@@ -374,6 +374,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1656768210}
     m_Modifications:
+    - target: {fileID: 1997924924346820020, guid: 898b366df89ef61429fab7f11b0d0df3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2565190989492744662, guid: 898b366df89ef61429fab7f11b0d0df3, type: 3}
       propertyPath: m_Name
       value: UIGameStartPanel
