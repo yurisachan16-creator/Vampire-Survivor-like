@@ -54,8 +54,8 @@ namespace VampireSurvivorLike
 				
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			///等级提升处理
-			Global.Level.RegisterWithInitValue((level) =>
+			///等级提升处理（只在等级变化时触发，不在初始化时触发）
+			Global.Level.Register((level) =>
 			{
 				//暂停游戏
 				Time.timeScale = 0f;
@@ -76,7 +76,8 @@ namespace VampireSurvivorLike
                 }
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			//UpgradeRoot.Hide();
+			// 初始化时隐藏升级界面
+			UpgradeRoot.Hide();
 
 			//简单攻击伤害升级按钮点击事件
 			BtnUpgrade.onClick.AddListener(()=>

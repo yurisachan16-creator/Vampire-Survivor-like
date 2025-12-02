@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 namespace VampireSurvivorLike
 {
-	public class UIGameStartPanelData : UIPanelData
-	{
-	}
-	public partial class UIGameStartPanel : UIPanel
+    public class UIGameStartPanelData : UIPanelData
+    {
+        
+    }
+    public partial class UIGameStartPanel : UIPanel,IController
 	{
 		protected override void OnInit(IUIData uiData = null)
 		{
@@ -25,48 +26,9 @@ namespace VampireSurvivorLike
 
 			});
 			
-			BtnCoinPercentUpgrade.onClick.AddListener(() =>
-			{
-				CoinUpgradePanel.Show();
-			});
-
-			Global.CoinPercent.RegisterWithInitValue((Coin) =>
-			{
-				CoinText.text="金币"+Coin;
-                if (Coin >= 5)
-                {
-                    BtnCoinUpgrade.Show();
-					BtnExpPercentUpgrade.Show();
-                }
-				else
-				{
-					BtnCoinUpgrade.Hide();
-					BtnExpPercentUpgrade.Hide();
-				}
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
-
 			
-			BtnCoinPercentUpgrade.onClick.AddListener(() =>
-            {
-                Global.CoinPercent.Value += 0.1f;
-				Global.Coin.Value -= 5;
-				//TODO:播放升级音效
-				AudioKit.PlaySound("");
-            });
 
-			
-			BtnExpPercentUpgrade.onClick.AddListener(() =>
-			{
-				Global.ExpPercent.Value += 0.1f;
-				Global.Coin.Value -= 5;
-				//TODO:播放升级音效
-				AudioKit.PlaySound("");
-			});
-
-			BtnClose.onClick.AddListener(() =>
-			{
-				CoinUpgradePanel.Hide();
-			});
+			this.GetSystem<CoinUpgradeSystem>().Say();
 		}
 		
 		protected override void OnOpen(IUIData uiData = null)
@@ -84,5 +46,10 @@ namespace VampireSurvivorLike
 		protected override void OnClose()
 		{
 		}
+
+		public IArchitecture GetArchitecture()
+        {
+            return Global.Interface;
+        }
 	}
 }
