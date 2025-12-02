@@ -5,11 +5,13 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	// Generate Id:29ca4515-9fe7-4160-ba75-b94aa500e5fc
+	// Generate Id:ecfb6f3c-a4c3-45aa-bd40-ceaab088f942
 	public partial class UIGamePanel
 	{
 		public const string Name = "UIGamePanel";
 		
+		[SerializeField]
+		public UnityEngine.UI.Text HPText;
 		[SerializeField]
 		public UnityEngine.UI.Text ExpText;
 		[SerializeField]
@@ -31,6 +33,7 @@ namespace VampireSurvivorLike
 		
 		protected override void ClearUIComponents()
 		{
+			HPText = null;
 			ExpText = null;
 			LevelText = null;
 			TimeText = null;

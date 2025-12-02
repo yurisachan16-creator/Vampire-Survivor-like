@@ -1,4 +1,4 @@
-// Generate Id:7665948b-6767-4c4f-88c4-9ceae21fe892
+// Generate Id:e255f75b-708a-4298-b253-831ca565d313
 using UnityEngine;
 
 namespace VampireSurvivorLike
@@ -8,6 +8,12 @@ namespace VampireSurvivorLike
 		public VampireSurvivorLike.Exp Exp;
 		
 		public VampireSurvivorLike.Coin Coin;
+		
+		public CircleCollider2D RecoverHP;
+		
+		public VampireSurvivorLike.Bomb Bomb;
+		
+		public VampireSurvivorLike.GetAllExp GetAllExp;
 		
 	}
 }

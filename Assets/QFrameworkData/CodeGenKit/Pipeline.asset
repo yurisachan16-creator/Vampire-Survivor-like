@@ -18,9 +18,24 @@ MonoBehaviour:
     GameObject: {fileID: 0}
     From: 0
     NameToFullName: []
-    BindInfos: []
+    BindInfos:
+    - TypeName: VampireSurvivorLike.Exp
+      PathToRoot: Exp
+      MemberName: Exp
+    - TypeName: VampireSurvivorLike.Coin
+      PathToRoot: Coin
+      MemberName: Coin
+    - TypeName: CircleCollider2D
+      PathToRoot: RecoverHP
+      MemberName: RecoverHP
+    - TypeName: VampireSurvivorLike.Bomb
+      PathToRoot: Bomb
+      MemberName: Bomb
+    - TypeName: VampireSurvivorLike.GetAllExp
+      PathToRoot: GetAllExp
+      MemberName: GetAllExp
     ScriptsFolder: Assets/Scripts/Game
-    ClassName: GameStartController
+    ClassName: PowerUpManager
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

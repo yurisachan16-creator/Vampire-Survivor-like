@@ -25,13 +25,27 @@ namespace VampireSurvivorLike
 				{
 					if(hitBox.Owner.CompareTag("Enemy"))
 					{
-						//玩家死亡,销毁自己
-						this.DestroyGameObjGracefully();
-						//TODO:重置游戏数据
-						
+						//玩家受伤
+						Global.HP.Value -= 1;
 
-						//显示游戏结束面板
-						UIKit.OpenPanel<UIGameOverPanel>();
+						if(Global.HP.Value<=0)
+						{
+							//播放死亡音效
+							AudioKit.PlaySound("");
+							//玩家死亡,销毁自己
+							this.DestroyGameObjGracefully();
+							//重置游戏数据
+							Global.ResetData();
+
+							//显示游戏结束面板
+							UIKit.OpenPanel<UIGameOverPanel>();
+						}
+						else
+						{
+							//播放受伤音效
+							AudioKit.PlaySound("");
+						}
+						
 					}
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);

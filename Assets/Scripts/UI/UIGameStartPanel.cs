@@ -50,6 +50,8 @@ namespace VampireSurvivorLike
             {
                 Global.CoinPercent.Value += 0.1f;
 				Global.Coin.Value -= 5;
+				//TODO:播放升级音效
+				AudioKit.PlaySound("");
             });
 
 			
@@ -57,6 +59,8 @@ namespace VampireSurvivorLike
 			{
 				Global.ExpPercent.Value += 0.1f;
 				Global.Coin.Value -= 5;
+				//TODO:播放升级音效
+				AudioKit.PlaySound("");
 			});
 
 			BtnClose.onClick.AddListener(() =>

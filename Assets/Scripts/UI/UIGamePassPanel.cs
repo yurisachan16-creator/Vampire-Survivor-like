@@ -35,6 +35,9 @@ namespace VampireSurvivorLike
                 this.CloseSelf();
 				SceneManager.LoadScene("GameStart");
             });
+
+			//通关音效
+			AudioKit.PlaySound("");
 		}
 		
 		protected override void OnOpen(IUIData uiData = null)

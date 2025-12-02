@@ -8,6 +8,9 @@ namespace VampireSurvivorLike
     public class Global : Architecture<Global>
     {
         #region Model
+
+        public static BindableProperty<int> HP = new BindableProperty<int>(3);
+        public static BindableProperty<int> MaxHP = new BindableProperty<int>(3);
         /// <summary>
         /// 玩家经验值
         /// </summary>
@@ -30,6 +33,8 @@ namespace VampireSurvivorLike
             UIKit.Root.SetResolution(1920, 1080, 1);
             Global.Coin.Value=PlayerPrefs.GetInt(nameof(Global.Coin),0);
             
+            Global.HP.Value=PlayerPrefs.GetInt(nameof(Global.MaxHP),3);
+            HP.Value=MaxHP.Value;
 
             Global.ExpPercent.Value=PlayerPrefs.GetFloat(nameof(Global.ExpPercent),0.3f);
             Global.CoinPercent.Value=PlayerPrefs.GetFloat(nameof(Global.CoinPercent),0.05f);
@@ -51,9 +56,15 @@ namespace VampireSurvivorLike
 				PlayerPrefs.SetFloat(nameof(Global.CoinPercent), coinPercent);
 
 			});
+
+            Global.MaxHP.Register((maxHp) =>
+            {
+                PlayerPrefs.SetInt(nameof(Global.MaxHP), maxHp);
+            });
         }
         public static void ResetData()
         {
+            HP.Value = MaxHP.Value;
             Exp.Value = 0;
             Level.Value = 1;
             CurrentSeconds.Value = 0;
@@ -82,6 +93,8 @@ namespace VampireSurvivorLike
                 PowerUpManager.Default.Exp.Instantiate()
                     .Position(gameObject.Position())
                     .Show();
+
+                return;
             }
 
             if (percent < CoinPercent.Value)
@@ -90,6 +103,44 @@ namespace VampireSurvivorLike
                 PowerUpManager.Default.Coin.Instantiate()
                     .Position(gameObject.Position())
                     .Show();
+
+                return;
+            }
+
+            percent=Random.Range(0, 1f);
+
+            if(percent<0.1f)
+            {
+                //生成回血道具
+                PowerUpManager.Default.RecoverHP.Instantiate()
+                    .Position(gameObject.Position())
+                    .Show();
+
+                return;
+            }
+
+            percent=Random.Range(0, 1f);
+
+            if(percent<0.1f)
+            {
+                //生成炸弹道具
+                PowerUpManager.Default.Bomb.Instantiate()
+                    .Position(gameObject.Position())
+                    .Show();
+
+                return;
+            }
+
+            percent=Random.Range(0, 1f);
+
+            if(percent<0.1f)
+            {
+                //生成经验吸附道具
+                PowerUpManager.Default.GetAllExp.Instantiate()
+                    .Position(gameObject.Position())
+                    .Show();
+
+                return;
             }
         }
 

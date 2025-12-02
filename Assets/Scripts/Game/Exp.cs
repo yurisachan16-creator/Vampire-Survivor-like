@@ -9,6 +9,7 @@ namespace VampireSurvivorLike
         {
             if (other.GetComponent<CollectableAera>())
             {
+                AudioKit.PlaySound("Exp");
                 Global.Exp.Value += 1;
 				this.DestroyGameObjGracefully();
             }

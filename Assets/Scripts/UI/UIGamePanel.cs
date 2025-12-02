@@ -14,6 +14,16 @@ namespace VampireSurvivorLike
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
 			// please add init code here
 
+			Global.HP.RegisterWithInitValue((hp) =>
+			{
+				HPText.text = "生命值:" + Global.HP.Value + "/"+Global.MaxHP.Value;
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.MaxHP.RegisterWithInitValue((hp) =>
+			{
+				HPText.text = "生命值:" + Global.MaxHP.Value + "/"+Global.MaxHP.Value;
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
 			EnemyGenerator.EnemyCount.RegisterWithInitValue(EnemyCount =>
 			{
 				EnemyCountText.text = "敌人数量:" + EnemyCount;
@@ -52,6 +62,8 @@ namespace VampireSurvivorLike
 				
 				//显示升级按钮
 				UpgradeRoot.Show();
+				//升级音效
+				AudioKit.PlaySound("LevelUp");
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			///经验值转等级处理
@@ -75,6 +87,8 @@ namespace VampireSurvivorLike
 				Global.SimpleAbilityDamage.Value *= 1.5f;
 				//隐藏升级按钮
 				UpgradeRoot.Hide();
+				//TODO:播放升级音效
+				AudioKit.PlaySound("");
 			});
 
 			//简单攻击间隔时间升级按钮点击事件
@@ -86,6 +100,8 @@ namespace VampireSurvivorLike
 				Global.SimpleAbilityDuration.Value *= 0.8f;
 				//隐藏升级按钮
 				UpgradeRoot.Hide();
+				//TODO:播放升级音效
+				AudioKit.PlaySound("");
 			});
 
 			var enemyGenerator=FindObjectOfType<EnemyGenerator>();

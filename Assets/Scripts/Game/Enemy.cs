@@ -1,6 +1,7 @@
 using UnityEngine;
 using QFramework;
 using System;
+using UnityEditor.UI;
 
 namespace VampireSurvivorLike
 {
@@ -16,13 +17,7 @@ namespace VampireSurvivorLike
 
         void Update()
         {
-			if(Player.Default)
-            {
-                var direction=(Player.Default.transform.position-transform.position).normalized;
-
-
-            	transform.Translate(direction*Time.deltaTime*MovementSpeed);
-            }
+			
 
             if (Health <= 0)
             {
@@ -40,17 +35,32 @@ namespace VampireSurvivorLike
             EnemyGenerator.EnemyCount.Value--;
         }
 
-		private bool _isIgnoreHurt = false;
-
-        internal void Hurt(float value)
+        void FixedUpdate()
         {
-			if (_isIgnoreHurt) return;
+            if(Player.Default)
+            {
+                var direction=(Player.Default.transform.position-transform.position).normalized;
 
-            Sprite.color = Color.red;		
+				SelfRigidbody2D.velocity = direction * MovementSpeed;
+            }
+            else
+            {
+                SelfRigidbody2D.velocity = Vector2.zero;
+            }
+        }
+
+        private bool _isIgnoreHurt = false;
+
+        internal void Hurt(float value,bool force=false)
+        {
+			if (_isIgnoreHurt&&!force) return;
+
+            Sprite.color = Color.red;
+			AudioKit.PlaySound("Hit");		
 			//延时0.3秒后判断攻击，恢复颜色并扣血
 			ActionKit.Delay(0.2f,() =>
 			{
-				this.Health -= Global.SimpleAbilityDamage.Value;
+				this.Health -= value;
 				this.Sprite.color = Color.white;
 				_isIgnoreHurt = false;
 			}).Start(this);
