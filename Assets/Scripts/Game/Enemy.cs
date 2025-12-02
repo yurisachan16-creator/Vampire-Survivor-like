@@ -55,6 +55,9 @@ namespace VampireSurvivorLike
         {
 			if (_isIgnoreHurt&&!force) return;
 
+            //显示伤害数字
+            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString());
+
             Sprite.color = Color.red;
 			AudioKit.PlaySound("Hit");		
 			//延时0.3秒后判断攻击，恢复颜色并扣血

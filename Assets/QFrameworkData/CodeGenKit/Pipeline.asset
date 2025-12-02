@@ -19,23 +19,11 @@ MonoBehaviour:
     From: 0
     NameToFullName: []
     BindInfos:
-    - TypeName: VampireSurvivorLike.Exp
-      PathToRoot: Exp
-      MemberName: Exp
-    - TypeName: VampireSurvivorLike.Coin
-      PathToRoot: Coin
-      MemberName: Coin
-    - TypeName: CircleCollider2D
-      PathToRoot: RecoverHP
-      MemberName: RecoverHP
-    - TypeName: VampireSurvivorLike.Bomb
-      PathToRoot: Bomb
-      MemberName: Bomb
-    - TypeName: VampireSurvivorLike.GetAllExp
-      PathToRoot: GetAllExp
-      MemberName: GetAllExp
+    - TypeName: RectTransform
+      PathToRoot: FloatingText
+      MemberName: FloatingText
     ScriptsFolder: Assets/Scripts/Game
-    ClassName: PowerUpManager
+    ClassName: FloatingTextController
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

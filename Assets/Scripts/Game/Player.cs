@@ -55,13 +55,11 @@ namespace VampireSurvivorLike
 
         void Update()
         {
-            var horizontal = Input.GetAxis("Horizontal");
-			var vertical = Input.GetAxis("Vertical");
+            var horizontal = Input.GetAxisRaw("Horizontal");
+			var vertical = Input.GetAxisRaw("Vertical");
+			var targetVelocity = new Vector2(horizontal, vertical).normalized * MoveSpeed;
 
-			//方向归一化
-			var direction = new Vector2(horizontal, vertical).normalized;
-
-			SelfRigidbody2D.velocity = direction * MoveSpeed;
+			SelfRigidbody2D.velocity = Vector2.Lerp(SelfRigidbody2D.velocity, targetVelocity, 1-Mathf.Exp(-10f * Time.deltaTime));
         }
 
         void OnDestroy()

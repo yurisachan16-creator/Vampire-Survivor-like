@@ -21,6 +21,9 @@ namespace VampireSurvivorLike
 				}
 				//TODO：播放炸弹音效
 				AudioKit.PlaySound("");
+				//屏幕震动
+				CameraController.ShakeCamera();
+				
 				this.DestroyGameObjGracefully();
             }
         }
