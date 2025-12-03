@@ -13,12 +13,21 @@ namespace VampireSurvivorLike
 {
 	public partial class CoinUpgradePanel : UIElement,IController
 	{
-		void Refresh()
+	
+		private void Awake()
         {
-			//消除旧的条目
-			CoinUpgradeItemRoot.DestroyChildren();
+			CoinUpgradeItemPrefab.Hide();
 
-            foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items.Where(item=>!item.ConditionCheck()))
+			
+
+			
+
+			Global.Coin.RegisterWithInitValue((coin)=>
+			{
+				CoinText.text = "金币:" + coin;
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items.Where(item=>!item.ConditionCheck()))
             {
                 CoinUpgradeItemPrefab.InstantiateWithParent(CoinUpgradeItemRoot)
                 .Self(self =>
@@ -32,6 +41,27 @@ namespace VampireSurvivorLike
 						AudioKit.PlaySound("");
 					});
 					var SelfCache=self;
+					CoinUpgradeItem.OnChanged.Register(()=>
+					{
+						if(itemCache.ConditionCheck())
+						{
+							SelfCache.Show();
+						}
+                        else
+                        {
+							SelfCache.Hide();
+                        }
+					}).UnRegisterWhenGameObjectDestroyed(SelfCache);
+
+					if(itemCache.ConditionCheck())
+					{
+						SelfCache.Show();
+					}
+                    else
+                    {
+						SelfCache.Hide();
+                    }
+
 					Global.Coin.RegisterWithInitValue((Coin) =>
 					{
                         if (Coin >= itemCache.Price)
@@ -45,26 +75,9 @@ namespace VampireSurvivorLike
 						
 
 					}).UnRegisterWhenGameObjectDestroyed(self);
-                })
-				.Show();
+                });
+				
             }
-        }
-		private void Awake()
-        {
-			CoinUpgradeItemPrefab.Hide();
-
-			CoinUpgradeSystem.OnCoinUpgradeSystemChanged.Register(()=>
-            {
-                Refresh();
-
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-			
-
-			Global.Coin.RegisterWithInitValue((coin)=>
-			{
-				CoinText.text = "金币:" + coin;
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			BtnClose.onClick.AddListener(() =>
 			{

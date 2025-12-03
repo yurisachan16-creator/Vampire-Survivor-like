@@ -28,6 +28,8 @@ namespace VampireSurvivorLike
 				Global.Coin.Value -= item.Price;
             }));
 
+            
+
             var coinPercentLv2 = Add(new CoinUpgradeItem()
             .WithKey("coin_percent_Lv2")
             .WithDescription("金币掉落概率提升 Lv2")
@@ -38,6 +40,11 @@ namespace VampireSurvivorLike
                 Global.CoinPercent.Value += 0.1f;
 				Global.Coin.Value -= item.Price;
             }));
+
+            coinPercentLv1.OnChanged.Register(()=>
+            {
+                coinPercentLv2.OnChanged.Trigger();
+            });
 
             var coinPercentLv3 = Add(new CoinUpgradeItem()
             .WithKey("coin_percent_Lv3")
@@ -50,7 +57,10 @@ namespace VampireSurvivorLike
 				Global.Coin.Value -= item.Price;
             }));
 
-            
+            coinPercentLv2.OnChanged.Register(()=>
+            {
+                coinPercentLv3.OnChanged.Trigger();
+            });
 
             Items.Add(new CoinUpgradeItem()
             .WithKey("exp_percent")

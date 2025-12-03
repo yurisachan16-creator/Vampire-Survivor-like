@@ -5,6 +5,7 @@ namespace VampireSurvivorLike
 {
     public class CoinUpgradeItem
     {
+        public EasyEvent OnChanged = new EasyEvent();
         public bool UpgradeFinish{get;set;}=false;
         public string Key { get; private set; } //新增Key属性
         public string Description { get; private set; } //新增描述属性
@@ -16,6 +17,7 @@ namespace VampireSurvivorLike
         {
             _mOnUpgrade?.Invoke(this);
             UpgradeFinish = true;
+            OnChanged.Trigger();
             CoinUpgradeSystem.OnCoinUpgradeSystemChanged.Trigger();
         }
 
