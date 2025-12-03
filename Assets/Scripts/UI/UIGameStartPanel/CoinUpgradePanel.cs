@@ -7,16 +7,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
+using System.Linq;
 
 namespace VampireSurvivorLike
 {
 	public partial class CoinUpgradePanel : UIElement,IController
 	{
-		private void Awake()
+		void Refresh()
         {
-			CoinUpgradeItemPrefab.Hide();
+			//消除旧的条目
+			CoinUpgradeItemRoot.DestroyChildren();
 
-			foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items)
+            foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items.Where(item=>!item.ConditionCheck()))
             {
                 CoinUpgradeItemPrefab.InstantiateWithParent(CoinUpgradeItemRoot)
                 .Self(self =>
@@ -29,57 +31,40 @@ namespace VampireSurvivorLike
 						//TODO:播放升级音效
 						AudioKit.PlaySound("");
 					});
+					var SelfCache=self;
+					Global.Coin.RegisterWithInitValue((Coin) =>
+					{
+                        if (Coin >= itemCache.Price)
+                        {
+                            SelfCache.interactable = true;
+                        }
+						else
+						{
+							SelfCache.interactable = false;
+						}
+						
+
+					}).UnRegisterWhenGameObjectDestroyed(self);
                 })
 				.Show();
             }
+        }
+		private void Awake()
+        {
+			CoinUpgradeItemPrefab.Hide();
 
-			BtnCoinPercentUpgrade.Hide();
-			BtnExpPercentUpgrade.Hide();
-			BtnPlayerMaxHpUpgrade.Hide();
-
-            BtnCoinPercentUpgrade.onClick.AddListener(() =>
-			{
-				this.Show();
-			});
-
-			Global.Coin.RegisterWithInitValue((Coin) =>
-			{
-				CoinText.text="金币"+Coin;
-                if (Coin >= 5)
-                {
-                    BtnCoinPercentUpgrade.Show();
-					BtnExpPercentUpgrade.Show();
-                }
-				else
-				{
-					BtnCoinPercentUpgrade.Hide();
-					BtnExpPercentUpgrade.Hide();
-				}
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-			
-			BtnCoinPercentUpgrade.onClick.AddListener(() =>
+			CoinUpgradeSystem.OnCoinUpgradeSystemChanged.Register(()=>
             {
-                
-				
-            });
+                Refresh();
+
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			
-			BtnExpPercentUpgrade.onClick.AddListener(() =>
-			{
-				Global.ExpPercent.Value += 0.1f;
-				Global.Coin.Value -= 5;
-				//TODO:播放升级音效
-				AudioKit.PlaySound("");
-			});
 
-			BtnPlayerMaxHpUpgrade.onClick.AddListener(() =>
+			Global.Coin.RegisterWithInitValue((coin)=>
 			{
-				Global.MaxHP.Value++;
-				Global.Coin.Value -= 5;
-				//TODO:播放升级音效
-				AudioKit.PlaySound("");
-			});
+				CoinText.text = "金币:" + coin;
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			BtnClose.onClick.AddListener(() =>
 			{

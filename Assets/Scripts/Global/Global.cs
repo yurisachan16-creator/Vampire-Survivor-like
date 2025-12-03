@@ -148,7 +148,7 @@ namespace VampireSurvivorLike
         {
             //注册模块的操作
             // XXX Model
-
+            this.RegisterSystem(new SaveSystem());
             this.RegisterSystem(new CoinUpgradeSystem());
         }
     }
