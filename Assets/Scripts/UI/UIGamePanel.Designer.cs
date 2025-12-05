@@ -5,7 +5,7 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	// Generate Id:ecfb6f3c-a4c3-45aa-bd40-ceaab088f942
+	// Generate Id:018a344e-44b5-482d-8d95-228121524177
 	public partial class UIGamePanel
 	{
 		public const string Name = "UIGamePanel";
@@ -23,11 +23,7 @@ namespace VampireSurvivorLike
 		[SerializeField]
 		public UnityEngine.UI.Text CoinText;
 		[SerializeField]
-		public RectTransform UpgradeRoot;
-		[SerializeField]
-		public UnityEngine.UI.Button BtnUpgrade;
-		[SerializeField]
-		public UnityEngine.UI.Button BtnSimpleDurationUpgrade;
+		public ExpUpgradePanel ExpUpgradePanel;
 		
 		private UIGamePanelData mPrivateData = null;
 		
@@ -39,9 +35,7 @@ namespace VampireSurvivorLike
 			TimeText = null;
 			EnemyCountText = null;
 			CoinText = null;
-			UpgradeRoot = null;
-			BtnUpgrade = null;
-			BtnSimpleDurationUpgrade = null;
+			ExpUpgradePanel = null;
 			
 			mData = null;
 		}

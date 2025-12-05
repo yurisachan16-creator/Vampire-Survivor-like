@@ -54,14 +54,16 @@ namespace VampireSurvivorLike
 				
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
+			//默认升级界面隐藏
+			ExpUpgradePanel.Hide();
 			///等级提升处理（只在等级变化时触发，不在初始化时触发）
 			Global.Level.Register((level) =>
 			{
 				//暂停游戏
 				Time.timeScale = 0f;
 				
-				//显示升级按钮
-				UpgradeRoot.Show();
+				//显示升级面板
+				ExpUpgradePanel.Show();
 				//升级音效
 				AudioKit.PlaySound("LevelUp");
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -76,34 +78,34 @@ namespace VampireSurvivorLike
                 }
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			// 初始化时隐藏升级界面
-			UpgradeRoot.Hide();
+			// // 初始化时隐藏升级界面
+			// UpgradeRoot.Hide();
 
-			//简单攻击伤害升级按钮点击事件
-			BtnUpgrade.onClick.AddListener(()=>
-			{
-				//恢复游戏
-				Time.timeScale = 1f;
-				//提升简单攻击伤害
-				Global.SimpleAbilityDamage.Value *= 1.5f;
-				//隐藏升级按钮
-				UpgradeRoot.Hide();
-				//TODO:播放升级音效
-				AudioKit.PlaySound("");
-			});
+			// //简单攻击伤害升级按钮点击事件
+			// BtnUpgrade.onClick.AddListener(()=>
+			// {
+			// 	//恢复游戏
+			// 	Time.timeScale = 1f;
+			// 	//提升简单攻击伤害
+			// 	Global.SimpleAbilityDamage.Value *= 1.5f;
+			// 	//隐藏升级按钮
+			// 	UpgradeRoot.Hide();
+			// 	//TODO:播放升级音效
+			// 	AudioKit.PlaySound("");
+			// });
 
-			//简单攻击间隔时间升级按钮点击事件
-			BtnSimpleDurationUpgrade.onClick.AddListener(()=>
-			{
-				//恢复游戏
-				Time.timeScale = 1f;
-				//缩短简单攻击间隔时间
-				Global.SimpleAbilityDuration.Value *= 0.8f;
-				//隐藏升级按钮
-				UpgradeRoot.Hide();
-				//TODO:播放升级音效
-				AudioKit.PlaySound("");
-			});
+			// //简单攻击间隔时间升级按钮点击事件
+			// BtnSimpleDurationUpgrade.onClick.AddListener(()=>
+			// {
+			// 	//恢复游戏
+			// 	Time.timeScale = 1f;
+			// 	//缩短简单攻击间隔时间
+			// 	Global.SimpleAbilityDuration.Value *= 0.8f;
+			// 	//隐藏升级按钮
+			// 	UpgradeRoot.Hide();
+			// 	//TODO:播放升级音效
+			// 	AudioKit.PlaySound("");
+			// });
 
 			var enemyGenerator=FindObjectOfType<EnemyGenerator>();
 			///游戏时间流逝处理

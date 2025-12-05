@@ -37,7 +37,7 @@ namespace VampireSurvivorLike
             HP.Value=MaxHP.Value;
 
             Global.ExpPercent.Value=PlayerPrefs.GetFloat(nameof(Global.ExpPercent),0.3f);
-            Global.CoinPercent.Value=PlayerPrefs.GetFloat(nameof(Global.CoinPercent),0.05f);
+            Global.CoinPercent.Value=PlayerPrefs.GetFloat(nameof(Global.CoinPercent),0.3f);
 
 			Global.Coin.Register((coin) =>
 			{
@@ -71,6 +71,7 @@ namespace VampireSurvivorLike
             SimpleAbilityDamage.Value = 1;
             SimpleAbilityDuration.Value = 1.5f;
             EnemyGenerator.EnemyCount.Value = 0;
+            Interface.GetSystem<ExpUpgradeSystem>().ResetData();
         }
 
         /// <summary>
@@ -96,6 +97,8 @@ namespace VampireSurvivorLike
 
                 return;
             }
+
+            percent=Random.Range(0, 1f);
 
             if (percent < CoinPercent.Value)
             {
@@ -150,6 +153,7 @@ namespace VampireSurvivorLike
             // XXX Model
             this.RegisterSystem(new SaveSystem());
             this.RegisterSystem(new CoinUpgradeSystem());
+            this.RegisterSystem(new ExpUpgradeSystem());
         }
     }
 }

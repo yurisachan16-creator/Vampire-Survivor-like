@@ -19,11 +19,14 @@ MonoBehaviour:
     From: 0
     NameToFullName: []
     BindInfos:
-    - TypeName: RectTransform
-      PathToRoot: FloatingText
-      MemberName: FloatingText
+    - TypeName: QFramework.ViewController
+      PathToRoot: Enemy
+      MemberName: Enemy
+    - TypeName: QFramework.ViewController
+      PathToRoot: EnemySkeleton
+      MemberName: EnemySkeleton
     ScriptsFolder: Assets/Scripts/Game
-    ClassName: FloatingTextController
+    ClassName: EnemyGenerator
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 
