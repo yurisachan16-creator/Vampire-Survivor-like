@@ -22,7 +22,7 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> SimpleAbilityDuration = new BindableProperty<float>(1);   //简单攻击间隔时间
 
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
-        public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.05f); //金币掉落概率
+        public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
         #endregion
 
@@ -61,6 +61,8 @@ namespace VampireSurvivorLike
             {
                 PlayerPrefs.SetInt(nameof(Global.MaxHP), maxHp);
             });
+
+            var _ = Interface;
         }
         public static void ResetData()
         {

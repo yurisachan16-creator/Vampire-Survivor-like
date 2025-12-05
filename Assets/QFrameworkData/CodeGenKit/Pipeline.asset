@@ -19,14 +19,11 @@ MonoBehaviour:
     From: 0
     NameToFullName: []
     BindInfos:
-    - TypeName: QFramework.ViewController
-      PathToRoot: Enemy
-      MemberName: Enemy
-    - TypeName: QFramework.ViewController
-      PathToRoot: EnemySkeleton
-      MemberName: EnemySkeleton
-    ScriptsFolder: Assets/Scripts/Game
-    ClassName: EnemyGenerator
+    - TypeName: SpriteRenderer
+      PathToRoot: Knife
+      MemberName: Knife
+    ScriptsFolder: Assets/Scripts/Game/Ability
+    ClassName: SimpleKnife
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 
