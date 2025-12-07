@@ -31,7 +31,7 @@ namespace VampireSurvivorLike
 						if(Global.HP.Value<=0)
 						{
 							//播放死亡音效
-							AudioKit.PlaySound("");
+							AudioKit.PlaySound("Death");
 							//玩家死亡,销毁自己
 							this.DestroyGameObjGracefully();
 							//重置游戏数据
@@ -43,7 +43,7 @@ namespace VampireSurvivorLike
 						else
 						{
 							//播放受伤音效
-							AudioKit.PlaySound("");
+							AudioKit.PlaySound("Hurt");
 						}
 						
 					}

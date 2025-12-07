@@ -23,7 +23,7 @@ namespace VampireSurvivorLike
 					});
 				}
 				//TODO：播放音效
-				AudioKit.PlaySound("");
+				AudioKit.PlaySound("Exp");
 				
 				this.DestroyGameObjGracefully();
             }

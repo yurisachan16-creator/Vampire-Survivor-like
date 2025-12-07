@@ -37,7 +37,7 @@ namespace VampireSurvivorLike
             });
 
 			//通关音效
-			AudioKit.PlaySound("");
+			AudioKit.PlaySound("Retro Event Acute 11");
 		}
 		
 		protected override void OnOpen(IUIData uiData = null)

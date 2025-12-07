@@ -15,7 +15,7 @@ namespace VampireSurvivorLike
                 }
                 else
                 {
-                    AudioKit.PlaySound("");
+                    AudioKit.PlaySound("Health");
 					Global.HP.Value += 1;
 					this.DestroyGameObjGracefully();
                 }

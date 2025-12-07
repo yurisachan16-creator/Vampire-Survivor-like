@@ -8,8 +8,10 @@ namespace VampireSurvivorLike
 	{
 		private Vector2 _mTargetPosition = Vector2.zero;
 
-		private static CameraController _mDefault;
+		private static CameraController _mDefault = null;
 
+		public static Transform LBTransform => _mDefault.LB;
+		public static Transform RTTransform => _mDefault.RT;
         void Awake()
         {
             _mDefault = this;

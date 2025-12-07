@@ -38,7 +38,7 @@ namespace VampireSurvivorLike
 					{
 						CoinUpgradeItem.Upgrade();
 						//TODO:播放升级音效
-						AudioKit.PlaySound("");
+						AudioKit.PlaySound("Retro Event UI 01");
 					});
 					var SelfCache=self;
 					CoinUpgradeItem.OnChanged.Register(()=>

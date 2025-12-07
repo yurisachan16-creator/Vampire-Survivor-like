@@ -1,13 +1,13 @@
-// Generate Id:275d7d60-7f6e-43ce-895d-186344d1881b
+// Generate Id:276b3ce7-4364-4621-a6ec-c097354b59eb
 using UnityEngine;
 
 namespace VampireSurvivorLike
 {
 	public partial class EnemyGenerator
 	{
-		public QFramework.ViewController Enemy;
-		
 		public QFramework.ViewController EnemySkeleton;
+		
+		public Rigidbody2D EnemyMiniBoss;
 		
 	}
 }

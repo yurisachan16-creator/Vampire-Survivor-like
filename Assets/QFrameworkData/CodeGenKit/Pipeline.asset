@@ -18,12 +18,9 @@ MonoBehaviour:
     GameObject: {fileID: 0}
     From: 0
     NameToFullName: []
-    BindInfos:
-    - TypeName: SpriteRenderer
-      PathToRoot: Knife
-      MemberName: Knife
-    ScriptsFolder: Assets/Scripts/Game/Ability
-    ClassName: SimpleKnife
+    BindInfos: []
+    ScriptsFolder: Assets/Scripts/Game
+    ClassName: CameraController
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

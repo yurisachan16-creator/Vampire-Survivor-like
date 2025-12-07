@@ -1,9 +1,13 @@
-// Generate Id:60f94c9f-4df3-43e1-88f1-7fb534a83ae9
+// Generate Id:3786ee2b-f41f-49a6-881e-ab1dffd5a34c
 using UnityEngine;
 
 namespace VampireSurvivorLike
 {
 	public partial class CameraController
 	{
+		public UnityEngine.Transform RT;
+		
+		public UnityEngine.Transform LB;
+		
 	}
 }

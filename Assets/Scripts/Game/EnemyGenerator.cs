@@ -10,15 +10,8 @@ namespace VampireSurvivorLike
 {
 	public partial class EnemyGenerator : ViewController
 	{
-		[Serializable]
-		public class EnemyWave
-        {
-			public float GenerateDuration=1;	//每隔多少秒生成一波次敌人
-            public GameObject EnemyPrefab;	//敌人预制体
-			public int KeepSeconds = 10;	//持续生成多少秒
-			
-        }
-
+		[SerializeField]
+		public LevelConfig Config;
 
 		private float _mCurrentGenerateSeconds = 0;	//生成时间
 		private float _mCurrentWaveSeconds = 0;	//当前波次持续时间计时器
@@ -30,15 +23,21 @@ namespace VampireSurvivorLike
 		private Queue<EnemyWave> _mEnemyWaveQueue = new Queue<EnemyWave>();	
 
 		public int WaveCount=0;
-		public bool IsLastWave=>WaveCount==EnemyWaves.Count;
+		private int _mToatalCount=0;
+		public bool IsLastWave=>WaveCount==_mToatalCount;
 		public EnemyWave CurrentWave=>_mCurrentWave;
 
         void Start()
         {
-            foreach(var wave in EnemyWaves)
-			{
-				_mEnemyWaveQueue.Enqueue(wave);
-			}
+			foreach(var group in Config.EnemyWaveGroups)
+            {
+                foreach(var wave in group.EnemyWaves)
+                {
+                    _mEnemyWaveQueue.Enqueue(wave);
+					_mToatalCount++;
+                }
+            }
+            
         }
 
 		private EnemyWave _mCurrentWave=null;
@@ -66,19 +65,38 @@ namespace VampireSurvivorLike
 
 					/// <summary>
 					/// 初始化玩家
-					/// 在玩家周围10个单位的随机位置
+					/// 在以RT，LB为对角点的矩形区域外生成敌人
 					/// </summary>
 					var player=Player.Default;
 					if(player)
 					{
-						var randomAngle= UnityEngine.Random.Range(0f,360f);
-						var randomRadius=randomAngle*Mathf.Deg2Rad;
-						var direction= new Vector3(Mathf.Cos(randomRadius),Mathf.Sin(randomRadius));
-						var generate = player.transform.position +direction*10;
+						var xOry = RandomUtility.Choose( -1, 1);
+						var pos = Vector2.zero;
+						if(xOry == -1)
+                        {
+                            pos.x = RandomUtility.Choose(CameraController.LBTransform.position.x,
+														CameraController.RTTransform.position.x);
+							pos.y = UnityEngine.Random.Range(CameraController.LBTransform.position.y,
+													CameraController.RTTransform.position.y);							
+                        }
+                        else
+                        {
+                            pos.x = UnityEngine.Random.Range(CameraController.LBTransform.position.x,
+													CameraController.RTTransform.position.x);
+							pos.y = RandomUtility.Choose(CameraController.LBTransform.position.y,
+														CameraController.RTTransform.position.y);
+                        }
+						
 
 						//生成敌人
 						_mCurrentWave.EnemyPrefab.Instantiate()
-												.Position(generate)
+												.Position(pos)
+												.Self(self=>
+												{
+													var enemy=self.GetComponent<IEnemy>();
+													enemy.SetSpeedScale(_mCurrentWave.SpeedScale);
+													enemy.SetHPScale(_mCurrentWave.HPScale);
+												})
 												.Show();
 					}
                 }

@@ -5,7 +5,7 @@ using UnityEditor.UI;
 
 namespace VampireSurvivorLike
 {
-	public partial class Enemy : ViewController
+	public partial class Enemy : ViewController,IEnemy
 	{
 		public float MovementSpeed = 2f;
 
@@ -67,6 +67,21 @@ namespace VampireSurvivorLike
 				this.Sprite.color = Color.white;
 				_isIgnoreHurt = false;
 			}).Start(this);
+        }
+
+        void IEnemy.Hurt(float value, bool force)
+        {
+            Hurt(value, force);
+        }
+
+        public void SetSpeedScale(float SpeedScale)
+        {
+            MovementSpeed *= SpeedScale;
+        }
+
+        public void SetHPScale(float HPScale)
+        {
+            Health *= HPScale;
         }
     }
 }

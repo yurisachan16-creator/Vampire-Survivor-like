@@ -29,7 +29,7 @@ namespace VampireSurvivorLike
 						expUpgradeItem.Upgrade();
 						this.Hide();
 						//TODO:播放升级音效
-						AudioKit.PlaySound("");
+						AudioKit.PlaySound("Retro Event Acute 08");
 					});
 					var SelfCache=self;
 					
