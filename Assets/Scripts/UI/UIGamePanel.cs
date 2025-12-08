@@ -14,15 +14,7 @@ namespace VampireSurvivorLike
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
 			// please add init code here
 
-			Global.HP.RegisterWithInitValue((hp) =>
-			{
-				HPText.text = "生命值:" + Global.HP.Value + "/"+Global.MaxHP.Value;
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-			Global.MaxHP.RegisterWithInitValue((hp) =>
-			{
-				HPText.text = "生命值:" + Global.MaxHP.Value + "/"+Global.MaxHP.Value;
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+			
 
 			EnemyGenerator.EnemyCount.RegisterWithInitValue(EnemyCount =>
 			{
@@ -44,7 +36,9 @@ namespace VampireSurvivorLike
 			///经验值变化处理
 			Global.Exp.RegisterWithInitValue((exp) =>
             {
-                ExpText.text = "经验值:(" + exp + "/" + Global.ExpToNextLevel() + ")";
+				//更新经验值显示，使用ExpValue的fillAmount来显示经验值进度
+				ExpValue.fillAmount = exp / (float)Global.ExpToNextLevel();
+                // ExpText.text = "经验值:(" + exp + "/" + Global.ExpToNextLevel() + ")";
             }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			///等级提升处理

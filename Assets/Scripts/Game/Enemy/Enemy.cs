@@ -2,6 +2,7 @@ using UnityEngine;
 using QFramework;
 using System;
 using UnityEditor.UI;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -10,6 +11,7 @@ namespace VampireSurvivorLike
 		public float MovementSpeed = 2f;
 
 		public float Health = 3f;
+        public Color DissolveColor = Color.yellow;
 		void Start()
 		{
 			EnemyGenerator.EnemyCount.Value++;
@@ -23,8 +25,8 @@ namespace VampireSurvivorLike
             {
 				//掉落经验值
 				Global.GeneratePowerUp(gameObject);
-
-				
+                AudioKit.PlaySound(Sfx.ENEMYDIE);
+				FxController.Play(Sprite, DissolveColor);
                 this.DestroyGameObjGracefully();
             }
 			
@@ -56,7 +58,7 @@ namespace VampireSurvivorLike
 			if (_isIgnoreHurt&&!force) return;
 
             //显示伤害数字
-            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString());
+            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"));
 
             Sprite.color = Color.red;
 			AudioKit.PlaySound("Hit");		

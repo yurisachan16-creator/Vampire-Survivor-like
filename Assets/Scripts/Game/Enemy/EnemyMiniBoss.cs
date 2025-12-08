@@ -139,7 +139,7 @@ namespace VampireSurvivorLike
             if (_isIgnoreHurt&&!force) return;
 
             //显示伤害数字
-            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString());
+            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"));
 
             Sprite.color = Color.red;
 			AudioKit.PlaySound("Hit");		

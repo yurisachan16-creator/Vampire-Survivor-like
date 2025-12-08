@@ -17,18 +17,19 @@ namespace VampireSurvivorLike
 			Time.timeScale = 0f;
 			// please add init code here
 
-			ActionKit.OnUpdate.Register(()=>
-            {
-                if(Input.GetKeyDown(KeyCode.Space))
-				{
-					//重置数据
-					Global.ResetData();
-					//关闭当前面板
-					this.CloseSelf();
-					//重新加载场景
-					SceneManager.LoadScene("Game");
-				}
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);
+			//移除按空格键重玩功能
+			// ActionKit.OnUpdate.Register(()=>
+            // {
+            //     if(Input.GetKeyDown(KeyCode.Space))
+			// 	{
+			// 		//重置数据
+			// 		Global.ResetData();
+			// 		//关闭当前面板
+			// 		this.CloseSelf();
+			// 		//重新加载场景
+			// 		SceneManager.LoadScene("Game");
+			// 	}
+            // }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			BtnBackToStart.onClick.AddListener(() =>
             {

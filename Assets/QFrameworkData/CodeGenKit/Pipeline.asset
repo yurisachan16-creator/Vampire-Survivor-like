@@ -18,9 +18,18 @@ MonoBehaviour:
     GameObject: {fileID: 0}
     From: 0
     NameToFullName: []
-    BindInfos: []
+    BindInfos:
+    - TypeName: SpriteRenderer
+      PathToRoot: Sprite
+      MemberName: Sprite
+    - TypeName: CircleCollider2D
+      PathToRoot: HurtBox
+      MemberName: HurtBox
+    - TypeName: UnityEngine.UI.Image
+      PathToRoot: Canvas/HPValue
+      MemberName: HPValue
     ScriptsFolder: Assets/Scripts/Game
-    ClassName: CameraController
+    ClassName: Player
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

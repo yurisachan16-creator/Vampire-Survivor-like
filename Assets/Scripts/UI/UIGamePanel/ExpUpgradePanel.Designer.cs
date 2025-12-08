@@ -12,15 +12,11 @@ namespace VampireSurvivorLike
 	{
 		[SerializeField] public UnityEngine.UI.Button BtnExpUpgradeItemPrefab;
 		[SerializeField] public RectTransform UpgradeRoot;
-		[SerializeField] public UnityEngine.UI.Button BtnUpgrade;
-		[SerializeField] public UnityEngine.UI.Button BtnSimpleDurationUpgrade;
 
 		public void Clear()
 		{
 			BtnExpUpgradeItemPrefab = null;
 			UpgradeRoot = null;
-			BtnUpgrade = null;
-			BtnSimpleDurationUpgrade = null;
 		}
 
 		public override string ComponentName

@@ -49,6 +49,21 @@ namespace VampireSurvivorLike
 					}
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			void UPdateHP()
+            {
+                HPValue.fillAmount = Global.HP.Value / (float)Global.MaxHP.Value;
+            }
+
+			Global.HP.RegisterWithInitValue(hp =>
+			{
+				UPdateHP();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.MaxHP.RegisterWithInitValue(maxHp =>
+			{
+				UPdateHP();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 		}
 
         
