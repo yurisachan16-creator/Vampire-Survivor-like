@@ -8519,12 +8519,12 @@ GameObject:
   - component: {fileID: 1270474838}
   - component: {fileID: 1270474837}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1270474836
 Transform:
   m_ObjectHideFlags: 0
@@ -8632,7 +8632,7 @@ SpriteRenderer:
   m_SortingLayerID: 150941297
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 24a2df5a0d079c54d9c76accbe50cd4c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9485,12 +9485,12 @@ GameObject:
   - component: {fileID: 1610051710}
   - component: {fileID: 1610051711}
   m_Layer: 0
-  m_Name: SimpleCircle
+  m_Name: RotateSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1610051710
 Transform:
   m_ObjectHideFlags: 0
@@ -9520,13 +9520,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Namespace: VampireSurvivorLike
-  ScriptName: SimpleCircle
-  ScriptsFolder: Assets/Scripts/Game/Ability
+  ScriptName: RotateSword
+  ScriptsFolder: Assets\Scripts\Game\Ability
   GeneratePrefab: 0
   PrefabFolder: Assets/Art/Prefab
   ArchitectureFullTypeName: 
   ViewControllerFullTypeName: 
-  Circle: {fileID: 1270474838}
+  Sword: {fileID: 1270474838}
 --- !u!1 &1625059814
 GameObject:
   m_ObjectHideFlags: 0
@@ -10506,7 +10506,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1980877411
 Transform:
   m_ObjectHideFlags: 0

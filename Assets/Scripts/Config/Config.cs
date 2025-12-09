@@ -11,5 +11,10 @@ namespace VampireSurvivorLike
         public const float InitSimpleKnifeDuration=1f;
         public const int InitSimpleKnifeCount=3;
         public const int InitSimpleKnifeAttackCount=1; //穿透数量
+
+        public const float InitRotateSwordDamage=5;
+        public const int InitRotateSwordCount=1;
+        public const float InitRotateSwordSpeed=2f;
+        public const float InitRotateSwordRange=2f;
     }
 }

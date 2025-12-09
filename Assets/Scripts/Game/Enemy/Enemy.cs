@@ -39,16 +39,20 @@ namespace VampireSurvivorLike
 
         void FixedUpdate()
         {
-            if(Player.Default)
+            if (!_isIgnoreHurt)
             {
-                var direction=(Player.Default.transform.position-transform.position).normalized;
+                if(Player.Default)
+                {
+                    var direction=(Player.Default.transform.position-transform.position).normalized;
 
-				SelfRigidbody2D.velocity = direction * MovementSpeed;
+                    SelfRigidbody2D.velocity = direction * MovementSpeed;
+                }
+                else
+                {
+                    SelfRigidbody2D.velocity = Vector2.zero;
+                }
             }
-            else
-            {
-                SelfRigidbody2D.velocity = Vector2.zero;
-            }
+            
         }
 
         private bool _isIgnoreHurt = false;
@@ -56,6 +60,10 @@ namespace VampireSurvivorLike
         internal void Hurt(float value,bool force=false)
         {
 			if (_isIgnoreHurt&&!force) return;
+
+            //受伤时停止移动
+            _isIgnoreHurt = true;
+            SelfRigidbody2D.velocity = Vector2.zero;
 
             //显示伤害数字
             FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"));

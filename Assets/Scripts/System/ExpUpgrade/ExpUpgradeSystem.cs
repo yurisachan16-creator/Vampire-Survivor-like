@@ -95,6 +95,79 @@ namespace VampireSurvivorLike
                     }
                 })
             );
+
+            Add(new ExpUpgradeItem()
+                .WithKey("rotate_sword")
+                .WithMaxLevel(10)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"守卫剑Lv{lv}:\n环绕主角身边的剑",
+                        2=>$"守卫剑Lv{lv}：\n数量+1 攻击力+2",
+                        3=>$"守卫剑Lv{lv}：\n攻击力+2 速度+25%",
+                        4=>$"守卫剑Lv{lv}：\n速度+50%",
+                        5=>$"守卫剑Lv{lv}：\n数量+1 攻击力+1",
+                        6=>$"守卫剑Lv{lv}：\n攻击力+2 速度+25%",
+                        7=>$"守卫剑Lv{lv}：\n数量+1 攻击力+1",
+                        8=>$"守卫剑Lv{lv}：\n攻击力+2 速度+25%",
+                        9=>$"守卫剑Lv{lv}：\n数量+1 攻击力+1",
+                        10=>$"守卫剑Lv{lv}：\n攻击力+2 速度+25%",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(10)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            //Global.
+                            break;
+                        case 2:
+                            Global.RotateSwordCount.Value += 1;
+                            Global.RotateSwordDamage.Value += 2;
+                            break;
+                        case 3:
+                            Global.RotateSwordDamage.Value += 2;
+                            Global.RotateSwordSpeed.Value *= 1.25f;
+                            break;
+                        case 4:
+                            Global.RotateSwordSpeed.Value *= 1.5f;
+
+                            break;
+                        case 5:
+                            Global.RotateSwordCount.Value += 1;
+                            Global.RotateSwordDamage.Value += 1;
+
+                            break;
+                        case 6:
+                            Global.RotateSwordDamage.Value += 2;
+                            Global.RotateSwordSpeed.Value *= 1.25f;
+
+                            break;
+                        case 7:
+                            Global.RotateSwordCount.Value += 1;
+                            Global.RotateSwordDamage.Value += 1;
+
+                            break;
+                        case 8:
+                            Global.RotateSwordDamage.Value += 2;
+                            Global.RotateSwordSpeed.Value *= 1.25f;
+
+                            break;
+                        case 9:
+                            Global.RotateSwordCount.Value += 1;
+                            Global.RotateSwordDamage.Value += 1;
+
+                            break;
+                        case 10:
+                            Global.RotateSwordDamage.Value += 2;
+                            Global.RotateSwordSpeed.Value *= 1.25f;
+
+                            break;
+                    }
+                }));
            
             Add(new ExpUpgradeItem()
                 .WithKey("simple_knife")
@@ -103,15 +176,15 @@ namespace VampireSurvivorLike
                     return lv switch
                     {
                         1=>$"飞刀Lv{lv}:向最近的敌人发射一把",
-                        2=>$"剑Lv{lv}：\n攻击力+3 数量+2",
-                        3=>$"剑Lv{lv}：\n间隔-0.1s 攻击力+1 数量+1",
-                        4=>$"剑Lv{lv}：\n间隔-0.1s 穿透+1 数量+1",
-                        5=>$"剑Lv{lv}：\n攻击力+3 数量+1",
-                        6=>$"剑Lv{lv}：\n间隔-0.1s 数量+1",
-                        7=>$"剑Lv{lv}：\n间隔-0.1s 穿透+1 数量+1",
-                        8=>$"剑Lv{lv}：\n攻击力+3 数量+1",
-                        9=>$"剑Lv{lv}：\n间隔-0.1s 数量+1",
-                        10=>$"剑Lv{lv}：\n攻击力+3 数量+1",
+                        2=>$"飞刀Lv{lv}：\n攻击力+3 数量+2",
+                        3=>$"飞刀Lv{lv}：\n间隔-0.1s 攻击力+1 数量+1",
+                        4=>$"飞刀Lv{lv}：\n间隔-0.1s 穿透+1 数量+1",
+                        5=>$"飞刀Lv{lv}：\n攻击力+3 数量+1",
+                        6=>$"飞刀Lv{lv}：\n间隔-0.1s 数量+1",
+                        7=>$"飞刀Lv{lv}：\n间隔-0.1s 穿透+1 数量+1",
+                        8=>$"飞刀Lv{lv}：\n攻击力+3 数量+1",
+                        9=>$"飞刀Lv{lv}：\n间隔-0.1s 数量+1",
+                        10=>$"飞刀Lv{lv}：\n攻击力+3 数量+1",
                         _=>null
                     };
                 })
@@ -174,7 +247,7 @@ namespace VampireSurvivorLike
                 expUpgradeItem.Visible.Value = false;
             }
 
-            foreach(var item in Items.Where(item=>!item.UpgradeFinish).Take(2))
+            foreach(var item in Items.Where(item=>!item.UpgradeFinish).Take(3))
             {
                 if(item == null)
                 {

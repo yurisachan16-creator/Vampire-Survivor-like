@@ -19,17 +19,11 @@ MonoBehaviour:
     From: 0
     NameToFullName: []
     BindInfos:
-    - TypeName: SpriteRenderer
-      PathToRoot: Sprite
-      MemberName: Sprite
     - TypeName: CircleCollider2D
-      PathToRoot: HurtBox
-      MemberName: HurtBox
-    - TypeName: UnityEngine.UI.Image
-      PathToRoot: Canvas/HPValue
-      MemberName: HPValue
-    ScriptsFolder: Assets/Scripts/Game
-    ClassName: Player
+      PathToRoot: Sword
+      MemberName: Sword
+    ScriptsFolder: Assets\Scripts\Game\Ability
+    ClassName: RotateSword
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

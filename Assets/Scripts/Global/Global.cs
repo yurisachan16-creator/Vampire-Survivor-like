@@ -29,6 +29,11 @@ namespace VampireSurvivorLike
         public static BindableProperty<int> SimpleKnifeCount = new BindableProperty<int>(Config.InitSimpleKnifeCount);
         public static BindableProperty<int> SimpleKnifeAttackCount = new BindableProperty<int>(Config.InitSimpleKnifeAttackCount); //穿透数量
 
+        public static BindableProperty<float> RotateSwordDamage = new BindableProperty<float>(Config.InitRotateSwordDamage);
+        public static BindableProperty<int> RotateSwordCount = new BindableProperty<int>(Config.InitRotateSwordCount);
+        public static BindableProperty<float> RotateSwordSpeed = new BindableProperty<float>(Config.InitRotateSwordSpeed);
+        public static BindableProperty<float> RotateSwordRange = new BindableProperty<float>(Config.InitRotateSwordRange);
+
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
@@ -89,6 +94,11 @@ namespace VampireSurvivorLike
             SimpleKnifeDuration.Value = Config.InitSimpleKnifeDuration;
             SimpleKnifeCount.Value = Config.InitSimpleKnifeCount;
             SimpleKnifeAttackCount.Value = Config.InitSimpleKnifeAttackCount;
+
+            RotateSwordDamage.Value = Config.InitRotateSwordDamage;
+            RotateSwordCount.Value = Config.InitRotateSwordCount;
+            RotateSwordSpeed.Value = Config.InitRotateSwordSpeed;
+            RotateSwordRange.Value = Config.InitRotateSwordRange;
 
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
