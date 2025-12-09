@@ -18,6 +18,11 @@ namespace VampireSurvivorLike
         public static BindableProperty<int> Coin = new BindableProperty<int>(0);
         public static BindableProperty<int> Level = new BindableProperty<int>(1);
         public static BindableProperty<float> CurrentSeconds = new BindableProperty<float>(0);
+        public static BindableProperty<bool> SimpleSwordUnlocked = new BindableProperty<bool>(false);   //简单剑是否解锁
+        public static BindableProperty<bool> SimpleKnifeUnlocked = new BindableProperty<bool>(false);   //简单刀是否解锁
+        public static BindableProperty<bool> RotateSwordUnlocked = new BindableProperty<bool>(false);   //旋转剑是否解锁
+        public static BindableProperty<bool> BasketBallUnlocked = new BindableProperty<bool>(false);   //篮球是否解锁
+        public static BindableProperty<bool> BombUnlocked = new BindableProperty<bool>(false);   //简单炸弹是否解锁
         public static BindableProperty<float> SimpleAbilityDamage = new BindableProperty<float>(1); //简单攻击伤害
         public static BindableProperty<float> SimpleAbilityDuration = new BindableProperty<float>(1.5f);   //简单攻击间隔时间
 
@@ -37,6 +42,9 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> BasketBallDamage = new BindableProperty<float>(Config.InitBasketBallDamage);
         public static BindableProperty<float> BasketBallSpeed = new BindableProperty<float>(Config.InitBasketBallSpeed);
         public static BindableProperty<int> BasketBallCount = new BindableProperty<int>(Config.InitBasketBallCount);
+
+        public static BindableProperty<float> BombDamage = new BindableProperty<float>(Config.InitBombDamage);
+        public static BindableProperty<float> BombPercent = new BindableProperty<float>(Config.InitBombPercent);
 
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
@@ -88,6 +96,12 @@ namespace VampireSurvivorLike
             Level.Value = 1;
             CurrentSeconds.Value = 0;
 
+            SimpleSwordUnlocked.Value = false;
+            SimpleKnifeUnlocked.Value = false;
+            RotateSwordUnlocked.Value = false;
+            BasketBallUnlocked.Value = false;
+            BombUnlocked.Value = false;
+
             SimpleAbilityDamage.Value = Config.InitSimpleSwordDamage;
             SimpleAbilityDuration.Value = Config.InitSimpleSwordDuration;
 
@@ -103,6 +117,14 @@ namespace VampireSurvivorLike
             RotateSwordCount.Value = Config.InitRotateSwordCount;
             RotateSwordSpeed.Value = Config.InitRotateSwordSpeed;
             RotateSwordRange.Value = Config.InitRotateSwordRange;
+
+            BasketBallDamage.Value = Config.InitBasketBallDamage;
+            BasketBallSpeed.Value = Config.InitBasketBallSpeed;
+            BasketBallCount.Value = Config.InitBasketBallCount;
+
+            BombDamage.Value = Config.InitBombDamage;
+            BombPercent.Value = Config.InitBombPercent;
+
 
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
@@ -156,16 +178,19 @@ namespace VampireSurvivorLike
                 return;
             }
 
-            percent=Random.Range(0, 1f);
-
-            if(percent<0.1f)
+            if (BombUnlocked.Value && !Object.FindObjectOfType<Bomb>())
             {
-                //生成炸弹道具
-                PowerUpManager.Default.Bomb.Instantiate()
-                    .Position(gameObject.Position())
-                    .Show();
+                percent=Random.Range(0, 1f);
 
-                return;
+                if(percent<BombPercent.Value)
+                {
+                    //生成炸弹道具
+                    PowerUpManager.Default.Bomb.Instantiate()
+                        .Position(gameObject.Position())
+                        .Show();
+
+                    return;
+                }
             }
 
             percent=Random.Range(0, 1f);

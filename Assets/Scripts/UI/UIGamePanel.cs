@@ -9,6 +9,7 @@ namespace VampireSurvivorLike
 	}
 	public partial class UIGamePanel : UIPanel
 	{
+		public static EasyEvent FlashScreen = new EasyEvent(); //屏幕闪烁事件
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
@@ -70,6 +71,18 @@ namespace VampireSurvivorLike
                     Global.Exp.Value -= Global.ExpToNextLevel();
 					Global.Level.Value += 1;
                 }
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			FlashScreen.Register(()=>
+			{
+				//屏幕闪烁效果
+				ActionKit
+				.Sequence()
+				.Lerp(0,0.5f,0.1f
+					,alpha=>ScreenColor.ColorAlpha(alpha))
+				.Lerp(0.5f,0f,0.1f
+					,alpha=>ScreenColor.ColorAlpha(alpha))
+				.Start(this);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			// // 初始化时隐藏升级界面

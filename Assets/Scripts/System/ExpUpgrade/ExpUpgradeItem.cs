@@ -5,7 +5,11 @@ namespace VampireSurvivorLike
 {
     public class ExpUpgradeItem
     {
-        
+        public ExpUpgradeItem(bool isWeapon)
+        {
+            IsWeapon = isWeapon;
+        }
+        public bool IsWeapon = false;   //是否是武器
         public bool UpgradeFinish{get;set;}=false;
         public string Key { get; private set; } //新增Key属性
         public string Description => _mDescriptionFactory(CurrentLevel.Value + 1); 

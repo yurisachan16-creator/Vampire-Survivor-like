@@ -28,7 +28,7 @@ namespace VampireSurvivorLike
         {
             Items.Clear();
 
-            Add(new ExpUpgradeItem()
+            Add(new ExpUpgradeItem(true)
                 .WithKey("simple_sword")
                 .WithMaxLevel(10)
                 .WithDescription(lv =>
@@ -54,7 +54,8 @@ namespace VampireSurvivorLike
                     switch (level)
                     {
                         case 1:
-                            //Global.
+                            //解锁简单剑
+                            Global.SimpleSwordUnlocked.Value = true;
                             break;
                         case 2:
                             Global.SimpleAbilityDamage.Value += 3;
@@ -96,7 +97,7 @@ namespace VampireSurvivorLike
                 })
             );
 
-            Add(new ExpUpgradeItem()
+            Add(new ExpUpgradeItem(true)
                 .WithKey("rotate_sword")
                 .WithMaxLevel(10)
                 .WithDescription(lv =>
@@ -122,7 +123,8 @@ namespace VampireSurvivorLike
                     switch (level)
                     {
                         case 1:
-                            //Global.
+                            //解锁旋转剑
+                            Global.RotateSwordUnlocked.Value = true;
                             break;
                         case 2:
                             Global.RotateSwordCount.Value += 1;
@@ -168,8 +170,75 @@ namespace VampireSurvivorLike
                             break;
                     }
                 }));
+
+            Add(new ExpUpgradeItem(false)
+                .WithKey("simple_bomb")
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"炸弹Lv{lv}:攻击全部敌人(怪物掉落)",
+                        2=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        3=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        4=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        5=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        6=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        7=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        8=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        9=>$"炸弹Lv{lv}：\n掉落概率+5% 攻击力+5",
+                        10=>$"炸弹Lv{lv}：\n掉落概率+10% 攻击力+5",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(10)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            //解锁炸弹
+                            Global.BombUnlocked.Value = true;
+                            break;
+                        case 2:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 3:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 4:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 5:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 6:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 7:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 8:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 9:
+                            Global.BombPercent.Value += 0.05f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                        case 10:
+                            Global.BombPercent.Value += 0.10f;
+                            Global.BombDamage.Value += 5;
+                            break;
+                    }
+                }));    
            
-            Add(new ExpUpgradeItem()
+            Add(new ExpUpgradeItem(true)
                 .WithKey("simple_knife")
                 .WithDescription(lv =>
                 {
@@ -194,7 +263,8 @@ namespace VampireSurvivorLike
                     switch (level)
                     {
                         case 1:
-                            //Global.
+                            //解锁飞刀
+                            Global.SimpleKnifeUnlocked.Value = true;
                             break;
                         case 2:
                             Global.SimpleKnifeDamage.Value += 3;
@@ -238,7 +308,7 @@ namespace VampireSurvivorLike
                     }
                 }));
 
-                Add(new ExpUpgradeItem()
+                Add(new ExpUpgradeItem(true)
                 .WithKey("baket_ball")
                 .WithDescription(lv =>
                 {
@@ -263,7 +333,8 @@ namespace VampireSurvivorLike
                     switch (level)
                     {
                         case 1:
-                            //Global.
+                            //解锁篮球
+                            Global.BasketBallUnlocked.Value = true;
                             break;
                         case 2:
                             Global.BasketBallDamage.Value += 3;
@@ -304,7 +375,7 @@ namespace VampireSurvivorLike
                 expUpgradeItem.Visible.Value = false;
             }
 
-            foreach(var item in Items.Where(item=>!item.UpgradeFinish).Take(3))
+            foreach(var item in Items.Where(item=>!item.UpgradeFinish).Take(5))
             {
                 if(item == null)
                 {

@@ -21,6 +21,8 @@ namespace VampireSurvivorLike
 				}
 				//TODO：播放炸弹音效
 				AudioKit.PlaySound("BombExplosion");
+				//屏幕闪烁
+				UIGamePanel.FlashScreen.Trigger();
 				//屏幕震动
 				CameraController.ShakeCamera();
 				

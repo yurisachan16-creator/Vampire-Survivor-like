@@ -5,7 +5,7 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	// Generate Id:64f1aece-dc06-4e18-8e97-527646ba4aaa
+	// Generate Id:5708a707-d930-46a6-bbde-8d7ebeda4873
 	public partial class UIGamePanel
 	{
 		public const string Name = "UIGamePanel";
@@ -22,6 +22,8 @@ namespace VampireSurvivorLike
 		public ExpUpgradePanel ExpUpgradePanel;
 		[SerializeField]
 		public UnityEngine.UI.Image ExpValue;
+		[SerializeField]
+		public UnityEngine.UI.Image ScreenColor;
 		
 		private UIGamePanelData mPrivateData = null;
 		
@@ -33,6 +35,7 @@ namespace VampireSurvivorLike
 			CoinText = null;
 			ExpUpgradePanel = null;
 			ExpValue = null;
+			ScreenColor = null;
 			
 			mData = null;
 		}
