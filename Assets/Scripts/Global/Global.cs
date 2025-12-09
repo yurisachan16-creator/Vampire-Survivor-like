@@ -34,6 +34,10 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> RotateSwordSpeed = new BindableProperty<float>(Config.InitRotateSwordSpeed);
         public static BindableProperty<float> RotateSwordRange = new BindableProperty<float>(Config.InitRotateSwordRange);
 
+        public static BindableProperty<float> BasketBallDamage = new BindableProperty<float>(Config.InitBasketBallDamage);
+        public static BindableProperty<float> BasketBallSpeed = new BindableProperty<float>(Config.InitBasketBallSpeed);
+        public static BindableProperty<int> BasketBallCount = new BindableProperty<int>(Config.InitBasketBallCount);
+
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 

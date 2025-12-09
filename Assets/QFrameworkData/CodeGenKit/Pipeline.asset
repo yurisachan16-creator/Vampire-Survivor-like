@@ -19,11 +19,11 @@ MonoBehaviour:
     From: 0
     NameToFullName: []
     BindInfos:
-    - TypeName: CircleCollider2D
-      PathToRoot: Sword
-      MemberName: Sword
-    ScriptsFolder: Assets\Scripts\Game\Ability
-    ClassName: RotateSword
+    - TypeName: VampireSurvivorLike.Ball
+      PathToRoot: Ball
+      MemberName: Ball
+    ScriptsFolder: Assets/Scripts/Game/Ability
+    ClassName: BasketBallAbility
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

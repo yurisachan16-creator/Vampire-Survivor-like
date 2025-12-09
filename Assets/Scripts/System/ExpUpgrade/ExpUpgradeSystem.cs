@@ -237,6 +237,63 @@ namespace VampireSurvivorLike
                             break;
                     }
                 }));
+
+                Add(new ExpUpgradeItem()
+                .WithKey("baket_ball")
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"篮球Lv{lv}:\n在屏幕内反弹的篮球",
+                        2=>$"篮球Lv{lv}：\n攻击力+3",
+                        3=>$"篮球Lv{lv}：\n数量+1",
+                        4=>$"篮球Lv{lv}：\n攻击力+3",
+                        5=>$"篮球Lv{lv}：\n数量+1",
+                        6=>$"篮球Lv{lv}：\n攻击力+3",
+                        7=>$"篮球Lv{lv}：\n速度+20%",
+                        8=>$"篮球Lv{lv}：\n攻击力+3",
+                        9=>$"篮球Lv{lv}：\n速度+20%",
+                        10=>$"篮球Lv{lv}：\n数量+1",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(10)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            //Global.
+                            break;
+                        case 2:
+                            Global.BasketBallDamage.Value += 3;
+                            break;
+                        case 3:
+                            Global.BasketBallCount.Value += 1;
+                            break;
+                        case 4:
+                            Global.BasketBallDamage.Value += 3;
+                            break;
+                        case 5:
+                            Global.BasketBallCount.Value += 1;
+                            break;
+                        case 6:
+                            Global.BasketBallDamage.Value += 3;
+                            break;
+                        case 7:
+                            Global.BasketBallSpeed.Value *= 1.2f;
+                            break;
+                        case 8:
+                            Global.BasketBallDamage.Value += 3;
+                            break;
+                        case 9:
+                            Global.BasketBallSpeed.Value *= 1.2f;
+                            break;
+                        case 10:
+                            Global.BasketBallCount.Value += 1;
+                            break;
+                    }
+                }));
             
         }
 

@@ -16,5 +16,9 @@ namespace VampireSurvivorLike
         public const int InitRotateSwordCount=1;
         public const float InitRotateSwordSpeed=2f;
         public const float InitRotateSwordRange=2f;
+
+        public const float InitBasketBallDamage=5f;
+        public const float InitBasketBallSpeed=10f;
+        public const int InitBasketBallCount=1;
     }
 }
