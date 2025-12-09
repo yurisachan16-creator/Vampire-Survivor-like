@@ -12,7 +12,7 @@ namespace VampireSurvivorLike
 			FloatingText.Hide();
 		}
 
-		public static void Play(Vector2 position,string text)
+		public static void Play(Vector2 position,string text,bool critical=false)
         {
             _mDefault.FloatingText.InstantiateWithParent(_mDefault.transform)
 				.PositionX(position.x)
@@ -23,6 +23,11 @@ namespace VampireSurvivorLike
                 var textTransform = f.transform.Find("Text");
 				var textComp = textTransform.GetComponent<Text>();
 				textComp.text = text;
+
+                if (critical)	//暴击文字颜色变红
+                {
+                    textComp.color = Color.red;
+                }
 
 				//动画效果
 				ActionKit.Sequence().Lerp(0,0.5f,0.5f)

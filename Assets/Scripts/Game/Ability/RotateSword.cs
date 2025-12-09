@@ -29,7 +29,8 @@ namespace VampireSurvivorLike
                             {
                                 if(hurtBox.Owner.CompareTag("Enemy"))
                                 {
-                                    hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.RotateSwordDamage.Value);
+                                    DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value,
+                                            hurtBox.Owner.GetComponent<Enemy>());
 
                                     //有50%的概率对敌人进行击退
                                     if (Random.Range(0, 1.0f) < 0.5f)

@@ -57,7 +57,7 @@ namespace VampireSurvivorLike
 
         private bool _isIgnoreHurt = false;
 
-        internal void Hurt(float value,bool force=false)
+        internal void Hurt(float value,bool force=false, bool critical=false)
         {
 			if (_isIgnoreHurt&&!force) return;
 
@@ -66,7 +66,7 @@ namespace VampireSurvivorLike
             SelfRigidbody2D.velocity = Vector2.zero;
 
             //显示伤害数字
-            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"));
+            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"),critical);
 
             Sprite.color = Color.red;
 			AudioKit.PlaySound("Hit");		
@@ -79,9 +79,9 @@ namespace VampireSurvivorLike
 			}).Start(this);
         }
 
-        void IEnemy.Hurt(float value, bool force)
+        void IEnemy.Hurt(float value, bool force, bool critical)
         {
-            Hurt(value, force);
+            Hurt(value, force, critical);
         }
 
         public void SetSpeedScale(float SpeedScale)

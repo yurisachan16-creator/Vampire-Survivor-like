@@ -46,6 +46,7 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> BombDamage = new BindableProperty<float>(Config.InitBombDamage);
         public static BindableProperty<float> BombPercent = new BindableProperty<float>(Config.InitBombPercent);
 
+        public static BindableProperty<float> CriticalRate = new BindableProperty<float>(Config.InitCriticalRate); //暴击率
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
@@ -125,7 +126,8 @@ namespace VampireSurvivorLike
             BombDamage.Value = Config.InitBombDamage;
             BombPercent.Value = Config.InitBombPercent;
 
-
+            CriticalRate.Value = Config.InitCriticalRate;
+            
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
         }

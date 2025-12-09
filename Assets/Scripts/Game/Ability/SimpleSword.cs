@@ -35,23 +35,28 @@ namespace VampireSurvivorLike
                         .Self(self =>
                         {
                             var selfCache=self;
+							var hasHit = false;
+							
                             selfCache.OnTriggerEnter2DEvent(collider2D =>
                             {
+								if(hasHit) return;
+								
                                 var hurtBox = collider2D.GetComponent<HurtBox>();
 
 								if (hurtBox)
 								{
 									if (hurtBox.Owner.CompareTag("Enemy"))
 									{
-										hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleAbilityDamage.Value);
+										hasHit = true;
+										DamageSystem.CalculateDamage(Global.SimpleAbilityDamage.Value,
+												hurtBox.Owner.GetComponent<Enemy>());
 									}
 								}
-                            }).UnRegisterWhenGameObjectDestroyed(gameObject);
+                            }).UnRegisterWhenGameObjectDestroyed(selfCache);
 
 							//劈砍动画
 							ActionKit
 							.Sequence()
-							.Callback(()=>{selfCache.enabled=false;})
                             .Parallel(p =>
                             {
                                 p.Lerp(0, 10, 0.2f, (z) =>
@@ -64,7 +69,6 @@ namespace VampireSurvivorLike
 								.Lerp(1.25f,1f,0.1f,scale=>selfCache.LocalScale(scale))
 								);
                             })
-							.Callback(()=>{selfCache.enabled=true;})
                             .Parallel(p =>
                             {
                                 p.Lerp(10,-180,0.2f,z=>selfCache.LocalEulerAnglesZ(z));
@@ -73,13 +77,17 @@ namespace VampireSurvivorLike
 								.Lerp(1.25f,1f,0.1f,scale=>selfCache.LocalScale(scale))
 								);						
                             })
-							.Callback(()=>{selfCache.enabled=false;})
                             .Lerp(-180, 0, 0.3f, z =>
                             {
                                 selfCache.LocalEulerAnglesZ(z)
 								.LocalScale(z.Abs() / 180 );						 
                             })
-							.Start(this,()=>{selfCache.DestroyGameObjGracefully();});
+							.Start(this,()=>{
+								if(selfCache != null)
+								{
+									selfCache.DestroyGameObjGracefully();
+								}
+							});
                         });						
 					
 				}

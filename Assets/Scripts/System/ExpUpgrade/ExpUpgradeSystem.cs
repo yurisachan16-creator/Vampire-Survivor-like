@@ -365,6 +365,44 @@ namespace VampireSurvivorLike
                             break;
                     }
                 }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("simple_critical")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"暴击Lv{lv}:\n每次伤害15%概率暴击",
+                        2=>$"暴击Lv{lv}：\n每次伤害28%概率暴击",
+                        3=>$"暴击Lv{lv}：\n每次伤害40%概率暴击",
+                        4=>$"暴击Lv{lv}：\n每次伤害52%概率暴击",
+                        5=>$"暴击Lv{lv}：\n每次伤害65%概率暴击",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(5)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.CriticalRate.Value += 0.15f;
+                            break;
+                        case 2:
+                            Global.CriticalRate.Value += 0.13f;
+                            break;
+                        case 3:
+                            Global.CriticalRate.Value += 0.12f;
+                            break;
+                        case 4:
+                            Global.CriticalRate.Value += 0.12f;
+                            break;
+                        case 5:
+                            Global.CriticalRate.Value += 0.13f;
+                            break;
+                    }
+                }));
             
         }
 
@@ -375,20 +413,24 @@ namespace VampireSurvivorLike
                 expUpgradeItem.Visible.Value = false;
             }
 
-            foreach(var item in Items.Where(item=>!item.UpgradeFinish).Take(5))
-            {
-                if(item == null)
-                {
-                    
-                }
+            var list = Items.Where(item=>!item.UpgradeFinish).ToList();
 
-                else
+            if(list.Count >= 4)
+            {
+                list.GetAndRemoveRandomItem().Visible.Value = true;
+                list.GetAndRemoveRandomItem().Visible.Value = true;
+                list.GetAndRemoveRandomItem().Visible.Value = true;
+                list.GetAndRemoveRandomItem().Visible.Value = true;
+            }
+            else
+            {
+                foreach(var item in list)
                 {
                     item.Visible.Value = true;
                 }
             }
-            
 
+            
             
         }
     }

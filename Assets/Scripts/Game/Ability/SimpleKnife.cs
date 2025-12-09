@@ -63,7 +63,9 @@ namespace VampireSurvivorLike
 								{
 									if(hurtBox.Owner.CompareTag("Enemy"))
 									{
-										hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
+										//hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
+										DamageSystem.CalculateDamage(Global.SimpleKnifeDamage.Value,
+												hurtBox.Owner.GetComponent<Enemy>());
 										attackCount++;
 
 										if(attackCount>=Global.SimpleKnifeAttackCount.Value)

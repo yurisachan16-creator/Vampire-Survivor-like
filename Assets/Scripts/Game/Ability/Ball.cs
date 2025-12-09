@@ -20,7 +20,8 @@ namespace VampireSurvivorLike
 					if(hurtBox.Owner.CompareTag("Enemy"))
 					{
 						var enemy=hurtBox.Owner.GetComponent<IEnemy>();
-						enemy.Hurt(Global.BasketBallDamage.Value);
+						DamageSystem.CalculateDamage(Global.BasketBallDamage.Value,enemy);
+						
 
 						//有50%的概率对敌人进行击退
 						if (Random.Range(0, 1.0f) < 0.5f&&collider&collider.attachedRigidbody&&Player.Default)
