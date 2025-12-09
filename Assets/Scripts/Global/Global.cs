@@ -20,8 +20,15 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> CurrentSeconds = new BindableProperty<float>(0);
         public static BindableProperty<float> SimpleAbilityDamage = new BindableProperty<float>(1); //简单攻击伤害
         public static BindableProperty<float> SimpleAbilityDuration = new BindableProperty<float>(1.5f);   //简单攻击间隔时间
+
         public static BindableProperty<int> SimpleSwordCount = new BindableProperty<int>(Config.InitSimpleSwordCount);   //简单攻击数量
         public static BindableProperty<float> SimpleSwordRange = new BindableProperty<float>(Config.InitSimpleSwordRange);
+
+        public static BindableProperty<float> SimpleKnifeDamage = new BindableProperty<float>(Config.InitSimpleKnifeDamage);
+        public static BindableProperty<float> SimpleKnifeDuration = new BindableProperty<float>(Config.InitSimpleKnifeDuration);
+        public static BindableProperty<int> SimpleKnifeCount = new BindableProperty<int>(Config.InitSimpleKnifeCount);
+        public static BindableProperty<int> SimpleKnifeAttackCount = new BindableProperty<int>(Config.InitSimpleKnifeAttackCount); //穿透数量
+
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
@@ -71,10 +78,18 @@ namespace VampireSurvivorLike
             Exp.Value = 0;
             Level.Value = 1;
             CurrentSeconds.Value = 0;
+
             SimpleAbilityDamage.Value = Config.InitSimpleSwordDamage;
             SimpleAbilityDuration.Value = Config.InitSimpleSwordDuration;
+
             SimpleSwordCount.Value = Config.InitSimpleSwordCount;
             SimpleSwordRange.Value = Config.InitSimpleSwordRange;
+
+            SimpleKnifeDamage.Value = Config.InitSimpleKnifeDamage;
+            SimpleKnifeDuration.Value = Config.InitSimpleKnifeDuration;
+            SimpleKnifeCount.Value = Config.InitSimpleKnifeCount;
+            SimpleKnifeAttackCount.Value = Config.InitSimpleKnifeAttackCount;
+
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
         }

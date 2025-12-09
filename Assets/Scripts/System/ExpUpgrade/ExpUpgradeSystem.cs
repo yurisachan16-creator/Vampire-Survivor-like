@@ -30,6 +30,7 @@ namespace VampireSurvivorLike
 
             Add(new ExpUpgradeItem()
                 .WithKey("simple_sword")
+                .WithMaxLevel(10)
                 .WithDescription(lv =>
                 {
                     return lv switch
@@ -53,49 +54,116 @@ namespace VampireSurvivorLike
                     switch (level)
                     {
                         case 1:
-                        //Global.
-                        break;
+                            //Global.
+                            break;
                         case 2:
-                        Global.SimpleAbilityDamage.Value += 3;
-                        Global.SimpleSwordCount.Value += 2;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 3;
+                            Global.SimpleSwordCount.Value += 2;
+                            break;
                         case 3:
-                        Global.SimpleAbilityDamage.Value += 2;
-                        Global.SimpleAbilityDuration.Value -= 0.25f;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 2;
+                            Global.SimpleAbilityDuration.Value -= 0.25f;
+                            break;
                         case 4:
-                        Global.SimpleAbilityDamage.Value += 3;
-                        Global.SimpleAbilityDuration.Value -= 0.25f;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 3;
+                            Global.SimpleAbilityDuration.Value -= 0.25f;
+                            break;
                         case 5:
-                        Global.SimpleAbilityDamage.Value += 4;
-                        Global.SimpleAbilityDuration.Value -= 0.25f;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 4;
+                            Global.SimpleAbilityDuration.Value -= 0.25f;
+                            break;
                         case 6:
-                        Global.SimpleSwordRange.Value += 1;
-                        Global.SimpleAbilityDuration.Value -= 0.25f;
-                        break;
+                            Global.SimpleSwordRange.Value += 1;
+                            Global.SimpleAbilityDuration.Value -= 0.25f;
+                            break;
                         case 7:
-                        Global.SimpleAbilityDamage.Value += 3;
-                        Global.SimpleSwordCount.Value += 2;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 3;
+                            Global.SimpleSwordCount.Value += 2;
+                            break;
                         case 8:
-                        Global.SimpleAbilityDamage.Value += 2;
-                        Global.SimpleSwordRange.Value += 1;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 2;
+                            Global.SimpleSwordRange.Value += 1;
+                            break;
                         case 9:
-                        Global.SimpleAbilityDamage.Value += 5;
-                        Global.SimpleAbilityDuration.Value -= 0.25f;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 5;
+                            Global.SimpleAbilityDuration.Value -= 0.25f;
+                            break;
                         case 10:
-                        Global.SimpleAbilityDamage.Value += 3;
-                        Global.SimpleSwordCount.Value += 2;
-                        break;
+                            Global.SimpleAbilityDamage.Value += 3;
+                            Global.SimpleSwordCount.Value += 2;
+                            break;
                     }
                 })
             );
            
-
+            Add(new ExpUpgradeItem()
+                .WithKey("simple_knife")
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"飞刀Lv{lv}:向最近的敌人发射一把",
+                        2=>$"剑Lv{lv}：\n攻击力+3 数量+2",
+                        3=>$"剑Lv{lv}：\n间隔-0.1s 攻击力+1 数量+1",
+                        4=>$"剑Lv{lv}：\n间隔-0.1s 穿透+1 数量+1",
+                        5=>$"剑Lv{lv}：\n攻击力+3 数量+1",
+                        6=>$"剑Lv{lv}：\n间隔-0.1s 数量+1",
+                        7=>$"剑Lv{lv}：\n间隔-0.1s 穿透+1 数量+1",
+                        8=>$"剑Lv{lv}：\n攻击力+3 数量+1",
+                        9=>$"剑Lv{lv}：\n间隔-0.1s 数量+1",
+                        10=>$"剑Lv{lv}：\n攻击力+3 数量+1",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(10)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            //Global.
+                            break;
+                        case 2:
+                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeCount.Value += 2;
+                            break;
+                        case 3:
+                            Global.SimpleKnifeDuration.Value -= 0.1f;
+                            Global.SimpleKnifeDamage.Value += 2;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                        case 4:
+                            Global.SimpleKnifeDuration.Value -= 0.1f;
+                            Global.SimpleKnifeAttackCount.Value += 1;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                        case 5:
+                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                        case 6:
+                            Global.SimpleKnifeDuration.Value -= 0.1f;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                        case 7:
+                            Global.SimpleKnifeDuration.Value -= 0.1f;
+                            Global.SimpleKnifeAttackCount.Value += 1;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                        case 8:
+                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                        case 9:
+                            Global.SimpleKnifeDuration.Value -= 0.1f;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                        case 10:
+                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeCount.Value += 1;
+                            break;
+                    }
+                }));
             
         }
 
@@ -106,17 +174,21 @@ namespace VampireSurvivorLike
                 expUpgradeItem.Visible.Value = false;
             }
 
-            var item = Items.Where(item=>!item.UpgradeFinish).ToList().GetRandomItem();
-
-            if(item==null)
+            foreach(var item in Items.Where(item=>!item.UpgradeFinish).Take(2))
             {
-                
-            }
+                if(item == null)
+                {
+                    
+                }
 
-            else
-            {
-                item.Visible.Value = true;
+                else
+                {
+                    item.Visible.Value = true;
+                }
             }
+            
+
+            
         }
     }
 }

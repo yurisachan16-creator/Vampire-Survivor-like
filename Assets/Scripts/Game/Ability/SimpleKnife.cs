@@ -1,15 +1,13 @@
 using UnityEngine;
 using QFramework;
 using System.Linq;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
 	public partial class SimpleKnife : ViewController
 	{
-		void Start()
-		{
-			// Code Here
-		}
+		
 
 		private float _mCurrentSeconds = 0;
 
@@ -17,56 +15,81 @@ namespace VampireSurvivorLike
         {
             _mCurrentSeconds += Time.deltaTime;
 
-			//每秒发射一把刀
-            if (_mCurrentSeconds >= 1.0f)
+			//每隔一段时间发射一把飞刀
+            if (_mCurrentSeconds >= Global.SimpleKnifeDuration.Value)
             {
                 _mCurrentSeconds = 0;
 
-				var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude,FindObjectsSortMode.None);
+				var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude,FindObjectsSortMode.None)
+								.OrderBy(enemy=>Player.Default.Distance2D(enemy))
+									.Take(Global.SimpleKnifeCount.Value);
 
-				var enemy = enemies.OrderBy(enemy=>(Player.Default.transform.position-enemy.transform.position).magnitude).FirstOrDefault();
-				if (enemy)
-				{
-					Knife.Instantiate()
-					.Position(this.Position())
-					.Show()
-					.Self(self =>
+				
+				var i = 0;
+				foreach(var enemy in enemies)
+                {
+					//计时器，游戏中最多同时有4个小刀的声音
+                    if (i < 4)
+                    {
+						ActionKit.DelayFrame(11*i,()=>AudioKit.PlaySound(Sfx.KNIFE))
+									.StartGlobal();
+						i++;
+                        
+                    }		
+
+                    if (enemy)
 					{
-						var rigidbody2D = self.GetComponent<Rigidbody2D>();
-
-						var direction = (enemy.Position() - Player.Default.Position()).normalized;
-						rigidbody2D.velocity = direction * 10;
-
-						self.OnTriggerEnter2DEvent(collider=>
+						Knife.Instantiate()
+						.Position(this.Position())
+						.Show()
+						.Self(self =>
 						{
 							
-							var hurtBox=collider.GetComponent<HurtBox>();		
+							var selfCache = self;
+							var direction = enemy.NormalizedDirection2DFrom(Player.Default);
+							self.transform.up = direction;
 
-							if (hurtBox)
+							var rigidbody2D = self.GetComponent<Rigidbody2D>();
+
+							rigidbody2D.velocity = enemy.NormalizedDirection2DFrom(Player.Default) * 10;
+							var attackCount = 0;
+
+							self.OnTriggerEnter2DEvent(collider=>
 							{
-								if(hurtBox.Owner.CompareTag("Enemy"))
+								
+								var hurtBox=collider.GetComponent<HurtBox>();		
+
+								if (hurtBox)
 								{
-									hurtBox.Owner.GetComponent<Enemy>().Hurt(5);
-									self.DestroyGameObjGracefully();
+									if(hurtBox.Owner.CompareTag("Enemy"))
+									{
+										hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
+										attackCount++;
+
+										if(attackCount>=Global.SimpleKnifeAttackCount.Value)
+                                        {
+                                            selfCache.DestroyGameObjGracefully();
+                                        }
+										
+									}
 								}
-							}
 
-						}).UnRegisterWhenGameObjectDestroyed(self);
+							}).UnRegisterWhenGameObjectDestroyed(self);
 
-						ActionKit.OnUpdate.Register(() =>
-						{
-							if (Player.Default)
+							ActionKit.OnUpdate.Register(() =>
 							{
-								if(Player.Default.Position().y - self.Position().magnitude > 20)
+								if (Player.Default)
 								{
-									self.DestroyGameObjGracefully();
+									if(Player.Default.Distance2D(selfCache) > 20)
+									{
+										self.DestroyGameObjGracefully();
+									}
 								}
-							}
-						}).UnRegisterWhenGameObjectDestroyed(self);
+							}).UnRegisterWhenGameObjectDestroyed(self);
 
-						});
-            		}
-                
+							});
+					}
+                } 
             }
 			
         }

@@ -8,10 +8,10 @@ namespace VampireSurvivorLike
         
         public bool UpgradeFinish{get;set;}=false;
         public string Key { get; private set; } //新增Key属性
-        public string Description => _mDescriptionFactory(CurrentLevel.Value); 
+        public string Description => _mDescriptionFactory(CurrentLevel.Value + 1); 
 
         public int MaxLevel { get; private set; } = 1; //新增最大等级属性
-        public BindableProperty<int> CurrentLevel = new BindableProperty<int>(1);
+        public BindableProperty<int> CurrentLevel = new BindableProperty<int>(0);
         public BindableProperty<bool> Visible { get; } = new BindableProperty<bool>();
         private Func<int,string> _mDescriptionFactory;
         private Action<ExpUpgradeItem, int> _mOnUpgrade; //升级时的回调
