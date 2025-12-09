@@ -1,4 +1,4 @@
-// Generate Id:929df275-ec32-49e9-a383-fb4d4292734f
+// Generate Id:65894a7d-4849-4842-a710-4a52a34825d5
 using UnityEngine;
 
 namespace VampireSurvivorLike

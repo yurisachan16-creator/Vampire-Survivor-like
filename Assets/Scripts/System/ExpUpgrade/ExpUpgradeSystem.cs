@@ -27,33 +27,74 @@ namespace VampireSurvivorLike
         public void ResetData()
         {
             Items.Clear();
-            var simpleDamageLv1 = Add(new ExpUpgradeItem()
-            .WithKey("simple_damage")
-            .WithDescription(lv => $"简单攻击基础伤害提升 Lv{lv}")
-            .WithMaxLevel(10)
-            .OnUpgrade((_,level)=>
-            {
-                if (level == 1)
-                {
-                    //TODO:
-                }
-                Global.SimpleAbilityDamage.Value *= 1.5f;
-            }));
 
-            
-
-            var simpleDurationLv1 = Add(new ExpUpgradeItem()
-            .WithKey("simple_duration")
-            .WithMaxLevel(10)
-            .WithDescription(lv=>$"简单攻击的间隔时间减少 Lv{lv}")
-            .OnUpgrade((_,level)=>
-            {
-                if (level == 2)
+            Add(new ExpUpgradeItem()
+                .WithKey("simple_sword")
+                .WithDescription(lv =>
                 {
-                    //TODO:
-                }
-                Global.SimpleAbilityDuration.Value *= 0.8f;
-            }));
+                    return lv switch
+                    {
+                        1=>$"剑lv{lv}:攻击身边的敌人",
+                        2=>$"剑lv{lv}：\n攻击力+3 数量+2",
+                        3=>$"剑lv{lv}：\n攻击力+2 间隔-0.25s",
+                        4=>$"剑lv{lv}：\n攻击力+3 间隔-0.25s",
+                        5=>$"剑lv{lv}：\n攻击力+4 间隔-0.25s",
+                        6=>$"剑lv{lv}：\n范围+1 间隔-0.25s",
+                        7=>$"剑lv{lv}：\n攻击力+3 数量+2",
+                        8=>$"剑lv{lv}：\n攻击力+2 范围+1",
+                        9=>$"剑lv{lv}：\n攻击力+5 间隔-0.25s",
+                        10=>$"剑lv{lv}：\n攻击力+3 数量+2",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(10)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                        //Global.
+                        break;
+                        case 2:
+                        Global.SimpleAbilityDamage.Value += 3;
+                        Global.SimpleSwordCount.Value += 2;
+                        break;
+                        case 3:
+                        Global.SimpleAbilityDamage.Value += 2;
+                        Global.SimpleAbilityDuration.Value -= 0.25f;
+                        break;
+                        case 4:
+                        Global.SimpleAbilityDamage.Value += 3;
+                        Global.SimpleAbilityDuration.Value -= 0.25f;
+                        break;
+                        case 5:
+                        Global.SimpleAbilityDamage.Value += 4;
+                        Global.SimpleAbilityDuration.Value -= 0.25f;
+                        break;
+                        case 6:
+                        Global.SimpleSwordRange.Value += 1;
+                        Global.SimpleAbilityDuration.Value -= 0.25f;
+                        break;
+                        case 7:
+                        Global.SimpleAbilityDamage.Value += 3;
+                        Global.SimpleSwordCount.Value += 2;
+                        break;
+                        case 8:
+                        Global.SimpleAbilityDamage.Value += 2;
+                        Global.SimpleSwordRange.Value += 1;
+                        break;
+                        case 9:
+                        Global.SimpleAbilityDamage.Value += 5;
+                        Global.SimpleAbilityDuration.Value -= 0.25f;
+                        break;
+                        case 10:
+                        Global.SimpleAbilityDamage.Value += 3;
+                        Global.SimpleSwordCount.Value += 2;
+                        break;
+                    }
+                })
+            );
+           
 
             
         }

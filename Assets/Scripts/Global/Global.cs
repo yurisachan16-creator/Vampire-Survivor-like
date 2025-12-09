@@ -19,8 +19,9 @@ namespace VampireSurvivorLike
         public static BindableProperty<int> Level = new BindableProperty<int>(1);
         public static BindableProperty<float> CurrentSeconds = new BindableProperty<float>(0);
         public static BindableProperty<float> SimpleAbilityDamage = new BindableProperty<float>(1); //简单攻击伤害
-        public static BindableProperty<float> SimpleAbilityDuration = new BindableProperty<float>(1);   //简单攻击间隔时间
-
+        public static BindableProperty<float> SimpleAbilityDuration = new BindableProperty<float>(1.5f);   //简单攻击间隔时间
+        public static BindableProperty<int> SimpleSwordCount = new BindableProperty<int>(Config.InitSimpleSwordCount);   //简单攻击数量
+        public static BindableProperty<float> SimpleSwordRange = new BindableProperty<float>(Config.InitSimpleSwordRange);
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
@@ -70,8 +71,10 @@ namespace VampireSurvivorLike
             Exp.Value = 0;
             Level.Value = 1;
             CurrentSeconds.Value = 0;
-            SimpleAbilityDamage.Value = 1;
-            SimpleAbilityDuration.Value = 1.5f;
+            SimpleAbilityDamage.Value = Config.InitSimpleSwordDamage;
+            SimpleAbilityDuration.Value = Config.InitSimpleSwordDuration;
+            SimpleSwordCount.Value = Config.InitSimpleSwordCount;
+            SimpleSwordRange.Value = Config.InitSimpleSwordRange;
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
         }
