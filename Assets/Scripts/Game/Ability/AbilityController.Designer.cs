@@ -1,4 +1,4 @@
-// Generate Id:6f6ed6b1-7591-4d8f-b903-f5fb675e83d3
+// Generate Id:aa51875b-b286-4baf-89d4-aa43048a4c13
 using UnityEngine;
 
 namespace VampireSurvivorLike
@@ -14,6 +14,8 @@ namespace VampireSurvivorLike
 		public VampireSurvivorLike.SimpleKnife SimpleKnife;
 		
 		public VampireSurvivorLike.BasketBallAbility BasketBallAbility;
+		
+		public VampireSurvivorLike.SuperBomb SuperBomb;
 		
 	}
 }

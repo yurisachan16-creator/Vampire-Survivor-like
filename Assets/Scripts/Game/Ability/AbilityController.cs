@@ -50,6 +50,14 @@ namespace VampireSurvivorLike
 			this.GetSystem<ExpUpgradeSystem>().Items.Where(item=>item.IsWeapon)
 			.ToList()
 			.GetRandomItem().Upgrade();
+
+            Global.SuperBomb.RegisterWithInitValue(unlocked =>
+            {
+                if (unlocked)
+                {
+                    SuperBomb.Show();
+                }
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
 		}
 
 		public IArchitecture GetArchitecture()

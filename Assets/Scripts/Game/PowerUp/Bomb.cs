@@ -6,17 +6,15 @@ namespace VampireSurvivorLike
 {
 	public partial class Bomb : GameplayObject
 	{
-		void OnTriggerEnter2D(Collider2D other)
+		public static void Execute()
         {
-            if (other.GetComponent<CollectableAera>())
-            {
-				//炸弹效果: 清除屏幕上所有敌人
+            //炸弹效果: 清除屏幕上所有敌人
 				foreach(var enemyObj in GameObject.FindGameObjectsWithTag("Enemy"))
 				{
 					var enemy=enemyObj.GetComponent<Enemy>();
 					if(enemy&&enemy.gameObject.activeSelf)
 					{
-						enemy.Hurt(enemy.Health);
+						DamageSystem.CalculateDamage(Global.BombDamage.Value,enemy);
 					}
 				}
 				//TODO：播放炸弹音效
@@ -25,6 +23,12 @@ namespace VampireSurvivorLike
 				UIGamePanel.FlashScreen.Trigger();
 				//屏幕震动
 				CameraController.ShakeCamera();
+        }
+		void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.GetComponent<CollectableAera>())
+            {
+				Execute();
 				
 				this.DestroyGameObjGracefully();
             }

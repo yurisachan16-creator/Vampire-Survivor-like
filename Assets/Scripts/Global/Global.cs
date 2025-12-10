@@ -54,6 +54,12 @@ namespace VampireSurvivorLike
 
         public static BindableProperty<float> CollectableAreaRadius = new BindableProperty<float>(Config.InitCollectableAreaRadius); //可收集物品范围半径
         public static BindableProperty<float> AdditionalExpPercent = new BindableProperty<float>(Config.InitAdditionalExpPercent); //额外经验值获取百分比
+
+        public static BindableProperty<bool> SuperKnife = new (false); //超级简单刀
+        public static BindableProperty<bool> SuperSword = new (false); //超级简单剑
+        public static BindableProperty<bool> SuperRotateSword = new (false); //超级旋转剑
+        public static BindableProperty<bool> SuperBasketBall = new (false); //超级篮球
+        public static BindableProperty<bool> SuperBomb = new (false); //超级炸弹
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
@@ -144,6 +150,12 @@ namespace VampireSurvivorLike
             CollectableAreaRadius.Value = Config.InitCollectableAreaRadius;
 
             AdditionalExpPercent.Value = Config.InitAdditionalExpPercent;
+
+            SuperKnife.Value = false;
+            SuperSword.Value = false;
+            SuperRotateSword.Value = false;
+            SuperBasketBall.Value = false;
+            SuperBomb.Value = false;
             
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();

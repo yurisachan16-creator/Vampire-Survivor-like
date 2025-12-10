@@ -8,6 +8,8 @@ namespace VampireSurvivorLike
 	public partial class RotateSword : ViewController
 	{
         private List<Collider2D> _mSwords = new List<Collider2D>();
+
+        
         void Start()
         {
             
@@ -25,7 +27,9 @@ namespace VampireSurvivorLike
                             {
                                 if(hurtBox.Owner.CompareTag("Enemy"))
                                 {
-                                    DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value,
+                                    var damageTimes=Global.SuperRotateSword.Value ? Random.Range(2,3+1) : 1;
+
+                                    DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value * damageTimes,
                                             hurtBox.Owner.GetComponent<Enemy>());
 
                                     //有50%的概率对敌人进行击退
@@ -89,10 +93,11 @@ namespace VampireSurvivorLike
 
         void Update()
         {
-            
-			var degree = Time.frameCount * Global.RotateSwordSpeed.Value;
+            var speed = Global.SuperRotateSword.Value 
+                ? Time.frameCount * 10 
+                :Global.RotateSwordSpeed.Value * Time.frameCount;
 
-            this.LocalEulerAnglesZ(-degree);
+            this.LocalEulerAnglesZ(-speed);
 			
         }
     }

@@ -9,6 +9,38 @@ namespace VampireSurvivorLike
         public static EasyEvent OnExpUpgradeSystemChanged = new EasyEvent();
         public List<ExpUpgradeItem> Items{get;} = new List<ExpUpgradeItem>();
 
+        public Dictionary<string,ExpUpgradeItem> Dictionary = new Dictionary<string, ExpUpgradeItem>();
+        public Dictionary<string,string> Pairs = new Dictionary<string, string>()
+        {
+            {"simple_sword","simple_critical"},
+            {"simple_bomb","simple_fly_count"},
+            {"simple_knife","damage_rate"},
+            {"basket_ball","movement_speed_rate"},
+            {"rotate_sword","simple_exp_percent"},
+
+            {"simple_critical","simple_sword"},
+            {"simple_fly_count","simple_bomb"},
+            {"damage_rate","simple_knife"},
+            {"movement_speed_rate","basket_ball"},
+            {"simple_exp_percent","rotate_sword"},
+        };
+
+        public Dictionary<string,BindableProperty<bool>> PairedProperties = 
+            new()
+            {
+                {"simple_sword",Global.SuperSword},
+                {"simple_bomb",Global.SuperBomb},
+                {"simple_knife",Global.SuperKnife},
+                {"basket_ball",Global.SuperBasketBall},
+                {"rotate_sword",Global.SuperRotateSword},
+
+                // {"simple_critical",Global.SuperSword},
+                // {"simple_fly_count",Global.SuperBomb},
+                // {"damage_rate",Global.SuperKnife},
+                // {"movement_speed_rate",Global.SuperBasketBall},
+                // {"simple_exp_percent",Global.SuperRotateSword},
+            };
+
         public ExpUpgradeItem Add(ExpUpgradeItem item)
         {
             Items.Add(item);
@@ -579,6 +611,8 @@ namespace VampireSurvivorLike
                             break;
                     }
                 }));
+
+            Dictionary = Items.ToDictionary(i=>i.Key);
             
         }
 

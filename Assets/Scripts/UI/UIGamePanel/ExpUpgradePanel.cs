@@ -31,7 +31,7 @@ namespace VampireSurvivorLike
 						//TODO:播放升级音效
 						AudioKit.PlaySound("Retro Event Acute 08");
 					});
-					var SelfCache=self;
+					var selfCache=self;
 					
 
                     itemCache.Visible.RegisterWithInitValue(visible =>
@@ -39,17 +39,35 @@ namespace VampireSurvivorLike
                         if(visible)
                         {
 							self.GetComponentInChildren<Text>().text = expUpgradeItem.Description;
-                            SelfCache.Show();
+                            selfCache.Show();
+							if(expUpgradeSystem.Pairs.TryGetValue(itemCache.Key,out var pairedName))
+							{
+								var pairedItem = expUpgradeSystem.Dictionary[pairedName];
+								if(pairedItem.CurrentLevel.Value > 0 && itemCache.CurrentLevel.Value == 0)
+								{
+									var pairedNameText = selfCache.transform.Find("PairedName");
+									pairedNameText.GetComponent<Text>().text = "配对武器：" + pairedName;
+								}
+								else
+								{
+									selfCache.transform.Find("PairedName").Hide();
+								}
+								
+							}
+							else
+							{
+								selfCache.transform.Find("PairedName").Hide();
+							}
                         }
                         else
                         {
-                            SelfCache.Hide();
+                            selfCache.Hide();
                         }
-                    }).UnRegisterWhenGameObjectDestroyed(SelfCache);
+                    }).UnRegisterWhenGameObjectDestroyed(selfCache);
 
 					itemCache.CurrentLevel.Register((lv) =>
                     {
-                        SelfCache.GetComponentInChildren<Text>().text = expUpgradeItem.Description;
+                        selfCache.GetComponentInChildren<Text>().text = expUpgradeItem.Description;
                     }).UnRegisterWhenGameObjectDestroyed(gameObject);
                 });
             }

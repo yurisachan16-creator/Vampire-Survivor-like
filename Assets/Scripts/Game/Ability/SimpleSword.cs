@@ -8,6 +8,9 @@ namespace VampireSurvivorLike
 	public partial class SimpleSword : ViewController
 	{
 		private float _mCurrentSecond=0;
+
+		
+
 		void Start()
 		{
 			// Code Here
@@ -20,12 +23,17 @@ namespace VampireSurvivorLike
 			{
                 _mCurrentSecond = 0;
 
+				//计算数量和伤害倍数
+				var countTimes=Global.SuperSword.Value ? 2 : 1;
+				var damageTimes=Global.SuperSword.Value ? Random.Range(2,3+1) : 1;
+				var distanceTimes=Global.SuperSword.Value ? 2 : 1;
+
 				var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude,FindObjectsSortMode.None);
 
 				foreach(var enemy in enemies
 									.OrderBy(e=>e.Direction2DFrom(Player.Default).magnitude)
-									.Where(e=>e.Direction2DFrom(Player.Default).magnitude<=Global.SimpleSwordRange.Value)
-									.Take(Global.SimpleSwordCount.Value + Global.AdditionalFlyThingCount.Value))
+									.Where(e=>e.Direction2DFrom(Player.Default).magnitude<=Global.SimpleSwordRange.Value * distanceTimes)
+									.Take((Global.SimpleSwordCount.Value + Global.AdditionalFlyThingCount.Value) * countTimes))
 								
 				{
 					
@@ -48,7 +56,7 @@ namespace VampireSurvivorLike
 									if (hurtBox.Owner.CompareTag("Enemy"))
 									{
 										hasHit = true;
-										DamageSystem.CalculateDamage(Global.SimpleAbilityDamage.Value,
+										DamageSystem.CalculateDamage(Global.SimpleAbilityDamage.Value * damageTimes,
 												hurtBox.Owner.GetComponent<Enemy>());
 									}
 								}

@@ -11,6 +11,8 @@ namespace VampireSurvivorLike
 
 		private float _mCurrentSeconds = 0;
 
+		
+
         void Update()
         {
             _mCurrentSeconds += Time.deltaTime;
@@ -64,7 +66,8 @@ namespace VampireSurvivorLike
 									if(hurtBox.Owner.CompareTag("Enemy"))
 									{
 										//hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
-										DamageSystem.CalculateDamage(Global.SimpleKnifeDamage.Value,
+										var damageTimes=Global.SuperKnife.Value ? Random.Range(2,3+1) : 1;
+										DamageSystem.CalculateDamage(Global.SimpleKnifeDamage.Value * damageTimes,
 												hurtBox.Owner.GetComponent<Enemy>());
 										attackCount++;
 

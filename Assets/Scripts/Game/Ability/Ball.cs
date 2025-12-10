@@ -6,11 +6,21 @@ namespace VampireSurvivorLike
 {
 	public partial class Ball : ViewController
 	{
+		
 		void Start()
 		{
 			SelfRigidbody2D.velocity = 
 				new Vector2(Random.Range(-1.0f,1.0f),Random.Range(-1.0f,1.0f))*
 				Random.Range(Global.BasketBallSpeed.Value-2,Global.BasketBallSpeed.Value+2);
+
+			//如果是超级武器，篮球就放大
+			Global.SuperBasketBall.RegisterWithInitValue(unLocked=>
+			{
+				if(unLocked)
+				{
+					this.LocalScale(3);
+				}
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			HurtBox.OnTriggerEnter2DEvent(collider=>
 			{
@@ -20,7 +30,8 @@ namespace VampireSurvivorLike
 					if(hurtBox.Owner.CompareTag("Enemy"))
 					{
 						var enemy=hurtBox.Owner.GetComponent<IEnemy>();
-						DamageSystem.CalculateDamage(Global.BasketBallDamage.Value,enemy);
+						var damageTimes=Global.SuperBasketBall.Value ? Random.Range(2,3+1) : 1;
+						DamageSystem.CalculateDamage(Global.BasketBallDamage.Value * damageTimes,enemy);
 						
 
 						//有50%的概率对敌人进行击退
