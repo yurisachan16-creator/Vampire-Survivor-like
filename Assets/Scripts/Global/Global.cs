@@ -158,8 +158,16 @@ namespace VampireSurvivorLike
             return Global.Level.Value * 5;
         }
 
-        public static void GeneratePowerUp(GameObject gameObject)
+        public static void GeneratePowerUp(GameObject gameObject,bool genTreasureChest)
         {
+            if(genTreasureChest)
+            {
+                PowerUpManager.Default.TreasureChest
+                    .Instantiate()
+                    .Position(gameObject.Position())
+                    .Show();
+                return;
+            }
             //根据概率生成经验值和金币
             var percent=Random.Range(0, 1f);
 

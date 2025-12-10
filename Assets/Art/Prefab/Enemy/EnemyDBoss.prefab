@@ -252,6 +252,7 @@ MonoBehaviour:
   MovementSpeed: 1.5
   Health: 250
   DissolveColor: {r: 0.9490196, g: 1, b: 0, a: 1}
+  TreasureChestEnemy: 1
 --- !u!50 &5811873523621573606
 Rigidbody2D:
   serializedVersion: 4

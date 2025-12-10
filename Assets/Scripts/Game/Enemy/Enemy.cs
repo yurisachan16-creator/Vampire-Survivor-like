@@ -12,6 +12,7 @@ namespace VampireSurvivorLike
 
 		public float Health = 3f;
         public Color DissolveColor = Color.yellow;
+        public bool TreasureChestEnemy = false;
 		void Start()
 		{
 			EnemyGenerator.EnemyCount.Value++;
@@ -23,8 +24,8 @@ namespace VampireSurvivorLike
 
             if (Health <= 0)
             {
-				//掉落经验值
-				Global.GeneratePowerUp(gameObject);
+				//掉落道具
+				Global.GeneratePowerUp(gameObject, TreasureChestEnemy);
                 AudioKit.PlaySound(Sfx.ENEMYDIE);
 				FxController.Play(Sprite, DissolveColor);
                 this.DestroyGameObjGracefully();

@@ -10,6 +10,7 @@ namespace VampireSurvivorLike
 	public partial class UIGamePanel : UIPanel
 	{
 		public static EasyEvent FlashScreen = new EasyEvent(); //屏幕闪烁事件
+		public static EasyEvent OpenTreasureChestPanel = new EasyEvent(); //打开宝箱面板事件
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
@@ -85,35 +86,6 @@ namespace VampireSurvivorLike
 				.Start(this);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			// // 初始化时隐藏升级界面
-			// UpgradeRoot.Hide();
-
-			// //简单攻击伤害升级按钮点击事件
-			// BtnUpgrade.onClick.AddListener(()=>
-			// {
-			// 	//恢复游戏
-			// 	Time.timeScale = 1f;
-			// 	//提升简单攻击伤害
-			// 	Global.SimpleAbilityDamage.Value *= 1.5f;
-			// 	//隐藏升级按钮
-			// 	UpgradeRoot.Hide();
-			// 	//TODO:播放升级音效
-			// 	AudioKit.PlaySound("");
-			// });
-
-			// //简单攻击间隔时间升级按钮点击事件
-			// BtnSimpleDurationUpgrade.onClick.AddListener(()=>
-			// {
-			// 	//恢复游戏
-			// 	Time.timeScale = 1f;
-			// 	//缩短简单攻击间隔时间
-			// 	Global.SimpleAbilityDuration.Value *= 0.8f;
-			// 	//隐藏升级按钮
-			// 	UpgradeRoot.Hide();
-			// 	//TODO:播放升级音效
-			// 	AudioKit.PlaySound("");
-			// });
-
 			var enemyGenerator=FindObjectOfType<EnemyGenerator>();
 			///游戏时间流逝处理
 			ActionKit.OnUpdate.Register(()=>
@@ -139,6 +111,12 @@ namespace VampireSurvivorLike
 
 				CoinText.text = "金币:" + coin;
 
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			OpenTreasureChestPanel.Register(()=>
+			{
+				Time.timeScale = 0f;
+				TreasureChestPanel.Show();
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 		}
 		

@@ -115,7 +115,7 @@ namespace VampireSurvivorLike
             if (Health <= 0)
             {
 				//生成掉落物
-				Global.GeneratePowerUp(gameObject);
+				Global.GeneratePowerUp(gameObject, true);
 
 				
                 this.DestroyGameObjGracefully();
