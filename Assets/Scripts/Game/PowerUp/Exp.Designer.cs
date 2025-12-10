@@ -1,9 +1,9 @@
-// Generate Id:8fc9bf6c-18bc-463f-9c68-56353b28d95b
+// Generate Id:245ba1cd-7c2e-42f8-9b8e-41e1fa7c637c
 using UnityEngine;
 
 namespace VampireSurvivorLike
 {
-	public partial class Bomb
+	public partial class Exp
 	{
 		public UnityEngine.CircleCollider2D SelfCircleCollider2D;
 		

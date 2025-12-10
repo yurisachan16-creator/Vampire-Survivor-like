@@ -22,7 +22,7 @@ namespace VampireSurvivorLike
 
 				var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude,FindObjectsSortMode.None)
 								.OrderBy(enemy=>Player.Default.Distance2D(enemy))
-									.Take(Global.SimpleKnifeCount.Value);
+									.Take(Global.SimpleKnifeCount.Value + Global.AdditionalFlyThingCount.Value);
 
 				
 				var i = 0;

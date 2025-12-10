@@ -3,7 +3,7 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	public partial class RecoverHP : ViewController
+	public partial class RecoverHP : GameplayObject
 	{
 		void OnTriggerEnter2D(Collider2D other)
         {
@@ -21,5 +21,7 @@ namespace VampireSurvivorLike
                 }
             }
         }
+
+        protected override Collider2D Collider2D => SelfCircleCollider2D;
 	}
 }

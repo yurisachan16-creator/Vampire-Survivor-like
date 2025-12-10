@@ -18,24 +18,9 @@ MonoBehaviour:
     GameObject: {fileID: 0}
     From: 0
     NameToFullName: []
-    BindInfos:
-    - TypeName: VampireSurvivorLike.SimpleSword
-      PathToRoot: SimpleSword
-      MemberName: SimpleSword
-    - TypeName: VampireSurvivorLike.RotateSword
-      PathToRoot: RotateSword
-      MemberName: RotateSword
-    - TypeName: VampireSurvivorLike.SimpleAxe
-      PathToRoot: SimpleAxe
-      MemberName: SimpleAxe
-    - TypeName: VampireSurvivorLike.SimpleKnife
-      PathToRoot: SimpleKnife
-      MemberName: SimpleKnife
-    - TypeName: VampireSurvivorLike.BasketBallAbility
-      PathToRoot: BasketBallAbility
-      MemberName: BasketBallAbility
-    ScriptsFolder: Assets/Scripts/Game/Ability
-    ClassName: AbilityController
+    BindInfos: []
+    ScriptsFolder: Assets/Scripts/Game/PowerUp
+    ClassName: GetAllExp
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

@@ -25,7 +25,7 @@ namespace VampireSurvivorLike
 				foreach(var enemy in enemies
 									.OrderBy(e=>e.Direction2DFrom(Player.Default).magnitude)
 									.Where(e=>e.Direction2DFrom(Player.Default).magnitude<=Global.SimpleSwordRange.Value)
-									.Take(Global.SimpleSwordCount.Value))
+									.Take(Global.SimpleSwordCount.Value + Global.AdditionalFlyThingCount.Value))
 								
 				{
 					

@@ -24,6 +24,13 @@ namespace VampireSurvivorLike
         public const float InitBombDamage=10f;
         public const float InitBombPercent=0.05f;
 
-        public const float InitCriticalRate=0.05f;
+        public const float InitCriticalRate=0.05f;  //暴击率
+
+        public const float InitDamageRate=1.0f; //伤害倍率
+
+        public const float InitMovementSpeedRate=1.0f;  //移动速度倍率
+
+        public const float InitCollectableAreaRadius=1f;    //可收集物品范围半径
+        public const float InitAdditionalExpPercent=0f; //额外经验值获取百分比
     }
 }

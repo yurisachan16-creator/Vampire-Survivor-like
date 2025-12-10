@@ -3,8 +3,9 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	public partial class Exp : ViewController
+	public partial class Exp : GameplayObject
 	{
+        
         void OnTriggerEnter2D(Collider2D other)
         {
             if (other.GetComponent<CollectableAera>())
@@ -14,5 +15,7 @@ namespace VampireSurvivorLike
 				this.DestroyGameObjGracefully();
             }
         }
+
+        protected override Collider2D Collider2D => SelfCircleCollider2D;
     }
 }

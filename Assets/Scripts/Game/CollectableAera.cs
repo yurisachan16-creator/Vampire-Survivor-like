@@ -7,7 +7,11 @@ namespace VampireSurvivorLike
 	{
 		void Start()
 		{
-			// Code Here
+			Global.CollectableAreaRadius.Register(range =>
+			{
+				GetComponent<CircleCollider2D>().radius = range;
+
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 		}
 	}
 }

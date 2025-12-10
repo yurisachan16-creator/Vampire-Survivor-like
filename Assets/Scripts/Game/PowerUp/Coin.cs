@@ -3,7 +3,7 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	public partial class Coin : ViewController
+	public partial class Coin : GameplayObject
 	{
 		void OnTriggerEnter2D(Collider2D other)
         {
@@ -14,5 +14,7 @@ namespace VampireSurvivorLike
 				this.DestroyGameObjGracefully();
             }
         }
+
+        protected override Collider2D Collider2D => SelfCircleCollider2D;
 	}
 }

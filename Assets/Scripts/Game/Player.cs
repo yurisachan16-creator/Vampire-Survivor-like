@@ -72,7 +72,8 @@ namespace VampireSurvivorLike
         {
             var horizontal = Input.GetAxisRaw("Horizontal");
 			var vertical = Input.GetAxisRaw("Vertical");
-			var targetVelocity = new Vector2(horizontal, vertical).normalized * MoveSpeed;
+			var targetVelocity = new Vector2(horizontal, vertical).normalized * MoveSpeed
+												* Global.MovementSpeedRate.Value;
 
 			SelfRigidbody2D.velocity = Vector2.Lerp(SelfRigidbody2D.velocity, targetVelocity, 1-Mathf.Exp(-10f * Time.deltaTime));
         }

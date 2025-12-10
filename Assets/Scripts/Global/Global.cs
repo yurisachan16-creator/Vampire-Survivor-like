@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using QFramework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace VampireSurvivorLike
@@ -47,6 +48,12 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> BombPercent = new BindableProperty<float>(Config.InitBombPercent);
 
         public static BindableProperty<float> CriticalRate = new BindableProperty<float>(Config.InitCriticalRate); //暴击率
+        public static BindableProperty<float> DamageRate = new BindableProperty<float>(Config.InitDamageRate); //伤害倍率
+        public static BindableProperty<int> AdditionalFlyThingCount = new BindableProperty<int>(0); //额外飞行物数量
+        public static BindableProperty<float> MovementSpeedRate = new BindableProperty<float>(Config.InitMovementSpeedRate); //移动速度倍率
+
+        public static BindableProperty<float> CollectableAreaRadius = new BindableProperty<float>(Config.InitCollectableAreaRadius); //可收集物品范围半径
+        public static BindableProperty<float> AdditionalExpPercent = new BindableProperty<float>(Config.InitAdditionalExpPercent); //额外经验值获取百分比
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
@@ -127,6 +134,16 @@ namespace VampireSurvivorLike
             BombPercent.Value = Config.InitBombPercent;
 
             CriticalRate.Value = Config.InitCriticalRate;
+
+            DamageRate.Value = Config.InitDamageRate;
+
+            MovementSpeedRate.Value = Config.InitMovementSpeedRate;
+
+            AdditionalFlyThingCount.Value = 0;
+
+            CollectableAreaRadius.Value = Config.InitCollectableAreaRadius;
+
+            AdditionalExpPercent.Value = Config.InitAdditionalExpPercent;
             
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
@@ -146,7 +163,7 @@ namespace VampireSurvivorLike
             //根据概率生成经验值和金币
             var percent=Random.Range(0, 1f);
 
-            if (percent < ExpPercent.Value)
+            if (percent < ExpPercent.Value + AdditionalExpPercent.Value)
             {
                 //生成经验值
                 PowerUpManager.Default.Exp.Instantiate()

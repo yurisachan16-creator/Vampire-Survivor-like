@@ -6,6 +6,9 @@ namespace VampireSurvivorLike
     {
         public static void CalculateDamage(float baseDamage,IEnemy enemy,int maxNormalDamage=2,float criticalDamageTimes = 5)
         {
+
+            baseDamage *= Global.DamageRate.Value; //应用伤害倍率
+            
             if (UnityEngine.Random.Range(0, 1.0f) < Global.CriticalRate.Value)
             {
                 //暴击

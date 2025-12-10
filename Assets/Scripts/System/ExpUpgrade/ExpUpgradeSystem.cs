@@ -403,6 +403,182 @@ namespace VampireSurvivorLike
                             break;
                     }
                 }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("damage_rate")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"伤害倍率Lv{lv}:\n伤害提升15%",
+                        2=>$"伤害倍率Lv{lv}:\n伤害提升28%",
+                        3=>$"伤害倍率Lv{lv}:\n伤害提升40%",
+                        4=>$"伤害倍率Lv{lv}:\n伤害提升52%",
+                        5=>$"伤害倍率Lv{lv}:\n伤害提升65%",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(5)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.DamageRate.Value += 0.15f;
+                            break;
+                        case 2:
+                            Global.DamageRate.Value += 0.13f;
+                            break;
+                        case 3:
+                            Global.DamageRate.Value += 0.12f;
+                            break;
+                        case 4:
+                            Global.DamageRate.Value += 0.12f;
+                            break;
+                        case 5:
+                            Global.DamageRate.Value += 0.13f;
+                            break;
+                    }
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("simple_fly_count")
+                .WithMaxLevel(3)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"伤害倍率Lv{lv}:\n额外增加1个飞行物",
+                        2=>$"伤害倍率Lv{lv}:\n额外增加2个飞行物",
+                        3=>$"伤害倍率Lv{lv}:\n额外增加3个飞行物",
+                        
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(3)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.AdditionalFlyThingCount.Value += 1;
+                            break;
+                        case 2:
+                            Global.AdditionalFlyThingCount.Value += 1;
+                            break;
+                        case 3:
+                            Global.AdditionalFlyThingCount.Value += 1;
+                            break;
+                    }
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("movement_speed_rate")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"移动速度Lv{lv}:\n增加25%移动速度",
+                        2=>$"移动速度Lv{lv}:\n增加50%移动速度",
+                        3=>$"移动速度Lv{lv}:\n增加75%移动速度",
+                        4=>$"移动速度Lv{lv}:\n增加100%移动速度",
+                        5=>$"移动速度Lv{lv}:\n增加125%移动速度",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(5)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.MovementSpeedRate.Value += 0.25f;
+                            break;
+                        case 2:
+                            Global.MovementSpeedRate.Value += 0.25f;
+                            break;
+                        case 3:
+                            Global.MovementSpeedRate.Value += 0.25f;
+                            break;
+                        case 4:
+                            Global.MovementSpeedRate.Value += 0.25f;
+                            break;
+                        case 5:
+                            Global.MovementSpeedRate.Value += 0.25f;
+                            break;
+                    }
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("simple_exp_percent")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"经验值Lv{lv}:\n额外增加5%概率掉落",
+                        2=>$"经验值Lv{lv}:\n额外增加10%概率掉落",
+                        3=>$"经验值Lv{lv}:\n额外增加15%概率掉落",
+                        4=>$"经验值Lv{lv}:\n额外增加20%概率掉落",
+                        5=>$"经验值Lv{lv}:\n额外增加25%概率掉落",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(5)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.AdditionalExpPercent.Value += 0.05f;
+                            break;
+                        case 2:
+                            Global.AdditionalExpPercent.Value += 0.05f;
+                            break;
+                        case 3:
+                            Global.AdditionalExpPercent.Value += 0.05f;
+                            break;
+                        case 4:
+                            Global.AdditionalExpPercent.Value += 0.05f;
+                            break;
+                        case 5:
+                            Global.AdditionalExpPercent.Value += 0.05f;
+                            break;
+                        
+                    }
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("simple_collectable_area_radius")
+                .WithMaxLevel(3)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"拾取范围半径Lv{lv}:\n增加100%可收集物品范围半径",
+                        2=>$"拾取范围半径Lv{lv}:\n增加200%可收集物品范围半径",
+                        3=>$"拾取范围半径Lv{lv}:\n增加300%可收集物品范围半径",
+                        _=>null
+                    };
+                })
+                .WithMaxLevel(3)
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.CollectableAreaRadius.Value += 1.0f;
+                            break;
+                        case 2:
+                            Global.CollectableAreaRadius.Value += 1.0f;
+                            break;
+                        case 3:
+                            Global.CollectableAreaRadius.Value += 1.0f;
+                            break;
+                    }
+                }));
             
         }
 

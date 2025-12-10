@@ -13,13 +13,9 @@ namespace VampireSurvivorLike
             
             Sword.Hide();
 
-            Global.RotateSwordCount.RegisterWithInitValue(count =>
+            void CreateSword()
             {
-                var toAddCount = count - _mSwords.Count;
-
-                for(var i = 0; i < toAddCount; i++)
-                {
-                    _mSwords.Add(Sword.InstantiateWithParent(this)
+                _mSwords.Add(Sword.InstantiateWithParent(this)
                     .Self(self =>
                     {
                         self.OnTriggerEnter2DEvent(collider=>
@@ -46,10 +42,24 @@ namespace VampireSurvivorLike
 
                     })
                     .Show());
+            }
+
+            void CreateSwords()
+            {
+                var toAddCount = Global.RotateSwordCount.Value + Global.AdditionalFlyThingCount.Value - _mSwords.Count;
+
+                for(var i = 0; i < toAddCount; i++)
+                {
+                    CreateSword();
                                 
                 }
                 
                 UpdateCirclePos();
+            }
+
+            Global.RotateSwordCount.Or(Global.AdditionalFlyThingCount).Register(() =>
+            {
+                CreateSwords();
 
             }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -58,7 +68,7 @@ namespace VampireSurvivorLike
                 UpdateCirclePos();
             }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-            
+            CreateSwords();
         }
 
         void UpdateCirclePos()

@@ -4,7 +4,7 @@ using System.Data;
 
 namespace VampireSurvivorLike
 {
-	public partial class Bomb : ViewController
+	public partial class Bomb : GameplayObject
 	{
 		void OnTriggerEnter2D(Collider2D other)
         {
@@ -29,5 +29,7 @@ namespace VampireSurvivorLike
 				this.DestroyGameObjGracefully();
             }
         }
+
+		protected override Collider2D Collider2D => SelfCircleCollider2D;
 	}
 }
