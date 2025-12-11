@@ -613,6 +613,7 @@ GameObject:
   - component: {fileID: 519420035}
   - component: {fileID: 519420037}
   - component: {fileID: 519420036}
+  - component: {fileID: 519420038}
   m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -894,10 +895,10 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -918,6 +919,23 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &519420038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 8a4c700548a9a294cacbd48f99d08d2a, type: 2}
 --- !u!1 &540318184
 GameObject:
   m_ObjectHideFlags: 0
@@ -8963,7 +8981,7 @@ SpriteRenderer:
   m_SortingLayerID: 150941297
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1905882581, guid: 6c013a66dd79f9c4f9b15363acbe253e, type: 3}
+  m_Sprite: {fileID: 597563779, guid: 9b2650dea59279e499b5a18424a3b523, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8989,7 +9007,7 @@ MonoBehaviour:
   MarkType: 0
   CustomComponentName: Sprite
   CustomComment: 
-  mComponentName: SpriteRenderer
+  mComponentName: UnityEngine.Animator
 --- !u!4 &1141027195
 Transform:
   m_ObjectHideFlags: 0
@@ -11663,7 +11681,7 @@ MonoBehaviour:
   ArchitectureFullTypeName: 
   ViewControllerFullTypeName: 
   MoveSpeed: 5
-  Sprite: {fileID: 1141027193}
+  Sprite: {fileID: 1141027196}
   HurtBox: {fileID: 461601631}
   HPValue: {fileID: 387835361}
   SelfRigidbody2D: {fileID: 2038233918}

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
+using UnityEngine.U2D;
 
 namespace VampireSurvivorLike
 {
@@ -14,6 +15,9 @@ namespace VampireSurvivorLike
 	{
 		private void Awake()
         {
+			ResLoader loader = ResLoader.Allocate();
+			var iconAtlas = loader.LoadSync<SpriteAtlas>("icon");
+			var simpleKnifeIcon = iconAtlas.GetSprite("simple_knife_icon");
             var expUpgradeSystem = this.GetSystem<ExpUpgradeSystem>();
 
 			foreach(var expUpgradeItem in expUpgradeSystem.Items)
@@ -22,6 +26,8 @@ namespace VampireSurvivorLike
                 .Self(self =>
                 {
 					var itemCache = expUpgradeItem;
+					//动态加载图标
+					self.transform.Find("Icon").GetComponent<Image>().sprite = simpleKnifeIcon;
 					self.onClick.AddListener(() =>
 					{
 						//恢复游戏
