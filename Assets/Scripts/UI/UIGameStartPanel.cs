@@ -25,6 +25,12 @@ namespace VampireSurvivorLike
 				SceneManager.LoadScene("Game");
 
 			});
+
+			BtnCoinUpgrade.onClick.AddListener(() =>
+			{
+				//打开金币升级面板
+				CoinUpgradePanel.Show();
+			});
 			
 			
 

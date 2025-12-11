@@ -63,6 +63,11 @@ namespace VampireSurvivorLike
             Add(new ExpUpgradeItem(true)
                 .WithKey("simple_sword")
                 .WithMaxLevel(10)
+                .WithName("剑")
+                .WithIconName("simple_sword_icon")
+                .WithPairedName("合成后的剑")
+                .WithPairedIconName("paired_simple_sword_icon")
+                .WithPairedDescription("攻击力翻倍 攻击距离翻倍")
                 .WithDescription(lv =>
                 {
                     return lv switch
@@ -132,6 +137,11 @@ namespace VampireSurvivorLike
             Add(new ExpUpgradeItem(true)
                 .WithKey("rotate_sword")
                 .WithMaxLevel(10)
+                .WithName("守卫剑")
+                .WithIconName("rotate_sword_icon")
+                .WithPairedName("合成后的守卫剑")
+                .WithPairedIconName("paired_rotate_sword_icon")
+                .WithPairedDescription("攻击力翻倍 旋转速度翻倍")
                 .WithDescription(lv =>
                 {
                     return lv switch
@@ -205,6 +215,12 @@ namespace VampireSurvivorLike
 
             Add(new ExpUpgradeItem(false)
                 .WithKey("simple_bomb")
+                .WithName("炸弹")
+                .WithIconName("bomb_icon")
+                .WithPairedName("合成后的炸弹")
+                .WithPairedIconName("paired_bomb_icon")
+                .WithPairedDescription("每隔15秒爆炸一次")
+                .WithMaxLevel(10)
                 .WithDescription(lv =>
                 {
                     return lv switch
@@ -272,6 +288,12 @@ namespace VampireSurvivorLike
            
             Add(new ExpUpgradeItem(true)
                 .WithKey("simple_knife")
+                .WithName("飞刀")
+                .WithIconName("simple_knife_icon")
+                .WithPairedName("合成后的飞刀")
+                .WithPairedIconName("paired_simple_knife_icon")
+                .WithPairedDescription("攻击力翻倍")
+                .WithMaxLevel(10)
                 .WithDescription(lv =>
                 {
                     return lv switch
@@ -342,6 +364,12 @@ namespace VampireSurvivorLike
 
                 Add(new ExpUpgradeItem(true)
                 .WithKey("baket_ball")
+                .WithName("篮球")
+                .WithIconName("ball_icon")
+                .WithPairedName("合成后的篮球")
+                .WithPairedIconName("paired_ball_icon")
+                .WithPairedDescription("攻击力翻倍 体型变大")
+                .WithMaxLevel(10)
                 .WithDescription(lv =>
                 {
                     return lv switch
@@ -400,6 +428,8 @@ namespace VampireSurvivorLike
 
                 Add(new ExpUpgradeItem(false)
                 .WithKey("simple_critical")
+                .WithName("暴击")
+                .WithIconName("critical_icon")
                 .WithMaxLevel(5)
                 .WithDescription(lv =>
                 {
@@ -438,6 +468,8 @@ namespace VampireSurvivorLike
 
                 Add(new ExpUpgradeItem(false)
                 .WithKey("damage_rate")
+                .WithName("伤害倍率")
+                .WithIconName("damage_icon")
                 .WithMaxLevel(5)
                 .WithDescription(lv =>
                 {
@@ -476,6 +508,8 @@ namespace VampireSurvivorLike
 
                 Add(new ExpUpgradeItem(false)
                 .WithKey("simple_fly_count")
+                .WithName("飞射物")
+                .WithIconName("fly_icon")
                 .WithMaxLevel(3)
                 .WithDescription(lv =>
                 {
@@ -507,6 +541,8 @@ namespace VampireSurvivorLike
 
                 Add(new ExpUpgradeItem(false)
                 .WithKey("movement_speed_rate")
+                .WithName("移动速度")
+                .WithIconName("movement_icon")
                 .WithMaxLevel(5)
                 .WithDescription(lv =>
                 {
@@ -545,6 +581,8 @@ namespace VampireSurvivorLike
 
                 Add(new ExpUpgradeItem(false)
                 .WithKey("simple_exp_percent")
+                .WithName("经验值")
+                .WithIconName("exp_icon")
                 .WithMaxLevel(5)
                 .WithDescription(lv =>
                 {
@@ -584,6 +622,8 @@ namespace VampireSurvivorLike
 
                 Add(new ExpUpgradeItem(false)
                 .WithKey("simple_collectable_area_radius")
+                .WithName("拾取范围半径")
+                .WithIconName("collectable_icon")
                 .WithMaxLevel(3)
                 .WithDescription(lv =>
                 {

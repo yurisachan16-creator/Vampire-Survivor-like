@@ -32,6 +32,10 @@ namespace VampireSurvivorLike
 
 			BtnBackToStart.onClick.AddListener(() =>
 			{
+				//恢复时间缩放
+				Time.timeScale = 1f;
+				//重置游戏数据（保留金币）
+				Global.ResetData();
 				this.CloseSelf();
 				SceneManager.LoadScene("GameStart");
 			});

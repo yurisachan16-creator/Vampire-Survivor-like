@@ -12,9 +12,11 @@ namespace VampireSurvivorLike
         public bool IsWeapon = false;   //是否是武器
         public bool UpgradeFinish{get;set;}=false;
         public string Key { get; private set; } //新增Key属性
+        public string Name {get; private set;}
         public string Description => _mDescriptionFactory(CurrentLevel.Value + 1); 
 
-        public int MaxLevel { get; private set; } = 1; //新增最大等级属性
+        public int MaxLevel { get; private set; } //新增最大等级属性
+        public string IconName { get;private set; } //图标名称
         public BindableProperty<int> CurrentLevel = new BindableProperty<int>(0);
         public BindableProperty<bool> Visible { get; } = new BindableProperty<bool>();
         private Func<int,string> _mDescriptionFactory;
@@ -40,6 +42,40 @@ namespace VampireSurvivorLike
         public ExpUpgradeItem WithKey(string key)
         {
             Key = key;
+            return this;
+        }
+
+        public ExpUpgradeItem WithName(string name)
+        {
+            Name = name;
+            return this;
+        }
+
+        public ExpUpgradeItem WithIconName(string iconName)
+        {
+            IconName = iconName;
+            return this;
+        }
+
+        public string PairedName{get; private set;}
+        public string PairedDescription{get; private set;}
+        public string PairedIconName{get; private set;}
+
+        public ExpUpgradeItem WithPairedName(string pairedName)
+        {
+            PairedName = pairedName;
+            return this;
+        }
+
+        public ExpUpgradeItem WithPairedDescription(string pairedDescription)
+        {
+            PairedDescription = pairedDescription;
+            return this;
+        }
+
+        public ExpUpgradeItem WithPairedIconName(string pairedIconName)
+        {
+            PairedIconName = pairedIconName;
             return this;
         }
 

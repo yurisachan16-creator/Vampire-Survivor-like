@@ -1,0 +1,129 @@
+/****************************************************************************
+ * 2025.12 DESKTOP-JJUC8BO
+ ****************************************************************************/
+
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using QFramework;
+
+namespace VampireSurvivorLike
+{
+	public partial class UnlockedIconPanel : UIElement,IController
+	{
+		private Dictionary<string,System.Tuple<ExpUpgradeItem,Image>> _mUnlockedKeys =
+			new Dictionary<string, System.Tuple<ExpUpgradeItem, Image>>();
+
+		ResLoader _mResLoader = ResLoader.Allocate();
+		private void Awake()
+        {
+            UnlockedIconPrefab.Hide();
+
+			var iconAtlas = _mResLoader.LoadSync<UnityEngine.U2D.SpriteAtlas>("icon");
+
+			foreach(var expUpgradeItem in this.GetSystem<ExpUpgradeSystem>().Items)
+            {
+                var cachedItem = expUpgradeItem;
+				//监听当前等级变化
+                expUpgradeItem.CurrentLevel.RegisterWithInitValue(level=>
+				{
+                    if(level > 0)
+                    {
+                        if(_mUnlockedKeys.ContainsKey(cachedItem.Key))
+                        {
+                            
+                        }
+                        else
+                        {
+                            UnlockedIconPrefab.InstantiateWithParent(UnlockedIconRoot)
+							.Self(self =>
+                            {
+                                self.sprite = iconAtlas.GetSprite(cachedItem.IconName);
+								_mUnlockedKeys.Add(cachedItem.Key,
+									new System.Tuple<ExpUpgradeItem, Image>(cachedItem,self));
+                            })
+							.Show();
+                        }
+                    }
+                }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+            }
+
+            Global.SuperKnife.Register(unlocked =>
+            {
+                if(unlocked)
+				{
+                    if (_mUnlockedKeys.ContainsKey("simple_knife"))
+                    {
+                        var item = _mUnlockedKeys["simple_knife"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						_mUnlockedKeys["simple_knife"].Item2.sprite = sprite;
+					}
+				}	
+            }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
+			Global.SuperRotateSword.Register(unlocked =>
+            {
+                if(unlocked)
+				{
+                    if (_mUnlockedKeys.ContainsKey("rotate_sword"))
+					{
+						var item = _mUnlockedKeys["rotate_sword"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						_mUnlockedKeys["rotate_sword"].Item2.sprite = sprite;
+					}
+				}	
+            }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
+			Global.SuperBasketBall.Register(unlocked =>
+            {
+                if(unlocked)
+				{
+                    if (_mUnlockedKeys.ContainsKey("basket_ball"))
+                    {
+                        var item = _mUnlockedKeys["basket_ball"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						_mUnlockedKeys["basket_ball"].Item2.sprite = sprite;
+					}
+				}	
+            }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
+			Global.SuperBomb.Register(unlocked =>
+            {
+                if(unlocked)
+				{
+                    if (_mUnlockedKeys.ContainsKey("simple_bomb"))
+                    {
+                        var item = _mUnlockedKeys["simple_bomb"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						_mUnlockedKeys["simple_bomb"].Item2.sprite = sprite;
+					}
+				}	
+            }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
+			Global.SuperSword.Register(unlocked =>
+            {
+                if(unlocked)
+				{
+                    if (_mUnlockedKeys.ContainsKey("simple_sword"))
+                    {
+                        var item = _mUnlockedKeys["simple_sword"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						_mUnlockedKeys["simple_sword"].Item2.sprite = sprite;
+					}
+				}	
+            }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+        }
+
+		protected override void OnBeforeDestroy()
+        {
+            _mResLoader.Recycle2Cache();
+			_mResLoader = null;
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return Global.Interface;
+        }
+    }
+}

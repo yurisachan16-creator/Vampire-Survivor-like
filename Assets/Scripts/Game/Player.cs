@@ -36,9 +36,10 @@ namespace VampireSurvivorLike
 							AudioKit.PlaySound("Death");
 							//玩家死亡,销毁自己
 							this.DestroyGameObjGracefully();
-							//重置游戏数据
-							Global.ResetData();
-
+							//暂停游戏
+							Time.timeScale = 0f;
+							//关闭游戏面板
+							UIKit.ClosePanel<UIGamePanel>();
 							//显示游戏结束面板
 							UIKit.OpenPanel<UIGameOverPanel>();
 						}

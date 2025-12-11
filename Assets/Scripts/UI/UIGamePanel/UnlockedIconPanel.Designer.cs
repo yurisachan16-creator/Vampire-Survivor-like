@@ -8,22 +8,20 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	public partial class TreasureChestPanel
+	public partial class UnlockedIconPanel
 	{
-		[SerializeField] public UnityEngine.UI.Image Icon;
-		[SerializeField] public UnityEngine.UI.Button BtnSure;
-		[SerializeField] public UnityEngine.UI.Text Content;
+		[SerializeField] public UnityEngine.UI.Image UnlockedIconPrefab;
+		[SerializeField] public RectTransform UnlockedIconRoot;
 
 		public void Clear()
 		{
-			Icon = null;
-			BtnSure = null;
-			Content = null;
+			UnlockedIconPrefab = null;
+			UnlockedIconRoot = null;
 		}
 
 		public override string ComponentName
 		{
-			get { return "TreasureChestPanel";}
+			get { return "UnlockedIconPanel";}
 		}
 	}
 }

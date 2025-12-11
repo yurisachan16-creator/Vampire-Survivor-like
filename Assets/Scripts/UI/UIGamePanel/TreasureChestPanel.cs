@@ -8,11 +8,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 using System.Linq;
+using UnityEngine.U2D;
 
 namespace VampireSurvivorLike
 {
 	public partial class TreasureChestPanel : UIElement,IController
 	{
+        private ResLoader _mResLoader;
 		private void Awake()
         {
             BtnSure.onClick.AddListener(()=>
@@ -32,7 +34,7 @@ namespace VampireSurvivorLike
 
             var matchedPairedItems = expUpgradeSystem.Items.Where(item =>
             {
-                if (item.CurrentLevel.Value >= 7)
+                if (item.CurrentLevel.Value >= 7 && item.PairedName.IsNotNullAndEmpty())
                 {
                     var containsInPair = expUpgradeSystem.Pairs.ContainsKey(item.Key);
                     var pairedItemKey = expUpgradeSystem.Pairs[item.Key];
@@ -48,13 +50,17 @@ namespace VampireSurvivorLike
             if(matchedPairedItems.Any())
             {
                 var item = matchedPairedItems.ToList().GetRandomItem();
-                Content.text = "<b>" + "合成后的" + item.Key + "</b>\n";
+                Content.text = "<b>" + item.PairedName + "</b>\n" + item.PairedDescription;
 
                 //如果是超级武器，直接升级到满级
                 while(!item.UpgradeFinish)
                 {
                     item.Upgrade();
                 }
+
+                Icon.sprite = _mResLoader.LoadSync<SpriteAtlas>("icon")
+                    .GetSprite(item.PairedIconName);
+                Icon.Show();
 
                 expUpgradeSystem.PairedProperties[item.Key].Value = true;
             }
@@ -66,6 +72,11 @@ namespace VampireSurvivorLike
                 {
                     var item = upgradeItems.GetRandomItem();
                     Content.text = item.Description;
+
+                    Icon.sprite = _mResLoader.LoadSync<SpriteAtlas>("icon")
+                        .GetSprite(item.IconName);
+                     Icon.Show();
+
                     item.Upgrade();
                 }
                 else
@@ -77,6 +88,7 @@ namespace VampireSurvivorLike
                             Content.text = "恢复1点生命值";
                             AudioKit.PlaySound("Retro Event Acute 08");
                             Global.HP.Value += 1;
+                            Icon.Hide();
                             return;
                         }
                         
@@ -84,6 +96,7 @@ namespace VampireSurvivorLike
 
                     Content.text = "增加50点金币";
                     Global.Coin.Value += 50;
+                    Icon.Hide();
                 }
             }
 
@@ -93,8 +106,10 @@ namespace VampireSurvivorLike
         }
 
         protected override void OnBeforeDestroy()
-		{
-		}
+        {
+            _mResLoader.Recycle2Cache();
+            _mResLoader = null;
+        }
 
         public IArchitecture GetArchitecture()
         {

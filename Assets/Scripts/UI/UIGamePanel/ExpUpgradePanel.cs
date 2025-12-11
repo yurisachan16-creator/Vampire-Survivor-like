@@ -13,11 +13,12 @@ namespace VampireSurvivorLike
 {
 	public partial class ExpUpgradePanel : UIElement,IController
 	{
+		private ResLoader _mResLoader;
+
 		private void Awake()
         {
-			ResLoader loader = ResLoader.Allocate();
-			var iconAtlas = loader.LoadSync<SpriteAtlas>("icon");
-			var simpleKnifeIcon = iconAtlas.GetSprite("simple_knife_icon");
+			_mResLoader = ResLoader.Allocate();
+			var iconAtlas = _mResLoader.LoadSync<SpriteAtlas>("icon");
             var expUpgradeSystem = this.GetSystem<ExpUpgradeSystem>();
 
 			foreach(var expUpgradeItem in expUpgradeSystem.Items)
@@ -27,7 +28,9 @@ namespace VampireSurvivorLike
                 {
 					var itemCache = expUpgradeItem;
 					//动态加载图标
-					self.transform.Find("Icon").GetComponent<Image>().sprite = simpleKnifeIcon;
+					self.transform.Find("Icon").GetComponent<Image>().sprite = 
+						iconAtlas.GetSprite(expUpgradeItem.IconName);
+
 					self.onClick.AddListener(() =>
 					{
 						//恢复游戏
@@ -46,23 +49,27 @@ namespace VampireSurvivorLike
                         {
 							self.GetComponentInChildren<Text>().text = expUpgradeItem.Description;
                             selfCache.Show();
+							var pairedUpgradeName = selfCache.transform.Find("PairedUpgradeName");
 							if(expUpgradeSystem.Pairs.TryGetValue(itemCache.Key,out var pairedName))
 							{
 								var pairedItem = expUpgradeSystem.Dictionary[pairedName];
 								if(pairedItem.CurrentLevel.Value > 0 && itemCache.CurrentLevel.Value == 0)
 								{
-									var pairedNameText = selfCache.transform.Find("PairedName");
-									pairedNameText.GetComponent<Text>().text = "配对武器：" + pairedName;
+									
+									pairedUpgradeName.GetComponent<Text>().text = "配对武器：" + pairedItem.Key;
+									pairedUpgradeName.Show();
+									pairedUpgradeName.Find("Icon").GetComponent<Image>().sprite = 
+										iconAtlas.GetSprite(pairedItem.IconName);
 								}
 								else
 								{
-									selfCache.transform.Find("PairedName").Hide();
+									pairedUpgradeName.Hide();
 								}
 								
 							}
 							else
 							{
-								selfCache.transform.Find("PairedName").Hide();
+								pairedUpgradeName.Hide();
 							}
                         }
                         else
@@ -96,6 +103,8 @@ namespace VampireSurvivorLike
 
 		protected override void OnBeforeDestroy()
 		{
+			_mResLoader.Recycle2Cache();
+			_mResLoader = null;
 		}
 
         public IArchitecture GetArchitecture()

@@ -27,7 +27,7 @@ namespace VampireSurvivorLike
 				CoinText.text = "金币:" + coin;
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items.Where(item=>!item.ConditionCheck()))
+			foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items.Where(item=>item.ConditionCheck()))
             {
                 CoinUpgradeItemPrefab.InstantiateWithParent(CoinUpgradeItemRoot)
                 .Self(self =>

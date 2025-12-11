@@ -11,11 +11,13 @@ namespace VampireSurvivorLike
 	public partial class ExpUpgradePanel
 	{
 		[SerializeField] public UnityEngine.UI.Button BtnExpUpgradeItemPrefab;
+		[SerializeField] public UnityEngine.UI.Image Icon;
 		[SerializeField] public RectTransform UpgradeRoot;
 
 		public void Clear()
 		{
 			BtnExpUpgradeItemPrefab = null;
+			Icon = null;
 			UpgradeRoot = null;
 		}
 

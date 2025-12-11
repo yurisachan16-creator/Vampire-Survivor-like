@@ -67,10 +67,11 @@ namespace VampireSurvivorLike
 			///经验值转等级处理
 			Global.Exp.RegisterWithInitValue((exp) =>
 			{
-                if (exp >= Global.ExpToNextLevel())
+                while (exp >= Global.ExpToNextLevel())
                 {
                     Global.Exp.Value -= Global.ExpToNextLevel();
 					Global.Level.Value += 1;
+					exp = Global.Exp.Value;
                 }
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
