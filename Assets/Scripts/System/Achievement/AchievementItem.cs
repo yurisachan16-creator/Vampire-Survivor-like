@@ -66,7 +66,7 @@ namespace VampireSurvivorLike
             Unlocked = true;
             Global.Interface.GetSystem<SaveSystem>().SaveBool($"achievement_first_{Key}",true);
             _mOnUnlocked?.Invoke(this);
-            AchievementSystem.OnAchivementUnlocked.Trigger(this);
+            AchievementSystem.OnAchievementUnlocked.Trigger(this);
         }
     }
 }

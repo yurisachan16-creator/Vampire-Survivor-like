@@ -93,7 +93,7 @@ namespace VampireSurvivorLike
                 .WithKey("first_time_paired_sword")
                 .WithName("合成后的剑")
                 .WithDescription("第一次解锁合成后的剑\n获得成就奖励1000金币")
-                .WithIconName("paired_sword_icon")
+                .WithIconName("paired_simple_sword_icon")
                 .Condition(()=>Global.SuperSword.Value)
                 .OnUnlocked(_=>{Global.Coin.Value += 1000;})
             .Load(saveSystem));
@@ -102,7 +102,7 @@ namespace VampireSurvivorLike
                 .WithKey("first_time_paired_knife")
                 .WithName("合成后的飞刀")
                 .WithDescription("第一次解锁合成后的飞刀\n获得成就奖励1000金币")
-                .WithIconName("paired_knife_icon")
+                .WithIconName("paired_simple_knife_icon")
                 .Condition(()=>Global.SuperKnife.Value)
                 .OnUnlocked(_=>{Global.Coin.Value += 1000;})
             .Load(saveSystem));
@@ -111,7 +111,7 @@ namespace VampireSurvivorLike
                 .WithKey("first_time_paired_circle")
                 .WithName("合成后的守卫剑")
                 .WithDescription("第一次解锁合成后的守卫剑\n获得成就奖励1000金币")
-                .WithIconName("paired_circle_icon")
+                .WithIconName("paired_rotate_sword_icon")
                 .Condition(()=>Global.SuperRotateSword.Value)
                 .OnUnlocked(_=>{Global.Coin.Value += 1000;})
             .Load(saveSystem));
@@ -142,7 +142,7 @@ namespace VampireSurvivorLike
 
         public List<AchievementItem> Items = new List<AchievementItem>();
 
-        public static EasyEvent<AchievementItem> OnAchivementUnlocked = new EasyEvent<AchievementItem>();
+        public static EasyEvent<AchievementItem> OnAchievementUnlocked = new EasyEvent<AchievementItem>();
         
     }
 }

@@ -5,7 +5,7 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	// Generate Id:ad032176-6eec-4ce8-bf14-9e75a5407c13
+	// Generate Id:09ff99ba-1f29-4a1d-ad67-91f9022720d3
 	public partial class UIGamePassPanel
 	{
 		public const string Name = "UIGamePassPanel";

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using QFramework;
 using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -32,6 +33,8 @@ namespace VampireSurvivorLike
 
 			BtnBackToStart.onClick.AddListener(() =>
 			{
+				//播放音效
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				//恢复时间缩放
 				Time.timeScale = 1f;
 				//重置游戏数据（保留金币）

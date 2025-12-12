@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 using UnityEngine.SceneManagement;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -33,6 +34,8 @@ namespace VampireSurvivorLike
 
 			BtnBackToStart.onClick.AddListener(() =>
             {
+				//播放音效
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
                 this.CloseSelf();
 				SceneManager.LoadScene("GameStart");
             });

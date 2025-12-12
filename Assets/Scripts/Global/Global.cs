@@ -6,8 +6,18 @@ using UnityEngine;
 
 namespace VampireSurvivorLike
 {
+
     public class Global : Architecture<Global>
     {
+        #if UNITY_EDITOR
+        [UnityEditor.MenuItem("Tool/Clear All Data")]
+        public static void ClearAllData()
+        {
+            PlayerPrefs.DeleteAll();
+            UnityEditor.EditorUtility.DisplayDialog("提示","已清除所有数据","确定");
+        }
+        #endif
+        
         #region Model
 
         public static BindableProperty<int> HP = new BindableProperty<int>(3);

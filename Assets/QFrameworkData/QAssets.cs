@@ -26,6 +26,11 @@ namespace QAssetBundle
         public const string BundleName = "hit_wav";
         public const string HIT = "Hit";
     }
+    public class Icon_spriteatlasv2
+    {
+        public const string BundleName = "icon_spriteatlasv2";
+        public const string ICON = "Icon";
+    }
     public class Music
     {
         public const string BundleName = "music";
@@ -33,18 +38,21 @@ namespace QAssetBundle
     public class Sfx
     {
         public const string BundleName = "sfx";
+        public const string ACHIEVEMENT = "Achievement";
         public const string BALL = "Ball";
         public const string BOMBEXPLOSION = "BombExplosion";
+        public const string BUTTONCLICK = "ButtonClick";
         public const string DEATH = "Death";
         public const string ENEMYDIE = "EnemyDie";
         public const string EXP = "Exp";
         public const string HEALTH = "Health";
+        public const string HOMEBG = "HomeBg";
         public const string KNIFE = "Knife";
         public const string LEVELUP = "LevelUp";
         public const string RETRO_EVENT_ACUTE_08 = "Retro Event Acute 08";
         public const string RETRO_EVENT_ACUTE_11 = "Retro Event Acute 11";
         public const string RETRO_EVENT_UI_01 = "Retro Event UI 01";
-        public const string TREASUER_CHEST = "treasuer_chest";
+        public const string TREASUER_CHEST = "Treasuer_chest";
         public const string WALK = "Walk";
     }
     public class Uigameoverpanel_prefab

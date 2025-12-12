@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 using System.Linq;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -81,6 +82,8 @@ namespace VampireSurvivorLike
 
 			BtnClose.onClick.AddListener(() =>
 			{
+				//播放音效
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				this.Hide();
 			});
         }

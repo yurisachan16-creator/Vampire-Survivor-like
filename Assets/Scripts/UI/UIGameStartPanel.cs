@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 using UnityEngine.SceneManagement;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -19,6 +20,8 @@ namespace VampireSurvivorLike
 
 			BtnStartGame.onClick.AddListener(() =>
 			{
+				//播放音效
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				//开始游戏
 				Global.ResetData();
 				this.CloseSelf();
@@ -28,8 +31,18 @@ namespace VampireSurvivorLike
 
 			BtnCoinUpgrade.onClick.AddListener(() =>
 			{
+				//播放音效
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				//打开金币升级面板
 				CoinUpgradePanel.Show();
+			});
+
+			BtnAchievement.onClick.AddListener(() =>
+			{
+				//播放音效
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
+				//打开成就面板
+				AchievementPanel.Show();
 			});
 			
 			
