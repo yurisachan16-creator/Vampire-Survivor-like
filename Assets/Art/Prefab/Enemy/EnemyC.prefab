@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 816984836524886211}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &6795851706388716928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,6 +441,7 @@ MonoBehaviour:
   MovementSpeed: 1.5
   Health: 25
   DissolveColor: {r: 0.6415094, g: 0.4695751, b: 0, a: 1}
+  TreasureChestEnemy: 0
 --- !u!50 &8401239692693988090
 Rigidbody2D:
   serializedVersion: 4

@@ -3,7 +3,7 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	public partial class RecoverHP : GameplayObject
+	public partial class RecoverHP : PowerUp
 	{
 		void OnTriggerEnter2D(Collider2D other)
         {
@@ -15,11 +15,16 @@ namespace VampireSurvivorLike
                 }
                 else
                 {
-                    AudioKit.PlaySound("Health");
-					Global.HP.Value += 1;
-					this.DestroyGameObjGracefully();
+                    FlyingToPalyer = true;
                 }
             }
+        }
+
+        protected override void Execute()
+        {
+            AudioKit.PlaySound("Health");
+            Global.HP.Value += 1;
+            this.DestroyGameObjGracefully();
         }
 
         protected override Collider2D Collider2D => SelfCircleCollider2D;
