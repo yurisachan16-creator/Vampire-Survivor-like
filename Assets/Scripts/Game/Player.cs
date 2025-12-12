@@ -33,12 +33,14 @@ namespace VampireSurvivorLike
 						if(Global.HP.Value<=0)
 						{
 							//播放死亡音效
-							AudioKit.PlaySound("Death");
-							//玩家死亡,销毁自己
-							this.DestroyGameObjGracefully();
-							//暂停游戏
-							Time.timeScale = 0f;
-							//关闭游戏面板
+							AudioKit.PlaySound(Sfx.DEATH);
+							//停止走路音效
+							if(_mWalkSfx != null)
+							{
+								_mWalkSfx.Stop();
+								_mWalkSfx = null;
+							}
+							
 							UIKit.ClosePanel<UIGamePanel>();
 							//显示游戏结束面板
 							UIKit.OpenPanel<UIGameOverPanel>();
@@ -83,11 +85,11 @@ namespace VampireSurvivorLike
             {
                 if (_mFaceRight)
                 {
-                    Sprite.Play("PLayerIdleRight");
+                    Sprite.Play("PlayerIdleRight");
                 }
                 else
                 {
-                    Sprite.Play("PLayerIdleLeft");
+                    Sprite.Play("PlayerIdleLeft");
                 }
 
 				//闲置音效

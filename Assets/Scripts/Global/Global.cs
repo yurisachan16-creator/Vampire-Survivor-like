@@ -17,7 +17,7 @@ namespace VampireSurvivorLike
             UnityEditor.EditorUtility.DisplayDialog("提示","已清除所有数据","确定");
         }
         #endif
-        
+
         #region Model
 
         public static BindableProperty<int> HP = new BindableProperty<int>(3);
@@ -220,7 +220,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent<0.1f)
+            if(percent<0.1f && !Object.FindObjectOfType<RecoverHP>())
             {
                 //生成回血道具
                 PowerUpManager.Default.RecoverHP.Instantiate()
@@ -247,7 +247,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent<0.1f)
+            if(percent<0.1f && !Object.FindObjectOfType<GetAllExp>())
             {
                 //生成经验吸附道具
                 PowerUpManager.Default.GetAllExp.Instantiate()

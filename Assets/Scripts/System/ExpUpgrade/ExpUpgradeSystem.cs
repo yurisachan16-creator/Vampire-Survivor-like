@@ -92,7 +92,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(10)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -166,7 +165,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(10)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -245,7 +243,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(10)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -300,7 +297,6 @@ namespace VampireSurvivorLike
                 .WithPairedName("合成后的飞刀")
                 .WithPairedIconName("paired_simple_knife_icon")
                 .WithPairedDescription("攻击力翻倍")
-                .WithMaxLevel(10)
                 .WithDescription(lv =>
                 {
                     return lv switch
@@ -318,7 +314,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(10)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -394,7 +389,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(10)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -450,7 +444,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(5)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -490,7 +483,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(5)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -529,7 +521,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(3)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -563,7 +554,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(5)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -603,7 +593,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(5)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)
@@ -642,7 +631,6 @@ namespace VampireSurvivorLike
                         _=>null
                     };
                 })
-                .WithMaxLevel(3)
                 .OnUpgrade((_, level) =>
                 {
                     switch (level)

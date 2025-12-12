@@ -47,6 +47,7 @@ namespace QAssetBundle
         public const string EXP = "Exp";
         public const string HEALTH = "Health";
         public const string HOMEBG = "HomeBg";
+        public const string HURT = "Hurt";
         public const string KNIFE = "Knife";
         public const string LEVELUP = "LevelUp";
         public const string RETRO_EVENT_ACUTE_08 = "Retro Event Acute 08";
