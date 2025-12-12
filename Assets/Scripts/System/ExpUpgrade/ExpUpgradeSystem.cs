@@ -51,6 +51,10 @@ namespace VampireSurvivorLike
         public ExpUpgradeItem Add(ExpUpgradeItem item)
         {
             Items.Add(item);
+            if (item.Key.IsNotNullAndEmpty())
+            {
+                Dictionary[item.Key] = item;
+            }
             return item;
         }
         protected override void OnInit()
@@ -66,6 +70,7 @@ namespace VampireSurvivorLike
         public void ResetData()
         {
             Items.Clear();
+            Dictionary.Clear();
 
             Add(new ExpUpgradeItem(true)
                 .WithKey("simple_sword")
@@ -365,7 +370,7 @@ namespace VampireSurvivorLike
                 }));
 
                 Add(new ExpUpgradeItem(true)
-                .WithKey("baket_ball")
+                .WithKey("basket_ball")
                 .WithName("篮球")
                 .WithIconName("ball_icon")
                 .WithPairedName("合成后的篮球")

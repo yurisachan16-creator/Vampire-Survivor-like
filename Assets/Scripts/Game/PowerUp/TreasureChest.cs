@@ -13,7 +13,7 @@ namespace VampireSurvivorLike
                 {
 					UIGamePanel.OpenTreasureChestPanel.Trigger();
                     //TODO：播放音效
-					AudioKit.PlaySound("TreasureChest");
+					AudioKit.PlaySound("Retro Event Acute 08");
 					
 					this.DestroyGameObjGracefully();
 				}

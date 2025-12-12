@@ -17,6 +17,7 @@ namespace VampireSurvivorLike
         private ResLoader _mResLoader;
 		private void Awake()
         {
+			_mResLoader = ResLoader.Allocate();
             BtnSure.onClick.AddListener(()=>
             {
                 Time.timeScale = 1f;
@@ -36,12 +37,14 @@ namespace VampireSurvivorLike
             {
                 if (item.CurrentLevel.Value >= 7 && item.PairedName.IsNotNullAndEmpty())
                 {
-                    var containsInPair = expUpgradeSystem.Pairs.ContainsKey(item.Key);
-                    var pairedItemKey = expUpgradeSystem.Pairs[item.Key];
-                    var pairedItemStartUpgrade = expUpgradeSystem.Dictionary[pairedItemKey].CurrentLevel.Value > 0;
-                    var pairedUnlocked = expUpgradeSystem.PairedProperties[pairedItemKey].Value;
+					if (!expUpgradeSystem.Pairs.TryGetValue(item.Key, out var pairedItemKey)) return false;
+					if (!expUpgradeSystem.Dictionary.TryGetValue(pairedItemKey, out var pairedItem) || pairedItem == null) return false;
+					if (!expUpgradeSystem.PairedProperties.TryGetValue(pairedItemKey, out var pairedUnlockedProperty) || pairedUnlockedProperty == null) return false;
 
-                    return containsInPair && pairedItemStartUpgrade && pairedUnlocked;
+					var pairedItemStartUpgrade = pairedItem.CurrentLevel.Value > 0;
+					var pairedUnlocked = pairedUnlockedProperty.Value;
+
+					return pairedItemStartUpgrade && pairedUnlocked;
                 }
 
                 return false;
@@ -58,11 +61,14 @@ namespace VampireSurvivorLike
                     item.Upgrade();
                 }
 
-                Icon.sprite = _mResLoader.LoadSync<SpriteAtlas>("icon")
-                    .GetSprite(item.PairedIconName);
+				var atlas = _mResLoader.LoadSync<SpriteAtlas>("icon");
+				if (atlas) Icon.sprite = atlas.GetSprite(item.PairedIconName);
                 Icon.Show();
 
-                expUpgradeSystem.PairedProperties[item.Key].Value = true;
+				if (expUpgradeSystem.PairedProperties.TryGetValue(item.Key, out var prop) && prop != null)
+				{
+					prop.Value = true;
+				}
             }
             else
             {
@@ -73,8 +79,8 @@ namespace VampireSurvivorLike
                     var item = upgradeItems.GetRandomItem();
                     Content.text = item.Description;
 
-                    Icon.sprite = _mResLoader.LoadSync<SpriteAtlas>("icon")
-                        .GetSprite(item.IconName);
+					var atlas = _mResLoader.LoadSync<SpriteAtlas>("icon");
+					if (atlas) Icon.sprite = atlas.GetSprite(item.IconName);
                      Icon.Show();
 
                     item.Upgrade();
@@ -107,8 +113,11 @@ namespace VampireSurvivorLike
 
         protected override void OnBeforeDestroy()
         {
-            _mResLoader.Recycle2Cache();
-            _mResLoader = null;
+			if (_mResLoader != null)
+			{
+				_mResLoader.Recycle2Cache();
+				_mResLoader = null;
+			}
         }
 
         public IArchitecture GetArchitecture()

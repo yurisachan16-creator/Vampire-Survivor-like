@@ -28,14 +28,18 @@ namespace VampireSurvivorLike
                 {
 					var itemCache = expUpgradeItem;
 					//动态加载图标
-					self.transform.Find("Icon").GetComponent<Image>().sprite = 
-						iconAtlas.GetSprite(expUpgradeItem.IconName);
+					var iconTransform = self.transform.Find("Icon");
+					var iconImage = iconTransform ? iconTransform.GetComponent<Image>() : null;
+					if (iconImage && iconAtlas)
+					{
+						iconImage.sprite = iconAtlas.GetSprite(itemCache.IconName);
+					}
 
 					self.onClick.AddListener(() =>
 					{
 						//恢复游戏
 						Time.timeScale = 1f;
-						expUpgradeItem.Upgrade();
+						itemCache.Upgrade();
 						this.Hide();
 						//TODO:播放升级音效
 						AudioKit.PlaySound("Retro Event Acute 08");
@@ -47,19 +51,30 @@ namespace VampireSurvivorLike
 					{
                         if(visible)
                         {
-							self.GetComponentInChildren<Text>().text = expUpgradeItem.Description;
+							var label = self.GetComponentInChildren<Text>();
+							if (label) label.text = itemCache.Description;
                             selfCache.Show();
 							var pairedUpgradeName = selfCache.transform.Find("PairedUpgradeName");
-							if(expUpgradeSystem.Pairs.TryGetValue(itemCache.Key,out var pairedName))
+							if(pairedUpgradeName && expUpgradeSystem.Pairs.TryGetValue(itemCache.Key,out var pairedName))
 							{
-								var pairedItem = expUpgradeSystem.Dictionary[pairedName];
-								if(pairedItem.CurrentLevel.Value > 0 && itemCache.CurrentLevel.Value == 0)
+								if (expUpgradeSystem.Dictionary.TryGetValue(pairedName, out var pairedItem) && pairedItem != null)
 								{
-									
-									pairedUpgradeName.GetComponent<Text>().text = "配对武器：" + pairedItem.Key;
-									pairedUpgradeName.Show();
-									pairedUpgradeName.Find("Icon").GetComponent<Image>().sprite = 
-										iconAtlas.GetSprite(pairedItem.IconName);
+									if(pairedItem.CurrentLevel.Value > 0 && itemCache.CurrentLevel.Value == 0)
+									{
+										var pairedLabel = pairedUpgradeName.GetComponent<Text>();
+										if (pairedLabel) pairedLabel.text = "配对武器：" + pairedItem.Key;
+										pairedUpgradeName.Show();
+										var pairedIconTransform = pairedUpgradeName.Find("Icon");
+										var pairedIconImage = pairedIconTransform ? pairedIconTransform.GetComponent<Image>() : null;
+										if (pairedIconImage && iconAtlas)
+										{
+											pairedIconImage.sprite = iconAtlas.GetSprite(pairedItem.IconName);
+										}
+									}
+									else
+									{
+										pairedUpgradeName.Hide();
+									}
 								}
 								else
 								{
@@ -69,7 +84,7 @@ namespace VampireSurvivorLike
 							}
 							else
 							{
-								pairedUpgradeName.Hide();
+								if (pairedUpgradeName) pairedUpgradeName.Hide();
 							}
                         }
                         else
@@ -80,7 +95,8 @@ namespace VampireSurvivorLike
 
 					itemCache.CurrentLevel.Register((lv) =>
                     {
-                        selfCache.GetComponentInChildren<Text>().text = expUpgradeItem.Description;
+						var label = selfCache.GetComponentInChildren<Text>();
+						if (label) label.text = itemCache.Description;
                     }).UnRegisterWhenGameObjectDestroyed(gameObject);
                 });
             }

@@ -530,7 +530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!58 &461601631
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1397,7 +1397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &803306284
 Transform:
   m_ObjectHideFlags: 0
@@ -11763,7 +11763,7 @@ MonoBehaviour:
   PrefabFolder: Assets/Art/Prefab
   ArchitectureFullTypeName: 
   ViewControllerFullTypeName: 
-  Config: {fileID: 11400000, guid: 09abfb29c9c51b54198e149f2c8c026e, type: 2}
+  Config: {fileID: 11400000, guid: 2679b995d46145d4d8f50b17a50b33ee, type: 2}
   EnemyWaves:
   - WaveName: 
     Active: 1
