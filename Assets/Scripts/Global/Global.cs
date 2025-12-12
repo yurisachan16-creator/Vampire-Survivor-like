@@ -68,6 +68,9 @@ namespace VampireSurvivorLike
         [RuntimeInitializeOnLoadMethod]
         public static void AutoInit()
         {
+            //设置音频播放模式，避免同一音效在短时间内重复播放
+            //相同的音效在10帧内只播放一次
+            AudioKit.PlaySoundMode = AudioKit.PlaySoundModes.IgnoreSameSoundInGlobalFrames;
             ResKit.Init();
             UIKit.Root.SetResolution(1920, 1080, 1);
             Global.Coin.Value=PlayerPrefs.GetInt(nameof(Global.Coin),0);
@@ -252,6 +255,7 @@ namespace VampireSurvivorLike
             this.RegisterSystem(new SaveSystem());
             this.RegisterSystem(new CoinUpgradeSystem());
             this.RegisterSystem(new ExpUpgradeSystem());
+            this.RegisterSystem(new AchievementSystem());
         }
     }
 }

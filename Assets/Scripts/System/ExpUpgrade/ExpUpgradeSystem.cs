@@ -8,6 +8,13 @@ namespace VampireSurvivorLike
     {
         public static EasyEvent OnExpUpgradeSystemChanged = new EasyEvent();
         public List<ExpUpgradeItem> Items{get;} = new List<ExpUpgradeItem>();
+        public static bool AllUnlockedFinished = false;
+
+        public static void CheckAllUnlockedFinish()
+        {
+            AllUnlockedFinished = Global.Interface.GetSystem<ExpUpgradeSystem>().Items
+                .All(i=>i.UpgradeFinish);
+        }
 
         public Dictionary<string,ExpUpgradeItem> Dictionary = new Dictionary<string, ExpUpgradeItem>();
         public Dictionary<string,string> Pairs = new Dictionary<string, string>()

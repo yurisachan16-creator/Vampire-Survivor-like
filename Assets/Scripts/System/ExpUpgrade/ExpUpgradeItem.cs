@@ -10,7 +10,7 @@ namespace VampireSurvivorLike
             IsWeapon = isWeapon;
         }
         public bool IsWeapon = false;   //是否是武器
-        public bool UpgradeFinish{get;set;}=false;
+        public bool UpgradeFinish => CurrentLevel.Value >= MaxLevel;
         public string Key { get; private set; } //新增Key属性
         public string Name {get; private set;}
         public string Description => _mDescriptionFactory(CurrentLevel.Value + 1); 
@@ -30,10 +30,8 @@ namespace VampireSurvivorLike
             {
                 _mOnUpgrade?.Invoke(this, CurrentLevel.Value);
             }
-            if (CurrentLevel.Value > 10)
-            {
-                UpgradeFinish = true;
-            }
+            
+            ExpUpgradeSystem.CheckAllUnlockedFinish();
             
         }
 

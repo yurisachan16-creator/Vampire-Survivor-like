@@ -6,6 +6,14 @@ namespace VampireSurvivorLike
     public class CoinUpgradeItem
     {
         public EasyEvent OnChanged = new EasyEvent();
+
+        private CoinUpgradeItem _mNext = null;
+        public CoinUpgradeItem Next(CoinUpgradeItem next)
+        {
+            _mNext = next;
+            _mNext.Condition((_)=>this.UpgradeFinish);
+            return _mNext;
+        }
         public bool UpgradeFinish{get;set;}=false;
         public string Key { get; private set; } //新增Key属性
         public string Description { get; private set; } //新增描述属性
@@ -17,8 +25,14 @@ namespace VampireSurvivorLike
         {
             _mOnUpgrade?.Invoke(this);
             UpgradeFinish = true;
-            OnChanged.Trigger();
+            TriggerOnChanged();
             CoinUpgradeSystem.OnCoinUpgradeSystemChanged.Trigger();
+        }
+
+        public void TriggerOnChanged()
+        {
+            OnChanged.Trigger();
+            _mNext?.OnChanged.Trigger();
         }
 
         public bool ConditionCheck()
