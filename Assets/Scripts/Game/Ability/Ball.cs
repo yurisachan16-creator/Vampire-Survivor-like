@@ -24,12 +24,12 @@ namespace VampireSurvivorLike
 
 			HurtBox.OnTriggerEnter2DEvent(collider=>
 			{
-				var hurtBox=collider.GetComponent<HurtBox>();
-				if(hurtBox)
+				var hitHurtBox = collider.GetComponent<HitHurtBox>();
+				if(hitHurtBox)
 				{
-					if(hurtBox.Owner.CompareTag("Enemy"))
+					if(hitHurtBox.Owner.CompareTag("Enemy"))
 					{
-						var enemy=hurtBox.Owner.GetComponent<IEnemy>();
+						var enemy=hitHurtBox.Owner.GetComponent<IEnemy>();
 						var damageTimes=Global.SuperBasketBall.Value ? Random.Range(2,3+1) : 1;
 						DamageSystem.CalculateDamage(Global.BasketBallDamage.Value * damageTimes,enemy);
 						

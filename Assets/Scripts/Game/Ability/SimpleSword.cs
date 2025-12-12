@@ -49,15 +49,15 @@ namespace VampireSurvivorLike
                             {
 								if(hasHit) return;
 								
-                                var hurtBox = collider2D.GetComponent<HurtBox>();
+								var hitHurtBox = collider2D.GetComponent<HitHurtBox>();
 
-								if (hurtBox)
+								if (hitHurtBox)
 								{
-									if (hurtBox.Owner.CompareTag("Enemy"))
+									if (hitHurtBox.Owner.CompareTag("Enemy"))
 									{
 										hasHit = true;
 										DamageSystem.CalculateDamage(Global.SimpleAbilityDamage.Value * damageTimes,
-												hurtBox.Owner.GetComponent<Enemy>());
+											hitHurtBox.Owner.GetComponent<Enemy>());
 									}
 								}
                             }).UnRegisterWhenGameObjectDestroyed(selfCache);

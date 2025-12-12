@@ -22,10 +22,10 @@ namespace VampireSurvivorLike
 		{	
             HurtBox.OnTriggerEnter2DEvent(Collider2D =>
 			{
-				var hitBox = Collider2D.GetComponent<HitBox>();
-				if(hitBox)
+				var hitHurtBox = Collider2D.GetComponent<HitHurtBox>();
+				if(hitHurtBox)
 				{
-					if(hitBox.Owner.CompareTag("Enemy"))
+					if(hitHurtBox.Owner.CompareTag("Enemy"))
 					{
 						//玩家受伤
 						Global.HP.Value -= 1;

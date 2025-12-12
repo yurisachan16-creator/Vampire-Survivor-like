@@ -31,13 +31,13 @@ namespace VampireSurvivorLike
 
                     self.OnTriggerEnter2DEvent(collider=>
                     {
-						var hurtBox=collider.GetComponent<HurtBox>();		
+						var hitHurtBox = collider.GetComponent<HitHurtBox>();		
 
-                        if (hurtBox)
+						if (hitHurtBox)
                 		{
-							if(hurtBox.Owner.CompareTag("Enemy"))
+							if(hitHurtBox.Owner.CompareTag("Enemy"))
 							{
-								hurtBox.Owner.GetComponent<Enemy>().Hurt(2);
+								hitHurtBox.Owner.GetComponent<Enemy>().Hurt(2);
 							}
                 		}
 

@@ -22,15 +22,15 @@ namespace VampireSurvivorLike
                     {
                         self.OnTriggerEnter2DEvent(collider=>
                         {
-                            var hurtBox=collider.GetComponent<HurtBox>();
-                            if (hurtBox)
+                            var hitHurtBox = collider.GetComponent<HitHurtBox>();
+                            if (hitHurtBox)
                             {
-                                if(hurtBox.Owner.CompareTag("Enemy"))
+                                if(hitHurtBox.Owner.CompareTag("Enemy"))
                                 {
                                     var damageTimes=Global.SuperRotateSword.Value ? Random.Range(2,3+1) : 1;
 
                                     DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value * damageTimes,
-                                            hurtBox.Owner.GetComponent<Enemy>());
+                                            hitHurtBox.Owner.GetComponent<Enemy>());
 
                                     //有50%的概率对敌人进行击退
                                     if (Random.Range(0, 1.0f) < 0.5f)

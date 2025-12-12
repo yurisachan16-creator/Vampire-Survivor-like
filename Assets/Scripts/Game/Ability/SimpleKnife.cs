@@ -59,16 +59,16 @@ namespace VampireSurvivorLike
 							self.OnTriggerEnter2DEvent(collider=>
 							{
 								
-								var hurtBox=collider.GetComponent<HurtBox>();		
+								var hitHurtBox = collider.GetComponent<HitHurtBox>();		
 
-								if (hurtBox)
+								if (hitHurtBox)
 								{
-									if(hurtBox.Owner.CompareTag("Enemy"))
+									if(hitHurtBox.Owner.CompareTag("Enemy"))
 									{
 										//hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
 										var damageTimes=Global.SuperKnife.Value ? Random.Range(2,3+1) : 1;
 										DamageSystem.CalculateDamage(Global.SimpleKnifeDamage.Value * damageTimes,
-												hurtBox.Owner.GetComponent<Enemy>());
+											hitHurtBox.Owner.GetComponent<Enemy>());
 										attackCount++;
 
 										if(attackCount>=Global.SimpleKnifeAttackCount.Value)
