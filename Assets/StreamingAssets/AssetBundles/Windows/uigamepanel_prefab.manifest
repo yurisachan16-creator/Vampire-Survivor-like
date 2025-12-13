@@ -1,0 +1,79 @@
+ManifestFileVersion: 0
+CRC: 4294792957
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: fe33cc93b3ebb1d59b1adf851269d32c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b7ecc5fd35512172e4b1d304f20dfe6a
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: fe33cc93b3ebb1d59b1adf851269d32c
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5bd007d9c6c57424daa1d11c4f400b12, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 895a981383624ae4fa89f7fe1aed4277, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0d51f3a7c41ab0346b49ae50d456bece, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c1eacad27c9ca3147ae0128bb3eee478, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1d7d49044ccb4a2409a8f229483dbf83, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4d618b0d95b83f419dda4634b5f7487, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.RectOffset
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.AnimationTriggers
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Button/ButtonClickedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.ColorBlock
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.FontData
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Navigation
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.SpriteState
+Assets:
+- Assets/Art/UIPrefab/UIGamePanel.prefab
+Dependencies:
+- D:/unity/Vampire Survivor-like/AssetBundles/Windows/fusion-pixel-12px-proportional-zh_hans_ttf

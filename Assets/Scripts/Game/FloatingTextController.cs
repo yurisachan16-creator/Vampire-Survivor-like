@@ -1,7 +1,6 @@
 using UnityEngine;
 using QFramework;
 using UnityEngine.UI;
-using UnityEditor;
 
 namespace VampireSurvivorLike
 {

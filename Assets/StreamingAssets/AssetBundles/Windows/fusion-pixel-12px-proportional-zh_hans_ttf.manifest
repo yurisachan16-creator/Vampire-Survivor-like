@@ -1,0 +1,26 @@
+ManifestFileVersion: 0
+CRC: 1507113187
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 6540150453988b80ff9857b21b1970db
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9372662e05ede815898c391bbc5766da
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 6540150453988b80ff9857b21b1970db
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Art/Font/fusion-pixel-12px-proportional-zh_hans.ttf
+Dependencies: []
