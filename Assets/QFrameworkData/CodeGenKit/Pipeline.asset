@@ -18,18 +18,9 @@ MonoBehaviour:
     GameObject: {fileID: 0}
     From: 0
     NameToFullName: []
-    BindInfos:
-    - TypeName: UnityEngine.Animator
-      PathToRoot: Sprite
-      MemberName: Sprite
-    - TypeName: CircleCollider2D
-      PathToRoot: HurtBox
-      MemberName: HurtBox
-    - TypeName: UnityEngine.UI.Image
-      PathToRoot: Canvas/HPValue
-      MemberName: HPValue
-    ScriptsFolder: Assets/Scripts/Game
-    ClassName: Player
+    BindInfos: []
+    ScriptsFolder: Assets/Scenes
+    ClassName: TestMaxPowerUpCount
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 
