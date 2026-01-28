@@ -1,15 +1,18 @@
 using UnityEngine;
 using QFramework;
+using System.Collections;
 
 namespace VampireSurvivorLike
 {
 	public partial class GameUIController : ViewController
 	{
-		void Start()
+		private IEnumerator Start()
 		{
-			// Code Here
-
+			#if UNITY_WEBGL && !UNITY_EDITOR
+			yield return ResKit.InitAsync();
+			#endif
 			UIKit.OpenPanel<UIGamePanel>();
+			yield break;
 		}
 
         void OnDestroy()

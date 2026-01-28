@@ -1,0 +1,38 @@
+ManifestFileVersion: 0
+CRC: 3295338934
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: uigameoverpanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_1:
+      Name: uigamepasspanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_2:
+      Name: uigamepanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_3:
+      Name: uigamestartpanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_4:
+      Name: "gamebg\u6F14\u827A\u4EBA_mp3"
+      Dependencies: {}
+    Info_5:
+      Name: coin_wav
+      Dependencies: {}
+    Info_6:
+      Name: hit_wav
+      Dependencies: {}
+    Info_7:
+      Name: sfx
+      Dependencies: {}
+    Info_8:
+      Name: icon_spriteatlasv2
+      Dependencies: {}
+    Info_9:
+      Name: fusion-pixel-12px-proportional-zh_hans_ttf
+      Dependencies: {}

@@ -81,7 +81,12 @@ namespace VampireSurvivorLike
             //设置音频播放模式，避免同一音效在短时间内重复播放
             //相同的音效在10帧内只播放一次
             AudioKit.PlaySoundMode = AudioKit.PlaySoundModes.IgnoreSameSoundInGlobalFrames;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // WebGL 平台只能异步初始化（ResKit.InitAsync），否则会尝试用同步文件 API 读取 StreamingAssets 导致失败。
+            // 异步初始化在场景启动时（如 GameStartController/GameUIController）完成。
+#else
             ResKit.Init();
+#endif
             UIKit.Root.SetResolution(1920, 1080, 1);
             Global.Coin.Value=PlayerPrefs.GetInt(nameof(Global.Coin),0);
             

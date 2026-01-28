@@ -49,11 +49,34 @@ File → Build Settings → WebGL → Switch Platform
 - **Strip Engine Code**: ✅ 勾选（减小包体）
 - **Managed Stripping Level**: `Medium` 或 `High`
 
+> 如果出现“只有背景/音乐，但开始界面(UI)不显示”，优先把 **Managed Stripping Level** 调低（建议 `Low`），
+> 因为 UIKit/反射/泛型在 IL2CPP + 裁剪较高时可能会被裁掉类型。
+> 也建议把 **WebGL Memory Size / Initial Memory** 提高到至少 `256MB`（本项目默认 1080p UI 与较多资源，32MB 很容易出问题）。
+
 ### 3. 确保场景已添加
 
 Build Settings 中确认包含：
 1. `Assets/Scenes/GameStart.unity` (index 0)
 2. `Assets/Scenes/Game.unity` (index 1)
+
+### 4. （本项目关键）为 WebGL 打 AssetBundle
+
+本项目的 UI Prefab / 音频等资源使用 QFramework ResKit 的 **AssetBundle** 管理（可在 `Assets/QFrameworkData/QAssets.cs` 看到已生成的 Bundle 名称）。
+如果你只打了 Windows 的 AB 包，那么 WebGL 运行时会去请求 `StreamingAssets/AssetBundles/WebGL/...`，导致 UI Prefab 加载失败，从而出现：
+**场景有画面/音乐，但开始界面(UI)不显示**。
+
+检查方法（无需猜）：
+- 打开 WebGL 构建目录，确认存在 `Build/WebGL/StreamingAssets/AssetBundles/WebGL/`（而不是只有 `Windows/`）
+- 浏览器 DevTools → Network，看看是否有对 `StreamingAssets/AssetBundles/WebGL/...` 的请求 404
+
+修复步骤：
+1. Unity 菜单打开 QFramework 的 ResKit 设置（你截图里的页面）
+2. **目标平台**选择 `WebGL`
+3. 点击 **打 AB 包**（必要时先点“生成代码(资源名称常量)”）
+4. 确认生成目录为：`Assets/StreamingAssets/AssetBundles/WebGL/`
+5. 重新 Build WebGL（让这些 AB 文件被带进 `Build/WebGL/StreamingAssets/AssetBundles/WebGL/`）
+
+> 备注：你目前本地构建输出里只有 `Build/WebGL/StreamingAssets/AssetBundles/Windows/`，这就是 UI 不显示的最强嫌疑点。
 
 ---
 
@@ -143,6 +166,8 @@ python -m http.server 8080
 - 确保使用 **Gzip 压缩** 并勾选 **Decompression Fallback**
 - 检查浏览器控制台（F12）是否有 CORS 或 MIME type 错误
 - itch.io 会自动处理 `.gz` 文件的 Content-Encoding
+
+定位技巧：打开 DevTools → Console/Network，刷新页面后重点看是否有 `TypeLoadException` / `MissingMethodException` / `Out of memory`。
 
 ### Q2: 音频不播放
 

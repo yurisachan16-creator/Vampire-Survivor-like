@@ -16,6 +16,11 @@ namespace QAssetBundle
         public const string BundleName = "coin_wav";
         public const string COIN = "Coin";
     }
+    public class Fusionpixel12pxproportionalzh_hans_ttf
+    {
+        public const string BundleName = "fusion-pixel-12px-proportional-zh_hans_ttf";
+        public const string FUSIONPIXEL12PXPROPORTIONALZH_HANS = "fusion-pixel-12px-proportional-zh_hans";
+    }
     public class Gamebg演艺人_mp3
     {
         public const string BundleName = "gamebg演艺人_mp3";

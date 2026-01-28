@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 4260799473
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: b199ccebb7d098734baf10236a878510
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: b199ccebb7d098734baf10236a878510
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- "Assets/Art/Sound/Music/GameBG\u6F14\u827A\u4EBA.mp3"
+Dependencies: []
