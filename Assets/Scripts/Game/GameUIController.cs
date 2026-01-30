@@ -9,8 +9,14 @@ namespace VampireSurvivorLike
 		private IEnumerator Start()
 		{
 			#if UNITY_WEBGL && !UNITY_EDITOR
-			yield return ResKit.InitAsync();
+			// WebGL 平台：如果还没预加载，先进行预加载
+			if (!WebGLPreloader.IsPreloaded)
+			{
+				yield return ResKit.InitAsync();
+				yield return WebGLPreloader.PreloadAllAssets();
+			}
 			#endif
+			
 			UIKit.OpenPanel<UIGamePanel>();
 			yield break;
 		}
