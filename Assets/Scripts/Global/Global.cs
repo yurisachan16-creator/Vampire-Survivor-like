@@ -82,10 +82,11 @@ namespace VampireSurvivorLike
             //相同的音效在10帧内只播放一次
             AudioKit.PlaySoundMode = AudioKit.PlaySoundModes.IgnoreSameSoundInGlobalFrames;
             
-            // WebGL 平台（包括编辑器中切换到 WebGL 目标）需要异步初始化
-            // 异步初始化在场景启动时（如 GameStartController/GameUIController）完成
-            // 这里只在非 WebGL 目标时进行同步初始化
-#if !UNITY_WEBGL
+            // WebGL 实际运行时需要异步初始化，在场景启动时完成
+            // 编辑器中即使目标是 WebGL，也使用同步初始化（模拟模式）
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // 异步初始化在 GameStartController/GameUIController 中完成
+#else
             ResKit.Init();
 #endif
             UIKit.Root.SetResolution(1920, 1080, 1);

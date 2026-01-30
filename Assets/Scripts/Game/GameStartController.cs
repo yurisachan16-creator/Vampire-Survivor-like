@@ -9,8 +9,8 @@ namespace VampireSurvivorLike
         
 		private IEnumerator Start() 
 		{
-			#if UNITY_WEBGL
-			// WebGL 平台（包括编辑器）：初始化 ResKit 并预加载所有资源
+			#if UNITY_WEBGL && !UNITY_EDITOR
+			// WebGL 实际运行时：初始化 ResKit 并预加载所有资源
 			yield return ResKit.InitAsync();
 			yield return WebGLPreloader.PreloadAllAssets();
 			#endif

@@ -8,8 +8,8 @@ namespace VampireSurvivorLike
 	{
 		private IEnumerator Start()
 		{
-			#if UNITY_WEBGL
-			// WebGL 平台（包括编辑器）：如果还没预加载，先进行预加载
+			#if UNITY_WEBGL && !UNITY_EDITOR
+			// WebGL 实际运行时：如果还没预加载，先进行预加载
 			if (!WebGLPreloader.IsPreloaded)
 			{
 				yield return ResKit.InitAsync();

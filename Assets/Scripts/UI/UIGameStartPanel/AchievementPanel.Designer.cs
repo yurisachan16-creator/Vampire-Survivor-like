@@ -1,34 +1,29 @@
-/****************************************************************************
- * 2025.12 DESKTOP-JJUC8BO
+﻿/****************************************************************************
+ * 2026.1 DESKTOP-JJUC8BO
  ****************************************************************************/
 
 using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
-using UnityEngine.Serialization;
 
 namespace VampireSurvivorLike
 {
 	public partial class AchievementPanel
 	{
-		[SerializeField] public UnityEngine.UI.Button BtnClose;
-
-		[FormerlySerializedAs("AchivementItemPrefab")]
 		[SerializeField] public UnityEngine.UI.Button AchievementItemPrefab;
-
-		[FormerlySerializedAs("AchivementItemRoot")]
+		[SerializeField] public UnityEngine.UI.Button BtnClose;
 		[SerializeField] public RectTransform AchievementItemRoot;
 
 		public void Clear()
 		{
-			BtnClose = null;
 			AchievementItemPrefab = null;
+			BtnClose = null;
 			AchievementItemRoot = null;
 		}
 
 		public override string ComponentName
 		{
-			get { return "AchievementPanel"; }
+			get { return "AchievementPanel";}
 		}
 	}
 }

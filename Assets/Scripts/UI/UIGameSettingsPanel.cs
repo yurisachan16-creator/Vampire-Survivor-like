@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 using QAssetBundle;
+using UnityEngine.SceneManagement;
 
 namespace VampireSurvivorLike
 {
@@ -59,6 +60,20 @@ namespace VampireSurvivorLike
 			{
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				CloseSelf();
+			});
+
+			//返回主菜单按钮
+			BtnReturnToMainMenu.onClick.AddListener(() =>
+			{
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
+				//停止所有正在播放的音效
+				AudioKit.StopAllSound();
+				//关闭所有面板
+				UIKit.CloseAllPanel();
+				//加载主菜单场景（会清理 Game 场景的所有游戏对象）
+				SceneManager.LoadScene("GameStart");
+				//恢复时间流逝
+				Time.timeScale = 1f;
 			});
 			
 			// 退出按钮
