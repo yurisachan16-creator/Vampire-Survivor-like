@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using QFramework;
 using QAssetBundle;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace VampireSurvivorLike
 {
@@ -83,9 +84,15 @@ namespace VampireSurvivorLike
 				GameSettings.QuitGame();
 			});
 			
-			// WebGL 平台隐藏退出按钮
+			// 平台特定的按钮显示逻辑
 			#if UNITY_WEBGL && !UNITY_EDITOR
+			// WebGL 实际运行时：隐藏退出按钮（WebGL不支持退出），显示返回主界面按钮
 			BtnQuit.gameObject.SetActive(false);
+			BtnReturnToMainMenu.gameObject.SetActive(true);
+			#else
+			// 编辑器和其他平台：显示退出按钮，也显示返回主界面按钮
+			BtnQuit.gameObject.SetActive(true);
+			BtnReturnToMainMenu.gameObject.SetActive(true);
 			#endif
 		}
 		
@@ -107,35 +114,57 @@ namespace VampireSurvivorLike
 		
 		protected override void OnOpen(IUIData uiData = null)
 		{
-			// 强制重置 SettingsPanel 位置到屏幕中央
-			if (_settingsPanelRect != null)
-			{
-				_settingsPanelRect.anchoredPosition = Vector2.zero;
-			}
-			
-			// 如果是从游戏中打开，暂停游戏
-			if (mData.IsFromGame)
-			{
-				_previousTimeScale = Time.timeScale;
-				Time.timeScale = 0f;
-			}
-		}
+		// 立即重置位置
+		ResetPanelPosition();
 		
-		protected override void OnShow()
-		{
-		}
+		// 延迟一帧再次重置（确保 WebGL 布局完成后位置正确）
+		StartCoroutine(ResetPositionEndOfFrame());
 		
-		protected override void OnHide()
+		// 如果是从游戏中打开，暂停游戏
+		if (mData.IsFromGame)
 		{
-		}
-		
-		protected override void OnClose()
-		{
-			// 如果是从游戏中打开，恢复游戏
-			if (mData.IsFromGame)
-			{
-				Time.timeScale = _previousTimeScale;
-			}
+			_previousTimeScale = Time.timeScale;
+			Time.timeScale = 0f;
 		}
 	}
+	
+	private IEnumerator ResetPositionEndOfFrame()
+	{
+		yield return new WaitForEndOfFrame();
+		ResetPanelPosition();
+	}
+	
+	private void ResetPanelPosition()
+	{
+		// 强制更新 Canvas 布局
+		Canvas.ForceUpdateCanvases();
+		
+		// 强制重置 SettingsPanel 位置到屏幕中央
+		if (_settingsPanelRect != null)
+		{
+			_settingsPanelRect.anchoredPosition = Vector2.zero;
+			// 强制刷新布局
+			LayoutRebuilder.ForceRebuildLayoutImmediate(_settingsPanelRect);
+		}
+	}
+	
+	protected override void OnShow()
+	{
+		// OnShow 时再次确保位置正确
+		ResetPanelPosition();
+	}
+	
+	protected override void OnHide()
+	{
+	}
+		
+	protected override void OnClose()
+	{
+		// 如果是从游戏中打开，恢复游戏
+		if (mData.IsFromGame)
+		{
+			Time.timeScale = _previousTimeScale;
+		}
+	}
+}
 }

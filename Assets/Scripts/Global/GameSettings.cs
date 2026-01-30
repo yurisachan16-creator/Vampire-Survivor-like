@@ -59,7 +59,10 @@ namespace VampireSurvivorLike
         {
             IsFullscreen = fullscreen;
             
-            #if !UNITY_WEBGL
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            // WebGL 运行时：使用 Screen.fullScreen 切换全屏
+            Screen.fullScreen = fullscreen;
+            #else
             if (fullscreen)
             {
                 // 全屏模式使用当前屏幕分辨率
@@ -79,9 +82,8 @@ namespace VampireSurvivorLike
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void ApplySettingsOnStartup()
         {
-            #if !UNITY_WEBGL
+            // 应用全屏设置（WebGL 和其他平台都支持）
             ApplyFullscreen(IsFullscreen);
-            #endif
             
             // 音频设置会由 AudioKit 自动从 PlayerPrefs 加载
         }
