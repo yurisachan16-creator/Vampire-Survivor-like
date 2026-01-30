@@ -37,6 +37,7 @@ namespace VampireSurvivorLike
             _resLoader.Add2Load<GameObject>(Uigamepanel_prefab.BundleName, Uigamepanel_prefab.UIGAMEPANEL);
             _resLoader.Add2Load<GameObject>(Uigameoverpanel_prefab.BundleName, Uigameoverpanel_prefab.UIGAMEOVERPANEL);
             _resLoader.Add2Load<GameObject>(Uigamepasspanel_prefab.BundleName, Uigamepasspanel_prefab.UIGAMEPASSPANEL);
+            _resLoader.Add2Load<GameObject>(Uigamesettingspanel_prefab.BundleName, Uigamesettingspanel_prefab.UIGAMESETTINGSPANEL);
             
             // 字体
             _resLoader.Add2Load<Font>(Fusionpixel12pxproportionalzh_hans_ttf.BundleName, 

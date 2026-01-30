@@ -76,6 +76,11 @@ namespace QAssetBundle
         public const string BundleName = "uigamepasspanel_prefab";
         public const string UIGAMEPASSPANEL = "UIGamePassPanel";
     }
+    public class Uigamesettingspanel_prefab
+    {
+        public const string BundleName = "uigamesettingspanel_prefab";
+        public const string UIGAMESETTINGSPANEL = "UIGameSettingsPanel";
+    }
     public class Uigamestartpanel_prefab
     {
         public const string BundleName = "uigamestartpanel_prefab";

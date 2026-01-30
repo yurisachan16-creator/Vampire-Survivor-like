@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3295338934
+CRC: 2441349830
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -36,3 +36,7 @@ AssetBundleManifest:
     Info_9:
       Name: fusion-pixel-12px-proportional-zh_hans_ttf
       Dependencies: {}
+    Info_10:
+      Name: uigamesettingspanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
