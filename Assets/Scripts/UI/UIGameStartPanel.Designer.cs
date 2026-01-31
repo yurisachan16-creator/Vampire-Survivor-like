@@ -5,13 +5,15 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	// Generate Id:748233b7-8f38-4221-876b-69bb9964d427
+	// Generate Id:57b3237b-ee72-4deb-8247-2ffbfed36d44
 	public partial class UIGameStartPanel
 	{
 		public const string Name = "UIGameStartPanel";
 		
 		[SerializeField]
 		public UnityEngine.UI.Button BtnStartGame;
+		[SerializeField]
+		public UnityEngine.UI.Button BtnSettingsGame;
 		[SerializeField]
 		public UnityEngine.UI.Button BtnCoinUpgrade;
 		[SerializeField]
@@ -21,24 +23,22 @@ namespace VampireSurvivorLike
 		[SerializeField]
 		public AchievementPanel AchievementPanel;
 		[SerializeField]
-		public UnityEngine.UI.Button AchievementItemPrefab;
-		[SerializeField]
 		public UnityEngine.UI.Button BtnClose;
 		[SerializeField]
-		public RectTransform AchievementItemRoot;
+		public UnityEngine.UI.Button AchievementItemPrefab;
 		
 		private UIGameStartPanelData mPrivateData = null;
 		
 		protected override void ClearUIComponents()
 		{
 			BtnStartGame = null;
+			BtnSettingsGame = null;
 			BtnCoinUpgrade = null;
 			BtnAchievement = null;
 			CoinUpgradePanel = null;
 			AchievementPanel = null;
-			AchievementItemPrefab = null;
 			BtnClose = null;
-			AchievementItemRoot = null;
+			AchievementItemPrefab = null;
 			
 			mData = null;
 		}

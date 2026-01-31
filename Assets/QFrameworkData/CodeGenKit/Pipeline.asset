@@ -18,9 +18,30 @@ MonoBehaviour:
     GameObject: {fileID: 0}
     From: 0
     NameToFullName: []
-    BindInfos: []
-    ScriptsFolder: Assets/Scenes
-    ClassName: TestMaxPowerUpCount
+    BindInfos:
+    - TypeName: UnityEngine.UI.Button
+      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/DisplaySettings
+      MemberName: DisplaySettings
+    - TypeName: UnityEngine.UI.Toggle
+      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/DisplaySettings/FullscreenToggle
+      MemberName: FullscreenToggle
+    - TypeName: UnityEngine.UI.Button
+      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/AudioSettings
+      MemberName: AudioSettings
+    - TypeName: UnityEngine.UI.Slider
+      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/AudioSettings/MusicVolumeSlider
+      MemberName: MusicVolumeSlider
+    - TypeName: UnityEngine.UI.Slider
+      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/AudioSettings/SoundVolumeSlider
+      MemberName: SoundVolumeSlider
+    - TypeName: UnityEngine.UI.Button
+      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/BtnClose
+      MemberName: BtnClose
+    - TypeName: UnityEngine.UI.Button
+      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/BtnQuit
+      MemberName: BtnQuit
+    ScriptsFolder: Assets\Scripts\UI\UIGameSettingsPanel
+    ClassName: UIGameSettingsPanel
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 
