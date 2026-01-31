@@ -13,6 +13,14 @@ namespace VampireSurvivorLike
 		[SerializeField]
 		public LevelConfig Config;
 
+		[SerializeField]
+		[Tooltip("敌人预制体映射表，用于将CSV中的敌人名称映射到实际预制体")]
+		public EnemyPrefabMapping PrefabMapping;
+
+		[SerializeField]
+		[Tooltip("是否从CSV配置文件加载波次数据")]
+		public bool UseCSVConfig = false;
+
 		private float _mCurrentGenerateSeconds = 0;	//生成时间
 		private float _mCurrentWaveSeconds = 0;	//当前波次持续时间计时器
 
@@ -27,23 +35,86 @@ namespace VampireSurvivorLike
 		public bool IsLastWave=>WaveCount==_mToatalCount;
 		public EnemyWave CurrentWave=>_mCurrentWave;
 
-        void Start()
+		private bool _isInitialized = false;
+
+        IEnumerator Start()
         {
+			if (UseCSVConfig && PrefabMapping != null)
+			{
+				// 从CSV加载配置
+				yield return LoadFromCSVAsync();
+			}
+			else
+			{
+				// 使用ScriptableObject配置
+				LoadFromScriptableObject();
+			}
+
+			_isInitialized = true;
+        }
+
+		/// <summary>
+		/// 从ScriptableObject加载波次配置
+		/// </summary>
+		private void LoadFromScriptableObject()
+		{
 			foreach(var group in Config.EnemyWaveGroups)
             {
                 foreach(var wave in group.EnemyWaves)
                 {
+					if (!wave.Active) continue;
                     _mEnemyWaveQueue.Enqueue(wave);
 					_mToatalCount++;
                 }
             }
-            
-        }
+		}
+
+		/// <summary>
+		/// 异步从CSV加载波次配置
+		/// </summary>
+		private IEnumerator LoadFromCSVAsync()
+		{
+			List<EnemyWaveConfigRow> configRows = null;
+			
+			yield return EnemyWaveConfigLoader.LoadAsync(rows => configRows = rows);
+
+			if (configRows == null || configRows.Count == 0)
+			{
+				Debug.LogWarning("[EnemyGenerator] CSV配置为空，回退到ScriptableObject配置");
+				LoadFromScriptableObject();
+				yield break;
+			}
+
+			// 转换配置并解析预制体
+			foreach (var row in configRows)
+			{
+				if (!row.Active) continue;
+
+				var wave = EnemyWave.FromConfigRow(row);
+				
+				// 通过映射表获取预制体
+				wave.EnemyPrefab = PrefabMapping.GetPrefab(row.EnemyPrefabName);
+				
+				if (wave.EnemyPrefab == null)
+				{
+					Debug.LogWarning($"[EnemyGenerator] 跳过波次 '{row.WaveName}'：未找到预制体 '{row.EnemyPrefabName}'");
+					continue;
+				}
+
+				_mEnemyWaveQueue.Enqueue(wave);
+				_mToatalCount++;
+			}
+
+			Debug.Log($"[EnemyGenerator] 从CSV成功加载 {_mToatalCount} 个波次");
+		}
 
 		private EnemyWave _mCurrentWave=null;
 
         void Update()
         {
+			// 等待初始化完成
+			if (!_isInitialized) return;
+
 			if(_mCurrentWave==null && _mEnemyWaveQueue.Count>0)
 			{
 				WaveCount++;
@@ -87,22 +158,23 @@ namespace VampireSurvivorLike
 														CameraController.RTTransform.position.y);
                         }
 						
-
+						var currentWave = _mCurrentWave;
 						//生成敌人
-						_mCurrentWave.EnemyPrefab.Instantiate()
+						currentWave.EnemyPrefab.Instantiate()
 												.Position(pos)
 												.Self(self=>
 												{
 													var enemy=self.GetComponent<IEnemy>();
-													enemy.SetSpeedScale(_mCurrentWave.SpeedScale);
-													enemy.SetHPScale(_mCurrentWave.HPScale);
+													enemy.SetSpeedScale(currentWave.SpeedScale);
+													enemy.SetHPScale(currentWave.HPScale);
+													enemy.SetDamageScale(currentWave.DamageScale);
 												})
 												.Show();
 					}
                 }
             }
 
-			if(_mCurrentWaveSeconds>=_mCurrentWave.KeepSeconds)
+			if(_mCurrentWave!=null && _mCurrentWaveSeconds>=_mCurrentWave.KeepSeconds)
 			{
 				_mCurrentWave = null;
 				

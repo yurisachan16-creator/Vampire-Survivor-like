@@ -16,6 +16,7 @@ namespace VampireSurvivorLike
 		public FSM<States> FSM = new FSM<States>();
 		public float Health = 20f;
 		public float MovementSpeed = 1.5f;
+		public float DamageMultiplier = 1f;  //伤害倍率
         
         void Start()
 		{
@@ -160,6 +161,11 @@ namespace VampireSurvivorLike
         public void SetHPScale(float HPScale)
         {
             Health *= HPScale;
+        }
+
+        public void SetDamageScale(float DamageScale)
+        {
+            DamageMultiplier *= DamageScale;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace VampireSurvivorLike
 		public float MovementSpeed = 2f;
 
 		public float Health = 3f;
+		public float DamageMultiplier = 1f;  //伤害倍率
         public Color DissolveColor = Color.yellow;
         public bool TreasureChestEnemy = false;
 		void Start()
@@ -92,6 +93,11 @@ namespace VampireSurvivorLike
         public void SetHPScale(float HPScale)
         {
             Health *= HPScale;
+        }
+
+        public void SetDamageScale(float DamageScale)
+        {
+            DamageMultiplier *= DamageScale;
         }
     }
 }
