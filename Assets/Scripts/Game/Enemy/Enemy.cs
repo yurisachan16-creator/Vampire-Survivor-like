@@ -13,6 +13,13 @@ namespace VampireSurvivorLike
 		public float DamageMultiplier = 1f;  //伤害倍率
         public Color DissolveColor = Color.yellow;
         public bool TreasureChestEnemy = false;
+        
+        // 掉落概率配置
+        public float ExpDropRate = 0.3f;
+        public float CoinDropRate = 0.3f;
+        public float HpDropRate = 0.1f;
+        public float BombDropRate = 0.05f;
+        
 		void Start()
 		{
 			EnemyGenerator.EnemyCount.Value++;
@@ -24,8 +31,8 @@ namespace VampireSurvivorLike
 
             if (Health <= 0)
             {
-				//掉落道具
-				Global.GeneratePowerUp(gameObject, TreasureChestEnemy);
+				//掉落道具（使用配置的掉落率）
+				Global.GeneratePowerUpWithRates(gameObject, TreasureChestEnemy, ExpDropRate, CoinDropRate, HpDropRate, BombDropRate);
                 AudioKit.PlaySound(Sfx.ENEMYDIE);
 				FxController.Play(Sprite, DissolveColor);
                 this.DestroyGameObjGracefully();
@@ -98,6 +105,24 @@ namespace VampireSurvivorLike
         public void SetDamageScale(float DamageScale)
         {
             DamageMultiplier *= DamageScale;
+        }
+
+        public void SetBaseSpeed(float baseSpeed)
+        {
+            MovementSpeed = baseSpeed;
+        }
+
+        public void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate)
+        {
+            ExpDropRate = expRate;
+            CoinDropRate = coinRate;
+            HpDropRate = hpRate;
+            BombDropRate = bombRate;
+        }
+
+        public void SetTreasureChest(bool isTreasureChest)
+        {
+            TreasureChestEnemy = isTreasureChest;
         }
     }
 }

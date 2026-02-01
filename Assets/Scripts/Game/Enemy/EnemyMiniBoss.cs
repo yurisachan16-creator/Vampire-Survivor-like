@@ -167,5 +167,20 @@ namespace VampireSurvivorLike
         {
             DamageMultiplier *= DamageScale;
         }
+
+        public void SetBaseSpeed(float baseSpeed)
+        {
+            MovementSpeed = baseSpeed;
+        }
+
+        public void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate)
+        {
+            // MiniBoss 固定掉落宝箱，不使用普通掉落率
+        }
+
+        public void SetTreasureChest(bool isTreasureChest)
+        {
+            // MiniBoss 固定掉落宝箱
+        }
     }
 }

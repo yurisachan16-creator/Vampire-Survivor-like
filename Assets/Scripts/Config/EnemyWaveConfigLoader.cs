@@ -24,6 +24,13 @@ namespace VampireSurvivorLike
         public float HPScale;
         public float SpeedScale;
         public float DamageScale;
+        // 新增字段
+        public float BaseSpeed = 2f;           // 敌人基础速度
+        public bool IsTreasureChest = false;   // 是否生成宝箱
+        public float ExpDropRate = 0.3f;       // 经验掉落概率
+        public float CoinDropRate = 0.3f;      // 金币掉落概率
+        public float HpDropRate = 0.1f;        // 回血道具掉落概率
+        public float BombDropRate = 0.05f;     // 炸弹掉落概率
     }
 
     /// <summary>
@@ -109,7 +116,14 @@ namespace VampireSurvivorLike
                         KeepSeconds = int.Parse(values[6]),
                         HPScale = float.Parse(values[7]),
                         SpeedScale = float.Parse(values[8]),
-                        DamageScale = float.Parse(values[9])
+                        DamageScale = float.Parse(values[9]),
+                        // 解析新增字段（使用默认值兼容旧配置）
+                        BaseSpeed = values.Length > 10 && !string.IsNullOrEmpty(values[10]) ? float.Parse(values[10]) : 2f,
+                        IsTreasureChest = values.Length > 11 && !string.IsNullOrEmpty(values[11]) && ParseBool(values[11]),
+                        ExpDropRate = values.Length > 12 && !string.IsNullOrEmpty(values[12]) ? float.Parse(values[12]) : 0.3f,
+                        CoinDropRate = values.Length > 13 && !string.IsNullOrEmpty(values[13]) ? float.Parse(values[13]) : 0.3f,
+                        HpDropRate = values.Length > 14 && !string.IsNullOrEmpty(values[14]) ? float.Parse(values[14]) : 0.1f,
+                        BombDropRate = values.Length > 15 && !string.IsNullOrEmpty(values[15]) ? float.Parse(values[15]) : 0.05f
                     };
                     rows.Add(row);
                 }

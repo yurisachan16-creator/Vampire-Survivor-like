@@ -6,5 +6,8 @@ namespace VampireSurvivorLike
         void SetSpeedScale(float SpeedScale);
         void SetHPScale(float HPScale);
         void SetDamageScale(float DamageScale);
+        void SetBaseSpeed(float baseSpeed);
+        void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate);
+        void SetTreasureChest(bool isTreasureChest);
     }
 }

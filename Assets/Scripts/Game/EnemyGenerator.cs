@@ -166,9 +166,17 @@ namespace VampireSurvivorLike
 												.Self(self=>
 												{
 													var enemy=self.GetComponent<IEnemy>();
+													// 设置基础速度（如果配置了）
+													if (currentWave.BaseSpeed > 0)
+													{
+														enemy.SetBaseSpeed(currentWave.BaseSpeed);
+													}
 													enemy.SetSpeedScale(currentWave.SpeedScale);
 													enemy.SetHPScale(currentWave.HPScale);
 													enemy.SetDamageScale(currentWave.DamageScale);
+													enemy.SetTreasureChest(currentWave.IsTreasureChest);
+													enemy.SetDropRates(currentWave.ExpDropRate, currentWave.CoinDropRate, 
+														currentWave.HpDropRate, currentWave.BombDropRate);
 												})
 												.Show();
 					}

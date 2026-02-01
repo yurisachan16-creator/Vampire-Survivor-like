@@ -179,6 +179,63 @@ namespace VampireSurvivorLike
             
             EnemyGenerator.EnemyCount.Value = 0;
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
+
+            // 从配置文件加载技能属性（如果已加载）
+            ApplyAbilityConfig();
+        }
+
+        /// <summary>
+        /// 从配置文件应用技能属性
+        /// </summary>
+        public static void ApplyAbilityConfig()
+        {
+            if (!AbilityConfigLoader.IsLoaded) return;
+
+            // 剑
+            var swordConfig = AbilityConfigLoader.GetConfig("simple_sword");
+            if (swordConfig != null)
+            {
+                SimpleAbilityDamage.Value = swordConfig.Damage;
+                SimpleAbilityDuration.Value = swordConfig.Duration;
+                SimpleSwordCount.Value = swordConfig.Count;
+                SimpleSwordRange.Value = swordConfig.Range;
+            }
+
+            // 飞刀
+            var knifeConfig = AbilityConfigLoader.GetConfig("simple_knife");
+            if (knifeConfig != null)
+            {
+                SimpleKnifeDamage.Value = knifeConfig.Damage;
+                SimpleKnifeDuration.Value = knifeConfig.Duration;
+                SimpleKnifeCount.Value = knifeConfig.Count;
+                SimpleKnifeAttackCount.Value = knifeConfig.AttackCount;
+            }
+
+            // 旋转剑
+            var rotateSwordConfig = AbilityConfigLoader.GetConfig("rotate_sword");
+            if (rotateSwordConfig != null)
+            {
+                RotateSwordDamage.Value = rotateSwordConfig.Damage;
+                RotateSwordCount.Value = rotateSwordConfig.Count;
+                RotateSwordSpeed.Value = rotateSwordConfig.Speed;
+                RotateSwordRange.Value = rotateSwordConfig.Range;
+            }
+
+            // 篮球
+            var basketBallConfig = AbilityConfigLoader.GetConfig("basket_ball");
+            if (basketBallConfig != null)
+            {
+                BasketBallDamage.Value = basketBallConfig.Damage;
+                BasketBallCount.Value = basketBallConfig.Count;
+                BasketBallSpeed.Value = basketBallConfig.Speed;
+            }
+
+            // 炸弹
+            var bombConfig = AbilityConfigLoader.GetConfig("bomb");
+            if (bombConfig != null)
+            {
+                BombDamage.Value = bombConfig.Damage;
+            }
         }
 
         /// <summary>
@@ -192,6 +249,15 @@ namespace VampireSurvivorLike
 
         public static void GeneratePowerUp(GameObject gameObject,bool genTreasureChest)
         {
+            GeneratePowerUpWithRates(gameObject, genTreasureChest, ExpPercent.Value, CoinPercent.Value, 0.1f, BombPercent.Value);
+        }
+
+        /// <summary>
+        /// 使用自定义掉落率生成掉落物
+        /// </summary>
+        public static void GeneratePowerUpWithRates(GameObject gameObject, bool genTreasureChest, 
+            float expDropRate, float coinDropRate, float hpDropRate, float bombDropRate)
+        {
             if(genTreasureChest)
             {
                 PowerUpManager.Default.TreasureChest
@@ -203,7 +269,7 @@ namespace VampireSurvivorLike
             //根据概率生成经验值和金币
             var percent=Random.Range(0, 1f);
 
-            if (percent < ExpPercent.Value + AdditionalExpPercent.Value)
+            if (percent < expDropRate + AdditionalExpPercent.Value)
             {
                 //生成经验值
                 PowerUpManager.Default.Exp.Instantiate()
@@ -215,7 +281,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if (percent < CoinPercent.Value)
+            if (percent < coinDropRate)
             {
                 //生成金币
                 PowerUpManager.Default.Coin.Instantiate()
@@ -227,7 +293,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent<0.1f && !Object.FindObjectOfType<RecoverHP>())
+            if(percent < hpDropRate && !Object.FindObjectOfType<RecoverHP>())
             {
                 //生成回血道具
                 PowerUpManager.Default.RecoverHP.Instantiate()
@@ -241,7 +307,7 @@ namespace VampireSurvivorLike
             {
                 percent=Random.Range(0, 1f);
 
-                if(percent<BombPercent.Value)
+                if(percent < bombDropRate)
                 {
                     //生成炸弹道具
                     PowerUpManager.Default.Bomb.Instantiate()
