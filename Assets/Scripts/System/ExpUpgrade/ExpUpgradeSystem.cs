@@ -7,6 +7,10 @@ namespace VampireSurvivorLike
     public class ExpUpgradeSystem : AbstractSystem
     {
         public static EasyEvent OnExpUpgradeSystemChanged = new EasyEvent();
+        /// <summary>
+        /// 升级面板应该显示时触发（参数为true表示有可选项，false表示无可选项）
+        /// </summary>
+        public static EasyEvent<bool> OnUpgradePanelShouldShow = new EasyEvent<bool>();
         public List<ExpUpgradeItem> Items{get;} = new List<ExpUpgradeItem>();
         public static bool AllUnlockedFinished = false;
 
@@ -63,7 +67,8 @@ namespace VampireSurvivorLike
 
             Global.Level.Register(_=>
             {
-                Roll();
+                var hasItems = Roll();
+                OnUpgradePanelShouldShow.Trigger(hasItems);
             });
         }
 
@@ -656,7 +661,11 @@ namespace VampireSurvivorLike
             
         }
 
-        public void Roll()
+        /// <summary>
+        /// 随机抽取可升级项目
+        /// </summary>
+        /// <returns>是否有可升级项目</returns>
+        public bool Roll()
         {
             foreach(var expUpgradeItem in Items)
             {
@@ -664,6 +673,12 @@ namespace VampireSurvivorLike
             }
 
             var list = Items.Where(item=>!item.UpgradeFinish).ToList();
+
+            // 没有可升级项目
+            if(list.Count == 0)
+            {
+                return false;
+            }
 
             if(list.Count >= 4)
             {
@@ -680,8 +695,7 @@ namespace VampireSurvivorLike
                 }
             }
 
-            
-            
+            return true;
         }
     }
 }

@@ -32,7 +32,8 @@ namespace VampireSurvivorLike
 
 		public int WaveCount=0;
 		private int _mToatalCount=0;
-		public bool IsLastWave=>WaveCount==_mToatalCount;
+		public bool IsInitialized => _isInitialized;
+		public bool IsLastWave=> _isInitialized && WaveCount==_mToatalCount && _mToatalCount > 0;
 		public EnemyWave CurrentWave=>_mCurrentWave;
 
 		private bool _isInitialized = false;

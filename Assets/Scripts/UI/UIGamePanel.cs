@@ -52,16 +52,24 @@ namespace VampireSurvivorLike
 
 			//默认升级界面隐藏
 			ExpUpgradePanel.Hide();
-			///等级提升处理（只在等级变化时触发，不在初始化时触发）
-			Global.Level.Register((level) =>
+			///等级提升处理：监听升级系统事件，只有在有可选项时才显示面板
+			ExpUpgradeSystem.OnUpgradePanelShouldShow.Register((hasItems) =>
 			{
-				//暂停游戏
-				Time.timeScale = 0f;
-				
-				//显示升级面板
-				ExpUpgradePanel.Show();
-				//升级音效
-				AudioKit.PlaySound("LevelUp");
+				if (hasItems)
+				{
+					//暂停游戏
+					Time.timeScale = 0f;
+					//显示升级面板
+					ExpUpgradePanel.Show();
+					//升级音效
+					AudioKit.PlaySound("LevelUp");
+				}
+				else
+				{
+					//没有可升级项目，给予补偿奖励
+					Global.Coin.Value += 100;
+					AudioKit.PlaySound("Retro Event Acute 08");
+				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			///经验值转等级处理

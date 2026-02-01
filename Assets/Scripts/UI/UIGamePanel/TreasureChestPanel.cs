@@ -39,12 +39,14 @@ namespace VampireSurvivorLike
                 {
 					if (!expUpgradeSystem.Pairs.TryGetValue(item.Key, out var pairedItemKey)) return false;
 					if (!expUpgradeSystem.Dictionary.TryGetValue(pairedItemKey, out var pairedItem) || pairedItem == null) return false;
-					if (!expUpgradeSystem.PairedProperties.TryGetValue(pairedItemKey, out var pairedUnlockedProperty) || pairedUnlockedProperty == null) return false;
+					// 使用当前武器的Key来检查是否已经合成过
+					if (!expUpgradeSystem.PairedProperties.TryGetValue(item.Key, out var currentUnlockedProperty) || currentUnlockedProperty == null) return false;
 
 					var pairedItemStartUpgrade = pairedItem.CurrentLevel.Value > 0;
-					var pairedUnlocked = pairedUnlockedProperty.Value;
+					var alreadyUnlocked = currentUnlockedProperty.Value;  // 检查当前武器的超级版本是否已解锁
 
-					return pairedItemStartUpgrade && pairedUnlocked;
+					// 配对武器已开始升级 且 当前武器的超级版本尚未解锁
+					return pairedItemStartUpgrade && !alreadyUnlocked;
                 }
 
                 return false;

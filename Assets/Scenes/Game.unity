@@ -9486,6 +9486,7 @@ MonoBehaviour:
   SelfRigidbody2D: {fileID: 1285076649}
   MovementSpeed: 1
   Health: 5
+  DamageMultiplier: 1
   DissolveColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   TreasureChestEnemy: 0
 --- !u!1 &1305448049
@@ -10269,6 +10270,7 @@ MonoBehaviour:
   ViewControllerFullTypeName: 
   Health: 20
   MovementSpeed: 1.5
+  DamageMultiplier: 1
   Sprite: {fileID: 1433433580}
   HitBox: {fileID: 892963716}
   SelfRigidbody2D: {fileID: 1547094469}
@@ -11777,70 +11779,90 @@ MonoBehaviour:
   ArchitectureFullTypeName: 
   ViewControllerFullTypeName: 
   Config: {fileID: 11400000, guid: 09abfb29c9c51b54198e149f2c8c026e, type: 2}
+  PrefabMapping: {fileID: 11400000, guid: c8a21bf6020e7a843ac7edbe979976fc, type: 2}
+  UseCSVConfig: 1
   EnemyWaves:
   - WaveName: 
     Active: 1
     GenerateDuration: 1
     EnemyPrefab: {fileID: 2086275127}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 0.8
     EnemyPrefab: {fileID: 2086275127}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 0.6
     EnemyPrefab: {fileID: 2086275127}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 0.4
     EnemyPrefab: {fileID: 2086275127}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 1
     EnemyPrefab: {fileID: 1285076646}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 0.8
     EnemyPrefab: {fileID: 1285076646}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 0.6
     EnemyPrefab: {fileID: 1285076646}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 0.4
     EnemyPrefab: {fileID: 1285076646}
+    EnemyPrefabName: 
     KeepSeconds: 10
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   - WaveName: 
     Active: 1
     GenerateDuration: 2
     EnemyPrefab: {fileID: 1547094466}
+    EnemyPrefabName: 
     KeepSeconds: 3
     HPScale: 1
     SpeedScale: 1
+    DamageScale: 1
   WaveCount: 0
   EnemySkeleton: {fileID: 1285076651}
   EnemyMiniBoss: {fileID: 1547094469}

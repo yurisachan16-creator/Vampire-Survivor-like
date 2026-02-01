@@ -131,13 +131,28 @@ namespace VampireSurvivorLike
             {
                 if(Time.frameCount % 10 == 0)
                 {
-                    foreach (var AchievementItem in Items.Where(AchievementItem=> 
-                        !AchievementItem.Unlocked && AchievementItem.ConditionCheck()))
-                    {
-                        AchievementItem.UnLock(saveSystem);
-                    }
+                    CheckAndUnlockAchievements(saveSystem);
                 }
             });
+
+            // 当超级武器解锁时立即检查成就
+            Global.SuperSword.Register(_ => CheckAndUnlockAchievements(saveSystem));
+            Global.SuperKnife.Register(_ => CheckAndUnlockAchievements(saveSystem));
+            Global.SuperBomb.Register(_ => CheckAndUnlockAchievements(saveSystem));
+            Global.SuperBasketBall.Register(_ => CheckAndUnlockAchievements(saveSystem));
+            Global.SuperRotateSword.Register(_ => CheckAndUnlockAchievements(saveSystem));
+        }
+
+        /// <summary>
+        /// 检查并解锁满足条件的成就
+        /// </summary>
+        private void CheckAndUnlockAchievements(SaveSystem saveSystem)
+        {
+            foreach (var achievementItem in Items.Where(item => 
+                !item.Unlocked && item.ConditionCheck()))
+            {
+                achievementItem.UnLock(saveSystem);
+            }
         }
 
         public List<AchievementItem> Items = new List<AchievementItem>();
