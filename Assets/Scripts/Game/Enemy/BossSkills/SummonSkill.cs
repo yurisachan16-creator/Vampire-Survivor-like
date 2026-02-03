@@ -1,5 +1,6 @@
 using UnityEngine;
 using QFramework;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -66,7 +67,7 @@ namespace VampireSurvivorLike
             // 召唤特效 - 紫色光芒
             Boss.Sprite.color = new Color(0.8f, 0.2f, 1f);
             
-            AudioKit.PlaySound("BossSummon");
+            AudioKit.PlaySound(Sfx.LEVELUP);
         }
         
         protected override void OnExecuteUpdate()
@@ -116,7 +117,7 @@ namespace VampireSurvivorLike
             
             _summonedCount++;
             
-            AudioKit.PlaySound("Summon");
+            AudioKit.PlaySound(Sfx.EXP);
         }
         
         private void SpawnSummonEffect(Vector3 position)

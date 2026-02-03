@@ -1,5 +1,6 @@
 using UnityEngine;
 using QFramework;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -109,7 +110,7 @@ namespace VampireSurvivorLike
             // 设置冲刺速度
             Boss.SelfRigidbody2D.velocity = _dashDirection * Boss.MovementSpeed * _dashSpeedMultiplier;
             
-            AudioKit.PlaySound("Dash");
+            AudioKit.PlaySound(Sfx.RETRO_EVENT_ACUTE_08);
         }
         
         private void UpdateDashingPhase()

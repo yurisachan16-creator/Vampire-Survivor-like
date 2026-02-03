@@ -11,8 +11,8 @@ namespace VampireSurvivorLike
             //炸弹效果: 清除屏幕上所有敌人
 				foreach(var enemyObj in GameObject.FindGameObjectsWithTag("Enemy"))
 				{
-					var enemy=enemyObj.GetComponent<Enemy>();
-					if(enemy&&enemy.gameObject.activeSelf)
+					var enemy=enemyObj.GetComponent<IEnemy>();
+					if(enemy!=null&&enemyObj.gameObject.activeSelf)
 					{
 						DamageSystem.CalculateDamage(Global.BombDamage.Value,enemy);
 					}

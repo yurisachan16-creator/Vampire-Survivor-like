@@ -1,5 +1,6 @@
 using UnityEngine;
 using QFramework;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -85,7 +86,7 @@ namespace VampireSurvivorLike
             Boss.Sprite.transform.localScale = _originalScale * 1.3f; // 放大
             Boss.Sprite.color = Color.yellow;
             
-            AudioKit.PlaySound("Spin");
+            AudioKit.PlaySound(Sfx.RETRO_EVENT_UI_01);
         }
         
         private void UpdateSpinPhase()

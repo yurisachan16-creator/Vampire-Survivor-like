@@ -55,9 +55,11 @@ namespace VampireSurvivorLike
 								{
 									if (hitHurtBox.Owner.CompareTag("Enemy"))
 									{
+										var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
+										if (enemy == null) return;
 										hasHit = true;
 										DamageSystem.CalculateDamage(Global.SimpleAbilityDamage.Value * damageTimes,
-											hitHurtBox.Owner.GetComponent<Enemy>());
+											enemy);
 									}
 								}
                             }).UnRegisterWhenGameObjectDestroyed(selfCache);

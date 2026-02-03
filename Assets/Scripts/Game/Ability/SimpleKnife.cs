@@ -65,10 +65,11 @@ namespace VampireSurvivorLike
 								{
 									if(hitHurtBox.Owner.CompareTag("Enemy"))
 									{
-										//hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
+										var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
+										if (enemy == null) return;
 										var damageTimes=Global.SuperKnife.Value ? Random.Range(2,3+1) : 1;
 										DamageSystem.CalculateDamage(Global.SimpleKnifeDamage.Value * damageTimes,
-											hitHurtBox.Owner.GetComponent<Enemy>());
+											enemy);
 										attackCount++;
 
 										if(attackCount>=Global.SimpleKnifeAttackCount.Value)

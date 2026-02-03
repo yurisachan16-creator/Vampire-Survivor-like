@@ -1,5 +1,6 @@
 using UnityEngine;
 using QFramework;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -106,7 +107,7 @@ namespace VampireSurvivorLike
                 return;
             }
             
-            AudioKit.PlaySound("BossAttack");
+            AudioKit.PlaySound(Sfx.RETRO_EVENT_ACUTE_11);
             
             float angleStep = 360f / _projectileCount;
             float startAngle = _currentWave * (angleStep / 2); // 每波偏移一定角度
