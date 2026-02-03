@@ -13,31 +13,57 @@ MonoBehaviour:
   m_Name: Enemy Prefab Mapping
   m_EditorClassIdentifier: 
   Enemies:
-  - Name: EnemyA
+  - Name: Enemy_Ghost
+    Prefab: {fileID: 4169054150964862606, guid: cfd8ec1bc4dd12642bc126936e7510f4, type: 3}
+  - Name: Enemy_Ghost_Boss
+    Prefab: {fileID: 3561807309246451492, guid: 0519d1deee9c9da4695ad17fa8b3abba, type: 3}
+  - Name: Enemy_Block_Yellow
+    Prefab: {fileID: 4169054150964862606, guid: 06ebcfe03d9bbea448274f5f9d5239f7, type: 3}
+  - Name: Enemy_Block_Yellow_Boss
+    Prefab: {fileID: 3561807309246451492, guid: b9fff614694d59b4b9f917fb735e0186, type: 3}
+  - Name: Enemy_Cyclops
+    Prefab: {fileID: 4169054150964862606, guid: 34782a2aa9acede4bad65f9fce77706b, type: 3}
+  - Name: Enemy_Bat
+    Prefab: {fileID: 4169054150964862606, guid: 8c471413ba1feaa4f8fa32f885766b2a, type: 3}
+  - Name: Enemy_Bat_Boss
+    Prefab: {fileID: 3561807309246451492, guid: fc52458ba5d094f4b8c8315494ea84d1, type: 3}
+  - Name: Enemy_Rouge
     Prefab: {fileID: 4169054150964862606, guid: c4d3ab39fbb03f541aa0e9e55ea45197, type: 3}
+  - Name: Enemy_Spider
+    Prefab: {fileID: 3766324054420972532, guid: f5356c37007c889498c02a0834f6aa9c, type: 3}
+  - Name: Enemy_Crab_Boss
+    Prefab: {fileID: 3561807309246451492, guid: 8b6ce9010edd9e748bdb5ee062d2f971, type: 3}
+  - Name: Enemy_Turtle_Boss
+    Prefab: {fileID: 3561807309246451492, guid: e09c16a062ca36943944a5c3dea49a96, type: 3}
+  - Name: Enemy_Orc_Boss
+    Prefab: {fileID: 3561807309246451492, guid: f531b6f2da6ffbd4698ddb9d3a525d97, type: 3}
+  - Name: EnemyMiniBoss
+    Prefab: {fileID: 3561807309246451492, guid: 0519d1deee9c9da4695ad17fa8b3abba, type: 3}
+  - Name: EnemyA
+    Prefab: {fileID: 4169054150964862606, guid: 06ebcfe03d9bbea448274f5f9d5239f7, type: 3}
   - Name: EnemyABoss
     Prefab: {fileID: 3766324054420972532, guid: f5356c37007c889498c02a0834f6aa9c, type: 3}
   - Name: EnemyABossB
-    Prefab: {fileID: 1227753066474831623, guid: e84c70bb2b0bb3f4b86ea674de21595b, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: b9fff614694d59b4b9f917fb735e0186, type: 3}
   - Name: EnemyB
-    Prefab: {fileID: 3448790481565817268, guid: 7d29a85f0024357469be6b81bb7a4ed5, type: 3}
+    Prefab: {fileID: 4169054150964862606, guid: cfd8ec1bc4dd12642bc126936e7510f4, type: 3}
   - Name: EnemyBBoss
-    Prefab: {fileID: 4901480879764822989, guid: f364b86ad17bcaf48b95b356afa4d5ea, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: 8b6ce9010edd9e748bdb5ee062d2f971, type: 3}
   - Name: EnemyBBossB
-    Prefab: {fileID: 6821214588263192071, guid: 31bebfeb16f03b54081ecfc39ff77794, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: 8b6ce9010edd9e748bdb5ee062d2f971, type: 3}
   - Name: EnemyC
-    Prefab: {fileID: 9103667646759206570, guid: 74f6b2f07a6e1a1439f6d3ed6c44b67c, type: 3}
+    Prefab: {fileID: 4169054150964862606, guid: c4d3ab39fbb03f541aa0e9e55ea45197, type: 3}
   - Name: EnemyCBoss
-    Prefab: {fileID: 60887744075502997, guid: 560521a8ea6a3e1439aab8d070fb7ada, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: f531b6f2da6ffbd4698ddb9d3a525d97, type: 3}
   - Name: EnemyCBossB
-    Prefab: {fileID: 8238583148685942822, guid: a5cbe68f21ee6564fb7d1db352bde440, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: f531b6f2da6ffbd4698ddb9d3a525d97, type: 3}
   - Name: EnemyD
-    Prefab: {fileID: 8471310678407677265, guid: f4c7469c32ab3e94b8d647030830dce2, type: 3}
+    Prefab: {fileID: 4169054150964862606, guid: 8c471413ba1feaa4f8fa32f885766b2a, type: 3}
   - Name: EnemyDBoss
-    Prefab: {fileID: 3259836443932227306, guid: 71421dc95fc3a1a469da72729abd3c46, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: e09c16a062ca36943944a5c3dea49a96, type: 3}
   - Name: EnemyDBossB
-    Prefab: {fileID: 4320142622625691705, guid: c3f6661a3d192d744a8d91260af16a85, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: 0519d1deee9c9da4695ad17fa8b3abba, type: 3}
   - Name: EnemyE
-    Prefab: {fileID: 3561807309246451492, guid: 5f0b4f6e6f0ee4c44b3f3d1b125aefda, type: 3}
+    Prefab: {fileID: 3561807309246451492, guid: fc52458ba5d094f4b8c8315494ea84d1, type: 3}
   - Name: EnemyFly
-    Prefab: {fileID: 456121072226086197, guid: b7f85d2c470dba84689e4528d5bbae6a, type: 3}
+    Prefab: {fileID: 4169054150964862606, guid: 34782a2aa9acede4bad65f9fce77706b, type: 3}
