@@ -207,9 +207,9 @@ MonoBehaviour:
   BossType: 0
   BossProjectilePrefab: {fileID: 0}
   MinionPrefab: {fileID: 0}
-  Sprite: {fileID: 0}
-  HitBox: {fileID: 0}
-  SelfRigidbody2D: {fileID: 0}
+  Sprite: {fileID: 2954019219674289236}
+  HitBox: {fileID: 6026201196960991602}
+  SelfRigidbody2D: {fileID: 4776199626154096865}
 --- !u!1 &5001432614900869883
 GameObject:
   m_ObjectHideFlags: 0

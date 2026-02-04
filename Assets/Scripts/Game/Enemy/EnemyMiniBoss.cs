@@ -1,6 +1,7 @@
 using UnityEngine;
 using QFramework;
 using System.Collections.Generic;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -85,6 +86,7 @@ namespace VampireSurvivorLike
         private List<IBossSkill> _skills = new List<IBossSkill>();
         private IBossSkill _currentSkill;
         private float _initialHealth;
+        private bool _isDead = false;
         
         void Start()
         {
@@ -278,7 +280,7 @@ namespace VampireSurvivorLike
             }
             
             // 死亡检查
-            if (Health <= 0)
+            if (!_isDead && Health <= 0)
             {
                 OnDeath();
             }
@@ -291,6 +293,12 @@ namespace VampireSurvivorLike
         
         private void OnDeath()
         {
+            if (_isDead) return;
+            _isDead = true;
+            _isIgnoreHurt = true;
+            if (HitBox) HitBox.enabled = false;
+            if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
+
             // 根据配置决定掉落
             if (DropTreasureChest)
             {
@@ -311,7 +319,7 @@ namespace VampireSurvivorLike
                 Global.GeneratePowerUpWithRates(gameObject, false, 0.8f, 0.5f, 0.2f, 0.1f);
             }
             
-            AudioKit.PlaySound("BossDie");
+            AudioKit.PlaySound(Sfx.ENEMYDIE);
             this.DestroyGameObjGracefully();
         }
         
@@ -326,6 +334,7 @@ namespace VampireSurvivorLike
         
         public void Hurt(float value, bool force = false, bool critical = false)
         {
+            if (_isDead) return;
             if (_isIgnoreHurt && !force) return;
             
             _isIgnoreHurt = true;
@@ -339,7 +348,13 @@ namespace VampireSurvivorLike
             // 延时后扣血并恢复
             ActionKit.Delay(0.2f, () =>
             {
+                if (!this || _isDead) return;
                 this.Health -= value;
+                if (this.Health <= 0)
+                {
+                    OnDeath();
+                    return;
+                }
                 this.Sprite.color = Color.white;
                 _isIgnoreHurt = false;
             }).Start(this);

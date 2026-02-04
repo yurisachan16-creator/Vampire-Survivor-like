@@ -34,7 +34,7 @@ namespace VampireSurvivorLike
             if (other.CompareTag("Player"))
             {
                 // 对玩家造成伤害
-                Global.HP.Value -= (int)_damage;
+                Global.HP.Value -= Mathf.Max(1, Mathf.CeilToInt(_damage));
                 AudioKit.PlaySound("Hit");
                 
                 // 销毁弹幕

@@ -23,6 +23,8 @@ namespace VampireSurvivorLike
 
 		private float _mCurrentGenerateSeconds = 0;	//生成时间
 		private float _mCurrentWaveSeconds = 0;	//当前波次持续时间计时器
+		private bool _hasSpawnedInCurrentWave = false;
+		private float _nextClearCheckAt = 0f;
 
 		public static BindableProperty<int> EnemyCount = new BindableProperty<int>(0);
 		/// <summary>
@@ -128,6 +130,22 @@ namespace VampireSurvivorLike
 
 		private EnemyWave _mCurrentWave=null;
 
+		private bool HasAnyAliveEnemiesInScene()
+		{
+			return FindObjectsByType<Enemy>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0
+			       || FindObjectsByType<EnemyMiniBoss>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0;
+		}
+		
+		private void EndCurrentWave()
+		{
+			_mCurrentWave = null;
+			CurrentWaveName.Value = "";
+			WaveRemainingTime.Value = 0;
+			_mCurrentGenerateSeconds = 0;
+			_mCurrentWaveSeconds = 0;
+			_hasSpawnedInCurrentWave = false;
+		}
+
         void Update()
         {
 			// 等待初始化完成
@@ -141,6 +159,8 @@ namespace VampireSurvivorLike
 				CurrentWaveName.Value = _mCurrentWave.WaveName;
 				_mCurrentGenerateSeconds = 0;
 				_mCurrentWaveSeconds = 0;
+				_hasSpawnedInCurrentWave = false;
+				_nextClearCheckAt = 0f;
 			}
 
 			if(_mCurrentWave!=null)
@@ -198,19 +218,44 @@ namespace VampireSurvivorLike
 														currentWave.HpDropRate, currentWave.BombDropRate);
 												})
 												.Show();
+						_hasSpawnedInCurrentWave = true;
 					}
                 }
             }
 
-			if(_mCurrentWave!=null && _mCurrentWaveSeconds>=_mCurrentWave.KeepSeconds)
+			var endedThisFrame = false;
+
+			if (_mCurrentWave != null && _hasSpawnedInCurrentWave && Time.time >= _nextClearCheckAt)
 			{
-				_mCurrentWave = null;
-				CurrentWaveName.Value = "";
-				WaveRemainingTime.Value = 0;
+				_nextClearCheckAt = Time.time + 0.1f;
+				if (!HasAnyAliveEnemiesInScene())
+				{
+					EndCurrentWave();
+					endedThisFrame = true;
+				}
 			}
-			else if (_mCurrentWave != null)
+
+			if (!endedThisFrame && _mCurrentWave != null && _mCurrentWaveSeconds>=_mCurrentWave.KeepSeconds)
+			{
+				EndCurrentWave();
+				endedThisFrame = true;
+			}
+
+			if (!endedThisFrame && _mCurrentWave != null)
 			{
 				WaveRemainingTime.Value = _mCurrentWave.KeepSeconds - _mCurrentWaveSeconds;
+			}
+
+			if (endedThisFrame && _mCurrentWave==null && _mEnemyWaveQueue.Count>0)
+			{
+				WaveCount++;
+				CurrentWaveIndex.Value = WaveCount;
+				_mCurrentWave = _mEnemyWaveQueue.Dequeue();
+				CurrentWaveName.Value = _mCurrentWave.WaveName;
+				_mCurrentGenerateSeconds = 0;
+				_mCurrentWaveSeconds = 0;
+				_hasSpawnedInCurrentWave = false;
+				_nextClearCheckAt = 0f;
 			}
         }
     }
