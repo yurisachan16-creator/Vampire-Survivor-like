@@ -23,6 +23,44 @@ namespace VampireSurvivorLike
 				EnemyCountText.text = "敌人数量:" + EnemyCount;
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
+			// 波次信息显示
+			EnemyGenerator.CurrentWaveIndex.RegisterWithInitValue(_ =>
+			{
+				EnemyWaveCountText.text = $"波次: {EnemyGenerator.CurrentWaveIndex.Value}/{EnemyGenerator.TotalWaveCount.Value}";
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			EnemyGenerator.TotalWaveCount.RegisterWithInitValue(_ =>
+			{
+				EnemyWaveCountText.text = $"波次: {EnemyGenerator.CurrentWaveIndex.Value}/{EnemyGenerator.TotalWaveCount.Value}";
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			// 波次剩余时间显示
+			EnemyGenerator.WaveRemainingTime.RegisterWithInitValue(_ =>
+			{
+				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				{
+					EnemyCountNextTimeText.text = "等待下一波...";
+				}
+				else
+				{
+					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
+					EnemyCountNextTimeText.text = $"{EnemyGenerator.CurrentWaveName.Value} 剩余: {remaining}s";
+				}
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			EnemyGenerator.CurrentWaveName.RegisterWithInitValue(_ =>
+			{
+				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				{
+					EnemyCountNextTimeText.text = "等待下一波...";
+				}
+				else
+				{
+					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
+					EnemyCountNextTimeText.text = $"{EnemyGenerator.CurrentWaveName.Value} 剩余: {remaining}s";
+				}
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
 			///时间变化处理
 			Global.CurrentSeconds.RegisterWithInitValue((currentSeconds) =>
 			{

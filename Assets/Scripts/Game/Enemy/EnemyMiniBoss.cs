@@ -40,7 +40,7 @@ namespace VampireSurvivorLike
     /// </summary>
     public partial class EnemyMiniBoss : ViewController, IEnemy
     {
-        [Header("Boss基础属性")]
+        [Header("Boss基础属性（可被EnemyStatsConfig覆盖）")]
         [Tooltip("Boss血量 - 建议设置为200+以增加挑战性")]
         public float Health = 200f;
         
@@ -56,6 +56,10 @@ namespace VampireSurvivorLike
         [Tooltip("宝箱掉落概率（仅当DropTreasureChest为true时有效）")]
         [Range(0f, 1f)]
         public float TreasureChestDropRate = 0.3f;
+        
+        [Header("配置来源")]
+        [Tooltip("是否从EnemyStatsConfig读取属性，如果为false则使用预制体上的值")]
+        public bool UseStatsConfig = true;
         
         [Header("Boss类型与技能")]
         [Tooltip("Boss类型决定技能组合")]
@@ -84,6 +88,12 @@ namespace VampireSurvivorLike
         
         void Start()
         {
+            // 从配置中读取属性
+            if (UseStatsConfig)
+            {
+                LoadStatsFromConfig();
+            }
+            
             EnemyGenerator.EnemyCount.Value++;
             _initialHealth = Health;
             
@@ -94,6 +104,22 @@ namespace VampireSurvivorLike
             SetupFSM();
             
             FSM.StartState(States.Idle);
+        }
+        
+        /// <summary>
+        /// 从EnemyStatsConfig加载属性
+        /// </summary>
+        private void LoadStatsFromConfig()
+        {
+            var config = EnemyStatsConfig.Instance;
+            if (config == null) return;
+            
+            var stats = config.GetStats(gameObject.name.Replace("(Clone)", "").Trim());
+            if (stats == null) return;
+            
+            Health = stats.BaseHP;
+            MovementSpeed = stats.BaseSpeed;
+            DamageMultiplier = stats.BaseDamageMultiplier;
         }
         
         /// <summary>

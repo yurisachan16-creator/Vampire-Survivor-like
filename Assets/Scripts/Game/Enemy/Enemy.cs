@@ -7,6 +7,7 @@ namespace VampireSurvivorLike
 {
 	public partial class Enemy : ViewController,IEnemy
 	{
+		[Header("基础属性（可被EnemyStatsConfig覆盖）")]
 		public float MovementSpeed = 2f;
 
 		public float Health = 3f;
@@ -20,9 +21,40 @@ namespace VampireSurvivorLike
         public float HpDropRate = 0.1f;
         public float BombDropRate = 0.05f;
         
+        [Header("配置来源")]
+        [Tooltip("是否从EnemyStatsConfig读取属性，如果为false则使用预制体上的值")]
+        public bool UseStatsConfig = true;
+        
 		void Start()
 		{
+			// 从配置中读取属性
+			if (UseStatsConfig)
+			{
+				LoadStatsFromConfig();
+			}
+			
 			EnemyGenerator.EnemyCount.Value++;
+		}
+		
+		/// <summary>
+		/// 从EnemyStatsConfig加载属性
+		/// </summary>
+		private void LoadStatsFromConfig()
+		{
+			var config = EnemyStatsConfig.Instance;
+			if (config == null) return;
+			
+			var stats = config.GetStats(gameObject.name.Replace("(Clone)", "").Trim());
+			if (stats == null) return;
+			
+			Health = stats.BaseHP;
+			MovementSpeed = stats.BaseSpeed;
+			DamageMultiplier = stats.BaseDamageMultiplier;
+			ExpDropRate = stats.ExpDropRate;
+			CoinDropRate = stats.CoinDropRate;
+			HpDropRate = stats.HpDropRate;
+			BombDropRate = stats.BombDropRate;
+			DissolveColor = stats.DissolveColor;
 		}
 
         void Update()

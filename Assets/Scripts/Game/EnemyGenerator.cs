@@ -25,6 +25,22 @@ namespace VampireSurvivorLike
 		private float _mCurrentWaveSeconds = 0;	//当前波次持续时间计时器
 
 		public static BindableProperty<int> EnemyCount = new BindableProperty<int>(0);
+		/// <summary>
+		/// 当前波次编号（可绑定显示）
+		/// </summary>
+		public static BindableProperty<int> CurrentWaveIndex = new BindableProperty<int>(0);
+		/// <summary>
+		/// 总波次数（可绑定显示）
+		/// </summary>
+		public static BindableProperty<int> TotalWaveCount = new BindableProperty<int>(0);
+		/// <summary>
+		/// 当前波次名称
+		/// </summary>
+		public static BindableProperty<string> CurrentWaveName = new BindableProperty<string>("");
+		/// <summary>
+		/// 当前波次剩余时间（秒）
+		/// </summary>
+		public static BindableProperty<float> WaveRemainingTime = new BindableProperty<float>(0);
 		[SerializeField]
 		public List<EnemyWave> EnemyWaves = new List<EnemyWave>();	//敌人波次列表
 
@@ -52,6 +68,7 @@ namespace VampireSurvivorLike
 			}
 
 			_isInitialized = true;
+			TotalWaveCount.Value = _mToatalCount;
         }
 
 		/// <summary>
@@ -119,7 +136,9 @@ namespace VampireSurvivorLike
 			if(_mCurrentWave==null && _mEnemyWaveQueue.Count>0)
 			{
 				WaveCount++;
+				CurrentWaveIndex.Value = WaveCount;
 				_mCurrentWave = _mEnemyWaveQueue.Dequeue();
+				CurrentWaveName.Value = _mCurrentWave.WaveName;
 				_mCurrentGenerateSeconds = 0;
 				_mCurrentWaveSeconds = 0;
 			}
@@ -186,7 +205,12 @@ namespace VampireSurvivorLike
 			if(_mCurrentWave!=null && _mCurrentWaveSeconds>=_mCurrentWave.KeepSeconds)
 			{
 				_mCurrentWave = null;
-				
+				CurrentWaveName.Value = "";
+				WaveRemainingTime.Value = 0;
+			}
+			else if (_mCurrentWave != null)
+			{
+				WaveRemainingTime.Value = _mCurrentWave.KeepSeconds - _mCurrentWaveSeconds;
 			}
         }
     }

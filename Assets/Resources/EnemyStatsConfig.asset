@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b959fed288f4fdb45be6ac43ce7112c6, type: 3}
+  m_Name: EnemyStatsConfig
+  m_EditorClassIdentifier: 
+  Description: "\u5728\u6B64\u914D\u7F6E\u6240\u6709\u654C\u4EBA\u7684\u57FA\u7840\u5C5E\u6027\uFF0C\u654C\u4EBA\u4F1A\u5728Start\u65F6\u81EA\u52A8\u8BFB\u53D6\u5BF9\u5E94\u914D\u7F6E"
+  EnemyStats: []
