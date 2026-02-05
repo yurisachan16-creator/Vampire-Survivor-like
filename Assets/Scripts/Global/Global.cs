@@ -73,6 +73,18 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
 
+        public static BindableProperty<bool> IsGameOver = new BindableProperty<bool>(false);
+        public static EasyEvent RequestHPUIRefresh = new EasyEvent();
+
+        public struct PlayerDeathReport
+        {
+            public string BossId;
+            public string DamageSource;
+            public int DeathFrame;
+        }
+
+        public static PlayerDeathReport LastPlayerDeathReport;
+
         #endregion
 
         [RuntimeInitializeOnLoadMethod]
@@ -125,6 +137,7 @@ namespace VampireSurvivorLike
         }
         public static void ResetData()
         {
+            IsGameOver.Value = false;
             HP.Value = MaxHP.Value;
             Exp.Value = 0;
             Level.Value = 1;
@@ -182,6 +195,17 @@ namespace VampireSurvivorLike
 
             // 从配置文件加载技能属性（如果已加载）
             ApplyAbilityConfig();
+        }
+
+        public static void ReportPlayerDeath(string bossId, string damageSource)
+        {
+            LastPlayerDeathReport = new PlayerDeathReport
+            {
+                BossId = bossId ?? string.Empty,
+                DamageSource = damageSource ?? string.Empty,
+                DeathFrame = Time.frameCount
+            };
+            Debug.Log($"[BattleReport] PlayerDead BossId={LastPlayerDeathReport.BossId} Source={LastPlayerDeathReport.DamageSource} Frame={LastPlayerDeathReport.DeathFrame}");
         }
 
         /// <summary>

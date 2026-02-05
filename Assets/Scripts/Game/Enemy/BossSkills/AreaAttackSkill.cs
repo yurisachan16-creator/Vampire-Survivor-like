@@ -140,7 +140,7 @@ namespace VampireSurvivorLike
             var bossProjectile = projectile.GetComponent<BossProjectile>();
             if (bossProjectile != null)
             {
-                bossProjectile.Initialize(_damage * Boss.DamageMultiplier, _projectileLifetime);
+                bossProjectile.Initialize(_damage * Boss.DamageMultiplier, _projectileLifetime, Boss.BossType.ToString(), "BossProjectile");
             }
             
             // 设置旋转朝向移动方向

@@ -12,6 +12,7 @@ namespace VampireSurvivorLike
         private const string KEY_FULLSCREEN = "GameSettings_Fullscreen";
         private const string KEY_RESOLUTION_WIDTH = "GameSettings_ResWidth";
         private const string KEY_RESOLUTION_HEIGHT = "GameSettings_ResHeight";
+        private const string KEY_LOOT_GUIDE = "GameSettings_LootGuide";
 
         /// <summary>
         /// 是否全屏
@@ -48,6 +49,16 @@ namespace VampireSurvivorLike
             set
             {
                 PlayerPrefs.SetInt(KEY_RESOLUTION_HEIGHT, value);
+                PlayerPrefs.Save();
+            }
+        }
+
+        public static bool EnableLootGuide
+        {
+            get => PlayerPrefs.GetInt(KEY_LOOT_GUIDE, 1) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(KEY_LOOT_GUIDE, value ? 1 : 0);
                 PlayerPrefs.Save();
             }
         }

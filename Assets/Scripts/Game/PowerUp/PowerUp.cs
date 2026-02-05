@@ -40,6 +40,11 @@ namespace VampireSurvivorLike
 
                     if(distance < 0.1f)
                     {
+                        if (Global.IsGameOver.Value)
+                        {
+                            this.DestroyGameObjGracefully();
+                            return;
+                        }
                         Execute();
                     }
                 }

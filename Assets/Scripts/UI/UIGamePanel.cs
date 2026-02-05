@@ -15,7 +15,21 @@ namespace VampireSurvivorLike
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
 			// please add init code here
+			var overlayGo = new GameObject("LootGuideOverlay", typeof(RectTransform), typeof(CanvasGroup));
+			var overlayRt = (RectTransform)overlayGo.transform;
+			overlayRt.SetParent(transform, false);
+			overlayRt.anchorMin = Vector2.zero;
+			overlayRt.anchorMax = Vector2.one;
+			overlayRt.offsetMin = Vector2.zero;
+			overlayRt.offsetMax = Vector2.zero;
+			overlayRt.pivot = new Vector2(0.5f, 0.5f);
+			var cg = overlayGo.GetComponent<CanvasGroup>();
+			cg.blocksRaycasts = false;
+			cg.interactable = false;
 
+			var lootGuideSystem = gameObject.GetComponent<LootGuideSystem>() ?? gameObject.AddComponent<LootGuideSystem>();
+			var canvas = GetComponentInParent<Canvas>();
+			lootGuideSystem.Initialize(overlayRt, canvas, Camera.main, Player.Default ? Player.Default.transform : null);
 			
 
 			EnemyGenerator.EnemyCount.RegisterWithInitValue(EnemyCount =>
@@ -139,7 +153,7 @@ namespace VampireSurvivorLike
 			{
 				Global.CurrentSeconds.Value += Time.deltaTime;
 				//敌人全部死亡，通关
-				if(enemyGenerator.IsLastWave && EnemyGenerator.EnemyCount.Value == 0 && enemyGenerator.CurrentWave==null)
+				if(enemyGenerator.IsAllWavesFinished && EnemyGenerator.EnemyCount.Value == 0)
 				{
 					//关闭当前面板
 					this.CloseSelf();

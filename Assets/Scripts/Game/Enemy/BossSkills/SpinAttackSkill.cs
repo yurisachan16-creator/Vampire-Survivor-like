@@ -126,7 +126,7 @@ namespace VampireSurvivorLike
             if (distance <= _damageRadius)
             {
                 float damage = _damagePerSecond * 0.1f * Boss.DamageMultiplier;
-                Global.HP.Value -= (int)damage;
+                Player.Default.ApplyDamage(Mathf.Max(1, Mathf.CeilToInt(damage)), Boss.BossType.ToString(), "BossSpin");
             }
         }
         

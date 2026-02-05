@@ -31,6 +31,38 @@ namespace VampireSurvivorLike
 			// 初始化全屏 Toggle
 			FullscreenToggle.isOn = GameSettings.IsFullscreen;
 			FullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
+
+			var settingsContent = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
+			var templateRow = FullscreenToggle.transform.parent ? FullscreenToggle.transform.parent.gameObject : FullscreenToggle.gameObject;
+			if (settingsContent && templateRow && templateRow.transform.parent == settingsContent)
+			{
+				var lootGuideRow = Instantiate(templateRow, settingsContent, false);
+				lootGuideRow.name = "LootGuideSetting";
+				lootGuideRow.transform.SetSiblingIndex(templateRow.transform.GetSiblingIndex() + 1);
+
+				var toggle = lootGuideRow.GetComponentInChildren<Toggle>(true);
+				if (toggle)
+				{
+					toggle.gameObject.name = "LootGuideToggle";
+					toggle.onValueChanged.RemoveAllListeners();
+					toggle.isOn = GameSettings.EnableLootGuide;
+					toggle.onValueChanged.AddListener(isOn =>
+					{
+						AudioKit.PlaySound(Sfx.BUTTONCLICK);
+						GameSettings.EnableLootGuide = isOn;
+					});
+				}
+
+				var texts = lootGuideRow.GetComponentsInChildren<Text>(true);
+				for (var i = 0; i < texts.Length; i++)
+				{
+					if (texts[i] && (texts[i].text == "全屏" || texts[i].text.Contains("全屏")))
+					{
+						texts[i].text = "道具引导";
+						break;
+					}
+				}
+			}
 			
 			// ===== 音频设置 =====
 			// 音乐音量滑块

@@ -18,19 +18,24 @@ namespace VampireSurvivorLike
         public string GroupDescription;
         public string WaveName;
         public bool Active;
+        public bool AllowMixedWave = true;
+        public string MixedGroupId;
+        public string Phase;
         public string EnemyPrefabName;
         public float GenerateDuration;
         public int KeepSeconds;
+        public int SpawnCount = 0;
         public float HPScale;
         public float SpeedScale;
         public float DamageScale;
-        // 新增字段
-        public float BaseSpeed = 2f;           // 敌人基础速度
-        public bool IsTreasureChest = false;   // 是否生成宝箱
-        public float ExpDropRate = 0.3f;       // 经验掉落概率
-        public float CoinDropRate = 0.3f;      // 金币掉落概率
-        public float HpDropRate = 0.1f;        // 回血道具掉落概率
-        public float BombDropRate = 0.05f;     // 炸弹掉落概率
+        // 刷新结束后最大等待时间（秒）：用于混合波次，避免清完小怪后还要等待未刷出的Boss
+        public float MaxWaitAfterSpawnSeconds = 3f;
+        public float BaseSpeed = 2f;
+        public bool IsTreasureChest = false;
+        public float ExpDropRate = 0.3f;
+        public float CoinDropRate = 0.3f;
+        public float HpDropRate = 0.1f;
+        public float BombDropRate = 0.05f;
     }
 
     /// <summary>
@@ -105,6 +110,12 @@ namespace VampireSurvivorLike
 
                 try
                 {
+                    // CSV列顺序：
+                    // 0 GroupName, 1 GroupDescription, 2 WaveName, 3 Active, 4 EnemyPrefabName,
+                    // 5 GenerateDuration, 6 KeepSeconds, 7 HPScale, 8 SpeedScale, 9 DamageScale,
+                    // 10 MaxWaitAfterSpawnSeconds, 11 BaseSpeed, 12 IsTreasureChest,
+                    // 13 ExpDropRate, 14 CoinDropRate, 15 HpDropRate, 16 BombDropRate,
+                    // 17 AllowMixedWave, 18 MixedGroupId, 19 Phase, 20 SpawnCount
                     var row = new EnemyWaveConfigRow
                     {
                         GroupName = values[0],
@@ -117,13 +128,17 @@ namespace VampireSurvivorLike
                         HPScale = float.Parse(values[7]),
                         SpeedScale = float.Parse(values[8]),
                         DamageScale = float.Parse(values[9]),
-                        // 解析新增字段（使用默认值兼容旧配置）
-                        BaseSpeed = values.Length > 10 && !string.IsNullOrEmpty(values[10]) ? float.Parse(values[10]) : 2f,
-                        IsTreasureChest = values.Length > 11 && !string.IsNullOrEmpty(values[11]) && ParseBool(values[11]),
-                        ExpDropRate = values.Length > 12 && !string.IsNullOrEmpty(values[12]) ? float.Parse(values[12]) : 0.3f,
-                        CoinDropRate = values.Length > 13 && !string.IsNullOrEmpty(values[13]) ? float.Parse(values[13]) : 0.3f,
-                        HpDropRate = values.Length > 14 && !string.IsNullOrEmpty(values[14]) ? float.Parse(values[14]) : 0.1f,
-                        BombDropRate = values.Length > 15 && !string.IsNullOrEmpty(values[15]) ? float.Parse(values[15]) : 0.05f
+                        MaxWaitAfterSpawnSeconds = values.Length > 10 && !string.IsNullOrEmpty(values[10]) ? float.Parse(values[10]) : 3f,
+                        BaseSpeed = values.Length > 11 && !string.IsNullOrEmpty(values[11]) ? float.Parse(values[11]) : 2f,
+                        IsTreasureChest = values.Length > 12 && !string.IsNullOrEmpty(values[12]) && ParseBool(values[12]),
+                        ExpDropRate = values.Length > 13 && !string.IsNullOrEmpty(values[13]) ? float.Parse(values[13]) : 0.3f,
+                        CoinDropRate = values.Length > 14 && !string.IsNullOrEmpty(values[14]) ? float.Parse(values[14]) : 0.3f,
+                        HpDropRate = values.Length > 15 && !string.IsNullOrEmpty(values[15]) ? float.Parse(values[15]) : 0.1f,
+                        BombDropRate = values.Length > 16 && !string.IsNullOrEmpty(values[16]) ? float.Parse(values[16]) : 0.05f,
+                        AllowMixedWave = values.Length > 17 && !string.IsNullOrEmpty(values[17]) ? ParseBool(values[17]) : true,
+                        MixedGroupId = values.Length > 18 ? values[18] : null,
+                        Phase = values.Length > 19 ? values[19] : null,
+                        SpawnCount = values.Length > 20 && !string.IsNullOrEmpty(values[20]) ? int.Parse(values[20]) : 0
                     };
                     rows.Add(row);
                 }

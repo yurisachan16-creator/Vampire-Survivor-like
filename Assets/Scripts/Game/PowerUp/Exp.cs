@@ -5,6 +5,18 @@ namespace VampireSurvivorLike
 {
 	public partial class Exp : PowerUp
 	{
+		private void OnEnable()
+		{
+			var sr = GetComponent<SpriteRenderer>();
+			LootGuideSystem.Current?.Register(this, LootGuideKind.Exp, sr ? sr.sprite : null);
+			LootGuideSystem.Current?.TryPlayDropFeedback(transform.position, LootGuideKind.Exp);
+		}
+
+		private void OnDisable()
+		{
+			LootGuideSystem.Current?.Unregister(this);
+		}
+        
         
         void OnTriggerEnter2D(Collider2D other)
         {

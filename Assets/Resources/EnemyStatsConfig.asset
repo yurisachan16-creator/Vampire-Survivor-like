@@ -13,4 +13,124 @@ MonoBehaviour:
   m_Name: EnemyStatsConfig
   m_EditorClassIdentifier: 
   Description: "\u5728\u6B64\u914D\u7F6E\u6240\u6709\u654C\u4EBA\u7684\u57FA\u7840\u5C5E\u6027\uFF0C\u654C\u4EBA\u4F1A\u5728Start\u65F6\u81EA\u52A8\u8BFB\u53D6\u5BF9\u5E94\u914D\u7F6E"
-  EnemyStats: []
+  EnemyStats:
+  - EnemyId: Enemy_Bat
+    DisplayName: Bat
+    BaseHP: 1
+    BaseSpeed: 1.25
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.5254902, b: 0, a: 1}
+  - EnemyId: Enemy_Bat_Boss
+    DisplayName: Bat Boss
+    BaseHP: 1
+    BaseSpeed: 1.5
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - EnemyId: Enemy_Block_Yellow
+    DisplayName: Block Yellow
+    BaseHP: 1
+    BaseSpeed: 1.25
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.5254902, b: 0, a: 1}
+  - EnemyId: Enemy_Block_Yellow_Boss
+    DisplayName: Block Yellow Boss
+    BaseHP: 1
+    BaseSpeed: 1.5
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - EnemyId: Enemy_Crab_Boss
+    DisplayName: Crab Boss
+    BaseHP: 1
+    BaseSpeed: 1.5
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - EnemyId: Enemy_Cyclops
+    DisplayName: Cyclops
+    BaseHP: 1
+    BaseSpeed: 1.25
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.5254902, b: 0, a: 1}
+  - EnemyId: Enemy_Ghost
+    DisplayName: Ghost
+    BaseHP: 1
+    BaseSpeed: 1.25
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.5254902, b: 0, a: 1}
+  - EnemyId: Enemy_Ghost_Boss
+    DisplayName: Ghost Boss
+    BaseHP: 1
+    BaseSpeed: 1.5
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - EnemyId: Enemy_Orc_Boss
+    DisplayName: Orc Boss
+    BaseHP: 1
+    BaseSpeed: 1.5
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - EnemyId: Enemy_Rouge
+    DisplayName: Rouge
+    BaseHP: 1
+    BaseSpeed: 1.25
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.5254902, b: 0, a: 1}
+  - EnemyId: Enemy_Spider
+    DisplayName: Spider
+    BaseHP: 1
+    BaseSpeed: 1
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 0.9490196, g: 1, b: 0, a: 1}
+  - EnemyId: Enemy_Turtle_Boss
+    DisplayName: Turtle Boss
+    BaseHP: 1
+    BaseSpeed: 1.5
+    BaseDamageMultiplier: 1
+    ExpDropRate: 0.3
+    CoinDropRate: 0.3
+    HpDropRate: 0.1
+    BombDropRate: 0.05
+    DissolveColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
