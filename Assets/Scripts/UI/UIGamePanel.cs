@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using QFramework;
 
 namespace VampireSurvivorLike
@@ -15,6 +16,19 @@ namespace VampireSurvivorLike
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
 			// please add init code here
+			if (!FindObjectOfType<EventSystem>())
+			{
+				new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+			}
+
+			var tipTransform = transform.Find("Tip");
+			if (tipTransform)
+			{
+				var tooltipView = tipTransform.GetComponent<UITooltipView>();
+				if (!tooltipView) tooltipView = tipTransform.gameObject.AddComponent<UITooltipView>();
+				tooltipView.Hide();
+			}
+
 			var overlayGo = new GameObject("LootGuideOverlay", typeof(RectTransform), typeof(CanvasGroup));
 			var overlayRt = (RectTransform)overlayGo.transform;
 			overlayRt.SetParent(transform, false);

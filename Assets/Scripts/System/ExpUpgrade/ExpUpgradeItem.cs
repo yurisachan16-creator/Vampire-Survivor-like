@@ -13,7 +13,9 @@ namespace VampireSurvivorLike
         public bool UpgradeFinish => CurrentLevel.Value >= MaxLevel;
         public string Key { get; private set; } //新增Key属性
         public string Name {get; private set;}
-        public string Description => _mDescriptionFactory(CurrentLevel.Value + 1); 
+        public string Description => NextDescription;
+        public string CurrentDescription => GetDescriptionAtLevel(CurrentLevel.Value);
+        public string NextDescription => GetDescriptionAtLevel(CurrentLevel.Value + 1);
 
         public int MaxLevel { get; private set; } //新增最大等级属性
         public string IconName { get;private set; } //图标名称
@@ -81,6 +83,13 @@ namespace VampireSurvivorLike
         {
             _mDescriptionFactory = descriptionFactory;
             return this;
+        }
+
+        public string GetDescriptionAtLevel(int level)
+        {
+            if (_mDescriptionFactory == null) return string.Empty;
+            if (level < 1) level = 1;
+            return _mDescriptionFactory(level);
         }
 
         public ExpUpgradeItem OnUpgrade(Action<ExpUpgradeItem,int> onUpgrade)

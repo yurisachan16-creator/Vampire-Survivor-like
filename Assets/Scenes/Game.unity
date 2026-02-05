@@ -400,6 +400,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &222487335
 GameObject:
   m_ObjectHideFlags: 0
@@ -2248,6 +2249,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &750297201
 GameObject:
   m_ObjectHideFlags: 0
@@ -9803,6 +9805,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!4 &981669912
 Transform:
   m_ObjectHideFlags: 0
@@ -9894,6 +9897,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &995205485
 GameObject:
   m_ObjectHideFlags: 0
@@ -11654,6 +11658,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &1301211253
 GameObject:
   m_ObjectHideFlags: 0
@@ -13000,6 +13005,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &1514226974
 GameObject:
   m_ObjectHideFlags: 0
@@ -13293,6 +13299,7 @@ MonoBehaviour:
   DamageMultiplier: 1
   DropTreasureChest: 1
   TreasureChestDropRate: 0.3
+  UseStatsConfig: 1
   BossType: 0
   BossProjectilePrefab: {fileID: 0}
   MinionPrefab: {fileID: 0}
@@ -14219,6 +14226,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &1808577556
 GameObject:
   m_ObjectHideFlags: 0
@@ -15571,6 +15579,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &1990040217
 GameObject:
   m_ObjectHideFlags: 0
@@ -15663,6 +15672,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &1998461679
 GameObject:
   m_ObjectHideFlags: 0
@@ -15842,6 +15852,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &2020001565
 GameObject:
   m_ObjectHideFlags: 0
@@ -15980,6 +15991,7 @@ MonoBehaviour:
   ArchitectureFullTypeName: 
   ViewControllerFullTypeName: 
   MoveSpeed: 5
+  InvincibleSeconds: 0.5
   Sprite: {fileID: 1141027196}
   HurtBox: {fileID: 461601631}
   HPValue: {fileID: 387835361}
@@ -16166,13 +16178,22 @@ MonoBehaviour:
   Config: {fileID: 11400000, guid: 09abfb29c9c51b54198e149f2c8c026e, type: 2}
   PrefabMapping: {fileID: 11400000, guid: c8a21bf6020e7a843ac7edbe979976fc, type: 2}
   UseCSVConfig: 1
+  AllowMixedWave: 1
+  MixedStrategy: 1
+  EmptySceneBossTriggerSeconds: 0.5
+  EmptySceneCheckIntervalSeconds: 0.1
   EnemyWaves:
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 1
     EnemyPrefab: {fileID: 2086275127}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16184,10 +16205,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 0.8
     EnemyPrefab: {fileID: 2086275127}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16199,10 +16225,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 0.6
     EnemyPrefab: {fileID: 2086275127}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16214,10 +16245,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 0.4
     EnemyPrefab: {fileID: 2086275127}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16229,10 +16265,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 1
     EnemyPrefab: {fileID: 1285076646}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16244,10 +16285,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 0.8
     EnemyPrefab: {fileID: 1285076646}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16259,10 +16305,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 0.6
     EnemyPrefab: {fileID: 1285076646}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16274,10 +16325,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 0.4
     EnemyPrefab: {fileID: 1285076646}
     EnemyPrefabName: 
     KeepSeconds: 10
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16289,10 +16345,15 @@ MonoBehaviour:
     BombDropRate: 0.05
   - WaveName: 
     Active: 1
+    AllowMixedWave: 1
+    MixedGroupId: 
+    Phase: 
     GenerateDuration: 2
     EnemyPrefab: {fileID: 1547094466}
     EnemyPrefabName: 
     KeepSeconds: 3
+    SpawnCount: 0
+    MaxWaitAfterSpawnSeconds: 3
     HPScale: 1
     SpeedScale: 1
     DamageScale: 1
@@ -16427,6 +16488,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &2068527937
 GameObject:
   m_ObjectHideFlags: 0
@@ -16624,6 +16686,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1 &2086275127 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4169054150964862606, guid: c4d3ab39fbb03f541aa0e9e55ea45197, type: 3}
@@ -16983,6 +17046,7 @@ MonoBehaviour:
   CoinDropRate: 0.3
   HpDropRate: 0.1
   BombDropRate: 0.05
+  UseStatsConfig: 1
 --- !u!1001 &1416410070656907953
 PrefabInstance:
   m_ObjectHideFlags: 0

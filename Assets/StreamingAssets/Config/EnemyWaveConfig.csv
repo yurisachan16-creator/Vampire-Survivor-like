@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿GroupName,GroupDescription,WaveName,Active,EnemyPrefabName,GenerateDuration,KeepSeconds,HPScale,SpeedScale,DamageScale,MaxWaitAfterSpawnSeconds,BaseSpeed,IsTreasureChest,ExpDropRate,CoinDropRate,HpDropRate,BombDropRate
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿GroupName,GroupDescription,WaveName,Active,EnemyPrefabName,GenerateDuration,KeepSeconds,HPScale,SpeedScale,DamageScale,MaxWaitAfterSpawnSeconds,BaseSpeed,IsTreasureChest,ExpDropRate,CoinDropRate,HpDropRate,BombDropRate
 第一波幽灵,第一波幽灵敌人,幽灵,TRUE,Enemy_Ghost,0.4,20,1,1,1,3,2,FALSE,0.3,0.3,0.1,0.05
 第一波幽灵,第一波幽灵敌人,幽灵,TRUE,Enemy_Ghost,0.25,35,1,1,1,3,2,FALSE,0.3,0.3,0.1,0.05
 第一波幽灵,第一波幽灵敌人,小Boss,TRUE,Enemy_Ghost_Boss,20,35,10,0.6,2,3,1.2,TRUE,0,0,0,0
