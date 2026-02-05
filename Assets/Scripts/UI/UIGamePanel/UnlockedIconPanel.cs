@@ -19,6 +19,7 @@ namespace VampireSurvivorLike
 		private UITooltipView _mTooltipView;
 		private void Awake()
         {
+			LocalizationManager.PreloadTable("upgrade");
             UnlockedIconPrefab.Hide();
 
 			var iconAtlas = _mResLoader.LoadSync<UnityEngine.U2D.SpriteAtlas>("icon");
@@ -128,6 +129,19 @@ namespace VampireSurvivorLike
 					}
 				}	
             }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
+			LocalizationManager.CurrentLanguage.Register(_ =>
+			{
+				foreach (var kv in _mUnlockedKeys)
+				{
+					var item = kv.Value.Item1;
+					var image = kv.Value.Item2;
+					if (item != null && image != null)
+					{
+						RefreshTooltip(image, item, item.CurrentLevel.Value);
+					}
+				}
+			}).UnRegisterWhenGameObjectDestroyed(this.gameObject);
         }
 
 		private void RefreshTooltip(Image image, ExpUpgradeItem item, int level)

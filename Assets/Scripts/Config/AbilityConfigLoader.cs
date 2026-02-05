@@ -30,7 +30,8 @@ namespace VampireSurvivorLike
     /// </summary>
     public static class AbilityConfigLoader
     {
-        private const string CONFIG_FILE_NAME = "Config/AbilityConfig.csv";
+        private const string PRIMARY_CONFIG_FILE_NAME = "Config/AbilityConfig_i18n.csv";
+        private const string LEGACY_CONFIG_FILE_NAME = "Config/AbilityConfig.csv";
         private static Dictionary<string, AbilityConfigRow> _configCache;
 
         /// <summary>
@@ -58,18 +59,32 @@ namespace VampireSurvivorLike
         /// </summary>
         public static IEnumerator LoadAsync(Action<Dictionary<string, AbilityConfigRow>> onComplete = null)
         {
-            var path = Path.Combine(Application.streamingAssetsPath, CONFIG_FILE_NAME);
+            var primaryPath = Path.Combine(Application.streamingAssetsPath, PRIMARY_CONFIG_FILE_NAME);
             
-            using (var request = UnityWebRequest.Get(path))
+            using (var request = UnityWebRequest.Get(primaryPath))
             {
                 yield return request.SendWebRequest();
 
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    Debug.LogWarning($"[AbilityConfigLoader] 加载配置失败: {request.error}，使用默认配置");
-                    _configCache = GetDefaultConfig();
-                    onComplete?.Invoke(_configCache);
-                    yield break;
+                    var legacyPath = Path.Combine(Application.streamingAssetsPath, LEGACY_CONFIG_FILE_NAME);
+                    using (var legacyRequest = UnityWebRequest.Get(legacyPath))
+                    {
+                        yield return legacyRequest.SendWebRequest();
+                        if (legacyRequest.result != UnityWebRequest.Result.Success)
+                        {
+                            Debug.LogWarning($"[AbilityConfigLoader] 加载配置失败: {legacyRequest.error}，使用默认配置");
+                            _configCache = GetDefaultConfig();
+                            onComplete?.Invoke(_configCache);
+                            yield break;
+                        }
+
+                        var legacyCsv = legacyRequest.downloadHandler.text;
+                        _configCache = ParseCSV(legacyCsv);
+                        Debug.Log($"[AbilityConfigLoader] 成功加载 {_configCache.Count} 条技能配置(legacy)");
+                        onComplete?.Invoke(_configCache);
+                        yield break;
+                    }
                 }
 
                 var csvContent = request.downloadHandler.text;
@@ -84,13 +99,19 @@ namespace VampireSurvivorLike
         /// </summary>
         public static Dictionary<string, AbilityConfigRow> LoadSync()
         {
-            var path = Path.Combine(Application.streamingAssetsPath, CONFIG_FILE_NAME);
+            var path = Path.Combine(Application.streamingAssetsPath, PRIMARY_CONFIG_FILE_NAME);
             
             if (!File.Exists(path))
             {
-                Debug.LogWarning("[AbilityConfigLoader] 配置文件不存在，使用默认配置");
-                _configCache = GetDefaultConfig();
-                return _configCache;
+                var legacyPath = Path.Combine(Application.streamingAssetsPath, LEGACY_CONFIG_FILE_NAME);
+                if (!File.Exists(legacyPath))
+                {
+                    Debug.LogWarning("[AbilityConfigLoader] 配置文件不存在，使用默认配置");
+                    _configCache = GetDefaultConfig();
+                    return _configCache;
+                }
+
+                path = legacyPath;
             }
 
             var csvContent = File.ReadAllText(path, Encoding.UTF8);

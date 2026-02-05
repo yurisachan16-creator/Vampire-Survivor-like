@@ -16,6 +16,7 @@ namespace VampireSurvivorLike
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
 			// please add init code here
+			LocalizationManager.PreloadTable("game");
 			if (!FindObjectOfType<EventSystem>())
 			{
 				new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
@@ -48,18 +49,18 @@ namespace VampireSurvivorLike
 
 			EnemyGenerator.EnemyCount.RegisterWithInitValue(EnemyCount =>
 			{
-				EnemyCountText.text = "敌人数量:" + EnemyCount;
+				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", EnemyCount);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			// 波次信息显示
 			EnemyGenerator.CurrentWaveIndex.RegisterWithInitValue(_ =>
 			{
-				EnemyWaveCountText.text = $"波次: {EnemyGenerator.CurrentWaveIndex.Value}/{EnemyGenerator.TotalWaveCount.Value}";
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			EnemyGenerator.TotalWaveCount.RegisterWithInitValue(_ =>
 			{
-				EnemyWaveCountText.text = $"波次: {EnemyGenerator.CurrentWaveIndex.Value}/{EnemyGenerator.TotalWaveCount.Value}";
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			// 波次剩余时间显示
@@ -67,12 +68,12 @@ namespace VampireSurvivorLike
 			{
 				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
 				{
-					EnemyCountNextTimeText.text = "等待下一波...";
+					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
 				}
 				else
 				{
 					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
-					EnemyCountNextTimeText.text = $"{EnemyGenerator.CurrentWaveName.Value} 剩余: {remaining}s";
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -80,12 +81,12 @@ namespace VampireSurvivorLike
 			{
 				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
 				{
-					EnemyCountNextTimeText.text = "等待下一波...";
+					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
 				}
 				else
 				{
 					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
-					EnemyCountNextTimeText.text = $"{EnemyGenerator.CurrentWaveName.Value} 剩余: {remaining}s";
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -97,7 +98,7 @@ namespace VampireSurvivorLike
 					var secondsInt = Mathf.FloorToInt(currentSeconds);
 					var seconds = secondsInt % 60;
 					var minutes = secondsInt / 60;
-					TimeText.text = "时间:" + $"{minutes:00}:{seconds:00}";
+					TimeText.text = LocalizationManager.Format("game.ui.time", $"{minutes:00}:{seconds:00}");
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -112,7 +113,7 @@ namespace VampireSurvivorLike
 			///等级提升处理
 			Global.Level.RegisterWithInitValue((level) =>
 			{
-				LevelText.text = "等级:" + level;
+				LevelText.text = LocalizationManager.Format("game.ui.level", level);
 				
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -184,8 +185,31 @@ namespace VampireSurvivorLike
 			{
 				
 
-				CoinText.text = "金币:" + coin;
+				CoinText.text = LocalizationManager.Format("game.ui.coin", coin);
 
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			LocalizationManager.CurrentLanguage.Register(_ =>
+			{
+				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", EnemyGenerator.EnemyCount.Value);
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
+				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				{
+					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
+				}
+				else
+				{
+					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
+				}
+
+				var secondsInt = Mathf.FloorToInt(Global.CurrentSeconds.Value);
+				var seconds = secondsInt % 60;
+				var minutes = secondsInt / 60;
+				TimeText.text = LocalizationManager.Format("game.ui.time", $"{minutes:00}:{seconds:00}");
+
+				LevelText.text = LocalizationManager.Format("game.ui.level", Global.Level.Value);
+				CoinText.text = LocalizationManager.Format("game.ui.coin", Global.Coin.Value);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			OpenTreasureChestPanel.Register(()=>

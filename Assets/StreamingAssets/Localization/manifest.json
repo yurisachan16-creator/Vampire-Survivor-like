@@ -1,0 +1,13 @@
+{
+  "Version": 1,
+  "Languages": [
+    "zh-Hans",
+    "en"
+  ],
+  "Tables": [
+    "core",
+    "game",
+    "upgrade",
+    "ability"
+  ]
+}

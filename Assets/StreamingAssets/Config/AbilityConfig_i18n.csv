@@ -1,0 +1,6 @@
+AbilityKey,AbilityName,Damage,Duration,Count,Range,Speed,AttackCount,Description
+simple_sword,ability.simple_sword.name,3,1.5,3,3,0,0,ability.simple_sword.desc
+simple_knife,ability.simple_knife.name,5,1,3,0,10,1,ability.simple_knife.desc
+rotate_sword,ability.rotate_sword.name,5,0,1,2,2,0,ability.rotate_sword.desc
+basket_ball,ability.basket_ball.name,5,0,1,0,10,0,ability.basket_ball.desc
+bomb,ability.bomb.name,10,0,0,0,0,0,ability.bomb.desc

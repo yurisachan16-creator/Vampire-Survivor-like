@@ -1,0 +1,10 @@
+key,value
+ui.settings.language,语言
+ui.settings.fullscreen,全屏
+ui.settings.loot_guide,道具引导
+ui.settings.music_volume,音乐音量
+ui.settings.sound_volume,音效音量
+ui.settings.return_main_menu,返回主菜单
+ui.settings.quit,退出
+ui.settings.lang_en,English
+ui.settings.lang_zh,中文

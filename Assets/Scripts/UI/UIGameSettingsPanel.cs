@@ -31,36 +31,127 @@ namespace VampireSurvivorLike
 			// 初始化全屏 Toggle
 			FullscreenToggle.isOn = GameSettings.IsFullscreen;
 			FullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
-
-			var settingsContent = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
-			var templateRow = FullscreenToggle.transform.parent ? FullscreenToggle.transform.parent.gameObject : FullscreenToggle.gameObject;
-			if (settingsContent && templateRow && templateRow.transform.parent == settingsContent)
+			var fullscreenLabel = FullscreenToggle.GetComponentInChildren<Text>(true);
+			if (fullscreenLabel) fullscreenLabel.text = LocalizationManager.T("ui.settings.fullscreen");
+			if (fullscreenLabel) FontManager.Register(fullscreenLabel);
+			LocalizationManager.CurrentLanguage.Register(_ =>
 			{
-				var lootGuideRow = Instantiate(templateRow, settingsContent, false);
-				lootGuideRow.name = "LootGuideSetting";
-				lootGuideRow.transform.SetSiblingIndex(templateRow.transform.GetSiblingIndex() + 1);
+				if (fullscreenLabel) fullscreenLabel.text = LocalizationManager.T("ui.settings.fullscreen");
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-				var toggle = lootGuideRow.GetComponentInChildren<Toggle>(true);
-				if (toggle)
-				{
-					toggle.gameObject.name = "LootGuideToggle";
-					toggle.onValueChanged.RemoveAllListeners();
-					toggle.isOn = GameSettings.EnableLootGuide;
-					toggle.onValueChanged.AddListener(isOn =>
-					{
-						AudioKit.PlaySound(Sfx.BUTTONCLICK);
-						GameSettings.EnableLootGuide = isOn;
-					});
-				}
+			var languageToggle2 = LanguageToggle;
+			if (languageToggle2)
+			{
+				var languageTextTransform = LanguageSettings ? LanguageSettings.transform.Find("LanguageText") : null;
+				var languageText = languageTextTransform ? languageTextTransform.GetComponent<Text>() : null;
+				if (languageText) FontManager.Register(languageText);
 
-				var texts = lootGuideRow.GetComponentsInChildren<Text>(true);
-				for (var i = 0; i < texts.Length; i++)
+				languageToggle2.onValueChanged.RemoveAllListeners();
+				languageToggle2.SetIsOnWithoutNotify(LocalizationManager.CurrentLanguage.Value == LanguageId.En);
+				languageToggle2.onValueChanged.AddListener(isOn =>
 				{
-					if (texts[i] && (texts[i].text == "全屏" || texts[i].text.Contains("全屏")))
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					LocalizationManager.ChangeLanguage(isOn ? LanguageId.En : LanguageId.ZhHans);
+				});
+
+				System.Action refreshLanguageUi = () =>
+				{
+					if (!languageToggle2) return;
+					var isEn = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
+					languageToggle2.SetIsOnWithoutNotify(isEn);
+					if (languageText) languageText.text = LocalizationManager.T(isEn ? "ui.settings.lang_en" : "ui.settings.lang_zh");
+				};
+
+				refreshLanguageUi();
+				LocalizationManager.CurrentLanguage.Register(_ => refreshLanguageUi()).UnRegisterWhenGameObjectDestroyed(gameObject);
+			}
+			else
+			{
+				var settingsContent = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
+				var templateRow = FullscreenToggle.transform.parent ? FullscreenToggle.transform.parent.gameObject : FullscreenToggle.gameObject;
+				if (settingsContent && templateRow && templateRow.transform.parent == settingsContent)
+				{
+					var lootGuideRow = Instantiate(templateRow, settingsContent, false);
+					lootGuideRow.name = "LootGuideSetting";
+					lootGuideRow.transform.SetSiblingIndex(templateRow.transform.GetSiblingIndex() + 1);
+
+					var toggle = lootGuideRow.GetComponentInChildren<Toggle>(true);
+					if (toggle)
 					{
-						texts[i].text = "道具引导";
-						break;
+						toggle.gameObject.name = "LootGuideToggle";
+						toggle.onValueChanged.RemoveAllListeners();
+						toggle.isOn = GameSettings.EnableLootGuide;
+						toggle.onValueChanged.AddListener(isOn =>
+						{
+							AudioKit.PlaySound(Sfx.BUTTONCLICK);
+							GameSettings.EnableLootGuide = isOn;
+						});
 					}
+
+					var texts = lootGuideRow.GetComponentsInChildren<Text>(true);
+					for (var i = 0; i < texts.Length; i++)
+					{
+						if (texts[i] && (texts[i].text == "全屏" || texts[i].text.Contains("全屏")))
+						{
+							texts[i].text = LocalizationManager.T("ui.settings.loot_guide");
+							FontManager.Register(texts[i]);
+							break;
+						}
+					}
+					LocalizationManager.CurrentLanguage.Register(_ =>
+					{
+						var innerTexts = lootGuideRow.GetComponentsInChildren<Text>(true);
+						for (var j = 0; j < innerTexts.Length; j++)
+						{
+							if (innerTexts[j] && (innerTexts[j].text == "全屏" || innerTexts[j].text == "道具引导" || innerTexts[j].text == "Loot Guide"))
+							{
+								innerTexts[j].text = LocalizationManager.T("ui.settings.loot_guide");
+								break;
+							}
+						}
+					}).UnRegisterWhenGameObjectDestroyed(lootGuideRow);
+
+					var languageRow = Instantiate(templateRow, settingsContent, false);
+					languageRow.name = "LanguageSetting";
+					languageRow.transform.SetSiblingIndex(lootGuideRow.transform.GetSiblingIndex() + 1);
+
+					var languageToggle = languageRow.GetComponentInChildren<Toggle>(true);
+					if (languageToggle)
+					{
+						languageToggle.gameObject.name = "LanguageToggle";
+						languageToggle.onValueChanged.RemoveAllListeners();
+						languageToggle.SetIsOnWithoutNotify(LocalizationManager.CurrentLanguage.Value == LanguageId.En);
+						languageToggle.onValueChanged.AddListener(isOn =>
+						{
+							AudioKit.PlaySound(Sfx.BUTTONCLICK);
+							LocalizationManager.ChangeLanguage(isOn ? LanguageId.En : LanguageId.ZhHans);
+						});
+					}
+
+					var languageTexts = languageRow.GetComponentsInChildren<Text>(true);
+					for (var i = 0; i < languageTexts.Length; i++)
+					{
+						if (languageTexts[i] && (languageTexts[i].text == "全屏" || languageTexts[i].text.Contains("全屏")))
+						{
+							languageTexts[i].text = LocalizationManager.T("ui.settings.language");
+							FontManager.Register(languageTexts[i]);
+							break;
+						}
+					}
+
+					LocalizationManager.CurrentLanguage.Register(_ =>
+					{
+						if (languageToggle) languageToggle.SetIsOnWithoutNotify(LocalizationManager.CurrentLanguage.Value == LanguageId.En);
+						var innerTexts = languageRow.GetComponentsInChildren<Text>(true);
+						for (var j = 0; j < innerTexts.Length; j++)
+						{
+							if (innerTexts[j] && (innerTexts[j].text == "全屏" || innerTexts[j].text == "语言" || innerTexts[j].text == "Language"))
+							{
+								innerTexts[j].text = LocalizationManager.T("ui.settings.language");
+								break;
+							}
+						}
+					}).UnRegisterWhenGameObjectDestroyed(languageRow);
 				}
 			}
 			
@@ -108,6 +199,13 @@ namespace VampireSurvivorLike
 				//恢复时间流逝
 				Time.timeScale = 1f;
 			});
+			var returnMenuLabel = BtnReturnToMainMenu.GetComponentInChildren<Text>(true);
+			if (returnMenuLabel) returnMenuLabel.text = LocalizationManager.T("ui.settings.return_main_menu");
+			if (returnMenuLabel) FontManager.Register(returnMenuLabel);
+			LocalizationManager.CurrentLanguage.Register(_ =>
+			{
+				if (returnMenuLabel) returnMenuLabel.text = LocalizationManager.T("ui.settings.return_main_menu");
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 			
 			// 退出按钮
 			BtnQuit.onClick.AddListener(() =>
@@ -115,6 +213,13 @@ namespace VampireSurvivorLike
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				GameSettings.QuitGame();
 			});
+			var quitLabel = BtnQuit.GetComponentInChildren<Text>(true);
+			if (quitLabel) quitLabel.text = LocalizationManager.T("ui.settings.quit");
+			if (quitLabel) FontManager.Register(quitLabel);
+			LocalizationManager.CurrentLanguage.Register(_ =>
+			{
+				if (quitLabel) quitLabel.text = LocalizationManager.T("ui.settings.quit");
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 			
 			// 平台特定的按钮显示逻辑
 			#if UNITY_WEBGL && !UNITY_EDITOR

@@ -17,6 +17,9 @@ namespace VampireSurvivorLike
 			
 			// 加载技能配置
 			yield return AbilityConfigLoader.LoadAsync();
+			LocalizationManager.PreloadTable("ability");
+			LocalizationManager.PreloadTable("game");
+			LocalizationManager.PreloadTable("upgrade");
 			// 应用技能配置
 			Global.ApplyAbilityConfig();
 			

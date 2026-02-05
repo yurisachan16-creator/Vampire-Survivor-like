@@ -1,0 +1,10 @@
+key,value
+ui.settings.language,Language
+ui.settings.fullscreen,Fullscreen
+ui.settings.loot_guide,Loot Guide
+ui.settings.music_volume,Music Volume
+ui.settings.sound_volume,SFX Volume
+ui.settings.return_main_menu,Main Menu
+ui.settings.quit,Quit
+ui.settings.lang_en,English
+ui.settings.lang_zh,Chinese

@@ -5,7 +5,7 @@ using QFramework;
 
 namespace VampireSurvivorLike
 {
-	// Generate Id:4b3ae331-cd39-4cd2-aee0-ed09f7242bf7
+	// Generate Id:55d62c4c-54f3-4c08-a855-a1cdae06314f
 	public partial class UIGameSettingsPanel
 	{
 		public const string Name = "UIGameSettingsPanel";
@@ -20,6 +20,10 @@ namespace VampireSurvivorLike
 		public UnityEngine.UI.Slider MusicVolumeSlider;
 		[SerializeField]
 		public UnityEngine.UI.Slider SoundVolumeSlider;
+		[SerializeField]
+		public UnityEngine.UI.Image LanguageSettings;
+		[SerializeField]
+		public UnityEngine.UI.Toggle LanguageToggle;
 		[SerializeField]
 		public UnityEngine.UI.Button BtnClose;
 		[SerializeField]
@@ -36,6 +40,8 @@ namespace VampireSurvivorLike
 			AudioSettings = null;
 			MusicVolumeSlider = null;
 			SoundVolumeSlider = null;
+			LanguageSettings = null;
+			LanguageToggle = null;
 			BtnClose = null;
 			BtnReturnToMainMenu = null;
 			BtnQuit = null;
