@@ -1,7 +1,7 @@
 using UnityEngine;
 using QFramework;
-using MoonSharp.VsCodeDebugger.SDK;
 using System.Linq;
+using System;
 
 namespace VampireSurvivorLike
 {
@@ -25,20 +25,23 @@ namespace VampireSurvivorLike
 
 				//计算数量和伤害倍数
 				var countTimes=Global.SuperSword.Value ? 2 : 1;
-				var damageTimes=Global.SuperSword.Value ? Random.Range(2,3+1) : 1;
+				var damageTimes=Global.SuperSword.Value ? UnityEngine.Random.Range(2,3+1) : 1;
 				var distanceTimes=Global.SuperSword.Value ? 2 : 1;
 
-				var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude,FindObjectsSortMode.None);
+				// 查找所有带 "Enemy" 标签的对象（包括 Boss）
+				var enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
+				var enemies = enemyObjects.Select(obj => new { Obj = obj, Enemy = obj.GetComponent<IEnemy>() })
+					.Where(x => x.Enemy != null && Player.Default != null)
+					.OrderBy(x => Vector3.Distance(x.Obj.transform.position, Player.Default.transform.position))
+					.Where(x => Vector3.Distance(x.Obj.transform.position, Player.Default.transform.position) <= Global.SimpleSwordRange.Value * distanceTimes)
+					.Take((Global.SimpleSwordCount.Value + Global.AdditionalFlyThingCount.Value) * countTimes);
 
-				foreach(var enemy in enemies
-									.OrderBy(e=>e.Direction2DFrom(Player.Default).magnitude)
-									.Where(e=>e.Direction2DFrom(Player.Default).magnitude<=Global.SimpleSwordRange.Value * distanceTimes)
-									.Take((Global.SimpleSwordCount.Value + Global.AdditionalFlyThingCount.Value) * countTimes))
+				foreach(var enemyData in enemies)
 								
 				{
 					
 						Sword.Instantiate()
-						.Position(enemy.Position()+Vector3.left*0.25f)
+						.Position(enemyData.Obj.transform.position+Vector3.left*0.25f)
 						.Show()
                         .Self(self =>
                         {
@@ -55,9 +58,11 @@ namespace VampireSurvivorLike
 								{
 									if (hitHurtBox.Owner.CompareTag("Enemy"))
 									{
+										var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
+										if (enemy == null) return;
 										hasHit = true;
 										DamageSystem.CalculateDamage(Global.SimpleAbilityDamage.Value * damageTimes,
-											hitHurtBox.Owner.GetComponent<Enemy>());
+											enemy);
 									}
 								}
                             }).UnRegisterWhenGameObjectDestroyed(selfCache);

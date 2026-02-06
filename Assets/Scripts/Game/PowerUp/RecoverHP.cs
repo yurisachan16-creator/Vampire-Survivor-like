@@ -22,8 +22,15 @@ namespace VampireSurvivorLike
 
         protected override void Execute()
         {
+            if (Global.IsGameOver.Value)
+            {
+                this.DestroyGameObjGracefully();
+                return;
+            }
+
             AudioKit.PlaySound("Health");
             Global.HP.Value += 1;
+            Global.RequestHPUIRefresh.Trigger();
             this.DestroyGameObjGracefully();
         }
 

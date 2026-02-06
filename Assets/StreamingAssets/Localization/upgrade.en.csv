@@ -1,0 +1,115 @@
+key,value
+exp_upgrade.ui.paired_weapon,Paired: {0}
+coin_upgrade.ui.item_price,{0} (Price: {1} coins)
+coin_upgrade.coin_percent_Lv1.desc,Coin drop chance Up Lv1
+coin_upgrade.coin_percent_Lv2.desc,Coin drop chance Up Lv2
+coin_upgrade.coin_percent_Lv3.desc,Coin drop chance Up Lv3
+coin_upgrade.coin_percent_Lv4.desc,Coin drop chance Up Lv4
+coin_upgrade.exp_percent.desc,Increase EXP drop chance
+coin_upgrade.player_max_hp.desc,Max HP +1
+coin_upgrade.player_max_hp1.desc,Max HP +1
+coin_upgrade.player_max_hp2.desc,Max HP +1
+coin_upgrade.player_max_hp3.desc,Max HP +1
+coin_upgrade.player_max_hp4.desc,Max HP +1
+coin_upgrade.player_max_hp5.desc,Max HP +1
+coin_upgrade.player_max_hp6.desc,Max HP +1
+coin_upgrade.player_max_hp7.desc,Max HP +1
+coin_upgrade.player_max_hp8.desc,Max HP +1
+coin_upgrade.player_max_hp9.desc,Max HP +1
+exp_upgrade.simple_sword.name,Sword
+exp_upgrade.simple_sword.paired_name,Fused Sword
+exp_upgrade.simple_sword.paired_desc,Double damage and double range
+exp_upgrade.simple_sword.lv1,Sword Lv1: Attacks nearby enemies
+exp_upgrade.simple_sword.lv2,Sword Lv2:\\nDamage +3, Count +2
+exp_upgrade.simple_sword.lv3,Sword Lv3:\\nDamage +2, Interval -0.25s
+exp_upgrade.simple_sword.lv4,Sword Lv4:\\nDamage +3, Interval -0.25s
+exp_upgrade.simple_sword.lv5,Sword Lv5:\\nDamage +4, Interval -0.25s
+exp_upgrade.simple_sword.lv6,Sword Lv6:\\nRange +1, Interval -0.25s
+exp_upgrade.simple_sword.lv7,Sword Lv7:\\nDamage +3, Count +2
+exp_upgrade.simple_sword.lv8,Sword Lv8:\\nDamage +2, Range +1
+exp_upgrade.simple_sword.lv9,Sword Lv9:\\nDamage +5, Interval -0.25s
+exp_upgrade.simple_sword.lv10,Sword Lv10:\\nDamage +3, Count +2
+exp_upgrade.rotate_sword.name,Guardian Sword
+exp_upgrade.rotate_sword.paired_name,Fused Guardian Sword
+exp_upgrade.rotate_sword.paired_desc,Double damage and double spin speed
+exp_upgrade.rotate_sword.lv1,Guardian Sword Lv1:\\nA sword orbiting the hero
+exp_upgrade.rotate_sword.lv2,Guardian Sword Lv2:\\nCount +1, Damage +2
+exp_upgrade.rotate_sword.lv3,Guardian Sword Lv3:\\nDamage +2, Speed +25%
+exp_upgrade.rotate_sword.lv4,Guardian Sword Lv4:\\nSpeed +50%
+exp_upgrade.rotate_sword.lv5,Guardian Sword Lv5:\\nCount +1, Damage +1
+exp_upgrade.rotate_sword.lv6,Guardian Sword Lv6:\\nDamage +2, Speed +25%
+exp_upgrade.rotate_sword.lv7,Guardian Sword Lv7:\\nCount +1, Damage +1
+exp_upgrade.rotate_sword.lv8,Guardian Sword Lv8:\\nDamage +2, Speed +25%
+exp_upgrade.rotate_sword.lv9,Guardian Sword Lv9:\\nCount +1, Damage +1
+exp_upgrade.rotate_sword.lv10,Guardian Sword Lv10:\\nDamage +2, Speed +25%
+exp_upgrade.simple_bomb.name,Bomb
+exp_upgrade.simple_bomb.paired_name,Fused Bomb
+exp_upgrade.simple_bomb.paired_desc,Explodes once every 15 seconds
+exp_upgrade.simple_bomb.lv1,Bomb Lv1: Hits all enemies (monster drop)
+exp_upgrade.simple_bomb.lv2,Bomb Lv2:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv3,Bomb Lv3:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv4,Bomb Lv4:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv5,Bomb Lv5:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv6,Bomb Lv6:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv7,Bomb Lv7:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv8,Bomb Lv8:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv9,Bomb Lv9:\\nDrop chance +5%, Damage +5
+exp_upgrade.simple_bomb.lv10,Bomb Lv10:\\nDrop chance +10%, Damage +5
+exp_upgrade.simple_knife.name,Knife
+exp_upgrade.simple_knife.paired_name,Fused Knife
+exp_upgrade.simple_knife.paired_desc,Double damage
+exp_upgrade.simple_knife.lv1,Knife Lv1: Fires one at the nearest enemy
+exp_upgrade.simple_knife.lv2,Knife Lv2:\\nDamage +3, Count +2
+exp_upgrade.simple_knife.lv3,Knife Lv3:\\nInterval -0.1s, Damage +1, Count +1
+exp_upgrade.simple_knife.lv4,Knife Lv4:\\nInterval -0.1s, Pierce +1, Count +1
+exp_upgrade.simple_knife.lv5,Knife Lv5:\\nDamage +3, Count +1
+exp_upgrade.simple_knife.lv6,Knife Lv6:\\nInterval -0.1s, Count +1
+exp_upgrade.simple_knife.lv7,Knife Lv7:\\nInterval -0.1s, Pierce +1, Count +1
+exp_upgrade.simple_knife.lv8,Knife Lv8:\\nDamage +3, Count +1
+exp_upgrade.simple_knife.lv9,Knife Lv9:\\nInterval -0.1s, Count +1
+exp_upgrade.simple_knife.lv10,Knife Lv10:\\nDamage +3, Count +1
+exp_upgrade.basket_ball.name,Basketball
+exp_upgrade.basket_ball.paired_name,Fused Basketball
+exp_upgrade.basket_ball.paired_desc,Double damage and larger size
+exp_upgrade.basket_ball.lv1,Basketball Lv1:\\nA basketball bouncing on screen
+exp_upgrade.basket_ball.lv2,Basketball Lv2:\\nDamage +3
+exp_upgrade.basket_ball.lv3,Basketball Lv3:\\nCount +1
+exp_upgrade.basket_ball.lv4,Basketball Lv4:\\nDamage +3
+exp_upgrade.basket_ball.lv5,Basketball Lv5:\\nCount +1
+exp_upgrade.basket_ball.lv6,Basketball Lv6:\\nDamage +3
+exp_upgrade.basket_ball.lv7,Basketball Lv7:\\nSpeed +20%
+exp_upgrade.basket_ball.lv8,Basketball Lv8:\\nDamage +3
+exp_upgrade.basket_ball.lv9,Basketball Lv9:\\nSpeed +20%
+exp_upgrade.basket_ball.lv10,Basketball Lv10:\\nCount +1
+exp_upgrade.simple_critical.name,Crit
+exp_upgrade.simple_critical.lv1,Crit Lv1:\\n15% chance to crit per hit
+exp_upgrade.simple_critical.lv2,Crit Lv2:\\n28% chance to crit per hit
+exp_upgrade.simple_critical.lv3,Crit Lv3:\\n40% chance to crit per hit
+exp_upgrade.simple_critical.lv4,Crit Lv4:\\n52% chance to crit per hit
+exp_upgrade.simple_critical.lv5,Crit Lv5:\\n65% chance to crit per hit
+exp_upgrade.damage_rate.name,Damage Multiplier
+exp_upgrade.damage_rate.lv1,Damage Multiplier Lv1:\\nDamage +15%
+exp_upgrade.damage_rate.lv2,Damage Multiplier Lv2:\\nDamage +28%
+exp_upgrade.damage_rate.lv3,Damage Multiplier Lv3:\\nDamage +40%
+exp_upgrade.damage_rate.lv4,Damage Multiplier Lv4:\\nDamage +52%
+exp_upgrade.damage_rate.lv5,Damage Multiplier Lv5:\\nDamage +65%
+exp_upgrade.simple_fly_count.name,Projectiles
+exp_upgrade.simple_fly_count.lv1,Projectiles Lv1:\\n+1 extra projectile
+exp_upgrade.simple_fly_count.lv2,Projectiles Lv2:\\n+2 extra projectiles
+exp_upgrade.simple_fly_count.lv3,Projectiles Lv3:\\n+3 extra projectiles
+exp_upgrade.movement_speed_rate.name,Move Speed
+exp_upgrade.movement_speed_rate.lv1,Move Speed Lv1:\\nMove speed +25%
+exp_upgrade.movement_speed_rate.lv2,Move Speed Lv2:\\nMove speed +50%
+exp_upgrade.movement_speed_rate.lv3,Move Speed Lv3:\\nMove speed +75%
+exp_upgrade.movement_speed_rate.lv4,Move Speed Lv4:\\nMove speed +100%
+exp_upgrade.movement_speed_rate.lv5,Move Speed Lv5:\\nMove speed +125%
+exp_upgrade.simple_exp_percent.name,EXP Drop
+exp_upgrade.simple_exp_percent.lv1,EXP Drop Lv1:\\nDrop chance +5%
+exp_upgrade.simple_exp_percent.lv2,EXP Drop Lv2:\\nDrop chance +10%
+exp_upgrade.simple_exp_percent.lv3,EXP Drop Lv3:\\nDrop chance +15%
+exp_upgrade.simple_exp_percent.lv4,EXP Drop Lv4:\\nDrop chance +20%
+exp_upgrade.simple_exp_percent.lv5,EXP Drop Lv5:\\nDrop chance +25%
+exp_upgrade.simple_collectable_area_radius.name,Pickup Radius
+exp_upgrade.simple_collectable_area_radius.lv1,Pickup Radius Lv1:\\nPickup radius +100%
+exp_upgrade.simple_collectable_area_radius.lv2,Pickup Radius Lv2:\\nPickup radius +200%
+exp_upgrade.simple_collectable_area_radius.lv3,Pickup Radius Lv3:\\nPickup radius +300%

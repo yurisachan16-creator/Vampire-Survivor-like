@@ -1,0 +1,115 @@
+key,value
+exp_upgrade.ui.paired_weapon,配对武器：{0}
+coin_upgrade.ui.item_price,{0} (价格:{1}金币)
+coin_upgrade.coin_percent_Lv1.desc,金币掉落概率提升 Lv1
+coin_upgrade.coin_percent_Lv2.desc,金币掉落概率提升 Lv2
+coin_upgrade.coin_percent_Lv3.desc,金币掉落概率提升 Lv3
+coin_upgrade.coin_percent_Lv4.desc,金币掉落概率提升 Lv4
+coin_upgrade.exp_percent.desc,增加经验掉落概率
+coin_upgrade.player_max_hp.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp1.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp2.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp3.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp4.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp5.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp6.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp7.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp8.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp9.desc,玩家最大生命值+1
+exp_upgrade.simple_sword.name,剑
+exp_upgrade.simple_sword.paired_name,合成后的剑
+exp_upgrade.simple_sword.paired_desc,攻击力翻倍 攻击距离翻倍
+exp_upgrade.simple_sword.lv1,剑Lv1:攻击身边的敌人
+exp_upgrade.simple_sword.lv2,剑Lv2：\\n攻击力+3 数量+2
+exp_upgrade.simple_sword.lv3,剑Lv3：\\n攻击力+2 间隔-0.25s
+exp_upgrade.simple_sword.lv4,剑Lv4：\\n攻击力+3 间隔-0.25s
+exp_upgrade.simple_sword.lv5,剑Lv5：\\n攻击力+4 间隔-0.25s
+exp_upgrade.simple_sword.lv6,剑Lv6：\\n范围+1 间隔-0.25s
+exp_upgrade.simple_sword.lv7,剑Lv7：\\n攻击力+3 数量+2
+exp_upgrade.simple_sword.lv8,剑Lv8：\\n攻击力+2 范围+1
+exp_upgrade.simple_sword.lv9,剑Lv9：\\n攻击力+5 间隔-0.25s
+exp_upgrade.simple_sword.lv10,剑Lv10：\\n攻击力+3 数量+2
+exp_upgrade.rotate_sword.name,守卫剑
+exp_upgrade.rotate_sword.paired_name,合成后的守卫剑
+exp_upgrade.rotate_sword.paired_desc,攻击力翻倍 旋转速度翻倍
+exp_upgrade.rotate_sword.lv1,守卫剑Lv1:\\n环绕主角身边的剑
+exp_upgrade.rotate_sword.lv2,守卫剑Lv2：\\n数量+1 攻击力+2
+exp_upgrade.rotate_sword.lv3,守卫剑Lv3：\\n攻击力+2 速度+25%
+exp_upgrade.rotate_sword.lv4,守卫剑Lv4：\\n速度+50%
+exp_upgrade.rotate_sword.lv5,守卫剑Lv5：\\n数量+1 攻击力+1
+exp_upgrade.rotate_sword.lv6,守卫剑Lv6：\\n攻击力+2 速度+25%
+exp_upgrade.rotate_sword.lv7,守卫剑Lv7：\\n数量+1 攻击力+1
+exp_upgrade.rotate_sword.lv8,守卫剑Lv8：\\n攻击力+2 速度+25%
+exp_upgrade.rotate_sword.lv9,守卫剑Lv9：\\n数量+1 攻击力+1
+exp_upgrade.rotate_sword.lv10,守卫剑Lv10：\\n攻击力+2 速度+25%
+exp_upgrade.simple_bomb.name,炸弹
+exp_upgrade.simple_bomb.paired_name,合成后的炸弹
+exp_upgrade.simple_bomb.paired_desc,每隔15秒爆炸一次
+exp_upgrade.simple_bomb.lv1,炸弹Lv1:攻击全部敌人(怪物掉落)
+exp_upgrade.simple_bomb.lv2,炸弹Lv2：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv3,炸弹Lv3：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv4,炸弹Lv4：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv5,炸弹Lv5：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv6,炸弹Lv6：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv7,炸弹Lv7：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv8,炸弹Lv8：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv9,炸弹Lv9：\\n掉落概率+5% 攻击力+5
+exp_upgrade.simple_bomb.lv10,炸弹Lv10：\\n掉落概率+10% 攻击力+5
+exp_upgrade.simple_knife.name,飞刀
+exp_upgrade.simple_knife.paired_name,合成后的飞刀
+exp_upgrade.simple_knife.paired_desc,攻击力翻倍
+exp_upgrade.simple_knife.lv1,飞刀Lv1:向最近的敌人发射一把
+exp_upgrade.simple_knife.lv2,飞刀Lv2：\\n攻击力+3 数量+2
+exp_upgrade.simple_knife.lv3,飞刀Lv3：\\n间隔-0.1s 攻击力+1 数量+1
+exp_upgrade.simple_knife.lv4,飞刀Lv4：\\n间隔-0.1s 穿透+1 数量+1
+exp_upgrade.simple_knife.lv5,飞刀Lv5：\\n攻击力+3 数量+1
+exp_upgrade.simple_knife.lv6,飞刀Lv6：\\n间隔-0.1s 数量+1
+exp_upgrade.simple_knife.lv7,飞刀Lv7：\\n间隔-0.1s 穿透+1 数量+1
+exp_upgrade.simple_knife.lv8,飞刀Lv8：\\n攻击力+3 数量+1
+exp_upgrade.simple_knife.lv9,飞刀Lv9：\\n间隔-0.1s 数量+1
+exp_upgrade.simple_knife.lv10,飞刀Lv10：\\n攻击力+3 数量+1
+exp_upgrade.basket_ball.name,篮球
+exp_upgrade.basket_ball.paired_name,合成后的篮球
+exp_upgrade.basket_ball.paired_desc,攻击力翻倍 体型变大
+exp_upgrade.basket_ball.lv1,篮球Lv1:\\n在屏幕内反弹的篮球
+exp_upgrade.basket_ball.lv2,篮球Lv2：\\n攻击力+3
+exp_upgrade.basket_ball.lv3,篮球Lv3：\\n数量+1
+exp_upgrade.basket_ball.lv4,篮球Lv4：\\n攻击力+3
+exp_upgrade.basket_ball.lv5,篮球Lv5：\\n数量+1
+exp_upgrade.basket_ball.lv6,篮球Lv6：\\n攻击力+3
+exp_upgrade.basket_ball.lv7,篮球Lv7：\\n速度+20%
+exp_upgrade.basket_ball.lv8,篮球Lv8：\\n攻击力+3
+exp_upgrade.basket_ball.lv9,篮球Lv9：\\n速度+20%
+exp_upgrade.basket_ball.lv10,篮球Lv10：\\n数量+1
+exp_upgrade.simple_critical.name,暴击
+exp_upgrade.simple_critical.lv1,暴击Lv1:\\n每次伤害15%概率暴击
+exp_upgrade.simple_critical.lv2,暴击Lv2：\\n每次伤害28%概率暴击
+exp_upgrade.simple_critical.lv3,暴击Lv3：\\n每次伤害40%概率暴击
+exp_upgrade.simple_critical.lv4,暴击Lv4：\\n每次伤害52%概率暴击
+exp_upgrade.simple_critical.lv5,暴击Lv5：\\n每次伤害65%概率暴击
+exp_upgrade.damage_rate.name,伤害倍率
+exp_upgrade.damage_rate.lv1,伤害倍率Lv1:\\n伤害提升15%
+exp_upgrade.damage_rate.lv2,伤害倍率Lv2:\\n伤害提升28%
+exp_upgrade.damage_rate.lv3,伤害倍率Lv3:\\n伤害提升40%
+exp_upgrade.damage_rate.lv4,伤害倍率Lv4:\\n伤害提升52%
+exp_upgrade.damage_rate.lv5,伤害倍率Lv5:\\n伤害提升65%
+exp_upgrade.simple_fly_count.name,飞射物
+exp_upgrade.simple_fly_count.lv1,飞射物Lv1:\\n额外增加1个飞行物
+exp_upgrade.simple_fly_count.lv2,飞射物Lv2:\\n额外增加2个飞行物
+exp_upgrade.simple_fly_count.lv3,飞射物Lv3:\\n额外增加3个飞行物
+exp_upgrade.movement_speed_rate.name,移动速度
+exp_upgrade.movement_speed_rate.lv1,移动速度Lv1:\\n增加25%移动速度
+exp_upgrade.movement_speed_rate.lv2,移动速度Lv2:\\n增加50%移动速度
+exp_upgrade.movement_speed_rate.lv3,移动速度Lv3:\\n增加75%移动速度
+exp_upgrade.movement_speed_rate.lv4,移动速度Lv4:\\n增加100%移动速度
+exp_upgrade.movement_speed_rate.lv5,移动速度Lv5:\\n增加125%移动速度
+exp_upgrade.simple_exp_percent.name,经验值
+exp_upgrade.simple_exp_percent.lv1,经验值Lv1:\\n额外增加5%概率掉落
+exp_upgrade.simple_exp_percent.lv2,经验值Lv2:\\n额外增加10%概率掉落
+exp_upgrade.simple_exp_percent.lv3,经验值Lv3:\\n额外增加15%概率掉落
+exp_upgrade.simple_exp_percent.lv4,经验值Lv4:\\n额外增加20%概率掉落
+exp_upgrade.simple_exp_percent.lv5,经验值Lv5:\\n额外增加25%概率掉落
+exp_upgrade.simple_collectable_area_radius.name,拾取范围半径
+exp_upgrade.simple_collectable_area_radius.lv1,拾取范围半径Lv1:\\n增加100%可收集物品范围半径
+exp_upgrade.simple_collectable_area_radius.lv2,拾取范围半径Lv2:\\n增加200%可收集物品范围半径
+exp_upgrade.simple_collectable_area_radius.lv3,拾取范围半径Lv3:\\n增加300%可收集物品范围半径

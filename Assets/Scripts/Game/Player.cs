@@ -7,9 +7,15 @@ namespace VampireSurvivorLike
 	public partial class Player : ViewController
 	{
 		public float MoveSpeed = 5f;
+		[Tooltip("受击无敌时间（秒）：用于防止同帧/短时间内重复扣血")]
+		public float InvincibleSeconds = 0.5f;
 		private AudioPlayer _mWalkSfx;
+		private float _invincibleUntilTime;
+		private int _lastDamageFrame = -1;
+		private string _lastDamageSource;
 
 		public static Player Default { get; private set; }
+		public bool IsGameOver => Global.IsGameOver.Value;
 
 		#region 生命周期函数
 
@@ -22,34 +28,16 @@ namespace VampireSurvivorLike
 		{	
             HurtBox.OnTriggerEnter2DEvent(Collider2D =>
 			{
+				if (IsGameOver) return;
+
 				var hitHurtBox = Collider2D.GetComponent<HitHurtBox>();
 				if(hitHurtBox)
 				{
 					if(hitHurtBox.Owner.CompareTag("Enemy"))
 					{
-						//玩家受伤
-						Global.HP.Value -= 1;
-
-						if(Global.HP.Value<=0)
-						{
-							//播放死亡音效
-							AudioKit.PlaySound(Sfx.DEATH);
-							//停止走路音效
-							if(_mWalkSfx != null)
-							{
-								_mWalkSfx.Stop();
-								_mWalkSfx = null;
-							}
-							
-							UIKit.ClosePanel<UIGamePanel>();
-							//显示游戏结束面板
-							UIKit.OpenPanel<UIGameOverPanel>();
-						}
-						else
-						{
-							//播放受伤音效
-							AudioKit.PlaySound("Hurt");
-						}
+						var boss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
+						var bossId = boss ? boss.BossType.ToString() : string.Empty;
+						ApplyDamage(1, bossId, boss ? "BossMelee" : "EnemyMelee");
 						
 					}
 				}
@@ -60,15 +48,62 @@ namespace VampireSurvivorLike
                 HPValue.fillAmount = Global.HP.Value / (float)Global.MaxHP.Value;
             }
 
-			Global.HP.RegisterWithInitValue(hp =>
+			Global.RequestHPUIRefresh.Register(() =>
 			{
 				UPdateHP();
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			Global.MaxHP.RegisterWithInitValue(maxHp =>
+			UPdateHP();
+		}
+
+		public bool ApplyDamage(int amount, string bossId, string damageSource, bool ignoreInvincible = false)
+		{
+			if (IsGameOver) return false;
+
+			amount = Mathf.Max(1, amount);
+			damageSource ??= string.Empty;
+
+			if (_lastDamageFrame == Time.frameCount && _lastDamageSource == damageSource) return false;
+			if (!ignoreInvincible && _lastDamageFrame != Time.frameCount && Time.time < _invincibleUntilTime) return false;
+
+			_lastDamageFrame = Time.frameCount;
+			_lastDamageSource = damageSource;
+			_invincibleUntilTime = Time.time + Mathf.Max(0f, InvincibleSeconds);
+
+			Global.HP.Value -= amount;
+
+			if (Global.HP.Value <= 0)
 			{
-				UPdateHP();
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+				GameOver(bossId, damageSource);
+				return true;
+			}
+
+			AudioKit.PlaySound(Sfx.HURT);
+			CameraController.ShakeCamera();
+			Global.RequestHPUIRefresh.Trigger();
+			return true;
+		}
+
+		private void GameOver(string bossId, string damageSource)
+		{
+			if (IsGameOver) return;
+
+			Global.IsGameOver.Value = true;
+			Global.ReportPlayerDeath(bossId, damageSource);
+
+			AudioKit.PlaySound(Sfx.DEATH);
+			Time.timeScale = 0;
+
+			if(_mWalkSfx != null)
+			{
+				_mWalkSfx.Stop();
+				_mWalkSfx = null;
+			}
+							
+			UIKit.ClosePanel<UIGamePanel>();
+			UIKit.OpenPanel<UIGameOverPanel>();
+
+			Global.RequestHPUIRefresh.Trigger();
 		}
 
         private bool _mFaceRight = true;

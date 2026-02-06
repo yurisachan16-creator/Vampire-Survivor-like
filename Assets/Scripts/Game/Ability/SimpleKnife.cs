@@ -22,13 +22,18 @@ namespace VampireSurvivorLike
             {
                 _mCurrentSeconds = 0;
 
-				var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude,FindObjectsSortMode.None)
-								.OrderBy(enemy=>Player.Default.Distance2D(enemy))
-									.Take(Global.SimpleKnifeCount.Value + Global.AdditionalFlyThingCount.Value);
+				if (!Player.Default) return;
+
+				var targetCount = Global.SimpleKnifeCount.Value + Global.AdditionalFlyThingCount.Value;
+				var targets = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+					.Cast<Component>()
+					.Concat(FindObjectsByType<EnemyMiniBoss>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+					.OrderBy(target => Vector2.Distance(target.transform.position, Player.Default.transform.position))
+					.Take(targetCount);
 
 				
 				var i = 0;
-				foreach(var enemy in enemies)
+				foreach(var target in targets)
                 {
 					//计时器，游戏中最多同时有4个小刀的声音
                     if (i < 4)
@@ -39,7 +44,7 @@ namespace VampireSurvivorLike
                         
                     }		
 
-                    if (enemy)
+                    if (target)
 					{
 						Knife.Instantiate()
 						.Position(this.Position())
@@ -48,12 +53,12 @@ namespace VampireSurvivorLike
 						{
 							
 							var selfCache = self;
-							var direction = enemy.NormalizedDirection2DFrom(Player.Default);
+							var direction = ((Vector2)target.transform.position - (Vector2)Player.Default.transform.position).normalized;
 							self.transform.up = direction;
 
 							var rigidbody2D = self.GetComponent<Rigidbody2D>();
 
-							rigidbody2D.velocity = enemy.NormalizedDirection2DFrom(Player.Default) * 10;
+							rigidbody2D.velocity = direction * 10;
 							var attackCount = 0;
 
 							self.OnTriggerEnter2DEvent(collider=>
@@ -65,10 +70,11 @@ namespace VampireSurvivorLike
 								{
 									if(hitHurtBox.Owner.CompareTag("Enemy"))
 									{
-										//hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
+										var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
+										if (enemy == null) return;
 										var damageTimes=Global.SuperKnife.Value ? Random.Range(2,3+1) : 1;
 										DamageSystem.CalculateDamage(Global.SimpleKnifeDamage.Value * damageTimes,
-											hitHurtBox.Owner.GetComponent<Enemy>());
+											enemy);
 										attackCount++;
 
 										if(attackCount>=Global.SimpleKnifeAttackCount.Value)

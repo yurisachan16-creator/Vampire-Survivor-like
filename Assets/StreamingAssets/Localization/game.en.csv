@@ -1,0 +1,11 @@
+key,value
+game.ui.enemy_count,Enemies: {0}
+game.ui.wave,Wave: {0}/{1}
+game.ui.wait_next_wave,Waiting for next wave...
+game.ui.wave_remaining,{0} Remaining: {1}s
+game.ui.time,Time: {0}
+game.ui.level,Level: {0}
+game.ui.coin,Coins: {0}
+game.treasure.heal_1,Restore 1 HP
+game.treasure.add_coin_50,Gain 50 coins
+game.treasure.paired_content,<b>{0}</b>\n{1}

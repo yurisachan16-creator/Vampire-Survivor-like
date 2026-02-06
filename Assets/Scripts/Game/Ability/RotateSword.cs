@@ -27,10 +27,12 @@ namespace VampireSurvivorLike
                             {
                                 if(hitHurtBox.Owner.CompareTag("Enemy"))
                                 {
+                                    var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
+                                    if (enemy == null) return;
                                     var damageTimes=Global.SuperRotateSword.Value ? Random.Range(2,3+1) : 1;
 
                                     DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value * damageTimes,
-                                            hitHurtBox.Owner.GetComponent<Enemy>());
+                                            enemy);
 
                                     //有50%的概率对敌人进行击退
                                     if (Random.Range(0, 1.0f) < 0.5f)

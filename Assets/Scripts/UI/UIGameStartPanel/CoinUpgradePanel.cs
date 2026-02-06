@@ -17,6 +17,8 @@ namespace VampireSurvivorLike
 	
 		private void Awake()
         {
+			LocalizationManager.PreloadTable("game");
+			LocalizationManager.PreloadTable("upgrade");
 			CoinUpgradeItemPrefab.Hide();
 
 			
@@ -25,16 +27,25 @@ namespace VampireSurvivorLike
 
 			Global.Coin.RegisterWithInitValue((coin)=>
 			{
-				CoinText.text = "金币:" + coin;
+				CoinText.text = LocalizationManager.Format("game.ui.coin", coin);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
+			LocalizationManager.CurrentLanguage.Register(_ =>
+			{
+				CoinText.text = LocalizationManager.Format("game.ui.coin", Global.Coin.Value);
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 			foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items.Where(item=>item.ConditionCheck()))
             {
                 CoinUpgradeItemPrefab.InstantiateWithParent(CoinUpgradeItemRoot)
                 .Self(self =>
                 {
 					var itemCache = CoinUpgradeItem;
-                    self.GetComponentInChildren<Text>().text = CoinUpgradeItem.Description+$" (价格:{CoinUpgradeItem.Price}金币)";
+					var label = self.GetComponentInChildren<Text>();
+					if (label) label.text = LocalizationManager.Format("coin_upgrade.ui.item_price", itemCache.Description, LocaleFormat.Number(itemCache.Price));
+					LocalizationManager.CurrentLanguage.Register(_ =>
+					{
+						if (label) label.text = LocalizationManager.Format("coin_upgrade.ui.item_price", itemCache.Description, LocaleFormat.Number(itemCache.Price));
+					}).UnRegisterWhenGameObjectDestroyed(self);
 					self.onClick.AddListener(() =>
 					{
 						CoinUpgradeItem.Upgrade();

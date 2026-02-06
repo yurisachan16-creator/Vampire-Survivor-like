@@ -37,7 +37,11 @@ namespace VampireSurvivorLike
                 		{
 							if(hitHurtBox.Owner.CompareTag("Enemy"))
 							{
-								hitHurtBox.Owner.GetComponent<Enemy>().Hurt(2);
+								var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
+								if (enemy != null)
+								{
+									enemy.Hurt(2);
+								}
 							}
                 		}
 

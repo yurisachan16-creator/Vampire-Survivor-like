@@ -8,6 +8,8 @@ namespace VampireSurvivorLike
         public string Key { get; private set; } 
         public string Name {get; private set;}
         public string Description { get; private set; }
+        public string NameKey { get; private set; }
+        public string DescriptionKey { get; private set; }
         public bool Unlocked { get; private set; }
         public string IconName { get; private set; }
 
@@ -29,6 +31,18 @@ namespace VampireSurvivorLike
         public AchievementItem WithDescription(string description)
         {
             Description = description;
+            return this;
+        }
+
+        public AchievementItem WithNameKey(string nameKey)
+        {
+            NameKey = nameKey;
+            return this;
+        }
+
+        public AchievementItem WithDescriptionKey(string descriptionKey)
+        {
+            DescriptionKey = descriptionKey;
             return this;
         }
 
@@ -67,6 +81,32 @@ namespace VampireSurvivorLike
             Global.Interface.GetSystem<SaveSystem>().SaveBool($"achievement_first_{Key}",true);
             _mOnUnlocked?.Invoke(this);
             AchievementSystem.OnAchievementUnlocked.Trigger(this);
+        }
+
+        public string DisplayName
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(NameKey))
+                {
+                    var translated = LocalizationManager.T(NameKey);
+                    if (translated != NameKey) return translated;
+                }
+                return Name;
+            }
+        }
+
+        public string DisplayDescription
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(DescriptionKey))
+                {
+                    var translated = LocalizationManager.T(DescriptionKey);
+                    if (translated != DescriptionKey) return translated;
+                }
+                return Description;
+            }
         }
     }
 }

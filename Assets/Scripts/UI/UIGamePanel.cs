@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using QFramework;
 
 namespace VampireSurvivorLike
@@ -15,12 +16,87 @@ namespace VampireSurvivorLike
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
 			// please add init code here
+			LocalizationManager.PreloadTable("game");
+			if (!FindObjectOfType<EventSystem>())
+			{
+				new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+			}
 
+			var tipTransform = transform.Find("Tip");
+			if (tipTransform)
+			{
+				var tooltipView = tipTransform.GetComponent<UITooltipView>();
+				if (!tooltipView) tooltipView = tipTransform.gameObject.AddComponent<UITooltipView>();
+				tooltipView.Hide();
+			}
+
+			var overlayGo = new GameObject("LootGuideOverlay", typeof(RectTransform), typeof(CanvasGroup));
+			var overlayRt = (RectTransform)overlayGo.transform;
+			overlayRt.SetParent(transform, false);
+			overlayRt.anchorMin = Vector2.zero;
+			overlayRt.anchorMax = Vector2.one;
+			overlayRt.offsetMin = Vector2.zero;
+			overlayRt.offsetMax = Vector2.zero;
+			overlayRt.pivot = new Vector2(0.5f, 0.5f);
+			var cg = overlayGo.GetComponent<CanvasGroup>();
+			cg.blocksRaycasts = false;
+			cg.interactable = false;
+
+			var lootGuideSystem = gameObject.GetComponent<LootGuideSystem>() ?? gameObject.AddComponent<LootGuideSystem>();
+			var canvas = GetComponentInParent<Canvas>();
+			lootGuideSystem.Initialize(overlayRt, canvas, Camera.main, Player.Default ? Player.Default.transform : null);
 			
+			bool IsGameTableReady()
+			{
+				return LocalizationManager.IsReady && LocalizationManager.TryGet("game.ui.level", out _);
+			}
 
 			EnemyGenerator.EnemyCount.RegisterWithInitValue(EnemyCount =>
 			{
-				EnemyCountText.text = "敌人数量:" + EnemyCount;
+				if (!IsGameTableReady()) return;
+				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", EnemyCount);
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			// 波次信息显示
+			EnemyGenerator.CurrentWaveIndex.RegisterWithInitValue(_ =>
+			{
+				if (!IsGameTableReady()) return;
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			EnemyGenerator.TotalWaveCount.RegisterWithInitValue(_ =>
+			{
+				if (!IsGameTableReady()) return;
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			// 波次剩余时间显示
+			EnemyGenerator.WaveRemainingTime.RegisterWithInitValue(_ =>
+			{
+				if (!IsGameTableReady()) return;
+				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				{
+					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
+				}
+				else
+				{
+					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
+				}
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			EnemyGenerator.CurrentWaveName.RegisterWithInitValue(_ =>
+			{
+				if (!IsGameTableReady()) return;
+				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				{
+					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
+				}
+				else
+				{
+					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
+				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			///时间变化处理
@@ -28,10 +104,11 @@ namespace VampireSurvivorLike
 			{
 				if(Time.frameCount %30 == 0)
 				{
+					if (!IsGameTableReady()) return;
 					var secondsInt = Mathf.FloorToInt(currentSeconds);
 					var seconds = secondsInt % 60;
 					var minutes = secondsInt / 60;
-					TimeText.text = "时间:" + $"{minutes:00}:{seconds:00}";
+					TimeText.text = LocalizationManager.Format("game.ui.time", $"{minutes:00}:{seconds:00}");
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -46,22 +123,31 @@ namespace VampireSurvivorLike
 			///等级提升处理
 			Global.Level.RegisterWithInitValue((level) =>
 			{
-				LevelText.text = "等级:" + level;
+				if (!IsGameTableReady()) return;
+				LevelText.text = LocalizationManager.Format("game.ui.level", level);
 				
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			//默认升级界面隐藏
 			ExpUpgradePanel.Hide();
-			///等级提升处理（只在等级变化时触发，不在初始化时触发）
-			Global.Level.Register((level) =>
+			///等级提升处理：监听升级系统事件，只有在有可选项时才显示面板
+			ExpUpgradeSystem.OnUpgradePanelShouldShow.Register((hasItems) =>
 			{
-				//暂停游戏
-				Time.timeScale = 0f;
-				
-				//显示升级面板
-				ExpUpgradePanel.Show();
-				//升级音效
-				AudioKit.PlaySound("LevelUp");
+				if (hasItems)
+				{
+					//暂停游戏
+					Time.timeScale = 0f;
+					//显示升级面板
+					ExpUpgradePanel.Show();
+					//升级音效
+					AudioKit.PlaySound("LevelUp");
+				}
+				else
+				{
+					//没有可升级项目，给予补偿奖励
+					Global.Coin.Value += 100;
+					AudioKit.PlaySound("Retro Event Acute 08");
+				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			///经验值转等级处理
@@ -93,7 +179,7 @@ namespace VampireSurvivorLike
 			{
 				Global.CurrentSeconds.Value += Time.deltaTime;
 				//敌人全部死亡，通关
-				if(enemyGenerator.IsLastWave && EnemyGenerator.EnemyCount.Value == 0 && enemyGenerator.CurrentWave==null)
+				if(enemyGenerator.IsAllWavesFinished && EnemyGenerator.EnemyCount.Value == 0)
 				{
 					//关闭当前面板
 					this.CloseSelf();
@@ -108,11 +194,40 @@ namespace VampireSurvivorLike
 			
 			Global.Coin.RegisterWithInitValue((coin) =>
 			{
-				
-
-				CoinText.text = "金币:" + coin;
+				if (!IsGameTableReady()) return;
+				CoinText.text = LocalizationManager.Format("game.ui.coin", coin);
 
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			System.Action refreshHudText = () =>
+			{
+				if (!LocalizationManager.IsReady) return;
+				if (!LocalizationManager.TryGet("game.ui.level", out _)) return;
+
+				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", EnemyGenerator.EnemyCount.Value);
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
+				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				{
+					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
+				}
+				else
+				{
+					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
+				}
+
+				var secondsInt = Mathf.FloorToInt(Global.CurrentSeconds.Value);
+				var seconds = secondsInt % 60;
+				var minutes = secondsInt / 60;
+				TimeText.text = LocalizationManager.Format("game.ui.time", $"{minutes:00}:{seconds:00}");
+
+				LevelText.text = LocalizationManager.Format("game.ui.level", Global.Level.Value);
+				CoinText.text = LocalizationManager.Format("game.ui.coin", Global.Coin.Value);
+			};
+
+			LocalizationManager.ReadyChanged.Register(() => refreshHudText()).UnRegisterWhenGameObjectDestroyed(gameObject);
+			LocalizationManager.CurrentLanguage.Register(_ => refreshHudText()).UnRegisterWhenGameObjectDestroyed(gameObject);
+			refreshHudText();
 
 			OpenTreasureChestPanel.Register(()=>
 			{

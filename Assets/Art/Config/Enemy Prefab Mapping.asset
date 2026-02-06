@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5946d00bc189f5c468f464a81b105062, type: 3}
+  m_Name: Enemy Prefab Mapping
+  m_EditorClassIdentifier: 
+  Enemies:
+  - Name: Enemy_Ghost
+    Prefab: {fileID: 4169054150964862606, guid: cfd8ec1bc4dd12642bc126936e7510f4, type: 3}
+  - Name: Enemy_Ghost_Boss
+    Prefab: {fileID: 3561807309246451492, guid: 0519d1deee9c9da4695ad17fa8b3abba, type: 3}
+  - Name: Enemy_Block_Yellow
+    Prefab: {fileID: 4169054150964862606, guid: 06ebcfe03d9bbea448274f5f9d5239f7, type: 3}
+  - Name: Enemy_Block_Yellow_Boss
+    Prefab: {fileID: 3561807309246451492, guid: b9fff614694d59b4b9f917fb735e0186, type: 3}
+  - Name: Enemy_Cyclops
+    Prefab: {fileID: 4169054150964862606, guid: 34782a2aa9acede4bad65f9fce77706b, type: 3}
+  - Name: Enemy_Bat
+    Prefab: {fileID: 4169054150964862606, guid: 8c471413ba1feaa4f8fa32f885766b2a, type: 3}
+  - Name: Enemy_Bat_Boss
+    Prefab: {fileID: 3561807309246451492, guid: fc52458ba5d094f4b8c8315494ea84d1, type: 3}
+  - Name: Enemy_Rouge
+    Prefab: {fileID: 4169054150964862606, guid: c4d3ab39fbb03f541aa0e9e55ea45197, type: 3}
+  - Name: Enemy_Spider
+    Prefab: {fileID: 3766324054420972532, guid: f5356c37007c889498c02a0834f6aa9c, type: 3}
+  - Name: Enemy_Crab_Boss
+    Prefab: {fileID: 3561807309246451492, guid: 8b6ce9010edd9e748bdb5ee062d2f971, type: 3}
+  - Name: Enemy_Turtle_Boss
+    Prefab: {fileID: 3561807309246451492, guid: e09c16a062ca36943944a5c3dea49a96, type: 3}
+  - Name: Enemy_Orc_Boss
+    Prefab: {fileID: 3561807309246451492, guid: f531b6f2da6ffbd4698ddb9d3a525d97, type: 3}
+  - Name: EnemyMiniBoss
+    Prefab: {fileID: 3561807309246451492, guid: 0519d1deee9c9da4695ad17fa8b3abba, type: 3}
+  - Name: EnemyA
+    Prefab: {fileID: 4169054150964862606, guid: 06ebcfe03d9bbea448274f5f9d5239f7, type: 3}
+  - Name: EnemyABoss
+    Prefab: {fileID: 3766324054420972532, guid: f5356c37007c889498c02a0834f6aa9c, type: 3}
+  - Name: EnemyABossB
+    Prefab: {fileID: 3561807309246451492, guid: b9fff614694d59b4b9f917fb735e0186, type: 3}
+  - Name: EnemyB
+    Prefab: {fileID: 4169054150964862606, guid: cfd8ec1bc4dd12642bc126936e7510f4, type: 3}
+  - Name: EnemyBBoss
+    Prefab: {fileID: 3561807309246451492, guid: 8b6ce9010edd9e748bdb5ee062d2f971, type: 3}
+  - Name: EnemyBBossB
+    Prefab: {fileID: 3561807309246451492, guid: 8b6ce9010edd9e748bdb5ee062d2f971, type: 3}
+  - Name: EnemyC
+    Prefab: {fileID: 4169054150964862606, guid: c4d3ab39fbb03f541aa0e9e55ea45197, type: 3}
+  - Name: EnemyCBoss
+    Prefab: {fileID: 3561807309246451492, guid: f531b6f2da6ffbd4698ddb9d3a525d97, type: 3}
+  - Name: EnemyCBossB
+    Prefab: {fileID: 3561807309246451492, guid: f531b6f2da6ffbd4698ddb9d3a525d97, type: 3}
+  - Name: EnemyD
+    Prefab: {fileID: 4169054150964862606, guid: 8c471413ba1feaa4f8fa32f885766b2a, type: 3}
+  - Name: EnemyDBoss
+    Prefab: {fileID: 3561807309246451492, guid: e09c16a062ca36943944a5c3dea49a96, type: 3}
+  - Name: EnemyDBossB
+    Prefab: {fileID: 3561807309246451492, guid: 0519d1deee9c9da4695ad17fa8b3abba, type: 3}
+  - Name: EnemyE
+    Prefab: {fileID: 3561807309246451492, guid: fc52458ba5d094f4b8c8315494ea84d1, type: 3}
+  - Name: EnemyFly
+    Prefab: {fileID: 4169054150964862606, guid: 34782a2aa9acede4bad65f9fce77706b, type: 3}

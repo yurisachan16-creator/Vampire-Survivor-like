@@ -1,0 +1,11 @@
+key,value
+ability.simple_sword.name,Sword
+ability.simple_sword.desc,Slash the nearest enemy
+ability.simple_knife.name,Knife
+ability.simple_knife.desc,Throw a knife at the nearest enemy
+ability.rotate_sword.name,Guardian Sword
+ability.rotate_sword.desc,A sword orbiting around the character
+ability.basket_ball.name,Basketball
+ability.basket_ball.desc,A bouncing ball that hits enemies
+ability.bomb.name,Bomb
+ability.bomb.desc,Explodes to damage nearby enemies

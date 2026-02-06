@@ -18,6 +18,20 @@ namespace VampireSurvivorLike
 			Time.timeScale = 0f;
 			// please add init code here
 
+			var titleText = transform.Find("Title")?.GetComponent<Text>();
+			if (titleText) FontManager.Register(titleText);
+			var backLabel = BtnBackToStart ? BtnBackToStart.GetComponentInChildren<Text>(true) : null;
+			if (backLabel) FontManager.Register(backLabel);
+
+			System.Action refreshUiText = () =>
+			{
+				if (!LocalizationManager.IsReady) return;
+				if (titleText) titleText.text = LocalizationManager.T("ui.gamepass.title");
+				if (backLabel) backLabel.text = LocalizationManager.T("ui.settings.return_main_menu");
+			};
+			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
+			refreshUiText();
+
 			//移除按空格键重玩功能
 			// ActionKit.OnUpdate.Register(()=>
             // {

@@ -6,13 +6,25 @@ namespace VampireSurvivorLike
 {
 	public partial class Bomb : GameplayObject
 	{
+		private void OnEnable()
+		{
+			var sr = GetComponent<SpriteRenderer>();
+			LootGuideSystem.Current?.Register(this, LootGuideKind.Bomb, sr ? sr.sprite : null);
+			LootGuideSystem.Current?.TryPlayDropFeedback(transform.position, LootGuideKind.Bomb);
+		}
+
+		private void OnDisable()
+		{
+			LootGuideSystem.Current?.Unregister(this);
+		}
+
 		public static void Execute()
         {
             //炸弹效果: 清除屏幕上所有敌人
 				foreach(var enemyObj in GameObject.FindGameObjectsWithTag("Enemy"))
 				{
-					var enemy=enemyObj.GetComponent<Enemy>();
-					if(enemy&&enemy.gameObject.activeSelf)
+					var enemy=enemyObj.GetComponent<IEnemy>();
+					if(enemy!=null&&enemyObj.gameObject.activeSelf)
 					{
 						DamageSystem.CalculateDamage(Global.BombDamage.Value,enemy);
 					}
