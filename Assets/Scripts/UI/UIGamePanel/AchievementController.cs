@@ -22,8 +22,9 @@ namespace VampireSurvivorLike
 
 			AchievementSystem.OnAchievementUnlocked.Register(item =>
 			{
-				Title.text = $"<b>成就{item.Name} 达成!</b>";
-				Description.text = item.Description;
+				var name = item.DisplayName;
+				Title.text = LocalizationManager.Format("ui.achievement.unlocked_title", name);
+				Description.text = item.DisplayDescription;
 				var sprite = iconAtlas.GetSprite(item.IconName);
 				Icon.sprite = sprite;
 				AchievementItem.Show();

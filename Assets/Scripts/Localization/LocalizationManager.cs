@@ -18,6 +18,7 @@ namespace VampireSurvivorLike
         private static readonly Dictionary<string, LanguageCache> CacheByLanguage = new Dictionary<string, LanguageCache>();
         private static readonly LinkedList<string> CacheLru = new LinkedList<string>();
         private const int MaxCachedLanguages = 2;
+        private static readonly HashSet<string> PreloadedTables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         private sealed class LanguageCache
         {
@@ -177,6 +178,7 @@ namespace VampireSurvivorLike
         {
             if (string.IsNullOrWhiteSpace(tableName)) return;
             Initialize();
+            PreloadedTables.Add(tableName.Trim());
             LocalizationRunner.Instance.StartCoroutine(LoadTableForLanguage(tableName, CurrentLanguage.Value));
         }
 
@@ -190,21 +192,19 @@ namespace VampireSurvivorLike
         {
             var langKey = (language.IsEmpty ? Settings.DefaultLanguage.ToString() : language.ToString()).ToLowerInvariant();
 
-            if (CacheByLanguage.TryGetValue(langKey, out var cache) && cache != null && cache.Ready)
-            {
-                TouchCache(langKey);
-                _mergedTable = cache.Merged;
-                _ready = true;
-                ReadyChanged.Trigger();
-                yield break;
-            }
-
             TouchCache(langKey);
-            cache = CacheByLanguage[langKey];
+            var cache = CacheByLanguage[langKey];
             _mergedTable = cache.Merged;
 
             yield return EnsureManifestLoaded();
             yield return LoadTableForLanguage("core", language);
+
+            foreach (var table in PreloadedTables)
+            {
+                if (string.IsNullOrWhiteSpace(table)) continue;
+                if (string.Equals(table, "core", StringComparison.OrdinalIgnoreCase)) continue;
+                yield return LoadTableForLanguage(table, language);
+            }
 
             _ready = cache.Ready;
             ReadyChanged.Trigger();

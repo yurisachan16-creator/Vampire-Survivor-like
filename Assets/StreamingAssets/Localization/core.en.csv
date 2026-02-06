@@ -1,10 +1,48 @@
 key,value
 ui.settings.language,Language
 ui.settings.fullscreen,Fullscreen
+ui.settings.windowed,Windowed
+ui.settings.screen_mode,Windowed/Fullscreen
 ui.settings.loot_guide,Loot Guide
+ui.settings.title,Settings
+ui.settings.back,Back
+ui.settings.music,Music
+ui.settings.sfx,SFX
 ui.settings.music_volume,Music Volume
 ui.settings.sound_volume,SFX Volume
 ui.settings.return_main_menu,Main Menu
 ui.settings.quit,Quit
 ui.settings.lang_en,English
 ui.settings.lang_zh,Chinese
+ui.start.start_game,Start Game
+ui.start.settings,Settings
+ui.start.achievement,Achievements
+ui.start.coin_upgrade,Coin Upgrades
+ui.achievement.completed,[Completed]
+ui.achievement.unlocked_title,<b>Achievement {0} unlocked!</b>
+ui.gameover.title,Game Over
+ui.gamepass.title,Stage Clear
+achievement.3_minutes.name,Survive 3 minutes
+achievement.3_minutes.desc,Survive for 3 minutes\\nReward: 1000 coins
+achievement.5_minutes.name,Survive 5 minutes
+achievement.5_minutes.desc,Survive for 5 minutes\\nReward: 1000 coins
+achievement.10_minutes.name,Survive 10 minutes
+achievement.10_minutes.desc,Survive for 10 minutes\\nReward: 1000 coins
+achievement.20_minutes.name,Survive 20 minutes
+achievement.20_minutes.desc,Survive for 20 minutes\\nReward: 1000 coins
+achievement.lv30.name,Level 30
+achievement.lv30.desc,Reach level 30 for the first time\\nReward: 1000 coins
+achievement.lv50.name,Level 50
+achievement.lv50.desc,Reach level 50 for the first time\\nReward: 1000 coins
+achievement.first_time_paired_ball.name,Fused Basketball
+achievement.first_time_paired_ball.desc,Unlock the fused basketball for the first time\\nReward: 1000 coins
+achievement.first_time_paired_bomb.name,Fused Bomb
+achievement.first_time_paired_bomb.desc,Unlock the fused bomb for the first time\\nReward: 1000 coins
+achievement.first_time_paired_sword.name,Fused Sword
+achievement.first_time_paired_sword.desc,Unlock the fused sword for the first time\\nReward: 1000 coins
+achievement.first_time_paired_knife.name,Fused Knife
+achievement.first_time_paired_knife.desc,Unlock the fused knife for the first time\\nReward: 1000 coins
+achievement.first_time_paired_circle.name,Fused Guard Sword
+achievement.first_time_paired_circle.desc,Unlock the fused guard sword for the first time\\nReward: 1000 coins
+achievement.all_ability_upgrade.name,All Abilities Upgraded
+achievement.all_ability_upgrade.desc,Finish upgrading all abilities\\nReward: 1000 coins

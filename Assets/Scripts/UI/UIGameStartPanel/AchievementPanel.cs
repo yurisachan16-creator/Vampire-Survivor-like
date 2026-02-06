@@ -16,30 +16,16 @@ namespace VampireSurvivorLike
 	public partial class AchievementPanel : UIElement, IController
 	{
 		private ResLoader _mResLoader = ResLoader.Allocate();
+		private SpriteAtlas _mIconAtlas;
 
 		private void Awake()
 		{
 			AchievementItemPrefab.Hide();
 
-			var iconAtlas = _mResLoader.LoadSync<SpriteAtlas>("icon");
+			_mIconAtlas = _mResLoader.LoadSync<SpriteAtlas>("icon");
 
-			//加载成就列表
-			//没完成的放前面
-			foreach (var achievementItem in this.GetSystem<AchievementSystem>().Items
-							.OrderByDescending(item => item.Unlocked))
-			{
-				AchievementItemPrefab.InstantiateWithParent(AchievementItemRoot)
-					.Self(s =>
-					{
-						s.GetComponentInChildren<Text>().text = "<b>" + achievementItem.Name +
-							(achievementItem.Unlocked ?
-							 "<color=green>【已完成】</color>" : "") +
-							"</b>\n" + achievementItem.Description;
-						var sprite = iconAtlas.GetSprite(achievementItem.IconName);
-						s.transform.Find("Icon").GetComponent<Image>().sprite = sprite;
-					})
-					.Show();
-			}
+			LocalizationManager.ReadyChanged.Register(RefreshList).UnRegisterWhenGameObjectDestroyed(gameObject);
+			RefreshList();
 
 			BtnClose.onClick.AddListener(() =>
 			{
@@ -49,10 +35,47 @@ namespace VampireSurvivorLike
 			});
 		}
 
+		private void RefreshList()
+		{
+			if (!LocalizationManager.IsReady) return;
+
+			for (var i = AchievementItemRoot.childCount - 1; i >= 0; i--)
+			{
+				var child = AchievementItemRoot.GetChild(i);
+				if (!child) continue;
+				if (child.gameObject == AchievementItemPrefab.gameObject) continue;
+				Destroy(child.gameObject);
+			}
+
+			var completedSuffix = LocalizationManager.T("ui.achievement.completed");
+
+			foreach (var achievementItem in this.GetSystem<AchievementSystem>().Items
+							.OrderByDescending(item => item.Unlocked))
+			{
+				AchievementItemPrefab.InstantiateWithParent(AchievementItemRoot)
+					.Self(s =>
+					{
+						var label = s.GetComponentInChildren<Text>(true);
+						if (label) FontManager.Register(label);
+						if (label)
+						{
+							label.text = "<b>" + achievementItem.DisplayName +
+										(achievementItem.Unlocked ? "<color=green>" + completedSuffix + "</color>" : "") +
+										"</b>\n" + achievementItem.DisplayDescription;
+						}
+						var sprite = _mIconAtlas ? _mIconAtlas.GetSprite(achievementItem.IconName) : null;
+						var icon = s.transform.Find("Icon")?.GetComponent<Image>();
+						if (icon) icon.sprite = sprite;
+					})
+					.Show();
+			}
+		}
+
 		protected override void OnBeforeDestroy()
 		{
 			_mResLoader.Recycle2Cache();
 			_mResLoader = null;
+			_mIconAtlas = null;
 		}
 
 		public IArchitecture GetArchitecture()

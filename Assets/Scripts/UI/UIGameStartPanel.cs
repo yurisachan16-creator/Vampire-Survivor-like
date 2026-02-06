@@ -18,6 +18,26 @@ namespace VampireSurvivorLike
 			// please add init code here
 			Time.timeScale = 1.0f;
 
+			var startLabel = BtnStartGame ? BtnStartGame.GetComponentInChildren<Text>(true) : null;
+			if (startLabel) FontManager.Register(startLabel);
+			var settingsLabel = BtnSettingsGame ? BtnSettingsGame.GetComponentInChildren<Text>(true) : null;
+			if (settingsLabel) FontManager.Register(settingsLabel);
+			var achievementLabel = BtnAchievement ? BtnAchievement.GetComponentInChildren<Text>(true) : null;
+			if (achievementLabel) FontManager.Register(achievementLabel);
+			var coinUpgradeLabel = BtnCoinUpgrade ? BtnCoinUpgrade.GetComponentInChildren<Text>(true) : null;
+			if (coinUpgradeLabel) FontManager.Register(coinUpgradeLabel);
+
+			System.Action refreshUiText = () =>
+			{
+				if (!LocalizationManager.IsReady) return;
+				if (startLabel) startLabel.text = LocalizationManager.T("ui.start.start_game");
+				if (settingsLabel) settingsLabel.text = LocalizationManager.T("ui.start.settings");
+				if (achievementLabel) achievementLabel.text = LocalizationManager.T("ui.start.achievement");
+				if (coinUpgradeLabel) coinUpgradeLabel.text = LocalizationManager.T("ui.start.coin_upgrade");
+			};
+			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
+			refreshUiText();
+
 			BtnStartGame.onClick.AddListener(() =>
 			{
 				//播放音效
