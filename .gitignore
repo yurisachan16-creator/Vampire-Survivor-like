@@ -4,6 +4,8 @@
 #
 # 临时文件目录
 .utmp/
+.trae/
+~$*.xlsx
 
 # Unity 自动生成的目录
 /[Ll]ibrary/
