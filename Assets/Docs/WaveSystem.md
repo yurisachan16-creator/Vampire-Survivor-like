@@ -1,5 +1,9 @@
 # 波次系统（现状）配置表与调用链
 
+相关文档：
+- 配置字段与使用指南：`Docs/GameConfig-Guide.md`
+- v0.10 版本线回溯（本分支整理）：`Docs/Changelog-v0.10.md`
+
 ## 配置数据源
 
 - 主配置：`Assets/StreamingAssets/Config/EnemyWaveConfig.csv`
@@ -54,4 +58,3 @@ flowchart TD
 - 刷新阶段：持续到 `KeepSeconds` 或被“提前切波”逻辑打断。
 - 提前切波（当前已增强）：当场景内 `Enemy` 与 `EnemyMiniBoss` 均为 0 时，会触发切波。
 - 刷新结束后的最大等待：`MaxWaitAfterSpawnSeconds` 用于限制“刷新结束后仍未清怪”的拖波时间上限。
-
