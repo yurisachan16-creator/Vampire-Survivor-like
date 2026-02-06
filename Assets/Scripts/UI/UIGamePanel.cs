@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using QFramework;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
@@ -21,6 +22,8 @@ namespace VampireSurvivorLike
 			{
 				new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
 			}
+
+			MobileTouchOverlay.Ensure(gameObject);
 
 			var tipTransform = transform.Find("Tip");
 			if (tipTransform)
@@ -250,6 +253,267 @@ namespace VampireSurvivorLike
 		
 		protected override void OnClose()
 		{
+		}
+	}
+
+	public static class PlatformInput
+	{
+		private static Vector2 _moveOverride;
+		private static bool _hasMoveOverride;
+		private static int _backRequestedFrame = -1;
+
+		public static void SetMoveOverride(Vector2 move)
+		{
+			_moveOverride = move;
+			_hasMoveOverride = move.sqrMagnitude > 0.0001f;
+		}
+
+		public static Vector2 GetMoveAxisRaw()
+		{
+			if (_hasMoveOverride) return _moveOverride;
+			return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+		}
+
+		public static void RequestBack()
+		{
+			_backRequestedFrame = Time.frameCount;
+		}
+
+		public static bool GetBackDown()
+		{
+			return Input.GetKeyDown(KeyCode.Escape) || _backRequestedFrame == Time.frameCount;
+		}
+	}
+
+	[DisallowMultipleComponent]
+	public class SafeAreaFitter : MonoBehaviour
+	{
+		private RectTransform _rect;
+		private Rect _lastSafeArea;
+		private Vector2Int _lastScreenSize;
+
+		private void Awake()
+		{
+			_rect = transform as RectTransform;
+			Apply();
+		}
+
+		private void Update()
+		{
+			if (_rect == null) return;
+			if (_lastSafeArea != Screen.safeArea || _lastScreenSize.x != Screen.width || _lastScreenSize.y != Screen.height)
+			{
+				Apply();
+			}
+		}
+
+		private void Apply()
+		{
+			if (_rect == null) return;
+
+			_lastSafeArea = Screen.safeArea;
+			_lastScreenSize = new Vector2Int(Screen.width, Screen.height);
+
+			var anchorMin = _lastSafeArea.position;
+			var anchorMax = _lastSafeArea.position + _lastSafeArea.size;
+			anchorMin.x /= Screen.width;
+			anchorMin.y /= Screen.height;
+			anchorMax.x /= Screen.width;
+			anchorMax.y /= Screen.height;
+
+			_rect.anchorMin = anchorMin;
+			_rect.anchorMax = anchorMax;
+			_rect.offsetMin = Vector2.zero;
+			_rect.offsetMax = Vector2.zero;
+		}
+	}
+
+	public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+	{
+		[SerializeField] private RectTransform _background;
+		[SerializeField] private RectTransform _handle;
+		[SerializeField] private float _radius = 110f;
+
+		private int _activePointerId = int.MinValue;
+
+		public Vector2 Value { get; private set; }
+
+		public void Initialize(RectTransform background, RectTransform handle, float radius)
+		{
+			_background = background;
+			_handle = handle;
+			_radius = Mathf.Max(1f, radius);
+			ResetState();
+		}
+
+		public void OnPointerDown(PointerEventData eventData)
+		{
+			if (_activePointerId != int.MinValue) return;
+			_activePointerId = eventData.pointerId;
+			OnDrag(eventData);
+		}
+
+		public void OnDrag(PointerEventData eventData)
+		{
+			if (_background == null || _handle == null) return;
+			if (_activePointerId != eventData.pointerId) return;
+
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(
+				_background,
+				eventData.position,
+				eventData.pressEventCamera,
+				out var localPoint
+			);
+
+			var clamped = Vector2.ClampMagnitude(localPoint, _radius);
+			_handle.anchoredPosition = clamped;
+			Value = clamped / _radius;
+		}
+
+		public void OnPointerUp(PointerEventData eventData)
+		{
+			if (_activePointerId != eventData.pointerId) return;
+			ResetState();
+		}
+
+		private void OnDisable()
+		{
+			ResetState();
+		}
+
+		private void ResetState()
+		{
+			_activePointerId = int.MinValue;
+			Value = Vector2.zero;
+			if (_handle != null) _handle.anchoredPosition = Vector2.zero;
+		}
+	}
+
+	[DisallowMultipleComponent]
+	public class MobileTouchOverlay : MonoBehaviour
+	{
+		private VirtualJoystick _joystick;
+
+		public static void Ensure(GameObject host)
+		{
+			if (host == null) return;
+			if (!host.GetComponent<MobileTouchOverlay>()) host.AddComponent<MobileTouchOverlay>();
+		}
+
+		private void Awake()
+		{
+			if (!Application.isMobilePlatform)
+			{
+				Destroy(this);
+				return;
+			}
+
+			var hostRect = transform as RectTransform;
+			if (hostRect && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
+
+			var overlay = new GameObject("MobileTouchOverlay", typeof(RectTransform));
+			var overlayRt = (RectTransform)overlay.transform;
+			overlayRt.SetParent(transform, false);
+			overlayRt.anchorMin = Vector2.zero;
+			overlayRt.anchorMax = Vector2.one;
+			overlayRt.offsetMin = Vector2.zero;
+			overlayRt.offsetMax = Vector2.zero;
+
+			_joystick = CreateJoystick(overlayRt);
+			CreatePauseButton(overlayRt);
+		}
+
+		private void Update()
+		{
+			if (_joystick != null) PlatformInput.SetMoveOverride(_joystick.Value);
+		}
+
+		private void OnDisable()
+		{
+			PlatformInput.SetMoveOverride(Vector2.zero);
+		}
+
+		private VirtualJoystick CreateJoystick(RectTransform parent)
+		{
+			var joystickRoot = new GameObject("Joystick", typeof(RectTransform));
+			var rt = (RectTransform)joystickRoot.transform;
+			rt.SetParent(parent, false);
+			rt.anchorMin = Vector2.zero;
+			rt.anchorMax = Vector2.zero;
+			rt.pivot = Vector2.zero;
+			rt.anchoredPosition = new Vector2(80f, 80f);
+			rt.sizeDelta = new Vector2(260f, 260f);
+
+			var bg = new GameObject("Background", typeof(RectTransform), typeof(Image));
+			var bgRt = (RectTransform)bg.transform;
+			bgRt.SetParent(rt, false);
+			bgRt.anchorMin = new Vector2(0.5f, 0.5f);
+			bgRt.anchorMax = new Vector2(0.5f, 0.5f);
+			bgRt.pivot = new Vector2(0.5f, 0.5f);
+			bgRt.sizeDelta = new Vector2(220f, 220f);
+
+			var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+			var handleRt = (RectTransform)handle.transform;
+			handleRt.SetParent(bgRt, false);
+			handleRt.anchorMin = new Vector2(0.5f, 0.5f);
+			handleRt.anchorMax = new Vector2(0.5f, 0.5f);
+			handleRt.pivot = new Vector2(0.5f, 0.5f);
+			handleRt.sizeDelta = new Vector2(110f, 110f);
+
+			var sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+			var bgImg = bg.GetComponent<Image>();
+			bgImg.sprite = sprite;
+			bgImg.type = Image.Type.Sliced;
+			bgImg.color = new Color(1f, 1f, 1f, 0.18f);
+
+			var handleImg = handle.GetComponent<Image>();
+			handleImg.sprite = sprite;
+			handleImg.type = Image.Type.Sliced;
+			handleImg.color = new Color(1f, 1f, 1f, 0.35f);
+
+			var joy = joystickRoot.AddComponent<VirtualJoystick>();
+			joy.Initialize(bgRt, handleRt, 110f);
+			return joy;
+		}
+
+		private void CreatePauseButton(RectTransform parent)
+		{
+			var buttonGo = new GameObject("PauseButton", typeof(RectTransform), typeof(Image), typeof(Button));
+			var rt = (RectTransform)buttonGo.transform;
+			rt.SetParent(parent, false);
+			rt.anchorMin = Vector2.one;
+			rt.anchorMax = Vector2.one;
+			rt.pivot = Vector2.one;
+			rt.anchoredPosition = new Vector2(-40f, -40f);
+			rt.sizeDelta = new Vector2(120f, 80f);
+
+			var sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+			var img = buttonGo.GetComponent<Image>();
+			img.sprite = sprite;
+			img.type = Image.Type.Sliced;
+			img.color = new Color(0f, 0f, 0f, 0.25f);
+
+			var textGo = new GameObject("Text", typeof(RectTransform), typeof(Text));
+			var textRt = (RectTransform)textGo.transform;
+			textRt.SetParent(rt, false);
+			textRt.anchorMin = Vector2.zero;
+			textRt.anchorMax = Vector2.one;
+			textRt.offsetMin = Vector2.zero;
+			textRt.offsetMax = Vector2.zero;
+
+			var text = textGo.GetComponent<Text>();
+			text.alignment = TextAnchor.MiddleCenter;
+			text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+			text.text = "Ⅱ";
+			text.fontSize = 42;
+			text.color = Color.white;
+
+			var button = buttonGo.GetComponent<Button>();
+			button.onClick.AddListener(() =>
+			{
+				AudioKit.PlaySound(Sfx.BUTTONCLICK);
+				PlatformInput.RequestBack();
+			});
 		}
 	}
 }

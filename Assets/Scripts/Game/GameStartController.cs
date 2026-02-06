@@ -30,8 +30,7 @@ namespace VampireSurvivorLike
 
 		private void Update()
 		{
-			// ESC 键或 Settings 按钮打开/关闭设置面板
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (PlatformInput.GetBackDown())
 			{
 				ToggleSettingsPanel(false);
 			}

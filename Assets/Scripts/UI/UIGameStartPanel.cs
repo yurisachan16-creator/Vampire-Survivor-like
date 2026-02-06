@@ -17,6 +17,7 @@ namespace VampireSurvivorLike
 			mData = uiData as UIGameStartPanelData ?? new UIGameStartPanelData();
 			// please add init code here
 			Time.timeScale = 1.0f;
+			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
 
 			var startLabel = BtnStartGame ? BtnStartGame.GetComponentInChildren<Text>(true) : null;
 			if (startLabel) FontManager.Register(startLabel);
@@ -78,8 +79,7 @@ namespace VampireSurvivorLike
 	
 		private void Update()
 		{
-			// ESC 键打开设置面板
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (PlatformInput.GetBackDown())
 			{
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				UIKit.OpenPanel<UIGameSettingsPanel>(new UIGameSettingsPanelData { IsFromGame = false });

@@ -23,6 +23,7 @@ namespace VampireSurvivorLike
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGameSettingsPanelData ?? new UIGameSettingsPanelData();
+			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
 			
 			// 获取 SettingsPanel 子对象的 RectTransform
 			_settingsPanelRect = transform.Find("SettingsPanel")?.GetComponent<RectTransform>();
@@ -211,8 +212,7 @@ namespace VampireSurvivorLike
 		
 		private void Update()
 		{
-			// ESC 键关闭设置面板
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (PlatformInput.GetBackDown())
 			{
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				CloseSelf();

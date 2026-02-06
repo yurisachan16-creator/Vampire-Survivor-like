@@ -110,9 +110,10 @@ namespace VampireSurvivorLike
 
         void Update()
         {
-            var horizontal = Input.GetAxisRaw("Horizontal");
-			var vertical = Input.GetAxisRaw("Vertical");
-			var targetVelocity = new Vector2(horizontal, vertical).normalized * MoveSpeed
+            var move = PlatformInput.GetMoveAxisRaw();
+            var horizontal = move.x;
+			var vertical = move.y;
+			var targetVelocity = move.normalized * MoveSpeed
 												* Global.MovementSpeedRate.Value;
 
 			//简单的动作与面向处理
