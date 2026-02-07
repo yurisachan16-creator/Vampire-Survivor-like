@@ -4,6 +4,8 @@ using QFramework;
 using QAssetBundle;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 
 namespace VampireSurvivorLike
 {
@@ -19,6 +21,7 @@ namespace VampireSurvivorLike
 	{
 		private float _previousTimeScale = 1f;
 		private RectTransform _settingsPanelRect;
+		private System.Action _refreshUiText;
 		
 		protected override void OnInit(IUIData uiData = null)
 		{
@@ -35,6 +38,17 @@ namespace VampireSurvivorLike
 			FullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
 			var fullscreenLabel = FullscreenToggle.GetComponentInChildren<Text>(true);
 			if (fullscreenLabel) FontManager.Register(fullscreenLabel);
+
+			TMP_Dropdown screenModeDropdown = null;
+			if (DisplaySettings)
+			{
+				screenModeDropdown = DisplaySettings.GetComponentInChildren<TMP_Dropdown>(true);
+				if (screenModeDropdown)
+				{
+					if (screenModeDropdown.captionText) FontManager.Register(screenModeDropdown.captionText);
+					if (screenModeDropdown.itemText) FontManager.Register(screenModeDropdown.itemText);
+				}
+			}
 
 			Toggle debugHudToggle = null;
 			Text debugHudLabel = null;
@@ -100,7 +114,25 @@ namespace VampireSurvivorLike
 
 			var languageTextTransform = LanguageSettings ? LanguageSettings.transform.Find("LanguageText") : null;
 			var languageText = languageTextTransform ? languageTextTransform.GetComponent<Text>() : null;
+			var languageTmpText = languageTextTransform ? languageTextTransform.GetComponent<TMP_Text>() : null;
 			if (languageText) FontManager.Register(languageText);
+			if (languageTmpText) FontManager.Register(languageTmpText);
+
+			TMP_Dropdown languageDropdown = null;
+			var languageDropdownIds = new List<LanguageId>();
+			if (LanguageSettings)
+			{
+				languageDropdown = LanguageSettings.GetComponentInChildren<TMP_Dropdown>(true);
+			}
+			if (!languageDropdown && fallbackLanguageRow)
+			{
+				languageDropdown = fallbackLanguageRow.GetComponentInChildren<TMP_Dropdown>(true);
+			}
+			if (languageDropdown)
+			{
+				if (languageDropdown.captionText) FontManager.Register(languageDropdown.captionText);
+				if (languageDropdown.itemText) FontManager.Register(languageDropdown.itemText);
+			}
 
 			var languageLabel = (Text)null;
 			if (LanguageSettings)
@@ -134,13 +166,27 @@ namespace VampireSurvivorLike
 			{
 				if (!LocalizationManager.IsReady) return;
 
+				if (FullscreenToggle) FullscreenToggle.SetIsOnWithoutNotify(GameSettings.IsFullscreen);
+
 				if (titleText) titleText.text = LocalizationManager.T("ui.settings.title");
 
 				if (screenText) screenText.text = LocalizationManager.T("ui.settings.screen_mode");
 
 				if (fullscreenLabel)
 				{
-					fullscreenLabel.text = LocalizationManager.T(FullscreenToggle && FullscreenToggle.isOn ? "ui.settings.fullscreen" : "ui.settings.windowed");
+					fullscreenLabel.text = LocalizationManager.T(GameSettings.IsFullscreen ? "ui.settings.fullscreen" : "ui.settings.windowed");
+				}
+
+				if (screenModeDropdown)
+				{
+					var options = screenModeDropdown.options;
+					options.Clear();
+					options.Add(new TMP_Dropdown.OptionData(LocalizationManager.T("ui.settings.windowed")));
+					options.Add(new TMP_Dropdown.OptionData(LocalizationManager.T("ui.settings.fullscreen")));
+
+					var selectedIndex = GameSettings.IsFullscreen ? 1 : 0;
+					screenModeDropdown.SetValueWithoutNotify(selectedIndex);
+					screenModeDropdown.RefreshShownValue();
 				}
 
 				if (musicLabel) musicLabel.text = LocalizationManager.T("ui.settings.music");
@@ -150,11 +196,52 @@ namespace VampireSurvivorLike
 				if (returnMenuLabel) returnMenuLabel.text = LocalizationManager.T("ui.settings.return_main_menu");
 				if (quitLabel) quitLabel.text = LocalizationManager.T("ui.settings.quit");
 
-				if (languageToggle2)
+				if (languageToggle2 && !languageDropdown)
 				{
 					var isEn = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
 					languageToggle2.SetIsOnWithoutNotify(isEn);
-					if (languageText) languageText.text = LocalizationManager.T(isEn ? "ui.settings.lang_en" : "ui.settings.lang_zh");
+					var langLabel = LocalizationManager.T(isEn ? "ui.settings.lang_en" : "ui.settings.lang_zh");
+					if (languageText) languageText.text = langLabel;
+					if (languageTmpText) languageTmpText.text = langLabel;
+				}
+
+				if (languageDropdown)
+				{
+					languageDropdownIds.Clear();
+					var supported = LocalizationManager.Settings.SupportedLanguages ?? new List<LanguageId> { LanguageId.ZhHans, LanguageId.En };
+					for (var i = 0; i < supported.Count; i++)
+					{
+						languageDropdownIds.Add(supported[i]);
+					}
+
+					var options = languageDropdown.options;
+					options.Clear();
+					for (var i = 0; i < languageDropdownIds.Count; i++)
+					{
+						var lang = languageDropdownIds[i];
+						var labelKey = lang == LanguageId.En ? "ui.settings.lang_en" : (lang == LanguageId.ZhHans ? "ui.settings.lang_zh" : string.Empty);
+						var label = string.IsNullOrEmpty(labelKey) ? lang.ToString() : LocalizationManager.T(labelKey);
+						options.Add(new TMP_Dropdown.OptionData(label));
+					}
+
+					var selectedIndex = 0;
+					for (var i = 0; i < languageDropdownIds.Count; i++)
+					{
+						if (languageDropdownIds[i] == LocalizationManager.CurrentLanguage.Value)
+						{
+							selectedIndex = i;
+							break;
+						}
+					}
+					languageDropdown.SetValueWithoutNotify(selectedIndex);
+					languageDropdown.RefreshShownValue();
+
+					if (selectedIndex >= 0 && selectedIndex < options.Count)
+					{
+						var label = options[selectedIndex].text;
+						if (languageText) languageText.text = label;
+						if (languageTmpText) languageTmpText.text = label;
+					}
 				}
 
 				if (languageLabel) languageLabel.text = LocalizationManager.T("ui.settings.language");
@@ -165,10 +252,35 @@ namespace VampireSurvivorLike
 				}
 			};
 
+			_refreshUiText = refreshUiText;
+
 			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
 			refreshUiText();
 
-			if (languageToggle2)
+			if (screenModeDropdown)
+			{
+				screenModeDropdown.onValueChanged.RemoveAllListeners();
+				screenModeDropdown.onValueChanged.AddListener(index =>
+				{
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					var fullscreen = index == 1;
+					if (GameSettings.IsFullscreen == fullscreen) return;
+					GameSettings.ApplyFullscreen(fullscreen);
+					refreshUiText();
+				});
+			}
+
+			if (languageDropdown)
+			{
+				languageDropdown.onValueChanged.RemoveAllListeners();
+				languageDropdown.onValueChanged.AddListener(index =>
+				{
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					if (index < 0 || index >= languageDropdownIds.Count) return;
+					LocalizationManager.ChangeLanguage(languageDropdownIds[index]);
+				});
+			}
+			else if (languageToggle2)
 			{
 				languageToggle2.onValueChanged.RemoveAllListeners();
 				languageToggle2.SetIsOnWithoutNotify(LocalizationManager.CurrentLanguage.Value == LanguageId.En);
@@ -259,21 +371,6 @@ namespace VampireSurvivorLike
 			var settingsPanel = _settingsPanelRect ? _settingsPanelRect : (transform as RectTransform);
 			if (!settingsPanel) return;
 
-			var content = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
-			if (content)
-			{
-				for (var i = 0; i < content.childCount; i++)
-				{
-					var child = content.GetChild(i) as RectTransform;
-					if (!child) continue;
-					if (child.gameObject.name == "Title") continue;
-
-					var layout = child.GetComponent<LayoutElement>();
-					if (!layout) layout = child.gameObject.AddComponent<LayoutElement>();
-					if (layout.minHeight < 100f) layout.minHeight = 110f;
-				}
-			}
-
 			var selectables = settingsPanel.GetComponentsInChildren<Selectable>(true);
 			for (var i = 0; i < selectables.Length; i++)
 			{
@@ -293,19 +390,8 @@ namespace VampireSurvivorLike
 
 					if (slider.handleRect)
 					{
-						var h = slider.handleRect;
-						var sd = h.sizeDelta;
-						h.sizeDelta = new Vector2(Mathf.Max(sd.x, 64f), Mathf.Max(sd.y, 64f));
-
-						var hImg = h.GetComponent<Image>();
+						var hImg = slider.handleRect.GetComponent<Image>();
 						if (hImg) hImg.raycastPadding = new Vector4(24f, 24f, 24f, 24f);
-
-						var slideArea = h.parent as RectTransform;
-						if (slideArea)
-						{
-							var areaSize = slideArea.sizeDelta;
-							slideArea.sizeDelta = new Vector2(areaSize.x, Mathf.Max(areaSize.y, 80f));
-						}
 					}
 				}
 			}
@@ -324,9 +410,7 @@ namespace VampireSurvivorLike
 		{
 			AudioKit.PlaySound(Sfx.BUTTONCLICK);
 			GameSettings.ApplyFullscreen(isFullscreen);
-			if (!LocalizationManager.IsReady) return;
-			var fullscreenLabel = FullscreenToggle ? FullscreenToggle.GetComponentInChildren<Text>(true) : null;
-			if (fullscreenLabel) fullscreenLabel.text = LocalizationManager.T(isFullscreen ? "ui.settings.fullscreen" : "ui.settings.windowed");
+			_refreshUiText?.Invoke();
 		}
 		
 		protected override void OnOpen(IUIData uiData = null)

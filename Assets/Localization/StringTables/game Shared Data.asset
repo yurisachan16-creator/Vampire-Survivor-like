@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: game Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: game
+  m_TableCollectionNameGuidString: 7cdad7de4adb5524bb63b0c4c95bd88a
+  m_Entries:
+  - m_Id: 1586565120
+    m_Key: game.ui.enemy_count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313856
+    m_Key: game.ui.wave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313857
+    m_Key: game.ui.wait_next_wave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313858
+    m_Key: game.ui.wave_remaining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313859
+    m_Key: game.ui.time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313860
+    m_Key: game.ui.level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313861
+    m_Key: game.ui.coin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313862
+    m_Key: game.treasure.heal_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313863
+    m_Key: game.treasure.add_coin_50
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1624313864
+    m_Key: game.treasure.paired_content
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 731117132829949953
+  references:
+    version: 2
+    RefIds:
+    - rid: 731117132829949953
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1770483171493

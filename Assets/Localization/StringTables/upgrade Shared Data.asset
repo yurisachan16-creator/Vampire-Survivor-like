@@ -1,0 +1,484 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: upgrade Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: upgrade
+  m_TableCollectionNameGuidString: 41c83fe97ca96ea4baf712c29b286391
+  m_Entries:
+  - m_Id: 1112608768
+    m_Key: exp_upgrade.ui.paired_weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746112
+    m_Key: coin_upgrade.ui.item_price
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746113
+    m_Key: coin_upgrade.coin_percent_Lv1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746114
+    m_Key: coin_upgrade.coin_percent_Lv2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746115
+    m_Key: coin_upgrade.coin_percent_Lv3.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746116
+    m_Key: coin_upgrade.coin_percent_Lv4.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746117
+    m_Key: coin_upgrade.exp_percent.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746118
+    m_Key: coin_upgrade.player_max_hp.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746119
+    m_Key: coin_upgrade.player_max_hp1.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746120
+    m_Key: coin_upgrade.player_max_hp2.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746121
+    m_Key: coin_upgrade.player_max_hp3.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746122
+    m_Key: coin_upgrade.player_max_hp4.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746123
+    m_Key: coin_upgrade.player_max_hp5.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746124
+    m_Key: coin_upgrade.player_max_hp6.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746125
+    m_Key: coin_upgrade.player_max_hp7.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746126
+    m_Key: coin_upgrade.player_max_hp8.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746127
+    m_Key: coin_upgrade.player_max_hp9.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746128
+    m_Key: exp_upgrade.simple_sword.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746129
+    m_Key: exp_upgrade.simple_sword.paired_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746130
+    m_Key: exp_upgrade.simple_sword.paired_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746131
+    m_Key: exp_upgrade.simple_sword.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746132
+    m_Key: exp_upgrade.simple_sword.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746133
+    m_Key: exp_upgrade.simple_sword.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746134
+    m_Key: exp_upgrade.simple_sword.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746135
+    m_Key: exp_upgrade.simple_sword.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746136
+    m_Key: exp_upgrade.simple_sword.lv6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746137
+    m_Key: exp_upgrade.simple_sword.lv7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746138
+    m_Key: exp_upgrade.simple_sword.lv8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746139
+    m_Key: exp_upgrade.simple_sword.lv9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746140
+    m_Key: exp_upgrade.simple_sword.lv10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746141
+    m_Key: exp_upgrade.rotate_sword.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746142
+    m_Key: exp_upgrade.rotate_sword.paired_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746143
+    m_Key: exp_upgrade.rotate_sword.paired_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746144
+    m_Key: exp_upgrade.rotate_sword.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746145
+    m_Key: exp_upgrade.rotate_sword.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746146
+    m_Key: exp_upgrade.rotate_sword.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746147
+    m_Key: exp_upgrade.rotate_sword.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746148
+    m_Key: exp_upgrade.rotate_sword.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746149
+    m_Key: exp_upgrade.rotate_sword.lv6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746150
+    m_Key: exp_upgrade.rotate_sword.lv7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746151
+    m_Key: exp_upgrade.rotate_sword.lv8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746152
+    m_Key: exp_upgrade.rotate_sword.lv9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746153
+    m_Key: exp_upgrade.rotate_sword.lv10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746154
+    m_Key: exp_upgrade.simple_bomb.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746155
+    m_Key: exp_upgrade.simple_bomb.paired_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746156
+    m_Key: exp_upgrade.simple_bomb.paired_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746157
+    m_Key: exp_upgrade.simple_bomb.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746158
+    m_Key: exp_upgrade.simple_bomb.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746159
+    m_Key: exp_upgrade.simple_bomb.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746160
+    m_Key: exp_upgrade.simple_bomb.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746161
+    m_Key: exp_upgrade.simple_bomb.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746162
+    m_Key: exp_upgrade.simple_bomb.lv6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746163
+    m_Key: exp_upgrade.simple_bomb.lv7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746164
+    m_Key: exp_upgrade.simple_bomb.lv8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746165
+    m_Key: exp_upgrade.simple_bomb.lv9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746166
+    m_Key: exp_upgrade.simple_bomb.lv10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746167
+    m_Key: exp_upgrade.simple_knife.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746168
+    m_Key: exp_upgrade.simple_knife.paired_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746169
+    m_Key: exp_upgrade.simple_knife.paired_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746170
+    m_Key: exp_upgrade.simple_knife.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746171
+    m_Key: exp_upgrade.simple_knife.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746172
+    m_Key: exp_upgrade.simple_knife.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746173
+    m_Key: exp_upgrade.simple_knife.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746174
+    m_Key: exp_upgrade.simple_knife.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746175
+    m_Key: exp_upgrade.simple_knife.lv6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746176
+    m_Key: exp_upgrade.simple_knife.lv7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746177
+    m_Key: exp_upgrade.simple_knife.lv8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746178
+    m_Key: exp_upgrade.simple_knife.lv9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746179
+    m_Key: exp_upgrade.simple_knife.lv10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746180
+    m_Key: exp_upgrade.basket_ball.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746181
+    m_Key: exp_upgrade.basket_ball.paired_name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746182
+    m_Key: exp_upgrade.basket_ball.paired_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746183
+    m_Key: exp_upgrade.basket_ball.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746184
+    m_Key: exp_upgrade.basket_ball.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746185
+    m_Key: exp_upgrade.basket_ball.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746186
+    m_Key: exp_upgrade.basket_ball.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746187
+    m_Key: exp_upgrade.basket_ball.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746188
+    m_Key: exp_upgrade.basket_ball.lv6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746189
+    m_Key: exp_upgrade.basket_ball.lv7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746190
+    m_Key: exp_upgrade.basket_ball.lv8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746191
+    m_Key: exp_upgrade.basket_ball.lv9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746192
+    m_Key: exp_upgrade.basket_ball.lv10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746193
+    m_Key: exp_upgrade.simple_critical.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746194
+    m_Key: exp_upgrade.simple_critical.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746195
+    m_Key: exp_upgrade.simple_critical.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746196
+    m_Key: exp_upgrade.simple_critical.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746197
+    m_Key: exp_upgrade.simple_critical.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746198
+    m_Key: exp_upgrade.simple_critical.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746199
+    m_Key: exp_upgrade.damage_rate.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746200
+    m_Key: exp_upgrade.damage_rate.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746201
+    m_Key: exp_upgrade.damage_rate.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746202
+    m_Key: exp_upgrade.damage_rate.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746203
+    m_Key: exp_upgrade.damage_rate.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746204
+    m_Key: exp_upgrade.damage_rate.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746205
+    m_Key: exp_upgrade.simple_fly_count.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746206
+    m_Key: exp_upgrade.simple_fly_count.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746207
+    m_Key: exp_upgrade.simple_fly_count.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746208
+    m_Key: exp_upgrade.simple_fly_count.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746209
+    m_Key: exp_upgrade.movement_speed_rate.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746210
+    m_Key: exp_upgrade.movement_speed_rate.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746211
+    m_Key: exp_upgrade.movement_speed_rate.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746212
+    m_Key: exp_upgrade.movement_speed_rate.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746213
+    m_Key: exp_upgrade.movement_speed_rate.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746214
+    m_Key: exp_upgrade.movement_speed_rate.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746215
+    m_Key: exp_upgrade.simple_exp_percent.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746216
+    m_Key: exp_upgrade.simple_exp_percent.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746217
+    m_Key: exp_upgrade.simple_exp_percent.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746218
+    m_Key: exp_upgrade.simple_exp_percent.lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746219
+    m_Key: exp_upgrade.simple_exp_percent.lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746220
+    m_Key: exp_upgrade.simple_exp_percent.lv5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746221
+    m_Key: exp_upgrade.simple_collectable_area_radius.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746222
+    m_Key: exp_upgrade.simple_collectable_area_radius.lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746223
+    m_Key: exp_upgrade.simple_collectable_area_radius.lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746224
+    m_Key: exp_upgrade.simple_collectable_area_radius.lv3
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 731117132829949954
+  references:
+    version: 2
+    RefIds:
+    - rid: 731117132829949954
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1770483171617

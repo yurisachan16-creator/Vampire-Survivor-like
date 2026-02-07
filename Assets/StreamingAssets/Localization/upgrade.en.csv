@@ -1,6 +1,7 @@
 key,value
 exp_upgrade.ui.paired_weapon,Paired: {0}
 coin_upgrade.ui.item_price,{0} (Price: {1} coins)
+coin_upgrade.ui.close,Close
 coin_upgrade.coin_percent_Lv1.desc,Coin drop chance Up Lv1
 coin_upgrade.coin_percent_Lv2.desc,Coin drop chance Up Lv2
 coin_upgrade.coin_percent_Lv3.desc,Coin drop chance Up Lv3

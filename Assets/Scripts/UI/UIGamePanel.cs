@@ -16,6 +16,7 @@ namespace VampireSurvivorLike
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
+			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
 			// please add init code here
 			LocalizationManager.PreloadTable("game");
 			if (!FindObjectOfType<EventSystem>())

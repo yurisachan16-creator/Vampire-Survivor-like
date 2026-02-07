@@ -9,95 +9,158 @@ using UnityEngine.UI;
 using QFramework;
 using System.Linq;
 using QAssetBundle;
+using TMPro;
 
 namespace VampireSurvivorLike
 {
 	public partial class CoinUpgradePanel : UIElement,IController
 	{
+		private sealed class ItemView
+		{
+			public Button Button;
+			public Text UguiLabel;
+			public TMP_Text TmpLabel;
+			public CoinUpgradeItem Item;
+		}
+
+		private readonly List<ItemView> _itemViews = new List<ItemView>();
 	
 		private void Awake()
-        {
+		{
 			LocalizationManager.PreloadTable("game");
 			LocalizationManager.PreloadTable("upgrade");
-			CoinUpgradeItemPrefab.Hide();
+			if (CoinUpgradeItemPrefab) CoinUpgradeItemPrefab.Hide();
 
-			
-
-			
-
-			Global.Coin.RegisterWithInitValue((coin)=>
+			if (!BtnClose)
 			{
-				CoinText.text = LocalizationManager.Format("game.ui.coin", coin);
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-			LocalizationManager.CurrentLanguage.Register(_ =>
-			{
-				CoinText.text = LocalizationManager.Format("game.ui.coin", Global.Coin.Value);
-			}).UnRegisterWhenGameObjectDestroyed(gameObject);
-			foreach(var CoinUpgradeItem in this.GetSystem<CoinUpgradeSystem>().Items.Where(item=>item.ConditionCheck()))
-            {
-                CoinUpgradeItemPrefab.InstantiateWithParent(CoinUpgradeItemRoot)
-                .Self(self =>
-                {
-					var itemCache = CoinUpgradeItem;
-					var label = self.GetComponentInChildren<Text>();
-					if (label) label.text = LocalizationManager.Format("coin_upgrade.ui.item_price", itemCache.Description, LocaleFormat.Number(itemCache.Price));
-					LocalizationManager.CurrentLanguage.Register(_ =>
+				var byName = transform.Find("BtnClose") ? transform.Find("BtnClose").GetComponent<Button>() : null;
+				if (!byName)
+				{
+					var buttons = GetComponentsInChildren<Button>(true);
+					for (var i = 0; i < buttons.Length; i++)
 					{
-						if (label) label.text = LocalizationManager.Format("coin_upgrade.ui.item_price", itemCache.Description, LocaleFormat.Number(itemCache.Price));
-					}).UnRegisterWhenGameObjectDestroyed(self);
-					self.onClick.AddListener(() =>
-					{
-						CoinUpgradeItem.Upgrade();
-						//TODO:播放升级音效
-						AudioKit.PlaySound("Retro Event UI 01");
-					});
-					var SelfCache=self;
-					CoinUpgradeItem.OnChanged.Register(()=>
-					{
-						if(itemCache.ConditionCheck())
+						var b = buttons[i];
+						if (!b) continue;
+						if (b.name.Contains("Close"))
 						{
-							SelfCache.Show();
+							byName = b;
+							break;
 						}
-                        else
-                        {
-							SelfCache.Hide();
-                        }
-					}).UnRegisterWhenGameObjectDestroyed(SelfCache);
-
-					if(itemCache.ConditionCheck())
-					{
-						SelfCache.Show();
 					}
-                    else
-                    {
-						SelfCache.Hide();
-                    }
+				}
 
-					Global.Coin.RegisterWithInitValue((Coin) =>
-					{
-                        if (Coin >= itemCache.Price)
-                        {
-                            SelfCache.interactable = true;
-                        }
-						else
-						{
-							SelfCache.interactable = false;
-						}
-						
+				if (byName) BtnClose = byName;
+			}
 
-					}).UnRegisterWhenGameObjectDestroyed(self);
-                });
-				
-            }
+			var closeUguiText = BtnClose ? BtnClose.GetComponentInChildren<Text>(true) : null;
+			var closeTmpText = BtnClose ? BtnClose.GetComponentInChildren<TMP_Text>(true) : null;
 
-			BtnClose.onClick.AddListener(() =>
+			if (CoinText) FontManager.Register(CoinText);
+			if (closeUguiText) FontManager.Register(closeUguiText);
+			if (closeTmpText) FontManager.Register(closeTmpText);
+
+			System.Action refreshTexts = () =>
 			{
-				//播放音效
-				AudioKit.PlaySound(Sfx.BUTTONCLICK);
-				this.Hide();
-			});
-        }
+				if (!LocalizationManager.IsReady) return;
+
+				if (CoinText) CoinText.text = LocalizationManager.Format("game.ui.coin", Global.Coin.Value);
+
+				var closeLabel = LocalizationManager.T("coin_upgrade.ui.close");
+				if (closeUguiText) closeUguiText.text = closeLabel;
+				if (closeTmpText) closeTmpText.text = closeLabel;
+
+				for (var i = 0; i < _itemViews.Count; i++)
+				{
+					var v = _itemViews[i];
+					if (v == null || v.Item == null) continue;
+					var text = LocalizationManager.Format("coin_upgrade.ui.item_price", v.Item.Description, LocaleFormat.Number(v.Item.Price));
+					if (v.UguiLabel) v.UguiLabel.text = text;
+					if (v.TmpLabel) v.TmpLabel.text = text;
+				}
+			};
+
+			System.Action refreshItemStates = () =>
+			{
+				var coin = Global.Coin.Value;
+				for (var i = 0; i < _itemViews.Count; i++)
+				{
+					var v = _itemViews[i];
+					if (v == null || !v.Button || v.Item == null) continue;
+
+					if (v.Item.ConditionCheck()) v.Button.Show();
+					else v.Button.Hide();
+
+					v.Button.interactable = coin >= v.Item.Price;
+				}
+			};
+
+			if (CoinUpgradeItemRoot && CoinUpgradeItemPrefab)
+			{
+				var coinUpgradeSystem = this.GetSystem<CoinUpgradeSystem>();
+				var items = coinUpgradeSystem != null ? coinUpgradeSystem.Items : null;
+				if (items != null)
+				{
+					for (var i = 0; i < items.Count; i++)
+					{
+						var itemCache = items[i];
+						if (itemCache == null) continue;
+
+						var btn = CoinUpgradeItemPrefab.InstantiateWithParent(CoinUpgradeItemRoot);
+						btn.gameObject.name = itemCache.Key;
+
+						var view = new ItemView
+						{
+							Button = btn,
+							UguiLabel = btn ? btn.GetComponentInChildren<Text>(true) : null,
+							TmpLabel = btn ? btn.GetComponentInChildren<TMP_Text>(true) : null,
+							Item = itemCache
+						};
+						_itemViews.Add(view);
+
+						if (view.UguiLabel) FontManager.Register(view.UguiLabel);
+						if (view.TmpLabel) FontManager.Register(view.TmpLabel);
+
+						btn.onClick.RemoveAllListeners();
+						btn.onClick.AddListener(() =>
+						{
+							if (Global.Coin.Value < itemCache.Price) return;
+							itemCache.Upgrade();
+							AudioKit.PlaySound("Retro Event UI 01");
+							refreshItemStates();
+							refreshTexts();
+						});
+
+						itemCache.OnChanged.Register(() =>
+						{
+							refreshItemStates();
+							refreshTexts();
+						}).UnRegisterWhenGameObjectDestroyed(gameObject);
+					}
+				}
+			}
+
+			Global.Coin.RegisterWithInitValue(_ =>
+			{
+				refreshItemStates();
+				if (LocalizationManager.IsReady && CoinText) CoinText.text = LocalizationManager.Format("game.ui.coin", Global.Coin.Value);
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			LocalizationManager.ReadyChanged.Register(refreshTexts).UnRegisterWhenGameObjectDestroyed(gameObject);
+			LocalizationManager.CurrentLanguage.Register(_ => refreshTexts()).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			if (BtnClose)
+			{
+				BtnClose.onClick.RemoveAllListeners();
+				BtnClose.onClick.AddListener(() =>
+				{
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					this.Hide();
+				});
+			}
+
+			refreshItemStates();
+			refreshTexts();
+		}
 
 		protected override void OnBeforeDestroy()
 		{

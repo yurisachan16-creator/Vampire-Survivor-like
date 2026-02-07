@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using QFramework;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Tables;
+using UnityLocalizationSettings = UnityEngine.Localization.Settings.LocalizationSettings;
 
 namespace VampireSurvivorLike
 {
@@ -9,23 +13,14 @@ namespace VampireSurvivorLike
     {
         private static LocalizationSettings _settings;
         private static bool _initialized;
-        private static LocalizationManifest _manifest;
-        private static Dictionary<string, string> _mergedTable = new Dictionary<string, string>();
         private static bool _ready;
-        private static ILocalizationProvider _provider;
+        private static bool _hookedUnityEvents;
+        private static bool _reloadRunning;
+        private static readonly Dictionary<string, StringTable> LoadedStringTables = new Dictionary<string, StringTable>(StringComparer.OrdinalIgnoreCase);
+        private static readonly List<string> PreloadedTableList = new List<string>();
+
         private static ILocalizedAssetResolver _assetResolver;
         private static ILocaleFormatter _formatter;
-        private static readonly Dictionary<string, LanguageCache> CacheByLanguage = new Dictionary<string, LanguageCache>();
-        private static readonly LinkedList<string> CacheLru = new LinkedList<string>();
-        private const int MaxCachedLanguages = 2;
-        private static readonly HashSet<string> PreloadedTables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        private sealed class LanguageCache
-        {
-            public readonly Dictionary<string, string> Merged = new Dictionary<string, string>();
-            public readonly HashSet<string> LoadedTables = new HashSet<string>(StringComparer.Ordinal);
-            public bool Ready;
-        }
 
         public static LocalizationSettings Settings
         {
@@ -47,12 +42,6 @@ namespace VampireSurvivorLike
 
         public static bool IsReady => _ready;
 
-        public static ILocalizationProvider Provider
-        {
-            get => _provider ??= new StreamingAssetsLocalizationProvider();
-            set => _provider = value;
-        }
-
         public static ILocalizedAssetResolver AssetResolver
         {
             get => _assetResolver ??= new SuffixLocalizedAssetResolver();
@@ -70,42 +59,15 @@ namespace VampireSurvivorLike
             if (_initialized) return;
             _initialized = true;
 
-            var loaded = LoadStoredLanguage();
-            var detected = DetectSystemLanguage();
-            var desired = !loaded.IsEmpty ? loaded : detected;
+            HookUnityLocalizationEvents();
 
-            if (!Settings.IsSupported(desired))
-            {
-                desired = Settings.DefaultLanguage;
-            }
-
-            CurrentLanguage.Value = desired;
-            SaveLanguage(desired);
-
-            LocalizationRunner.Instance.StartCoroutine(ActivateLanguage(desired));
-
-            CurrentLanguage.Register(lang =>
-            {
-                SaveLanguage(lang);
-                _ready = false;
-                ReadyChanged.Trigger();
-                LocalizationRunner.Instance.StartCoroutine(ActivateLanguage(lang));
-                LanguageChanged.Trigger(lang);
-            });
+            LocalizationRunner.Instance.StartCoroutine(InitializeAndSelectLocale());
         }
 
         public static void ChangeLanguage(LanguageId language)
         {
             Initialize();
-
-            var desired = language;
-            if (!Settings.IsSupported(desired))
-            {
-                desired = Settings.DefaultLanguage;
-            }
-
-            if (CurrentLanguage.Value == desired) return;
-            CurrentLanguage.Value = desired;
+            LocalizationRunner.Instance.StartCoroutine(SetSelectedLocaleAfterInit(language));
         }
 
         public static LanguageId DetectSystemLanguage()
@@ -119,6 +81,215 @@ namespace VampireSurvivorLike
                 SystemLanguage.English => LanguageId.En,
                 _ => Settings.DefaultLanguage
             };
+        }
+
+        public static string T(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return string.Empty;
+            Initialize();
+
+            if (!TryGetInternal(key, out var value))
+            {
+                LocalizationDebug.MissingKeys.Add(key);
+                return key;
+            }
+
+            return PostProcess(value);
+        }
+
+        public static bool TryGet(string key, out string value)
+        {
+            value = string.Empty;
+            if (string.IsNullOrEmpty(key)) return false;
+            Initialize();
+
+            if (!TryGetInternal(key, out var v))
+            {
+                LocalizationDebug.MissingKeys.Add(key);
+                return false;
+            }
+
+            value = PostProcess(v);
+            return true;
+        }
+
+        public static string Format(string key, params object[] args)
+        {
+            var text = T(key);
+            if (args == null || args.Length == 0) return text;
+            return string.Format(text, args);
+        }
+
+        public static void PreloadTable(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(tableName)) return;
+            Initialize();
+
+            tableName = tableName.Trim();
+            if (string.Equals(tableName, "core", StringComparison.OrdinalIgnoreCase)) return;
+
+            if (!PreloadedTableList.Contains(tableName))
+            {
+                PreloadedTableList.Add(tableName);
+            }
+
+            TriggerReload();
+        }
+
+        public static void ClearCachedLanguages()
+        {
+            LoadedStringTables.Clear();
+        }
+
+        private static void HookUnityLocalizationEvents()
+        {
+            if (_hookedUnityEvents) return;
+            _hookedUnityEvents = true;
+
+            UnityLocalizationSettings.SelectedLocaleChanged += OnSelectedLocaleChanged;
+        }
+
+        private static IEnumerator InitializeAndSelectLocale()
+        {
+            yield return UnityLocalizationSettings.InitializationOperation;
+
+            var loaded = LoadStoredLanguage();
+            var detected = DetectSystemLanguage();
+            var desired = !loaded.IsEmpty ? loaded : detected;
+
+            if (!Settings.IsSupported(desired))
+            {
+                desired = Settings.DefaultLanguage;
+            }
+
+            yield return SetSelectedLocaleAfterInit(desired);
+        }
+
+        private static IEnumerator SetSelectedLocaleAfterInit(LanguageId language)
+        {
+            yield return UnityLocalizationSettings.InitializationOperation;
+
+            var locale = FindLocale(language);
+            if (locale == null)
+            {
+                locale = FindLocale(Settings.DefaultLanguage) ?? UnityLocalizationSettings.SelectedLocale;
+            }
+
+            if (locale == null)
+            {
+                SetNotReady();
+                yield break;
+            }
+
+            var current = UnityLocalizationSettings.SelectedLocale;
+            if (current != null && current == locale)
+            {
+                TriggerReload();
+                yield break;
+            }
+
+            SetNotReady();
+            UnityLocalizationSettings.SelectedLocale = locale;
+        }
+
+        private static void OnSelectedLocaleChanged(Locale locale)
+        {
+            if (locale == null) return;
+            var lang = new LanguageId(locale.Identifier.Code);
+
+            CurrentLanguage.Value = lang;
+            SaveLanguage(lang);
+            LanguageChanged.Trigger(lang);
+
+            TriggerReload();
+        }
+
+        private static void TriggerReload()
+        {
+            if (_reloadRunning) return;
+            _reloadRunning = true;
+            LocalizationRunner.Instance.StartCoroutine(ReloadTables());
+        }
+
+        private static IEnumerator ReloadTables()
+        {
+            SetNotReady();
+
+            LoadedStringTables.Clear();
+            var tableOrder = BuildTableOrder();
+
+            for (var i = 0; i < tableOrder.Count; i++)
+            {
+                var tableName = tableOrder[i];
+                var op = UnityLocalizationSettings.StringDatabase.GetTableAsync(tableName);
+                yield return op;
+                var table = op.Result as StringTable;
+                if (table != null)
+                {
+                    LoadedStringTables[tableName] = table;
+                }
+            }
+
+            _ready = true;
+            _reloadRunning = false;
+            ReadyChanged.Trigger();
+        }
+
+        private static void SetNotReady()
+        {
+            _ready = false;
+            ReadyChanged.Trigger();
+        }
+
+        private static List<string> BuildTableOrder()
+        {
+            var order = new List<string> { "core" };
+            for (var i = 0; i < PreloadedTableList.Count; i++)
+            {
+                var name = PreloadedTableList[i];
+                if (string.IsNullOrWhiteSpace(name)) continue;
+                if (string.Equals(name, "core", StringComparison.OrdinalIgnoreCase)) continue;
+                if (!order.Contains(name)) order.Add(name);
+            }
+
+            return order;
+        }
+
+        private static bool TryGetInternal(string key, out string value)
+        {
+            value = string.Empty;
+            if (!IsReady) return false;
+
+            var order = BuildTableOrder();
+            for (var i = order.Count - 1; i >= 0; i--)
+            {
+                var tableName = order[i];
+                if (!LoadedStringTables.TryGetValue(tableName, out var table) || table == null) continue;
+                var entry = table.GetEntry(key);
+                if (entry == null) continue;
+                value = entry.LocalizedValue ?? string.Empty;
+                return !string.IsNullOrEmpty(value);
+            }
+
+            return false;
+        }
+
+        private static Locale FindLocale(LanguageId language)
+        {
+            var code = (language.IsEmpty ? string.Empty : language.ToString()) ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(code)) return null;
+
+            var locales = UnityLocalizationSettings.AvailableLocales;
+            if (locales == null || locales.Locales == null) return null;
+
+            for (var i = 0; i < locales.Locales.Count; i++)
+            {
+                var locale = locales.Locales[i];
+                if (locale == null) continue;
+                if (string.Equals(locale.Identifier.Code, code, StringComparison.OrdinalIgnoreCase)) return locale;
+            }
+
+            return null;
         }
 
         private static LanguageId LoadStoredLanguage()
@@ -136,143 +307,10 @@ namespace VampireSurvivorLike
             PlayerPrefs.Save();
         }
 
-        public static string T(string key)
-        {
-            if (string.IsNullOrEmpty(key)) return string.Empty;
-            if (_mergedTable != null && _mergedTable.TryGetValue(key, out var value))
-            {
-                return PostProcess(value);
-            }
-
-            LocalizationDebug.MissingKeys.Add(key);
-            return key;
-        }
-
-        public static bool TryGet(string key, out string value)
-        {
-            value = string.Empty;
-            if (string.IsNullOrEmpty(key)) return false;
-            if (_mergedTable != null && _mergedTable.TryGetValue(key, out var v))
-            {
-                value = PostProcess(v);
-                return true;
-            }
-            LocalizationDebug.MissingKeys.Add(key);
-            return false;
-        }
-
-        public static string Format(string key, params object[] args)
-        {
-            var text = T(key);
-            if (args == null || args.Length == 0) return text;
-            return string.Format(text, args);
-        }
-
         private static string PostProcess(string value)
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;
             return value.Replace("\\n", "\n").Replace("\\t", "\t");
-        }
-
-        public static void PreloadTable(string tableName)
-        {
-            if (string.IsNullOrWhiteSpace(tableName)) return;
-            Initialize();
-            PreloadedTables.Add(tableName.Trim());
-            LocalizationRunner.Instance.StartCoroutine(LoadTableForLanguage(tableName, CurrentLanguage.Value));
-        }
-
-        public static void ClearCachedLanguages()
-        {
-            CacheByLanguage.Clear();
-            CacheLru.Clear();
-        }
-
-        private static System.Collections.IEnumerator ActivateLanguage(LanguageId language)
-        {
-            var langKey = (language.IsEmpty ? Settings.DefaultLanguage.ToString() : language.ToString()).ToLowerInvariant();
-
-            TouchCache(langKey);
-            var cache = CacheByLanguage[langKey];
-            _mergedTable = cache.Merged;
-
-            yield return EnsureManifestLoaded();
-            yield return LoadTableForLanguage("core", language);
-
-            foreach (var table in PreloadedTables)
-            {
-                if (string.IsNullOrWhiteSpace(table)) continue;
-                if (string.Equals(table, "core", StringComparison.OrdinalIgnoreCase)) continue;
-                yield return LoadTableForLanguage(table, language);
-            }
-
-            _ready = cache.Ready;
-            ReadyChanged.Trigger();
-        }
-
-        private static void TouchCache(string langKey)
-        {
-            if (!CacheByLanguage.TryGetValue(langKey, out var cache) || cache == null)
-            {
-                cache = new LanguageCache();
-                CacheByLanguage[langKey] = cache;
-            }
-
-            var node = CacheLru.Find(langKey);
-            if (node != null) CacheLru.Remove(node);
-            CacheLru.AddFirst(langKey);
-
-            while (CacheLru.Count > MaxCachedLanguages)
-            {
-                var last = CacheLru.Last;
-                if (last == null) break;
-                var removeKey = last.Value;
-                CacheLru.RemoveLast();
-                CacheByLanguage.Remove(removeKey);
-            }
-        }
-
-        private static LanguageCache GetCurrentCache(LanguageId language)
-        {
-            var key = (language.IsEmpty ? Settings.DefaultLanguage.ToString() : language.ToString()).ToLowerInvariant();
-            TouchCache(key);
-            return CacheByLanguage[key];
-        }
-
-        private static System.Collections.IEnumerator EnsureManifestLoaded()
-        {
-            if (_manifest != null) yield break;
-
-            var provider = Provider;
-            LocalizationManifest manifest = null;
-            yield return provider.LoadManifest(m => manifest = m);
-            _manifest = manifest;
-        }
-
-        private static System.Collections.IEnumerator LoadTableForLanguage(string tableName, LanguageId language)
-        {
-            var cache = GetCurrentCache(language);
-            if (cache.LoadedTables.Contains(tableName)) yield break;
-
-            var provider = Provider;
-            Dictionary<string, string> table = null;
-            yield return provider.LoadTable(tableName, language, t => table = t);
-            table ??= new Dictionary<string, string>();
-
-            foreach (var kv in table)
-            {
-                cache.Merged[kv.Key] = kv.Value;
-            }
-
-            cache.LoadedTables.Add(tableName);
-            if (tableName == "core") cache.Ready = true;
-
-            if (language == CurrentLanguage.Value)
-            {
-                _mergedTable = cache.Merged;
-                _ready = cache.Ready;
-                ReadyChanged.Trigger();
-            }
         }
     }
 }

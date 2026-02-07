@@ -1,6 +1,7 @@
 key,value
 exp_upgrade.ui.paired_weapon,配对武器：{0}
 coin_upgrade.ui.item_price,{0} (价格:{1}金币)
+coin_upgrade.ui.close,关闭
 coin_upgrade.coin_percent_Lv1.desc,金币掉落概率提升 Lv1
 coin_upgrade.coin_percent_Lv2.desc,金币掉落概率提升 Lv2
 coin_upgrade.coin_percent_Lv3.desc,金币掉落概率提升 Lv3

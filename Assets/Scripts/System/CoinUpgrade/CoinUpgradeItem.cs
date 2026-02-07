@@ -41,7 +41,7 @@ namespace VampireSurvivorLike
         {
             if(_mCondition!=null)
             {
-                return UpgradeFinish && _mCondition.Invoke(this);
+                return !UpgradeFinish && _mCondition.Invoke(this);
             }
             return !UpgradeFinish;
         }
