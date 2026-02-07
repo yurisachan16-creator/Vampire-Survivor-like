@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  * Copyright (c) 2017 snowcold
  * Copyright (c) 2017 ~ 2022 liangxie UNDER MIT LICENSE
  * 
@@ -61,26 +61,23 @@ namespace QFramework
             }
             else
             {
-                var url = AssetBundleSettings.AssetBundleName2Url(mHash != null
-                    ? mAssetName + "_" + mHash
-                    : mAssetName);
+                var assetBundleFileName = mHash != null ? mAssetName + "_" + mHash : mAssetName;
+                var url = AssetBundleSettings.AssetBundleName2Url(assetBundleFileName);
                 AssetBundle bundle; 
-                // var zipFileHelper = ResKit.Architecture.Interface.GetUtility<IZipFileHelper>();
-
-                // if (File.ReadAllText(url).Contains(AES.AESHead))
-                // {
-                //     if (AESKey == string.Empty)
-                //     {
-                //         AESKey = JsonUtility.FromJson<EncryptConfig>(Resources.Load<TextAsset>("EncryptConfig").text).AESKey;
-                //     }
-                //  
-                //      bundle= AssetBundle.LoadFromMemory((AES.AESFileByteDecrypt(url, AESKey)));
-                //  
-                // }
-                // else
-                // {
+#if UNITY_ANDROID && !UNITY_EDITOR
+                if (url.StartsWith("jar:") || url.Contains("!/assets/"))
+                {
+                    var relative = "AssetBundles/" + AssetBundlePathHelper.GetPlatformName() + "/" + assetBundleFileName;
+                    var bytes = Architecture.ZipFileHelper.ReadSync(relative);
+                    bundle = bytes != null && bytes.Length > 0 ? AssetBundle.LoadFromMemory(bytes) : null;
+                }
+                else
+                {
+                    bundle = AssetBundle.LoadFromFile(url);
+                }
+#else
                 bundle = AssetBundle.LoadFromFile(url);
-                // }
+#endif
 
                 mUnloadFlag = true;
 
@@ -131,7 +128,12 @@ namespace QFramework
                     ? mAssetName + "_" + mHash
                     : mAssetName);
 
-                if (PlatformCheck.IsWebGL || PlatformCheck.IsWeixinMiniGame)
+                var useUwr = PlatformCheck.IsWebGL || PlatformCheck.IsWeixinMiniGame;
+#if UNITY_ANDROID && !UNITY_EDITOR
+                useUwr = useUwr || url.StartsWith("jar:") || url.Contains("!/assets/");
+#endif
+
+                if (useUwr)
                 {
                     var abcR = UnityWebRequestAssetBundle.GetAssetBundle(url);
                     var request = abcR.SendWebRequest();
@@ -140,7 +142,7 @@ namespace QFramework
                     yield return request;
                     mAssetBundleCreateRequest = null;
 
-                    if (!request.isDone)
+                    if (!request.isDone || abcR.result != UnityWebRequest.Result.Success)
                     {
                         Debug.LogError("AssetBundleCreateRequest Not Done! Path:" + mAssetName);
                         OnResLoadFaild();

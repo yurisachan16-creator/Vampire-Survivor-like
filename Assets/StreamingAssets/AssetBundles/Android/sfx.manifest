@@ -1,0 +1,36 @@
+ManifestFileVersion: 0
+CRC: 3956604886
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 84fd4b992f5878223107f79f5e56c6cf
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 84fd4b992f5878223107f79f5e56c6cf
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Art/Sound/Sfx/Exp.wav
+- Assets/Art/Sound/Sfx/HomeBg.mp3
+- Assets/Art/Sound/Sfx/Retro Event Acute 11.wav
+- Assets/Art/Sound/Sfx/ButtonClick.wav
+- Assets/Art/Sound/Sfx/BombExplosion.wav
+- Assets/Art/Sound/Sfx/LevelUp.wav
+- Assets/Art/Sound/Sfx/Hurt.wav
+- Assets/Art/Sound/Sfx/EnemyDie.mp3
+- Assets/Art/Sound/Sfx/Knife.wav
+- Assets/Art/Sound/Sfx/Ball.wav
+- Assets/Art/Sound/Sfx/Retro Event UI 01.wav
+- Assets/Art/Sound/Sfx/Health.wav
+- Assets/Art/Sound/Sfx/Achievement.wav
+- Assets/Art/Sound/Sfx/Death.wav
+- Assets/Art/Sound/Sfx/Retro Event Acute 08.wav
+- Assets/Art/Sound/Sfx/Treasuer_chest.wav
+- Assets/Art/Sound/Sfx/Walk.wav
+Dependencies: []

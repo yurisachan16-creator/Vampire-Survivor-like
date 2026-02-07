@@ -13,7 +13,7 @@ namespace VampireSurvivorLike
         {
             string json = null;
 
-            #if UNITY_WEBGL && !UNITY_EDITOR
+            #if (UNITY_WEBGL && !UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
             yield return LocalizationFileLoader.LoadStreamingAssetsTextAsync(ManifestPath, t => json = t);
             #else
             json = LocalizationFileLoader.LoadStreamingAssetsTextSync(ManifestPath);
@@ -45,7 +45,7 @@ namespace VampireSurvivorLike
             var relative = $"Localization/{tableName}.{langCode}.csv";
             string csv = null;
 
-            #if UNITY_WEBGL && !UNITY_EDITOR
+            #if (UNITY_WEBGL && !UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
             yield return LocalizationFileLoader.LoadStreamingAssetsTextAsync(relative, t => csv = t);
             #else
             csv = LocalizationFileLoader.LoadStreamingAssetsTextSync(relative);

@@ -27,6 +27,7 @@ namespace VampireSurvivorLike
 			
 			// 获取 SettingsPanel 子对象的 RectTransform
 			_settingsPanelRect = transform.Find("SettingsPanel")?.GetComponent<RectTransform>();
+			if (Application.isMobilePlatform) ApplyMobileTouchTuning();
 			
 			// ===== 显示设置 =====
 			// 初始化全屏 Toggle
@@ -34,6 +35,33 @@ namespace VampireSurvivorLike
 			FullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
 			var fullscreenLabel = FullscreenToggle.GetComponentInChildren<Text>(true);
 			if (fullscreenLabel) FontManager.Register(fullscreenLabel);
+
+			Toggle debugHudToggle = null;
+			Text debugHudLabel = null;
+			GameObject debugHudRow = null;
+			if (Application.isMobilePlatform && Debug.isDebugBuild)
+			{
+				var settingsContent = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
+				var templateRow = FullscreenToggle.transform.parent ? FullscreenToggle.transform.parent.gameObject : FullscreenToggle.gameObject;
+				if (settingsContent && templateRow && templateRow.transform.parent == settingsContent)
+				{
+					debugHudRow = Instantiate(templateRow, settingsContent, false);
+					debugHudRow.name = "MobileDebugHudSetting";
+					debugHudRow.transform.SetSiblingIndex(templateRow.transform.GetSiblingIndex() + 1);
+					debugHudToggle = debugHudRow.GetComponentInChildren<Toggle>(true);
+					if (debugHudToggle) debugHudToggle.SetIsOnWithoutNotify(GameSettings.EnableMobileDebugHud);
+
+					var texts = debugHudRow.GetComponentsInChildren<Text>(true);
+					for (var i = 0; i < texts.Length; i++)
+					{
+						if (!texts[i]) continue;
+						if (fullscreenLabel && texts[i] == fullscreenLabel) continue;
+						debugHudLabel = texts[i];
+						break;
+					}
+					if (debugHudLabel) FontManager.Register(debugHudLabel);
+				}
+			}
 
 			var languageToggle2 = LanguageToggle;
 			GameObject fallbackLanguageRow = null;
@@ -130,6 +158,11 @@ namespace VampireSurvivorLike
 				}
 
 				if (languageLabel) languageLabel.text = LocalizationManager.T("ui.settings.language");
+
+				if (debugHudLabel)
+				{
+					debugHudLabel.text = LocalizationManager.CurrentLanguage.Value == LanguageId.En ? "Debug HUD" : "调试HUD";
+				}
 			};
 
 			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -143,6 +176,17 @@ namespace VampireSurvivorLike
 				{
 					AudioKit.PlaySound(Sfx.BUTTONCLICK);
 					LocalizationManager.ChangeLanguage(isOn ? LanguageId.En : LanguageId.ZhHans);
+				});
+			}
+
+			if (debugHudToggle)
+			{
+				debugHudToggle.onValueChanged.RemoveAllListeners();
+				debugHudToggle.SetIsOnWithoutNotify(GameSettings.EnableMobileDebugHud);
+				debugHudToggle.onValueChanged.AddListener(isOn =>
+				{
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					GameSettings.EnableMobileDebugHud = isOn;
 				});
 			}
 			
@@ -208,6 +252,63 @@ namespace VampireSurvivorLike
 			BtnQuit.gameObject.SetActive(true);
 			BtnReturnToMainMenu.gameObject.SetActive(true);
 			#endif
+		}
+
+		private void ApplyMobileTouchTuning()
+		{
+			var settingsPanel = _settingsPanelRect ? _settingsPanelRect : (transform as RectTransform);
+			if (!settingsPanel) return;
+
+			var content = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
+			if (content)
+			{
+				for (var i = 0; i < content.childCount; i++)
+				{
+					var child = content.GetChild(i) as RectTransform;
+					if (!child) continue;
+					if (child.gameObject.name == "Title") continue;
+
+					var layout = child.GetComponent<LayoutElement>();
+					if (!layout) layout = child.gameObject.AddComponent<LayoutElement>();
+					if (layout.minHeight < 100f) layout.minHeight = 110f;
+				}
+			}
+
+			var selectables = settingsPanel.GetComponentsInChildren<Selectable>(true);
+			for (var i = 0; i < selectables.Length; i++)
+			{
+				var s = selectables[i];
+				if (!s) continue;
+
+				var g = s.targetGraphic;
+				if (g) g.raycastPadding = new Vector4(24f, 24f, 24f, 24f);
+
+				if (s is Slider slider)
+				{
+					if (slider.fillRect)
+					{
+						var fillImg = slider.fillRect.GetComponent<Image>();
+						if (fillImg) fillImg.raycastPadding = new Vector4(24f, 24f, 24f, 24f);
+					}
+
+					if (slider.handleRect)
+					{
+						var h = slider.handleRect;
+						var sd = h.sizeDelta;
+						h.sizeDelta = new Vector2(Mathf.Max(sd.x, 64f), Mathf.Max(sd.y, 64f));
+
+						var hImg = h.GetComponent<Image>();
+						if (hImg) hImg.raycastPadding = new Vector4(24f, 24f, 24f, 24f);
+
+						var slideArea = h.parent as RectTransform;
+						if (slideArea)
+						{
+							var areaSize = slideArea.sizeDelta;
+							slideArea.sizeDelta = new Vector2(areaSize.x, Mathf.Max(areaSize.y, 80f));
+						}
+					}
+				}
+			}
 		}
 		
 		private void Update()
