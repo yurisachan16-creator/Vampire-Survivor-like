@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 namespace VampireSurvivorLike
 {
@@ -20,6 +21,14 @@ namespace VampireSurvivorLike
             if (show)
             {
                 GUI.Label(new Rect(10, 32, 360, 22), $"Missing: {LocalizationDebug.MissingKeys.Count}");
+                var maxLines = 10;
+                var i = 0;
+                foreach (var key in LocalizationDebug.MissingKeys.OrderBy(x => x))
+                {
+                    if (i >= maxLines) break;
+                    GUI.Label(new Rect(10, 54 + i * 18, 900, 18), key);
+                    i++;
+                }
             }
         }
     }

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a440c0fe3d5b4364fb93671929054e84, type: 3}
+  m_Name: LocalizationFontCatalog
+  m_EditorClassIdentifier: 
+  Entries:
+  - LanguageCode: zh-Hans
+    UguiFont: {fileID: 12800000, guid: 42e1c649c157ed3498657cd5535a8cee, type: 3}
+    TmpFont: {fileID: 11400000, guid: d0ea6b727b7e0c04c97d52cc3a12fe23, type: 2}
+    TmpFallbackFonts: []
+  - LanguageCode: en
+    UguiFont: {fileID: 12800000, guid: 42e1c649c157ed3498657cd5535a8cee, type: 3}
+    TmpFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    TmpFallbackFonts: []

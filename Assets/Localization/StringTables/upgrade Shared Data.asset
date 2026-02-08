@@ -23,6 +23,10 @@ MonoBehaviour:
     m_Key: coin_upgrade.ui.item_price
     m_Metadata:
       m_Items: []
+  - m_Id: 1158746612
+    m_Key: coin_upgrade.ui.close
+    m_Metadata:
+      m_Items: []
   - m_Id: 1158746113
     m_Key: coin_upgrade.coin_percent_Lv1.desc
     m_Metadata:

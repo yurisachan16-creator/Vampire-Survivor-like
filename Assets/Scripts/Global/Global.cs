@@ -101,7 +101,7 @@ namespace VampireSurvivorLike
 #else
             ResKit.Init();
 #endif
-            UIKit.Root.SetResolution(1920, 1080, 1);
+            UIKit.Root.SetResolution(1920, 1080, 0);
             Global.Coin.Value=PlayerPrefs.GetInt(nameof(Global.Coin),0);
             
             Global.HP.Value=PlayerPrefs.GetInt(nameof(Global.MaxHP),3);

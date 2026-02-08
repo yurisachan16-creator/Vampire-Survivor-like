@@ -26,6 +26,10 @@ MonoBehaviour:
     m_Localized: "{0} (\u4EF7\u683C:{1}\u91D1\u5E01)"
     m_Metadata:
       m_Items: []
+  - m_Id: 1158746612
+    m_Localized: "\u5173\u95ED"
+    m_Metadata:
+      m_Items: []
   - m_Id: 1158746113
     m_Localized: "\u91D1\u5E01\u6389\u843D\u6982\u7387\u63D0\u5347 Lv1"
     m_Metadata:

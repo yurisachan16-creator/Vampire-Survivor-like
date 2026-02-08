@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using System;
 
 namespace VampireSurvivorLike
 {
@@ -166,6 +167,19 @@ namespace VampireSurvivorLike
 			{
 				if (!LocalizationManager.IsReady) return;
 
+				string GetLanguageDisplayName(LanguageId language)
+				{
+					if (language == LanguageId.ZhHans) return "简体中文";
+					if (language == LanguageId.ZhHant) return "繁體中文";
+					if (language == LanguageId.En) return "English";
+					if (language.ToString() == "ja") return "日本語";
+					if (language.ToString() == "ko") return "한국어";
+					if (language.ToString() == "fr") return "Français";
+					if (language.ToString() == "de") return "Deutsch";
+					if (language.ToString() == "es") return "Español";
+					return language.ToString();
+				}
+
 				if (FullscreenToggle) FullscreenToggle.SetIsOnWithoutNotify(GameSettings.IsFullscreen);
 
 				if (titleText) titleText.text = LocalizationManager.T("ui.settings.title");
@@ -200,7 +214,7 @@ namespace VampireSurvivorLike
 				{
 					var isEn = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
 					languageToggle2.SetIsOnWithoutNotify(isEn);
-					var langLabel = LocalizationManager.T(isEn ? "ui.settings.lang_en" : "ui.settings.lang_zh");
+					var langLabel = GetLanguageDisplayName(isEn ? LanguageId.En : LanguageId.ZhHans);
 					if (languageText) languageText.text = langLabel;
 					if (languageTmpText) languageTmpText.text = langLabel;
 				}
@@ -219,9 +233,7 @@ namespace VampireSurvivorLike
 					for (var i = 0; i < languageDropdownIds.Count; i++)
 					{
 						var lang = languageDropdownIds[i];
-						var labelKey = lang == LanguageId.En ? "ui.settings.lang_en" : (lang == LanguageId.ZhHans ? "ui.settings.lang_zh" : string.Empty);
-						var label = string.IsNullOrEmpty(labelKey) ? lang.ToString() : LocalizationManager.T(labelKey);
-						options.Add(new TMP_Dropdown.OptionData(label));
+						options.Add(new TMP_Dropdown.OptionData(GetLanguageDisplayName(lang)));
 					}
 
 					var selectedIndex = 0;
@@ -255,6 +267,8 @@ namespace VampireSurvivorLike
 			_refreshUiText = refreshUiText;
 
 			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
+			LocalizationManager.CurrentLanguage.Register(_ => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
+
 			refreshUiText();
 
 			if (screenModeDropdown)

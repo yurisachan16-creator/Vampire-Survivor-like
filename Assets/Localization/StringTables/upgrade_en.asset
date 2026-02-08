@@ -26,6 +26,10 @@ MonoBehaviour:
     m_Localized: '{0} (Price: {1} coins)'
     m_Metadata:
       m_Items: []
+  - m_Id: 1158746612
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
   - m_Id: 1158746113
     m_Localized: Coin drop chance Up Lv1
     m_Metadata:

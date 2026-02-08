@@ -90,7 +90,7 @@ namespace VampireSurvivorLike
 
             if (!TryGetInternal(key, out var value))
             {
-                LocalizationDebug.MissingKeys.Add(key);
+                if (_ready) LocalizationDebug.MissingKeys.Add(key);
                 return key;
             }
 
@@ -105,7 +105,7 @@ namespace VampireSurvivorLike
 
             if (!TryGetInternal(key, out var v))
             {
-                LocalizationDebug.MissingKeys.Add(key);
+                if (_ready) LocalizationDebug.MissingKeys.Add(key);
                 return false;
             }
 
@@ -145,8 +145,6 @@ namespace VampireSurvivorLike
         {
             if (_hookedUnityEvents) return;
             _hookedUnityEvents = true;
-
-            UnityLocalizationSettings.SelectedLocaleChanged += OnSelectedLocaleChanged;
         }
 
         private static IEnumerator InitializeAndSelectLocale()
@@ -184,12 +182,13 @@ namespace VampireSurvivorLike
             var current = UnityLocalizationSettings.SelectedLocale;
             if (current != null && current == locale)
             {
-                TriggerReload();
+                OnSelectedLocaleChanged(locale);
                 yield break;
             }
 
             SetNotReady();
             UnityLocalizationSettings.SelectedLocale = locale;
+            OnSelectedLocaleChanged(locale);
         }
 
         private static void OnSelectedLocaleChanged(Locale locale)

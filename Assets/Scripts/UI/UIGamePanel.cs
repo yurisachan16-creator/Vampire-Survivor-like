@@ -17,6 +17,7 @@ namespace VampireSurvivorLike
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
 			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
+			NormalizeHudLayout();
 			// please add init code here
 			LocalizationManager.PreloadTable("game");
 			if (!FindObjectOfType<EventSystem>())
@@ -246,6 +247,7 @@ namespace VampireSurvivorLike
 		
 		protected override void OnShow()
 		{
+			NormalizeHudLayout();
 		}
 		
 		protected override void OnHide()
@@ -254,6 +256,20 @@ namespace VampireSurvivorLike
 		
 		protected override void OnClose()
 		{
+		}
+
+		private void NormalizeHudLayout()
+		{
+			var root = transform as RectTransform;
+			if (root)
+			{
+				root.offsetMin = Vector2.zero;
+				root.offsetMax = Vector2.zero;
+				root.anchoredPosition3D = Vector3.zero;
+				root.anchorMin = Vector2.zero;
+				root.anchorMax = Vector2.one;
+				root.localScale = Vector3.one;
+			}
 		}
 	}
 
@@ -311,6 +327,15 @@ namespace VampireSurvivorLike
 		private void Apply()
 		{
 			if (_rect == null) return;
+			if (!Application.isMobilePlatform)
+			{
+				_rect.anchorMin = Vector2.zero;
+				_rect.anchorMax = Vector2.one;
+				_rect.offsetMin = Vector2.zero;
+				_rect.offsetMax = Vector2.zero;
+				enabled = false;
+				return;
+			}
 
 			_lastSafeArea = Screen.safeArea;
 			_lastScreenSize = new Vector2Int(Screen.width, Screen.height);

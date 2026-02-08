@@ -142,7 +142,7 @@ namespace VampireSurvivorLike
 			Global.Coin.RegisterWithInitValue(_ =>
 			{
 				refreshItemStates();
-				if (LocalizationManager.IsReady && CoinText) CoinText.text = LocalizationManager.Format("game.ui.coin", Global.Coin.Value);
+				refreshTexts();
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			LocalizationManager.ReadyChanged.Register(refreshTexts).UnRegisterWhenGameObjectDestroyed(gameObject);
