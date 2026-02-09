@@ -2,7 +2,10 @@
   "Version": 1,
   "Languages": [
     "zh-Hans",
-    "en"
+    "zh-Hant",
+    "en",
+    "ja",
+    "ko"
   ],
   "Tables": [
     "core",

@@ -207,6 +207,14 @@ MonoBehaviour:
     m_Localized: 'Finish upgrading all abilities\\nReward: 1000 coins'
     m_Metadata:
       m_Items: []
+  - m_Id: 632368902770688
+    m_Localized: Resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 632369007628288
+    m_Localized: Auto Detect
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

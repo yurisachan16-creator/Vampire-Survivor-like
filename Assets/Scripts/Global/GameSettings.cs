@@ -9,19 +9,72 @@ using System.Text;
 namespace VampireSurvivorLike
 {
     /// <summary>
+    /// 分辨率选项数据
+    /// </summary>
+    [Serializable]
+    public struct ResolutionOption
+    {
+        public int Width;
+        public int Height;
+        public string AspectLabel; // 如 "16:9", "18:9"
+        public bool IsAutoDetect; // 标记为"自动检测"选项
+
+        public ResolutionOption(int w, int h, string aspect, bool auto = false)
+        {
+            Width = w;
+            Height = h;
+            AspectLabel = aspect;
+            IsAutoDetect = auto;
+        }
+
+        /// <summary>
+        /// 显示文本，如 "1920×1080 (16:9)" 或 "自动检测"
+        /// </summary>
+        public string GetDisplayText(bool isRecommended = false)
+        {
+            if (IsAutoDetect) return ""; // 由本地化系统提供
+            var text = $"{Width}×{Height} ({AspectLabel})";
+            if (isRecommended) text += " ★";
+            return text;
+        }
+
+        public float GetAspectRatio()
+        {
+            return Height > 0 ? (float)Width / Height : 0f;
+        }
+    }
+
+    /// <summary>
     /// 游戏设置管理类
-    /// 处理显示设置（全屏/窗口化）和音频设置的持久化
+    /// 处理分辨率设置和音频设置的持久化
     /// </summary>
     public static class GameSettings
     {
         private const string KEY_FULLSCREEN = "GameSettings_Fullscreen";
         private const string KEY_RESOLUTION_WIDTH = "GameSettings_ResWidth";
         private const string KEY_RESOLUTION_HEIGHT = "GameSettings_ResHeight";
+        private const string KEY_RESOLUTION_INDEX = "GameSettings_ResIndex";
         private const string KEY_LOOT_GUIDE = "GameSettings_LootGuide";
         private const string KEY_MOBILE_DEBUG_HUD = "GameSettings_MobileDebugHud";
 
         /// <summary>
-        /// 是否全屏
+        /// 预设分辨率列表（覆盖主流屏幕比例）
+        /// </summary>
+        private static readonly ResolutionOption[] PresetResolutions = new ResolutionOption[]
+        {
+            new ResolutionOption(1280, 720,   "16:9"),
+            new ResolutionOption(1920, 1080,  "16:9"),
+            new ResolutionOption(2560, 1440,  "16:9"),
+            new ResolutionOption(2160, 1080,  "18:9"),
+            new ResolutionOption(2340, 1080,  "19.5:9"),
+            new ResolutionOption(2400, 1080,  "20:9"),
+            new ResolutionOption(2560, 1080,  "21:9"),
+        };
+
+        private static List<ResolutionOption> _cachedResolutions;
+
+        /// <summary>
+        /// 是否全屏（向后兼容，分辨率模式下 Android/WebGL 始终全屏，PC 按分辨率切换）
         /// </summary>
         public static bool IsFullscreen
         {
@@ -59,6 +112,19 @@ namespace VampireSurvivorLike
             }
         }
 
+        /// <summary>
+        /// 保存的分辨率选项索引（0 = 自动检测）
+        /// </summary>
+        public static int ResolutionIndex
+        {
+            get => PlayerPrefs.GetInt(KEY_RESOLUTION_INDEX, 0);
+            set
+            {
+                PlayerPrefs.SetInt(KEY_RESOLUTION_INDEX, value);
+                PlayerPrefs.Save();
+            }
+        }
+
         public static bool EnableLootGuide
         {
             get => PlayerPrefs.GetInt(KEY_LOOT_GUIDE, 1) == 1;
@@ -81,25 +147,212 @@ namespace VampireSurvivorLike
         }
 
         /// <summary>
-        /// 应用全屏设置
+        /// 获取当前平台可用的分辨率列表（第一项为"自动检测"）
+        /// </summary>
+        public static List<ResolutionOption> GetAvailableResolutions()
+        {
+            if (_cachedResolutions != null) return _cachedResolutions;
+
+            _cachedResolutions = new List<ResolutionOption>();
+
+            // 第一项：自动检测
+            _cachedResolutions.Add(new ResolutionOption(0, 0, "", true));
+
+            // 获取当前屏幕最大分辨率
+            var maxWidth = Screen.currentResolution.width;
+            var maxHeight = Screen.currentResolution.height;
+
+            for (var i = 0; i < PresetResolutions.Length; i++)
+            {
+                var res = PresetResolutions[i];
+                // 过滤超过屏幕最大分辨率的选项（Android/移动设备允许所有预设）
+                if (!Application.isMobilePlatform && (res.Width > maxWidth || res.Height > maxHeight))
+                    continue;
+                _cachedResolutions.Add(res);
+            }
+
+            // 如果当前屏幕分辨率不在预设列表中，添加为自定义选项
+            if (!Application.isMobilePlatform)
+            {
+                var found = false;
+                for (var i = 1; i < _cachedResolutions.Count; i++)
+                {
+                    if (_cachedResolutions[i].Width == maxWidth && _cachedResolutions[i].Height == maxHeight)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found && maxWidth > 0 && maxHeight > 0)
+                {
+                    var aspect = GetAspectLabel(maxWidth, maxHeight);
+                    _cachedResolutions.Add(new ResolutionOption(maxWidth, maxHeight, aspect));
+                }
+            }
+
+            return _cachedResolutions;
+        }
+
+        /// <summary>
+        /// 自动检测最优分辨率，返回推荐的分辨率选项索引
+        /// </summary>
+        public static int AutoDetectResolutionIndex()
+        {
+            var resolutions = GetAvailableResolutions();
+            var screenW = Screen.currentResolution.width;
+            var screenH = Screen.currentResolution.height;
+            var screenAspect = screenH > 0 ? (float)screenW / screenH : 16f / 9f;
+
+            var bestIndex = 1; // 默认第一个非自动选项
+            var bestScore = float.MaxValue;
+
+            for (var i = 1; i < resolutions.Count; i++)
+            {
+                var res = resolutions[i];
+                var resAspect = res.GetAspectRatio();
+                // 优先匹配宽高比，其次匹配分辨率大小
+                var aspectDiff = Mathf.Abs(resAspect - screenAspect);
+                var sizeDiff = Mathf.Abs(res.Width - screenW) + Mathf.Abs(res.Height - screenH);
+                var score = aspectDiff * 10000f + sizeDiff;
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    bestIndex = i;
+                }
+            }
+
+            return bestIndex;
+        }
+
+        /// <summary>
+        /// 获取推荐分辨率索引（用于标记★）
+        /// </summary>
+        public static int GetRecommendedIndex()
+        {
+            return AutoDetectResolutionIndex();
+        }
+
+        /// <summary>
+        /// 计算宽高比标签
+        /// </summary>
+        public static string GetAspectLabel(int width, int height)
+        {
+            if (height <= 0) return "?";
+            var ratio = (float)width / height;
+
+            if (Mathf.Abs(ratio - 16f / 9f) < 0.05f) return "16:9";
+            if (Mathf.Abs(ratio - 18f / 9f) < 0.05f) return "18:9";
+            if (Mathf.Abs(ratio - 19.5f / 9f) < 0.05f) return "19.5:9";
+            if (Mathf.Abs(ratio - 20f / 9f) < 0.05f) return "20:9";
+            if (Mathf.Abs(ratio - 21f / 9f) < 0.05f) return "21:9";
+            if (Mathf.Abs(ratio - 4f / 3f) < 0.05f) return "4:3";
+            if (Mathf.Abs(ratio - 16f / 10f) < 0.05f) return "16:10";
+
+            // 通用计算
+            var gcd = GCD(width, height);
+            return $"{width / gcd}:{height / gcd}";
+        }
+
+        private static int GCD(int a, int b)
+        {
+            while (b != 0)
+            {
+                var t = b;
+                b = a % b;
+                a = t;
+            }
+            return a;
+        }
+
+        /// <summary>
+        /// 应用分辨率设置
+        /// </summary>
+        /// <param name="index">分辨率列表中的索引，0 = 自动检测</param>
+        public static void ApplyResolution(int index)
+        {
+            var resolutions = GetAvailableResolutions();
+            if (index < 0 || index >= resolutions.Count) index = 0;
+
+            ResolutionIndex = index;
+
+            int targetW, targetH;
+
+            if (index == 0) // 自动检测
+            {
+                var autoIndex = AutoDetectResolutionIndex();
+                if (autoIndex > 0 && autoIndex < resolutions.Count)
+                {
+                    targetW = resolutions[autoIndex].Width;
+                    targetH = resolutions[autoIndex].Height;
+                }
+                else
+                {
+                    targetW = Screen.currentResolution.width;
+                    targetH = Screen.currentResolution.height;
+                }
+            }
+            else
+            {
+                targetW = resolutions[index].Width;
+                targetH = resolutions[index].Height;
+            }
+
+            // 保存分辨率
+            ResolutionWidth = targetW;
+            ResolutionHeight = targetH;
+
+            // 应用分辨率
+            ApplyResolutionInternal(targetW, targetH);
+        }
+
+        /// <summary>
+        /// 内部分辨率应用逻辑，跨平台处理
+        /// </summary>
+        private static void ApplyResolutionInternal(int width, int height)
+        {
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            // WebGL：设置画布渲染分辨率
+            Screen.SetResolution(width, height, FullScreenMode.MaximizedWindow);
+            #elif UNITY_ANDROID && !UNITY_EDITOR
+            // Android：始终全屏，分辨率影响渲染缩放
+            Screen.SetResolution(width, height, FullScreenMode.FullScreenWindow);
+            #else
+            // Windows/macOS/Editor
+            if (width >= Screen.currentResolution.width && height >= Screen.currentResolution.height)
+            {
+                // 选择的分辨率等于或大于屏幕分辨率，使用全屏
+                Screen.SetResolution(width, height, FullScreenMode.FullScreenWindow);
+                IsFullscreen = true;
+            }
+            else
+            {
+                // 选择的分辨率小于屏幕分辨率，使用窗口模式
+                Screen.SetResolution(width, height, FullScreenMode.Windowed);
+                IsFullscreen = false;
+            }
+            #endif
+        }
+
+        /// <summary>
+        /// 向后兼容：应用全屏设置（内部调用分辨率设置）
         /// </summary>
         public static void ApplyFullscreen(bool fullscreen)
         {
             IsFullscreen = fullscreen;
             
             #if UNITY_WEBGL && !UNITY_EDITOR
-            // WebGL 运行时：使用 Screen.fullScreen 切换全屏
             Screen.fullScreen = fullscreen;
             #else
             if (fullscreen)
             {
-                // 全屏模式使用当前屏幕分辨率
                 Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, FullScreenMode.FullScreenWindow);
             }
             else
             {
-                // 窗口模式使用 1280x720
-                Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
+                var w = ResolutionWidth;
+                var h = ResolutionHeight;
+                if (w <= 0 || h <= 0) { w = 1280; h = 720; }
+                Screen.SetResolution(w, h, FullScreenMode.Windowed);
             }
             #endif
         }
@@ -119,8 +372,17 @@ namespace VampireSurvivorLike
                 Screen.orientation = ScreenOrientation.LandscapeLeft;
             }
 
-            // 应用全屏设置（WebGL 和其他平台都支持）
-            ApplyFullscreen(IsFullscreen);
+            // 应用保存的分辨率设置
+            var savedIndex = ResolutionIndex;
+            if (savedIndex >= 0)
+            {
+                ApplyResolution(savedIndex);
+            }
+            else
+            {
+                // 向后兼容：使用旧的全屏设置
+                ApplyFullscreen(IsFullscreen);
+            }
             
             // 音频设置会由 AudioKit 自动从 PlayerPrefs 加载
             MobileDebugHud.ApplyStartup();
@@ -139,6 +401,14 @@ namespace VampireSurvivorLike
             #else
             Application.Quit();
             #endif
+        }
+
+        /// <summary>
+        /// 清除分辨率缓存（屏幕变化时调用）
+        /// </summary>
+        public static void InvalidateResolutionCache()
+        {
+            _cachedResolutions = null;
         }
     }
 

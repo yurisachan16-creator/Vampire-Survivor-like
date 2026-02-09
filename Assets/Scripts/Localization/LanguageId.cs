@@ -15,6 +15,8 @@ namespace VampireSurvivorLike
         public static LanguageId ZhHans => new LanguageId("zh-Hans");
         public static LanguageId ZhHant => new LanguageId("zh-Hant");
         public static LanguageId En => new LanguageId("en");
+        public static LanguageId Ja => new LanguageId("ja");
+        public static LanguageId Ko => new LanguageId("ko");
 
         public bool IsEmpty => string.IsNullOrWhiteSpace(Code);
 

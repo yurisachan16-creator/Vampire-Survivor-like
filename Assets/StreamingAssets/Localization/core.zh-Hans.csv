@@ -3,6 +3,8 @@ ui.settings.language,语言
 ui.settings.fullscreen,全屏
 ui.settings.windowed,窗口化
 ui.settings.screen_mode,窗口化/全屏
+ui.settings.resolution,分辨率
+ui.settings.auto_detect,自动检测
 ui.settings.loot_guide,道具引导
 ui.settings.title,设置
 ui.settings.back,返回

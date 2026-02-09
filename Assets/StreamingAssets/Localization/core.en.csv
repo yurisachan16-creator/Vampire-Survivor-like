@@ -3,6 +3,8 @@ ui.settings.language,Language
 ui.settings.fullscreen,Fullscreen
 ui.settings.windowed,Windowed
 ui.settings.screen_mode,Windowed/Fullscreen
+ui.settings.resolution,Resolution
+ui.settings.auto_detect,Auto Detect
 ui.settings.loot_guide,Loot Guide
 ui.settings.title,Settings
 ui.settings.back,Back

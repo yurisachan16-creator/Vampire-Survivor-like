@@ -1,0 +1,11 @@
+key,value
+game.ui.enemy_count,敵の数:{0}
+game.ui.wave,ウェーブ: {0}/{1}
+game.ui.wait_next_wave,次のウェーブを待機中...
+game.ui.wave_remaining,{0} 残り: {1}s
+game.ui.time,時間:{0}
+game.ui.level,レベル:{0}
+game.ui.coin,コイン:{0}
+game.treasure.heal_1,HP1回復
+game.treasure.add_coin_50,コイン50獲得
+game.treasure.paired_content,<b>{0}</b>\n{1}

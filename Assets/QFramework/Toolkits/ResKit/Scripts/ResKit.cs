@@ -28,6 +28,11 @@ namespace QFramework
                 Init();
             }
         }
+
+        public static object Get()
+        {
+            throw new NotImplementedException();
+        }
 #endif
 
 #if UNITY_EDITOR

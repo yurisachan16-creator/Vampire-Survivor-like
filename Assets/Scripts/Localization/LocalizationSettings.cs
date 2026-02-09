@@ -9,7 +9,7 @@ namespace VampireSurvivorLike
     {
         [SerializeField] public string PlayerPrefsLanguageKey = "Localization.Language";
         [SerializeField] public LanguageId DefaultLanguage = new LanguageId("zh-Hans");
-        [SerializeField] public List<LanguageId> SupportedLanguages = new List<LanguageId> { new LanguageId("zh-Hans"), new LanguageId("en") };
+        [SerializeField] public List<LanguageId> SupportedLanguages = new List<LanguageId> { new LanguageId("zh-Hans"), new LanguageId("zh-Hant"), new LanguageId("en"), new LanguageId("ja"), new LanguageId("ko") };
         [SerializeField] public List<LanguageId> FallbackChain = new List<LanguageId> { new LanguageId("zh-Hans") };
 
         public bool IsSupported(LanguageId language)
@@ -61,7 +61,7 @@ namespace VampireSurvivorLike
             var instance = CreateInstance<LocalizationSettings>();
             instance.PlayerPrefsLanguageKey = "Localization.Language";
             instance.DefaultLanguage = LanguageId.ZhHans;
-            instance.SupportedLanguages = new List<LanguageId> { LanguageId.ZhHans, LanguageId.En };
+            instance.SupportedLanguages = new List<LanguageId> { LanguageId.ZhHans, LanguageId.ZhHant, LanguageId.En, LanguageId.Ja, LanguageId.Ko };
             instance.FallbackChain = new List<LanguageId> { LanguageId.ZhHans };
             return instance;
         }

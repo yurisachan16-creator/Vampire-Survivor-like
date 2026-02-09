@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3071215290
+CRC: 2411848156
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -38,5 +38,10 @@ AssetBundleManifest:
       Dependencies: {}
     Info_10:
       Name: uigamesettingspanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+        Dependency_1: tmp_fontasset_asset
+    Info_11:
+      Name: tmp_fontasset_asset
       Dependencies:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf

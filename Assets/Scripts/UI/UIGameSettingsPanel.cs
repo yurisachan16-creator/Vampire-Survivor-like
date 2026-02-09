@@ -23,6 +23,7 @@ namespace VampireSurvivorLike
 		private float _previousTimeScale = 1f;
 		private RectTransform _settingsPanelRect;
 		private System.Action _refreshUiText;
+		private ResLoader _iconResLoader;
 		
 		protected override void OnInit(IUIData uiData = null)
 		{
@@ -32,33 +33,50 @@ namespace VampireSurvivorLike
 			// 获取 SettingsPanel 子对象的 RectTransform
 			_settingsPanelRect = transform.Find("SettingsPanel")?.GetComponent<RectTransform>();
 			if (Application.isMobilePlatform) ApplyMobileTouchTuning();
-			
-			// ===== 显示设置 =====
-			// 初始化全屏 Toggle
-			FullscreenToggle.isOn = GameSettings.IsFullscreen;
-			FullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
-			var fullscreenLabel = FullscreenToggle.GetComponentInChildren<Text>(true);
-			if (fullscreenLabel) FontManager.Register(fullscreenLabel);
 
-			TMP_Dropdown screenModeDropdown = null;
+			// ===== 预加载图标资源并修复丢失 sprite =====
+			_iconResLoader = ResLoader.Allocate();
+			RepairMissingSpriteReferences();
+			
+			// ===== 显示设置（分辨率选择） =====
+			// 隐藏旧的全屏 Toggle（保持 Designer 兼容，运行时不使用）
+			if (FullscreenToggle)
+			{
+				FullscreenToggle.gameObject.SetActive(false);
+			}
+
+			// 查找分辨率 Dropdown（复用 DisplaySettings 容器中的 TMP_Dropdown）
+			TMP_Dropdown resolutionDropdown = null;
 			if (DisplaySettings)
 			{
-				screenModeDropdown = DisplaySettings.GetComponentInChildren<TMP_Dropdown>(true);
-				if (screenModeDropdown)
+				resolutionDropdown = DisplaySettings.GetComponentInChildren<TMP_Dropdown>(true);
+				if (resolutionDropdown)
 				{
-					if (screenModeDropdown.captionText) FontManager.Register(screenModeDropdown.captionText);
-					if (screenModeDropdown.itemText) FontManager.Register(screenModeDropdown.itemText);
+					if (resolutionDropdown.captionText) FontManager.Register(resolutionDropdown.captionText);
+					if (resolutionDropdown.itemText) FontManager.Register(resolutionDropdown.itemText);
 				}
 			}
 
 			Toggle debugHudToggle = null;
 			Text debugHudLabel = null;
 			GameObject debugHudRow = null;
+			// 用于查找 template row 的辅助变量
+			Transform settingsContent = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
+			// 尝试从 FullscreenToggle 获取模板行，如果不存在则从 DisplaySettings 获取
+			GameObject templateRow = null;
+			if (FullscreenToggle && FullscreenToggle.transform.parent && settingsContent
+				&& FullscreenToggle.transform.parent.parent == settingsContent)
+			{
+				templateRow = FullscreenToggle.transform.parent.gameObject;
+			}
+			else if (DisplaySettings && DisplaySettings.transform.parent == settingsContent)
+			{
+				templateRow = DisplaySettings.gameObject;
+			}
+
 			if (Application.isMobilePlatform && Debug.isDebugBuild)
 			{
-				var settingsContent = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
-				var templateRow = FullscreenToggle.transform.parent ? FullscreenToggle.transform.parent.gameObject : FullscreenToggle.gameObject;
-				if (settingsContent && templateRow && templateRow.transform.parent == settingsContent)
+				if (settingsContent && templateRow)
 				{
 					debugHudRow = Instantiate(templateRow, settingsContent, false);
 					debugHudRow.name = "MobileDebugHudSetting";
@@ -66,14 +84,7 @@ namespace VampireSurvivorLike
 					debugHudToggle = debugHudRow.GetComponentInChildren<Toggle>(true);
 					if (debugHudToggle) debugHudToggle.SetIsOnWithoutNotify(GameSettings.EnableMobileDebugHud);
 
-					var texts = debugHudRow.GetComponentsInChildren<Text>(true);
-					for (var i = 0; i < texts.Length; i++)
-					{
-						if (!texts[i]) continue;
-						if (fullscreenLabel && texts[i] == fullscreenLabel) continue;
-						debugHudLabel = texts[i];
-						break;
-					}
+					debugHudLabel = FindNonSpecificLabel(debugHudRow, null);
 					if (debugHudLabel) FontManager.Register(debugHudLabel);
 				}
 			}
@@ -82,9 +93,7 @@ namespace VampireSurvivorLike
 			GameObject fallbackLanguageRow = null;
 			if (!languageToggle2)
 			{
-				var settingsContent = transform.Find("SettingsPanel/Scroll View/Viewport/Content");
-				var templateRow = FullscreenToggle.transform.parent ? FullscreenToggle.transform.parent.gameObject : FullscreenToggle.gameObject;
-				if (settingsContent && templateRow && templateRow.transform.parent == settingsContent)
+				if (settingsContent && templateRow)
 				{
 					fallbackLanguageRow = Instantiate(templateRow, settingsContent, false);
 					fallbackLanguageRow.name = "LanguageSetting";
@@ -180,27 +189,15 @@ namespace VampireSurvivorLike
 					return language.ToString();
 				}
 
-				if (FullscreenToggle) FullscreenToggle.SetIsOnWithoutNotify(GameSettings.IsFullscreen);
-
 				if (titleText) titleText.text = LocalizationManager.T("ui.settings.title");
 
-				if (screenText) screenText.text = LocalizationManager.T("ui.settings.screen_mode");
+				// 分辨率标签
+				if (screenText) screenText.text = LocalizationManager.T("ui.settings.resolution");
 
-				if (fullscreenLabel)
+				// 分辨率 Dropdown 选项
+				if (resolutionDropdown)
 				{
-					fullscreenLabel.text = LocalizationManager.T(GameSettings.IsFullscreen ? "ui.settings.fullscreen" : "ui.settings.windowed");
-				}
-
-				if (screenModeDropdown)
-				{
-					var options = screenModeDropdown.options;
-					options.Clear();
-					options.Add(new TMP_Dropdown.OptionData(LocalizationManager.T("ui.settings.windowed")));
-					options.Add(new TMP_Dropdown.OptionData(LocalizationManager.T("ui.settings.fullscreen")));
-
-					var selectedIndex = GameSettings.IsFullscreen ? 1 : 0;
-					screenModeDropdown.SetValueWithoutNotify(selectedIndex);
-					screenModeDropdown.RefreshShownValue();
+					PopulateResolutionDropdown(resolutionDropdown);
 				}
 
 				if (musicLabel) musicLabel.text = LocalizationManager.T("ui.settings.music");
@@ -271,16 +268,16 @@ namespace VampireSurvivorLike
 
 			refreshUiText();
 
-			if (screenModeDropdown)
+			// ===== 分辨率 Dropdown 事件 =====
+			if (resolutionDropdown)
 			{
-				screenModeDropdown.onValueChanged.RemoveAllListeners();
-				screenModeDropdown.onValueChanged.AddListener(index =>
+				resolutionDropdown.onValueChanged.RemoveAllListeners();
+				resolutionDropdown.onValueChanged.AddListener(index =>
 				{
 					AudioKit.PlaySound(Sfx.BUTTONCLICK);
-					var fullscreen = index == 1;
-					if (GameSettings.IsFullscreen == fullscreen) return;
-					GameSettings.ApplyFullscreen(fullscreen);
-					refreshUiText();
+					GameSettings.ApplyResolution(index);
+					// 分辨率变化后刷新 UI 布局
+					StartCoroutine(RefreshLayoutAfterResolutionChange());
 				});
 			}
 
@@ -380,6 +377,117 @@ namespace VampireSurvivorLike
 			#endif
 		}
 
+		/// <summary>
+		/// 填充分辨率 Dropdown 选项
+		/// </summary>
+		private void PopulateResolutionDropdown(TMP_Dropdown dropdown)
+		{
+			var resolutions = GameSettings.GetAvailableResolutions();
+			var recommendedIdx = GameSettings.GetRecommendedIndex();
+			var options = dropdown.options;
+			options.Clear();
+
+			for (var i = 0; i < resolutions.Count; i++)
+			{
+				var res = resolutions[i];
+				string text;
+				if (res.IsAutoDetect)
+				{
+					text = LocalizationManager.IsReady
+						? LocalizationManager.T("ui.settings.auto_detect")
+						: "自动检测";
+				}
+				else
+				{
+					text = res.GetDisplayText(i == recommendedIdx);
+				}
+				options.Add(new TMP_Dropdown.OptionData(text));
+			}
+
+			var savedIndex = GameSettings.ResolutionIndex;
+			if (savedIndex < 0 || savedIndex >= options.Count) savedIndex = 0;
+			dropdown.SetValueWithoutNotify(savedIndex);
+			dropdown.RefreshShownValue();
+		}
+
+		/// <summary>
+		/// 分辨率变更后刷新 UI 布局
+		/// </summary>
+		private IEnumerator RefreshLayoutAfterResolutionChange()
+		{
+			yield return new WaitForEndOfFrame();
+			Canvas.ForceUpdateCanvases();
+			if (_settingsPanelRect)
+			{
+				LayoutRebuilder.ForceRebuildLayoutImmediate(_settingsPanelRect);
+			}
+			// 移动端重新应用触控优化
+			if (Application.isMobilePlatform) ApplyMobileTouchTuning();
+		}
+
+		/// <summary>
+		/// 查找非特定用途的 Text 标签（用于动态创建的行）
+		/// </summary>
+		private Text FindNonSpecificLabel(GameObject row, Text excludeLabel)
+		{
+			var texts = row.GetComponentsInChildren<Text>(true);
+			for (var i = 0; i < texts.Length; i++)
+			{
+				if (!texts[i]) continue;
+				if (excludeLabel && texts[i] == excludeLabel) continue;
+				return texts[i];
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// 修复 Prefab 中可能丢失的 Sprite 引用
+		/// 当从 AssetBundle 加载时，Unity 内置 Sprite 可能不会被包含
+		/// </summary>
+		private void RepairMissingSpriteReferences()
+		{
+			var images = GetComponentsInChildren<Image>(true);
+			var missingCount = 0;
+			for (var i = 0; i < images.Length; i++)
+			{
+				if (!images[i]) continue;
+				// 检查 Image 是否应该有 sprite 但实际丢失
+				// 排除纯色背景 Image（sprite 为 null 且 color.a > 0 是正常的纯色背景）
+				if (images[i].sprite == null && images[i].type != Image.Type.Filled)
+				{
+					// 如果是 Toggle 的 Checkmark 或按钮背景，需要修复
+					var go = images[i].gameObject;
+					if (go.name == "Checkmark" || go.name == "Background" || go.name == "Handle")
+					{
+						// 创建一个简单的白色 sprite 作为替代
+						images[i].sprite = CreateFallbackSprite();
+						missingCount++;
+					}
+				}
+			}
+			if (missingCount > 0)
+			{
+				Debug.Log($"[UIGameSettingsPanel] Repaired {missingCount} missing sprite references");
+			}
+		}
+
+		/// <summary>
+		/// 创建一个纯白 fallback sprite（用于修复 AssetBundle 中丢失的内置 sprite）
+		/// </summary>
+		private static Sprite _fallbackSprite;
+		private static Sprite CreateFallbackSprite()
+		{
+			if (_fallbackSprite != null) return _fallbackSprite;
+			var tex = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+			var pixels = new Color32[16];
+			for (var i = 0; i < pixels.Length; i++) pixels[i] = new Color32(255, 255, 255, 255);
+			tex.SetPixels32(pixels);
+			tex.Apply();
+			_fallbackSprite = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 100f);
+			_fallbackSprite.name = "FallbackSprite";
+			return _fallbackSprite;
+		}
+
 		private void ApplyMobileTouchTuning()
 		{
 			var settingsPanel = _settingsPanelRect ? _settingsPanelRect : (transform as RectTransform);
@@ -418,13 +526,6 @@ namespace VampireSurvivorLike
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				CloseSelf();
 			}
-		}
-		
-		private void OnFullscreenChanged(bool isFullscreen)
-		{
-			AudioKit.PlaySound(Sfx.BUTTONCLICK);
-			GameSettings.ApplyFullscreen(isFullscreen);
-			_refreshUiText?.Invoke();
 		}
 		
 		protected override void OnOpen(IUIData uiData = null)
@@ -479,6 +580,12 @@ namespace VampireSurvivorLike
 		if (mData.IsFromGame)
 		{
 			Time.timeScale = _previousTimeScale;
+		}
+		// 释放图标资源加载器
+		if (_iconResLoader != null)
+		{
+			_iconResLoader.Recycle2Cache();
+			_iconResLoader = null;
 		}
 	}
 }

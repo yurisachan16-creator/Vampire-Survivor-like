@@ -1,0 +1,116 @@
+key,value
+exp_upgrade.ui.paired_weapon,페어 무기: {0}
+coin_upgrade.ui.item_price,{0} (가격:{1}코인)
+coin_upgrade.ui.close,닫기
+coin_upgrade.coin_percent_Lv1.desc,코인 드롭률 증가 Lv1
+coin_upgrade.coin_percent_Lv2.desc,코인 드롭률 증가 Lv2
+coin_upgrade.coin_percent_Lv3.desc,코인 드롭률 증가 Lv3
+coin_upgrade.coin_percent_Lv4.desc,코인 드롭률 증가 Lv4
+coin_upgrade.exp_percent.desc,경험치 드롭률 증가
+coin_upgrade.player_max_hp.desc,최대 HP+1
+coin_upgrade.player_max_hp1.desc,최대 HP+1
+coin_upgrade.player_max_hp2.desc,최대 HP+1
+coin_upgrade.player_max_hp3.desc,최대 HP+1
+coin_upgrade.player_max_hp4.desc,최대 HP+1
+coin_upgrade.player_max_hp5.desc,최대 HP+1
+coin_upgrade.player_max_hp6.desc,최대 HP+1
+coin_upgrade.player_max_hp7.desc,최대 HP+1
+coin_upgrade.player_max_hp8.desc,최대 HP+1
+coin_upgrade.player_max_hp9.desc,최대 HP+1
+exp_upgrade.simple_sword.name,검
+exp_upgrade.simple_sword.paired_name,합성 검
+exp_upgrade.simple_sword.paired_desc,공격력 2배 공격 거리 2배
+exp_upgrade.simple_sword.lv1,검Lv1:근처 적 공격
+exp_upgrade.simple_sword.lv2,검Lv2:\\n공격력+3 수량+2
+exp_upgrade.simple_sword.lv3,검Lv3:\\n공격력+2 간격-0.25s
+exp_upgrade.simple_sword.lv4,검Lv4:\\n공격력+3 간격-0.25s
+exp_upgrade.simple_sword.lv5,검Lv5:\\n공격력+4 간격-0.25s
+exp_upgrade.simple_sword.lv6,검Lv6:\\n범위+1 간격-0.25s
+exp_upgrade.simple_sword.lv7,검Lv7:\\n공격력+3 수량+2
+exp_upgrade.simple_sword.lv8,검Lv8:\\n공격력+2 범위+1
+exp_upgrade.simple_sword.lv9,검Lv9:\\n공격력+5 간격-0.25s
+exp_upgrade.simple_sword.lv10,검Lv10:\\n공격력+3 수량+2
+exp_upgrade.rotate_sword.name,수호검
+exp_upgrade.rotate_sword.paired_name,합성 수호검
+exp_upgrade.rotate_sword.paired_desc,공격력 2배 회전 속도 2배
+exp_upgrade.rotate_sword.lv1,수호검Lv1:\\n주인공 주위를 도는 검
+exp_upgrade.rotate_sword.lv2,수호검Lv2:\\n수량+1 공격력+2
+exp_upgrade.rotate_sword.lv3,수호검Lv3:\\n공격력+2 속도+25%
+exp_upgrade.rotate_sword.lv4,수호검Lv4:\\n속도+50%
+exp_upgrade.rotate_sword.lv5,수호검Lv5:\\n수량+1 공격력+1
+exp_upgrade.rotate_sword.lv6,수호검Lv6:\\n공격력+2 속도+25%
+exp_upgrade.rotate_sword.lv7,수호검Lv7:\\n수량+1 공격력+1
+exp_upgrade.rotate_sword.lv8,수호검Lv8:\\n공격력+2 속도+25%
+exp_upgrade.rotate_sword.lv9,수호검Lv9:\\n수량+1 공격력+1
+exp_upgrade.rotate_sword.lv10,수호검Lv10:\\n공격력+2 속도+25%
+exp_upgrade.simple_bomb.name,폭탄
+exp_upgrade.simple_bomb.paired_name,합성 폭탄
+exp_upgrade.simple_bomb.paired_desc,15초마다 폭발
+exp_upgrade.simple_bomb.lv1,폭탄Lv1:전체 적 공격(몬스터 드롭)
+exp_upgrade.simple_bomb.lv2,폭탄Lv2:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv3,폭탄Lv3:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv4,폭탄Lv4:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv5,폭탄Lv5:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv6,폭탄Lv6:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv7,폭탄Lv7:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv8,폭탄Lv8:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv9,폭탄Lv9:\\n드롭률+5% 공격력+5
+exp_upgrade.simple_bomb.lv10,폭탄Lv10:\\n드롭률+10% 공격력+5
+exp_upgrade.simple_knife.name,단검
+exp_upgrade.simple_knife.paired_name,합성 단검
+exp_upgrade.simple_knife.paired_desc,공격력 2배
+exp_upgrade.simple_knife.lv1,단검Lv1:가장 가까운 적에게 발사
+exp_upgrade.simple_knife.lv2,단검Lv2:\\n공격력+3 수량+2
+exp_upgrade.simple_knife.lv3,단검Lv3:\\n간격-0.1s 공격력+1 수량+1
+exp_upgrade.simple_knife.lv4,단검Lv4:\\n간격-0.1s 관통+1 수량+1
+exp_upgrade.simple_knife.lv5,단검Lv5:\\n공격력+3 수량+1
+exp_upgrade.simple_knife.lv6,단검Lv6:\\n간격-0.1s 수량+1
+exp_upgrade.simple_knife.lv7,단검Lv7:\\n간격-0.1s 관통+1 수량+1
+exp_upgrade.simple_knife.lv8,단검Lv8:\\n공격력+3 수량+1
+exp_upgrade.simple_knife.lv9,단검Lv9:\\n간격-0.1s 수량+1
+exp_upgrade.simple_knife.lv10,단검Lv10:\\n공격력+3 수량+1
+exp_upgrade.basket_ball.name,농구공
+exp_upgrade.basket_ball.paired_name,합성 농구공
+exp_upgrade.basket_ball.paired_desc,공격력 2배 크기 증가
+exp_upgrade.basket_ball.lv1,농구공Lv1:\\n화면 내에서 튕기는 농구공
+exp_upgrade.basket_ball.lv2,농구공Lv2:\\n공격력+3
+exp_upgrade.basket_ball.lv3,농구공Lv3:\\n수량+1
+exp_upgrade.basket_ball.lv4,농구공Lv4:\\n공격력+3
+exp_upgrade.basket_ball.lv5,농구공Lv5:\\n수량+1
+exp_upgrade.basket_ball.lv6,농구공Lv6:\\n공격력+3
+exp_upgrade.basket_ball.lv7,농구공Lv7:\\n속도+20%
+exp_upgrade.basket_ball.lv8,농구공Lv8:\\n공격력+3
+exp_upgrade.basket_ball.lv9,농구공Lv9:\\n속도+20%
+exp_upgrade.basket_ball.lv10,농구공Lv10:\\n수량+1
+exp_upgrade.simple_critical.name,치명타
+exp_upgrade.simple_critical.lv1,치명타Lv1:\\n15% 확률로 치명타
+exp_upgrade.simple_critical.lv2,치명타Lv2:\\n28% 확률로 치명타
+exp_upgrade.simple_critical.lv3,치명타Lv3:\\n40% 확률로 치명타
+exp_upgrade.simple_critical.lv4,치명타Lv4:\\n52% 확률로 치명타
+exp_upgrade.simple_critical.lv5,치명타Lv5:\\n65% 확률로 치명타
+exp_upgrade.damage_rate.name,피해 배율
+exp_upgrade.damage_rate.lv1,피해 배율Lv1:\\n피해+15%
+exp_upgrade.damage_rate.lv2,피해 배율Lv2:\\n피해+28%
+exp_upgrade.damage_rate.lv3,피해 배율Lv3:\\n피해+40%
+exp_upgrade.damage_rate.lv4,피해 배율Lv4:\\n피해+52%
+exp_upgrade.damage_rate.lv5,피해 배율Lv5:\\n피해+65%
+exp_upgrade.simple_fly_count.name,투사체
+exp_upgrade.simple_fly_count.lv1,투사체Lv1:\\n추가 투사체+1
+exp_upgrade.simple_fly_count.lv2,투사체Lv2:\\n추가 투사체+2
+exp_upgrade.simple_fly_count.lv3,투사체Lv3:\\n추가 투사체+3
+exp_upgrade.movement_speed_rate.name,이동 속도
+exp_upgrade.movement_speed_rate.lv1,이동 속도Lv1:\\n이동 속도+25%
+exp_upgrade.movement_speed_rate.lv2,이동 속도Lv2:\\n이동 속도+50%
+exp_upgrade.movement_speed_rate.lv3,이동 속도Lv3:\\n이동 속도+75%
+exp_upgrade.movement_speed_rate.lv4,이동 속도Lv4:\\n이동 속도+100%
+exp_upgrade.movement_speed_rate.lv5,이동 속도Lv5:\\n이동 속도+125%
+exp_upgrade.simple_exp_percent.name,경험치
+exp_upgrade.simple_exp_percent.lv1,경험치Lv1:\\n드롭률+5%
+exp_upgrade.simple_exp_percent.lv2,경험치Lv2:\\n드롭률+10%
+exp_upgrade.simple_exp_percent.lv3,경험치Lv3:\\n드롭률+15%
+exp_upgrade.simple_exp_percent.lv4,경험치Lv4:\\n드롭률+20%
+exp_upgrade.simple_exp_percent.lv5,경험치Lv5:\\n드롭률+25%
+exp_upgrade.simple_collectable_area_radius.name,수집 범위
+exp_upgrade.simple_collectable_area_radius.lv1,수집 범위Lv1:\\n수집 범위+100%
+exp_upgrade.simple_collectable_area_radius.lv2,수집 범위Lv2:\\n수집 범위+200%
+exp_upgrade.simple_collectable_area_radius.lv3,수집 범위Lv3:\\n수집 범위+300%
