@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 984472450
+CRC: 4095562980
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e027368ab9d4f75fddd1516e5744d072
+    Hash: 9df710a400cac4819891483245472020
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6d43a3e91bcb21041faeea81c64b9735
+    Hash: 84c95372b42777e7dbdc6be18c0601e0
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: e027368ab9d4f75fddd1516e5744d072
+    Hash: 9df710a400cac4819891483245472020
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -17,6 +17,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 48
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
@@ -62,17 +64,37 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.FaceInfo_Legacy
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.FontAssetCreationSettings
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.KerningTable
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_Character
+- AssemblyName: Unity.TextMeshPro
   ClassName: TMPro.TMP_Dropdown/DropdownEvent
 - AssemblyName: Unity.TextMeshPro
   ClassName: TMPro.TMP_Dropdown/OptionData
 - AssemblyName: Unity.TextMeshPro
   ClassName: TMPro.TMP_Dropdown/OptionDataList
 - AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_FontFeatureTable
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_FontWeightPair
+- AssemblyName: Unity.TextMeshPro
   ClassName: TMPro.VertexGradient
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.RectOffset
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.FaceInfo
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.Glyph
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.GlyphMetrics
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.GlyphRect
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.AnimationTriggers
 - AssemblyName: UnityEngine.UI
@@ -99,4 +121,3 @@ Assets:
 - Assets/Art/UIPrefab/UIGameSettingsPanel.prefab
 Dependencies:
 - D:/unity/Vampire Survivor-like/AssetBundles/Android/fusion-pixel-12px-proportional-zh_hans_ttf
-- D:/unity/Vampire Survivor-like/AssetBundles/Android/tmp_fontasset_asset

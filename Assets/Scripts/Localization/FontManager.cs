@@ -14,6 +14,10 @@ namespace VampireSurvivorLike
         private static readonly List<Text> UguiTexts = new List<Text>();
         private static readonly List<TMP_Text> TmpTexts = new List<TMP_Text>();
 
+        // 记录每个 TMP_FontAsset 的原始 fallback 列表，防止反复追加导致资产引用泄漏
+        private static readonly Dictionary<TMP_FontAsset, List<TMP_FontAsset>> OriginalFallbacks =
+            new Dictionary<TMP_FontAsset, List<TMP_FontAsset>>();
+
         public static LocalizationFontCatalog Catalog
         {
             get
@@ -97,15 +101,27 @@ namespace VampireSurvivorLike
             if (catalog.TryGet(LocalizationManager.CurrentLanguage.Value, out var entry) && entry != null)
             {
                 if (entry.TmpFont) text.font = entry.TmpFont;
-                if (entry.TmpFallbackFonts != null && entry.TmpFallbackFonts.Count > 0)
+                if (text.font && entry.TmpFallbackFonts != null && entry.TmpFallbackFonts.Count > 0)
                 {
+                    var font = text.font;
+
+                    // 首次遇到此字体时，保存其原始 fallback 列表
+                    if (!OriginalFallbacks.ContainsKey(font))
+                    {
+                        OriginalFallbacks[font] = font.fallbackFontAssetTable != null
+                            ? new List<TMP_FontAsset>(font.fallbackFontAssetTable)
+                            : new List<TMP_FontAsset>();
+                    }
+
+                    // 恢复为原始 fallback 列表，再追加当前语言需要的 fallback
+                    font.fallbackFontAssetTable = new List<TMP_FontAsset>(OriginalFallbacks[font]);
                     for (var i = 0; i < entry.TmpFallbackFonts.Count; i++)
                     {
                         var fallback = entry.TmpFallbackFonts[i];
                         if (!fallback) continue;
-                        if (text.font && !text.font.fallbackFontAssetTable.Contains(fallback))
+                        if (!font.fallbackFontAssetTable.Contains(fallback))
                         {
-                            text.font.fallbackFontAssetTable.Add(fallback);
+                            font.fallbackFontAssetTable.Add(fallback);
                         }
                     }
                 }

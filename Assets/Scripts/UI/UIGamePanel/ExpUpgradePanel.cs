@@ -91,6 +91,7 @@ namespace VampireSurvivorLike
 
                     itemCache.Visible.RegisterWithInitValue(visible =>
 					{
+						if (!selfCache) return;
                         if(visible)
                         {
 							refreshTexts();
@@ -100,7 +101,7 @@ namespace VampireSurvivorLike
                         {
                             selfCache.Hide();
                         }
-                    }).UnRegisterWhenGameObjectDestroyed(selfCache);
+                    }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 					itemCache.CurrentLevel.Register((lv) =>
                     {
@@ -109,8 +110,15 @@ namespace VampireSurvivorLike
 
 					LocalizationManager.CurrentLanguage.Register(_ =>
 					{
+						if (!selfCache) return;
 						if (selfCache.gameObject.activeInHierarchy) refreshTexts();
-					}).UnRegisterWhenGameObjectDestroyed(selfCache);
+					}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+					LocalizationManager.ReadyChanged.Register(() =>
+					{
+						if (!selfCache) return;
+						if (selfCache.gameObject.activeInHierarchy) refreshTexts();
+					}).UnRegisterWhenGameObjectDestroyed(gameObject);
                 });
             }
 

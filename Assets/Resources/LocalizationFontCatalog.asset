@@ -15,9 +15,41 @@ MonoBehaviour:
   Entries:
   - LanguageCode: zh-Hans
     UguiFont: {fileID: 12800000, guid: 42e1c649c157ed3498657cd5535a8cee, type: 3}
-    TmpFont: {fileID: 11400000, guid: d0ea6b727b7e0c04c97d52cc3a12fe23, type: 2}
-    TmpFallbackFonts: []
+    TmpFont: {fileID: 11400000, guid: 224492a3c18cc1c41ada5924465c5c0b, type: 2}
+    TmpFallbackFonts:
+    - {fileID: 11400000, guid: c03514a2c3530e349bc11bba7a63ecc0, type: 2}
+    - {fileID: 11400000, guid: 43a1974d801fd874c8565653d9617dac, type: 2}
+    - {fileID: 11400000, guid: 42253e35f0fb28f42a220f577d20d423, type: 2}
+    - {fileID: 11400000, guid: d483185fbc83fe94fa50157fb9f4ceb8, type: 2}
   - LanguageCode: en
     UguiFont: {fileID: 12800000, guid: 42e1c649c157ed3498657cd5535a8cee, type: 3}
     TmpFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    TmpFallbackFonts: []
+    TmpFallbackFonts:
+    - {fileID: 11400000, guid: 224492a3c18cc1c41ada5924465c5c0b, type: 2}
+    - {fileID: 11400000, guid: 43a1974d801fd874c8565653d9617dac, type: 2}
+    - {fileID: 11400000, guid: 42253e35f0fb28f42a220f577d20d423, type: 2}
+    - {fileID: 11400000, guid: d483185fbc83fe94fa50157fb9f4ceb8, type: 2}
+  - LanguageCode: ja
+    UguiFont: {fileID: 12800000, guid: 64f8d3b90d43e064a81893bbd4375744, type: 3}
+    TmpFont: {fileID: 11400000, guid: 42253e35f0fb28f42a220f577d20d423, type: 2}
+    TmpFallbackFonts:
+    - {fileID: 11400000, guid: 224492a3c18cc1c41ada5924465c5c0b, type: 2}
+    - {fileID: 11400000, guid: c03514a2c3530e349bc11bba7a63ecc0, type: 2}
+    - {fileID: 11400000, guid: 43a1974d801fd874c8565653d9617dac, type: 2}
+    - {fileID: 11400000, guid: d483185fbc83fe94fa50157fb9f4ceb8, type: 2}
+  - LanguageCode: ko
+    UguiFont: {fileID: 12800000, guid: 901369236d5ccd54aa6ccbc1c7c8145c, type: 3}
+    TmpFont: {fileID: 11400000, guid: 43a1974d801fd874c8565653d9617dac, type: 2}
+    TmpFallbackFonts:
+    - {fileID: 11400000, guid: 224492a3c18cc1c41ada5924465c5c0b, type: 2}
+    - {fileID: 11400000, guid: c03514a2c3530e349bc11bba7a63ecc0, type: 2}
+    - {fileID: 11400000, guid: 42253e35f0fb28f42a220f577d20d423, type: 2}
+    - {fileID: 11400000, guid: d483185fbc83fe94fa50157fb9f4ceb8, type: 2}
+  - LanguageCode: zh-Hant
+    UguiFont: {fileID: 12800000, guid: b93a6907db3a3f64da5709ce1d4a484b, type: 3}
+    TmpFont: {fileID: 11400000, guid: d483185fbc83fe94fa50157fb9f4ceb8, type: 2}
+    TmpFallbackFonts:
+    - {fileID: 11400000, guid: 224492a3c18cc1c41ada5924465c5c0b, type: 2}
+    - {fileID: 11400000, guid: c03514a2c3530e349bc11bba7a63ecc0, type: 2}
+    - {fileID: 11400000, guid: 43a1974d801fd874c8565653d9617dac, type: 2}
+    - {fileID: 11400000, guid: 42253e35f0fb28f42a220f577d20d423, type: 2}

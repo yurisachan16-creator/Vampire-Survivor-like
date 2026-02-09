@@ -19,6 +19,8 @@ namespace VampireSurvivorLike.EditorTools
         /// </summary>
         private const string HardcodedUiChars =
             "简体中文繁體" +       // 语言名称：简体中文、繁體中文
+            "日本語한국어" +       // 语言名称：日本語、한국어
+            "FrançaisDeutschEspañol" + // 语言名称（拉丁系）
             "分辨率自动检测推荐" + // 分辨率设置 UI
             "调试" +               // 调试 HUD
             "×★";                 // 特殊符号（分辨率显示：1920×1080 ★）
