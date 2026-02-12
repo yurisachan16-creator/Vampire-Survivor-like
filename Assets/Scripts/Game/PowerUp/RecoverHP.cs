@@ -5,6 +5,16 @@ namespace VampireSurvivorLike
 {
 	public partial class RecoverHP : PowerUp
 	{
+		private void OnEnable()
+		{
+			PowerUpRegistry.ActiveRecoverHPCount++;
+		}
+
+		private void OnDisable()
+		{
+			PowerUpRegistry.ActiveRecoverHPCount--;
+		}
+
 		void OnTriggerEnter2D(Collider2D other)
         {
             if (other.GetComponent<CollectableAera>())

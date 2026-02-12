@@ -18,48 +18,16 @@ namespace VampireSurvivorLike
 
             if (_mCurrentSecond >= 1.0f)
             {
-                Axe.Instantiate()
-				.Show()
-				.Position(this.Position())
-				.Self(self =>
-                {
-                    var rigidbody2D = self.GetComponent<Rigidbody2D>();
-
-					var randomX = RandomUtility.Choose(-8,-5,-3,3,5,8);
-					var randomY = RandomUtility.Choose(3,5,8);
-					rigidbody2D.velocity = new Vector2(randomX, randomY);
-
-                    self.OnTriggerEnter2DEvent(collider=>
-                    {
-						var hitHurtBox = collider.GetComponent<HitHurtBox>();		
-
-						if (hitHurtBox)
-                		{
-							if(hitHurtBox.Owner.CompareTag("Enemy"))
-							{
-								var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
-								if (enemy != null)
-								{
-									enemy.Hurt(2);
-								}
-							}
-                		}
-
-                    }).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-					//定时检测是否超出屏幕上方，超出则销毁
-                    ActionKit.OnUpdate.Register(() =>
-                    {
-                        if (Player.Default)
-                        {
-                            if(Player.Default.Position().y - self.Position().y > 15)
-							{
-								self.DestroyGameObjGracefully();
-							}
-                        }
-                        
-                    }).UnRegisterWhenGameObjectDestroyed(self);
-                });
+				var go = ObjectPoolSystem.Spawn(Axe.gameObject, null, true);
+				if (go)
+				{
+					go.transform.position = this.Position();
+					var randomX = RandomUtility.Choose(-8, -5, -3, 3, 5, 8);
+					var randomY = RandomUtility.Choose(3, 5, 8);
+					var projectile = go.GetComponent<PooledAxeProjectile>();
+					if (!projectile) projectile = go.AddComponent<PooledAxeProjectile>();
+					projectile.Configure(new Vector2(randomX, randomY), 2f, 15f);
+				}
 
 				_mCurrentSecond=0;
             }

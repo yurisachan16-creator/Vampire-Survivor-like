@@ -6,7 +6,7 @@ SpriteAtlasAsset:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: Icon
   serializedVersion: 2
   m_MasterAtlas: {fileID: 0}
   m_ImporterData:

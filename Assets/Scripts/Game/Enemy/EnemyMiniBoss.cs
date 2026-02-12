@@ -39,7 +39,7 @@ namespace VampireSurvivorLike
     /// <summary>
     /// MiniBoss - 可配置不同技能组合的Boss敌人
     /// </summary>
-    public partial class EnemyMiniBoss : ViewController, IEnemy
+    public partial class EnemyMiniBoss : ViewController, IEnemy, ObjectPoolSystem.IPoolable
     {
         [Header("Boss基础属性（可被EnemyStatsConfig覆盖）")]
         [Tooltip("Boss血量 - 建议设置为200+以增加挑战性")]
@@ -87,9 +87,43 @@ namespace VampireSurvivorLike
         private IBossSkill _currentSkill;
         private float _initialHealth;
         private bool _isDead = false;
+        private bool _initialized = false;
+
+        // 缓存 configKey，避免每次 string.Replace 分配
+        internal string ConfigKey;
+
+        // 受击计时器（替代 ActionKit.Delay，零 GC）
+        private float _hurtTimer;
+        private float _pendingDamage;
+        private bool _hurtPending;
+
+        // 缓存默认值
+        private float _defaultHealth;
+        private float _defaultMovementSpeed;
+        private float _defaultDamageMultiplier;
+
+        private void Awake()
+        {
+            _defaultHealth = Health;
+            _defaultMovementSpeed = MovementSpeed;
+            _defaultDamageMultiplier = DamageMultiplier;
+        }
         
         void Start()
         {
+            if (!_initialized)
+            {
+                InitializeBoss();
+            }
+        }
+
+        /// <summary>
+        /// 初始化Boss（首次 Start 或从池中取出时调用）
+        /// </summary>
+        internal void InitializeBoss()
+        {
+            if (_initialized) return;
+
             // 从配置中读取属性
             if (UseStatsConfig)
             {
@@ -97,7 +131,10 @@ namespace VampireSurvivorLike
             }
             
             EnemyGenerator.EnemyCount.Value++;
+            EnemyGenerator.BossEnemyCount.Value++;
+            EnemyRegistry.Register(this);
             _initialHealth = Health;
+            _initialized = true;
             
             // 根据Boss类型初始化技能
             InitializeSkills();
@@ -116,7 +153,8 @@ namespace VampireSurvivorLike
             var config = EnemyStatsConfig.Instance;
             if (config == null) return;
             
-            var stats = config.GetStats(gameObject.name.Replace("(Clone)", "").Trim());
+            var key = !string.IsNullOrEmpty(ConfigKey) ? ConfigKey : gameObject.name.Replace("(Clone)", "").Trim();
+            var stats = config.GetStats(key);
             if (stats == null) return;
             
             Health = stats.BaseHP;
@@ -284,6 +322,27 @@ namespace VampireSurvivorLike
             {
                 OnDeath();
             }
+
+            // 受击计时器：替代 ActionKit.Delay，零 GC
+            if (_hurtPending)
+            {
+                _hurtTimer -= Time.deltaTime;
+                if (_hurtTimer <= 0f)
+                {
+                    _hurtPending = false;
+                    if (!_isDead)
+                    {
+                        Health -= _pendingDamage;
+                        if (Health <= 0)
+                        {
+                            OnDeath();
+                            return;
+                        }
+                        if (Sprite) Sprite.color = Color.white;
+                        _isIgnoreHurt = false;
+                    }
+                }
+            }
         }
         
         void FixedUpdate()
@@ -296,6 +355,7 @@ namespace VampireSurvivorLike
             if (_isDead) return;
             _isDead = true;
             _isIgnoreHurt = true;
+            _hurtPending = false;
             if (HitBox) HitBox.enabled = false;
             if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
 
@@ -320,12 +380,60 @@ namespace VampireSurvivorLike
             }
             
             AudioKit.PlaySound(Sfx.ENEMYDIE);
-            this.DestroyGameObjGracefully();
+            ObjectPoolSystem.Despawn(gameObject);
+        }
+
+        /// <summary>
+        /// 从池中取出时的回调
+        /// </summary>
+        public void OnSpawned()
+        {
+            _isDead = false;
+            _isIgnoreHurt = false;
+            _hurtPending = false;
+            _hurtTimer = 0f;
+            _initialized = false;
+            ConfigKey = null;
+            _currentSkill = null;
+
+            Health = _defaultHealth;
+            MovementSpeed = _defaultMovementSpeed;
+            DamageMultiplier = _defaultDamageMultiplier;
+            DropTreasureChest = true;
+            TreasureChestDropRate = 0.3f;
+
+            if (Sprite) Sprite.color = Color.white;
+            if (HitBox) HitBox.enabled = true;
+            if (SelfRigidbody2D)
+            {
+                SelfRigidbody2D.velocity = Vector2.zero;
+                SelfRigidbody2D.simulated = true;
+            }
+        }
+
+        /// <summary>
+        /// 回收进池时的回调
+        /// </summary>
+        public void OnDespawned()
+        {
+            if (_initialized)
+            {
+                EnemyGenerator.EnemyCount.Value--;
+                EnemyGenerator.BossEnemyCount.Value--;
+                EnemyRegistry.Unregister(this);
+                _initialized = false;
+            }
         }
         
         void OnDestroy()
         {
-            EnemyGenerator.EnemyCount.Value--;
+            if (_initialized)
+            {
+                EnemyGenerator.EnemyCount.Value--;
+                EnemyGenerator.BossEnemyCount.Value--;
+                EnemyRegistry.Unregister(this);
+                _initialized = false;
+            }
         }
         
         #region IEnemy Implementation
@@ -345,19 +453,10 @@ namespace VampireSurvivorLike
             Sprite.color = Color.red;
             AudioKit.PlaySound("Hit");
             
-            // 延时后扣血并恢复
-            ActionKit.Delay(0.2f, () =>
-            {
-                if (!this || _isDead) return;
-                this.Health -= value;
-                if (this.Health <= 0)
-                {
-                    OnDeath();
-                    return;
-                }
-                this.Sprite.color = Color.white;
-                _isIgnoreHurt = false;
-            }).Start(this);
+            // 使用计时器替代 ActionKit.Delay，零 GC 分配
+            _pendingDamage = value;
+            _hurtTimer = 0.2f;
+            _hurtPending = true;
         }
         
         public void SetSpeedScale(float speedScale)

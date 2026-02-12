@@ -93,13 +93,16 @@ namespace VampireSurvivorLike
           
         }
 
+        private float _rotationAngle;
+
         void Update()
         {
             var speed = Global.SuperRotateSword.Value 
-                ? Time.frameCount * 10 
-                :Global.RotateSwordSpeed.Value * Time.frameCount;
+                ? 10f * 60f 
+                : Global.RotateSwordSpeed.Value * 60f;
 
-            this.LocalEulerAnglesZ(-speed);
+            _rotationAngle += speed * Time.deltaTime;
+            this.LocalEulerAnglesZ(-_rotationAngle);
 			
         }
     }

@@ -24,15 +24,19 @@ namespace VampireSurvivorLike
 
 		public static void Play(SpriteRenderer sprite,Color dissolveColor)
         {
-            _mDefault.EnemyDieFx.Instantiate()
-			.Position(sprite.Position())
-			.LocalScale(sprite.Scale())
-            .Self(s =>
-            {
-                s.GetComponent<Dissolve>().DissovleColor = dissolveColor;
-				s.sprite= sprite.sprite;
-            })
-			.Show();
+			if (!_mDefault || !_mDefault.EnemyDieFx || !sprite) return;
+
+			var go = ObjectPoolSystem.Spawn(_mDefault.EnemyDieFx.gameObject, null, true);
+			if (!go) return;
+
+			go.transform.position = sprite.Position();
+			go.transform.localScale = sprite.Scale();
+
+			var sr = go.GetComponent<SpriteRenderer>();
+			if (sr) sr.sprite = sprite.sprite;
+
+			var dissolve = go.GetComponent<Dissolve>();
+			if (dissolve) dissolve.DissovleColor = dissolveColor;
 
         }
     }	

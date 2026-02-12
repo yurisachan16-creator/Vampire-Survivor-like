@@ -56,6 +56,9 @@ namespace VampireSurvivorLike
         private const string KEY_RESOLUTION_INDEX = "GameSettings_ResIndex";
         private const string KEY_LOOT_GUIDE = "GameSettings_LootGuide";
         private const string KEY_MOBILE_DEBUG_HUD = "GameSettings_MobileDebugHud";
+        private const string KEY_PERFORMANCE_HUD = "GameSettings_PerformanceHud";
+        private const string KEY_MAX_SMALL_ENEMY_WEBGL = "GameSettings_MaxSmallEnemy_WebGL";
+        private const string KEY_PC_INSTANCED_ENEMY_RENDERER = "GameSettings_PcInstancedEnemyRenderer";
 
         /// <summary>
         /// 预设分辨率列表（覆盖主流屏幕比例）
@@ -144,6 +147,49 @@ namespace VampireSurvivorLike
                 PlayerPrefs.Save();
                 MobileDebugHud.ApplyStartup();
             }
+        }
+
+        public static bool EnablePerformanceHud
+        {
+            get => PlayerPrefs.GetInt(KEY_PERFORMANCE_HUD, Debug.isDebugBuild ? 1 : 0) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(KEY_PERFORMANCE_HUD, value ? 1 : 0);
+                PlayerPrefs.Save();
+                PerformanceHud.ApplyStartup();
+            }
+        }
+
+        public static bool EnablePcInstancedEnemyRenderer
+        {
+            get => PlayerPrefs.GetInt(KEY_PC_INSTANCED_ENEMY_RENDERER, 0) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(KEY_PC_INSTANCED_ENEMY_RENDERER, value ? 1 : 0);
+                PlayerPrefs.Save();
+                PcInstancedEnemyRenderer.ApplyStartup();
+            }
+        }
+
+        public static int MaxSmallEnemyCountWebGL
+        {
+            get => PlayerPrefs.GetInt(KEY_MAX_SMALL_ENEMY_WEBGL, 2500);
+            set
+            {
+                PlayerPrefs.SetInt(KEY_MAX_SMALL_ENEMY_WEBGL, Mathf.Max(0, value));
+                PlayerPrefs.Save();
+            }
+        }
+
+        public static int GetMaxSmallEnemyCountForCurrentPlatform()
+        {
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            return MaxSmallEnemyCountWebGL;
+            #elif UNITY_ANDROID && !UNITY_EDITOR
+            return 3000;
+            #else
+            return 5000;
+            #endif
         }
 
         /// <summary>
@@ -386,6 +432,8 @@ namespace VampireSurvivorLike
             
             // 音频设置会由 AudioKit 自动从 PlayerPrefs 加载
             MobileDebugHud.ApplyStartup();
+            PerformanceHud.ApplyStartup();
+            PcInstancedEnemyRenderer.ApplyStartup();
         }
 
         /// <summary>

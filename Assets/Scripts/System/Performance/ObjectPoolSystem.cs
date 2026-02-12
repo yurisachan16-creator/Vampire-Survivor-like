@@ -1,0 +1,91 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace VampireSurvivorLike
+{
+    public static class ObjectPoolSystem
+    {
+        private static readonly Dictionary<int, Stack<GameObject>> PoolsByPrefabId = new Dictionary<int, Stack<GameObject>>(128);
+        private static Transform _poolRoot;
+
+        public static GameObject Spawn(GameObject prefab, Transform parent = null, bool activate = true)
+        {
+            if (!prefab) return null;
+
+            EnsureRoot();
+            var prefabId = prefab.GetInstanceID();
+
+            if (!PoolsByPrefabId.TryGetValue(prefabId, out var pool))
+            {
+                pool = new Stack<GameObject>(32);
+                PoolsByPrefabId.Add(prefabId, pool);
+            }
+
+            GameObject go = null;
+            while (pool.Count > 0 && !go) go = pool.Pop();
+
+            if (!go)
+            {
+                go = Object.Instantiate(prefab);
+                var tag = go.GetComponent<PooledObjectTag>();
+                if (!tag) tag = go.AddComponent<PooledObjectTag>();
+                tag.PrefabId = prefabId;
+            }
+
+            if (go.activeSelf) go.SetActive(false);
+            go.transform.SetParent(parent ? parent : null, false);
+            if (!parent) go.transform.SetParent(null, false);
+            go.SetActive(activate);
+
+            var poolables = go.GetComponents<IPoolable>();
+            for (var i = 0; i < poolables.Length; i++) poolables[i].OnSpawned();
+
+            return go;
+        }
+
+        public static void Despawn(GameObject go)
+        {
+            if (!go) return;
+            var tag = go.GetComponent<PooledObjectTag>();
+            if (!tag)
+            {
+                Object.Destroy(go);
+                return;
+            }
+
+            if (!PoolsByPrefabId.TryGetValue(tag.PrefabId, out var pool))
+            {
+                pool = new Stack<GameObject>(32);
+                PoolsByPrefabId.Add(tag.PrefabId, pool);
+            }
+
+            var poolables = go.GetComponents<IPoolable>();
+            for (var i = 0; i < poolables.Length; i++) poolables[i].OnDespawned();
+
+            EnsureRoot();
+            if (go.activeSelf) go.SetActive(false);
+            go.transform.SetParent(_poolRoot, false);
+            pool.Push(go);
+        }
+
+        private static void EnsureRoot()
+        {
+            if (_poolRoot) return;
+            var rootGo = new GameObject("ObjectPool");
+            Object.DontDestroyOnLoad(rootGo);
+            _poolRoot = rootGo.transform;
+        }
+
+        public interface IPoolable
+        {
+            void OnSpawned();
+            void OnDespawned();
+        }
+
+        private sealed class PooledObjectTag : MonoBehaviour
+        {
+            public int PrefabId;
+        }
+    }
+}
+

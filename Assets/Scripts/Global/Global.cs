@@ -191,6 +191,10 @@ namespace VampireSurvivorLike
             SuperBomb.Value = false;
             
             EnemyGenerator.EnemyCount.Value = 0;
+            EnemyGenerator.SmallEnemyCount.Value = 0;
+            EnemyGenerator.BossEnemyCount.Value = 0;
+            EnemyRegistry.Clear();
+            PowerUpRegistry.Clear();
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
 
             // 从配置文件加载技能属性（如果已加载）
@@ -317,7 +321,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent < hpDropRate && !Object.FindObjectOfType<RecoverHP>())
+            if(percent < hpDropRate && PowerUpRegistry.ActiveRecoverHPCount == 0)
             {
                 //生成回血道具
                 PowerUpManager.Default.RecoverHP.Instantiate()
@@ -327,7 +331,7 @@ namespace VampireSurvivorLike
                 return;
             }
 
-            if (BombUnlocked.Value && !Object.FindObjectOfType<Bomb>())
+            if (BombUnlocked.Value && PowerUpRegistry.ActiveBombCount == 0)
             {
                 percent=Random.Range(0, 1f);
 
@@ -344,7 +348,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent<0.1f && !Object.FindObjectOfType<GetAllExp>())
+            if(percent<0.1f && PowerUpRegistry.ActiveGetAllExpCount == 0)
             {
                 //生成经验吸附道具
                 PowerUpManager.Default.GetAllExp.Instantiate()

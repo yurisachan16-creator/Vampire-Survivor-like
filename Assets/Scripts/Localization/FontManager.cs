@@ -100,7 +100,7 @@ namespace VampireSurvivorLike
 
             if (catalog.TryGet(LocalizationManager.CurrentLanguage.Value, out var entry) && entry != null)
             {
-                if (entry.TmpFont) text.font = entry.TmpFont;
+                if (entry.TmpFont && IsValidTmpFont(entry.TmpFont)) text.font = entry.TmpFont;
                 if (text.font && entry.TmpFallbackFonts != null && entry.TmpFallbackFonts.Count > 0)
                 {
                     var font = text.font;
@@ -118,7 +118,7 @@ namespace VampireSurvivorLike
                     for (var i = 0; i < entry.TmpFallbackFonts.Count; i++)
                     {
                         var fallback = entry.TmpFallbackFonts[i];
-                        if (!fallback) continue;
+                        if (!fallback || !IsValidTmpFont(fallback)) continue;
                         if (!font.fallbackFontAssetTable.Contains(fallback))
                         {
                             font.fallbackFontAssetTable.Add(fallback);
@@ -126,6 +126,18 @@ namespace VampireSurvivorLike
                     }
                 }
             }
+        }
+
+        private static bool IsValidTmpFont(TMP_FontAsset font)
+        {
+            if (!font) return false;
+            var atlas = font.atlasTextures;
+            if (atlas == null || atlas.Length == 0) return false;
+            for (var i = 0; i < atlas.Length; i++)
+            {
+                if (!atlas[i]) return false;
+            }
+            return true;
         }
     }
 }

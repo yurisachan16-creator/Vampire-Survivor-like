@@ -8,6 +8,7 @@ namespace VampireSurvivorLike
 	{
 		private void OnEnable()
 		{
+			PowerUpRegistry.ActiveBombCount++;
 			var sr = GetComponent<SpriteRenderer>();
 			LootGuideSystem.Current?.Register(this, LootGuideKind.Bomb, sr ? sr.sprite : null);
 			LootGuideSystem.Current?.TryPlayDropFeedback(transform.position, LootGuideKind.Bomb);
@@ -15,6 +16,7 @@ namespace VampireSurvivorLike
 
 		private void OnDisable()
 		{
+			PowerUpRegistry.ActiveBombCount--;
 			LootGuideSystem.Current?.Unregister(this);
 		}
 

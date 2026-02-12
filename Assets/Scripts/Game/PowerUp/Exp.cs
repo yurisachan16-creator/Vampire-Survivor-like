@@ -7,6 +7,7 @@ namespace VampireSurvivorLike
 	{
 		private void OnEnable()
 		{
+			PowerUpRegistry.RegisterExp(this);
 			var sr = GetComponent<SpriteRenderer>();
 			LootGuideSystem.Current?.Register(this, LootGuideKind.Exp, sr ? sr.sprite : null);
 			LootGuideSystem.Current?.TryPlayDropFeedback(transform.position, LootGuideKind.Exp);
@@ -14,6 +15,7 @@ namespace VampireSurvivorLike
 
 		private void OnDisable()
 		{
+			PowerUpRegistry.UnregisterExp(this);
 			LootGuideSystem.Current?.Unregister(this);
 		}
         

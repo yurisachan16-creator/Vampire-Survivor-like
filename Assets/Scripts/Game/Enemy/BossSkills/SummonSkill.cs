@@ -109,7 +109,10 @@ namespace VampireSurvivorLike
             Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * _summonRadius;
             Vector3 spawnPos = Boss.transform.position + new Vector3(offset.x, offset.y, 0);
             
-            var minion = Object.Instantiate(_minionPrefab, spawnPos, Quaternion.identity);
+            var minion = ObjectPoolSystem.Spawn(_minionPrefab, null, false);
+            if (!minion) return;
+            minion.transform.position = spawnPos;
+            minion.transform.rotation = Quaternion.identity;
             minion.SetActive(true);
             
             // 播放召唤特效

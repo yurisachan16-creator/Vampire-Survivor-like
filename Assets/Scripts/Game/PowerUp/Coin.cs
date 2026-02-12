@@ -5,6 +5,15 @@ namespace VampireSurvivorLike
 {
 	public partial class Coin : PowerUp
 	{
+		private void OnEnable()
+		{
+			PowerUpRegistry.RegisterCoin(this);
+		}
+
+		private void OnDisable()
+		{
+			PowerUpRegistry.UnregisterCoin(this);
+		}
 
         void OnTriggerEnter2D(Collider2D other)
         {

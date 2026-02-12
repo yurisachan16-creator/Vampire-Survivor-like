@@ -174,7 +174,12 @@ namespace VampireSurvivorLike
 
 			System.Action refreshUiText = () =>
 			{
-				if (!LocalizationManager.IsReady) return;
+				var isEn = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
+				string TL(string key, string fallbackZh, string fallbackEn)
+				{
+					if (LocalizationManager.IsReady) return LocalizationManager.T(key);
+					return isEn ? fallbackEn : fallbackZh;
+				}
 
 				string GetLanguageDisplayName(LanguageId language)
 				{
@@ -189,10 +194,10 @@ namespace VampireSurvivorLike
 					return language.ToString();
 				}
 
-				if (titleText) titleText.text = LocalizationManager.T("ui.settings.title");
+				if (titleText) titleText.text = TL("ui.settings.title", "设置", "Settings");
 
 				// 分辨率标签
-				if (screenText) screenText.text = LocalizationManager.T("ui.settings.resolution");
+				if (screenText) screenText.text = TL("ui.settings.resolution", "分辨率", "Resolution");
 
 				// 分辨率 Dropdown 选项
 				if (resolutionDropdown)
@@ -200,18 +205,18 @@ namespace VampireSurvivorLike
 					PopulateResolutionDropdown(resolutionDropdown);
 				}
 
-				if (musicLabel) musicLabel.text = LocalizationManager.T("ui.settings.music");
-				if (soundLabel) soundLabel.text = LocalizationManager.T("ui.settings.sfx");
+				if (musicLabel) musicLabel.text = TL("ui.settings.music", "音乐", "Music");
+				if (soundLabel) soundLabel.text = TL("ui.settings.sfx", "音效", "SFX");
 
-				if (backLabel) backLabel.text = LocalizationManager.T("ui.settings.back");
-				if (returnMenuLabel) returnMenuLabel.text = LocalizationManager.T("ui.settings.return_main_menu");
-				if (quitLabel) quitLabel.text = LocalizationManager.T("ui.settings.quit");
+				if (backLabel) backLabel.text = TL("ui.settings.back", "返回", "Back");
+				if (returnMenuLabel) returnMenuLabel.text = TL("ui.settings.return_main_menu", "主菜单", "Main Menu");
+				if (quitLabel) quitLabel.text = TL("ui.settings.quit", "退出", "Quit");
 
 				if (languageToggle2 && !languageDropdown)
 				{
-					var isEn = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
-					languageToggle2.SetIsOnWithoutNotify(isEn);
-					var langLabel = GetLanguageDisplayName(isEn ? LanguageId.En : LanguageId.ZhHans);
+					var isEnToggle = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
+					languageToggle2.SetIsOnWithoutNotify(isEnToggle);
+					var langLabel = GetLanguageDisplayName(isEnToggle ? LanguageId.En : LanguageId.ZhHans);
 					if (languageText) languageText.text = langLabel;
 					if (languageTmpText) languageTmpText.text = langLabel;
 				}
@@ -253,7 +258,7 @@ namespace VampireSurvivorLike
 					}
 				}
 
-				if (languageLabel) languageLabel.text = LocalizationManager.T("ui.settings.language");
+				if (languageLabel) languageLabel.text = TL("ui.settings.language", "语言", "Language");
 
 				if (debugHudLabel)
 				{
@@ -395,7 +400,7 @@ namespace VampireSurvivorLike
 				{
 					text = LocalizationManager.IsReady
 						? LocalizationManager.T("ui.settings.auto_detect")
-						: "自动检测";
+						: (LocalizationManager.CurrentLanguage.Value == LanguageId.En ? "Auto Detect" : "自动检测");
 				}
 				else
 				{

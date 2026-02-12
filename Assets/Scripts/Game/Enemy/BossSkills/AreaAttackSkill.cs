@@ -128,7 +128,10 @@ namespace VampireSurvivorLike
         
         private void SpawnProjectile(Vector2 direction)
         {
-            var projectile = Object.Instantiate(_projectilePrefab, Boss.transform.position, Quaternion.identity);
+            var projectile = ObjectPoolSystem.Spawn(_projectilePrefab, null, false);
+            if (!projectile) return;
+            projectile.transform.position = Boss.transform.position;
+            projectile.transform.rotation = Quaternion.identity;
             projectile.SetActive(true);
             
             var rb = projectile.GetComponent<Rigidbody2D>();

@@ -1,0 +1,136 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace VampireSurvivorLike
+{
+    [DisallowMultipleComponent]
+    public sealed class EnemySimulationManager : MonoBehaviour
+    {
+        private static EnemySimulationManager _instance;
+
+        public static bool Enabled = true;
+
+        public static bool EnableDistanceTiering = true;
+        public static float NearDistance = 10f;
+        public static float MidDistance = 20f;
+        public static float MidIntervalSeconds = 0.1f;
+        public static float FarIntervalSeconds = 0.25f;
+
+        public static bool DisablePhysicsForFarEnemies = true;
+        public static float PhysicsDisableDistance = 28f;
+
+        private readonly List<Enemy> _enemies = new List<Enemy>(8192);
+        private readonly Dictionary<Enemy, float> _nextMoveTime = new Dictionary<Enemy, float>(8192);
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Bootstrap()
+        {
+            if (_instance) return;
+            var go = new GameObject("EnemySimulationManager");
+            DontDestroyOnLoad(go);
+            _instance = go.AddComponent<EnemySimulationManager>();
+        }
+
+        public static void Register(Enemy enemy)
+        {
+            if (!Enabled) return;
+            if (!_instance || !enemy) return;
+            _instance._enemies.Add(enemy);
+        }
+
+        public static void Unregister(Enemy enemy)
+        {
+            if (!_instance || !enemy) return;
+            // swap-back-remove: O(1) 删除
+            var list = _instance._enemies;
+            var idx = list.IndexOf(enemy);
+            if (idx >= 0)
+            {
+                var last = list.Count - 1;
+                list[idx] = list[last];
+                list.RemoveAt(last);
+            }
+            _instance._nextMoveTime.Remove(enemy);
+        }
+
+        private void FixedUpdate()
+        {
+            if (!Enabled) return;
+            if (!Player.Default) return;
+
+            var playerPos = (Vector2)Player.Default.transform.position;
+            var now = Time.fixedTime;
+            var cam = Camera.main;
+            var camPos = cam ? (Vector2)cam.transform.position : Vector2.zero;
+            var halfH = cam && cam.orthographic ? cam.orthographicSize : 0f;
+            var halfW = cam && cam.orthographic ? cam.orthographicSize * cam.aspect : 0f;
+
+            for (var i = 0; i < _enemies.Count; i++)
+            {
+                var e = _enemies[i];
+                if (!e || e.IsDeadOrIgnoringHurt) continue;
+                if (!e.SelfRigidbody2D) continue;
+
+                var pos = (Vector2)e.transform.position;
+                var delta = playerPos - pos;
+                var distSqr = delta.sqrMagnitude;
+                var dist = distSqr > 0.0001f ? Mathf.Sqrt(distSqr) : 0f;
+                var dir = distSqr > 0.0001f ? (delta / dist) : Vector2.zero;
+
+                if (DisablePhysicsForFarEnemies && dist > PhysicsDisableDistance)
+                {
+                    if (e.SelfRigidbody2D.simulated) e.SelfRigidbody2D.simulated = false;
+                    if (e.HitBox && e.HitBox.enabled) e.HitBox.enabled = false;
+                    e.transform.position = (Vector3)(pos + dir * (e.MovementSpeed * Time.fixedDeltaTime));
+                    continue;
+                }
+
+                if (!e.SelfRigidbody2D.simulated) e.SelfRigidbody2D.simulated = true;
+                if (e.HitBox && !e.HitBox.enabled) e.HitBox.enabled = true;
+
+                if (EnableDistanceTiering)
+                {
+                    if (_nextMoveTime.TryGetValue(e, out var nextAt) && now < nextAt) continue;
+                    var interval = 0f;
+                    if (dist > MidDistance) interval = FarIntervalSeconds;
+                    else if (dist > NearDistance) interval = MidIntervalSeconds;
+                    if (interval > 0f) _nextMoveTime[e] = now + interval;
+                }
+
+                e.SelfRigidbody2D.velocity = dir * e.MovementSpeed;
+
+                if (dist < 3f)
+                {
+                    TryApplyMeleeDamageFallback(e, pos, playerPos);
+                }
+
+                if (cam && cam.orthographic)
+                {
+                    var inView = Mathf.Abs(pos.x - camPos.x) <= halfW + 1f && Mathf.Abs(pos.y - camPos.y) <= halfH + 1f;
+                    var enableSprite = inView && !PcInstancedEnemyRenderer.Enabled;
+                    var enableAnimation = inView && dist <= MidDistance;
+                    var enableShadow = inView && dist <= NearDistance;
+                    e.ApplyLod(enableAnimation, enableShadow, enableSprite);
+                }
+            }
+        }
+
+        private static void TryApplyMeleeDamageFallback(Enemy enemy, Vector2 enemyPos, Vector2 playerPos)
+        {
+            if (!Player.Default) return;
+            if (Player.Default.IsGameOver) return;
+
+            var playerCollider = Player.Default.HurtBox;
+            var enemyCollider = enemy.HitBox;
+            if (!playerCollider || !enemyCollider) return;
+
+            var pr = playerCollider.radius * Mathf.Max(Player.Default.transform.lossyScale.x, Player.Default.transform.lossyScale.y);
+            var er = enemyCollider.radius * Mathf.Max(enemy.transform.lossyScale.x, enemy.transform.lossyScale.y);
+            var r = pr + er;
+            if (((playerPos - enemyPos).sqrMagnitude) <= r * r)
+            {
+                Player.Default.ApplyDamage(1, string.Empty, "EnemyMelee");
+            }
+        }
+    }
+}
