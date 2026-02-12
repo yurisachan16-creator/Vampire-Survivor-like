@@ -57,6 +57,14 @@ namespace VampireSurvivorLike
             ApplyTo(text);
         }
 
+        /// <summary>
+        /// 强制对所有已注册的文本重新应用字体（用于首次打开面板时，确保 dropdown 等组件显示正确）
+        /// </summary>
+        public static void ApplyAllRegistered()
+        {
+            ApplyAll();
+        }
+
         private static void ApplyAll()
         {
             for (var i = UguiTexts.Count - 1; i >= 0; i--)

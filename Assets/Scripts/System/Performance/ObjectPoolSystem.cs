@@ -68,6 +68,23 @@ namespace VampireSurvivorLike
             pool.Push(go);
         }
 
+        /// <summary>
+        /// 清空所有对象池，避免快速重新进入 Game 场景时，回收的敌人/投射物短暂残留或出现在错误位置
+        /// </summary>
+        public static void ClearAll()
+        {
+            foreach (var kv in PoolsByPrefabId)
+            {
+                var pool = kv.Value;
+                while (pool.Count > 0)
+                {
+                    var go = pool.Pop();
+                    if (go) Object.Destroy(go);
+                }
+            }
+            PoolsByPrefabId.Clear();
+        }
+
         private static void EnsureRoot()
         {
             if (_poolRoot) return;

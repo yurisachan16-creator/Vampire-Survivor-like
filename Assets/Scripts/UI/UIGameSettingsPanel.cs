@@ -183,6 +183,17 @@ namespace VampireSurvivorLike
 
 				string GetLanguageDisplayName(LanguageId language)
 				{
+					string key = language switch
+					{
+						_ when language == LanguageId.ZhHans => "ui.settings.lang_zh_hans",
+						_ when language == LanguageId.ZhHant => "ui.settings.lang_zh_hant",
+						_ when language == LanguageId.En => "ui.settings.lang_en",
+						_ when language.ToString() == "ja" => "ui.settings.lang_ja",
+						_ when language.ToString() == "ko" => "ui.settings.lang_ko",
+						_ => null
+					};
+					if (key != null && LocalizationManager.TryGet(key, out var value)) return value;
+					// fallback when key missing or language not in manifest
 					if (language == LanguageId.ZhHans) return "简体中文";
 					if (language == LanguageId.ZhHant) return "繁體中文";
 					if (language == LanguageId.En) return "English";
@@ -272,6 +283,9 @@ namespace VampireSurvivorLike
 			LocalizationManager.CurrentLanguage.Register(_ => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			refreshUiText();
+			// 首次打开设置时，若默认语言为韩语等，dropdown 的 captionText 可能在 Register 时尚未填充文本，
+			// 延迟一帧再次应用字体，确保 TMP 能正确渲染（避免粉色方块）
+			StartCoroutine(DeferredApplyDropdownFont());
 
 			// ===== 分辨率 Dropdown 事件 =====
 			if (resolutionDropdown)
@@ -380,6 +394,15 @@ namespace VampireSurvivorLike
 			BtnQuit.gameObject.SetActive(true);
 			BtnReturnToMainMenu.gameObject.SetActive(true);
 			#endif
+		}
+
+		/// <summary>
+		/// 延迟一帧应用字体到 dropdown，解决首次打开设置且默认语言为韩语时 caption 显示粉色方块的问题
+		/// </summary>
+		private IEnumerator DeferredApplyDropdownFont()
+		{
+			yield return null;
+			FontManager.ApplyAllRegistered();
 		}
 
 		/// <summary>

@@ -194,6 +194,7 @@ namespace VampireSurvivorLike
             EnemyGenerator.SmallEnemyCount.Value = 0;
             EnemyGenerator.BossEnemyCount.Value = 0;
             EnemyRegistry.Clear();
+            ObjectPoolSystem.ClearAll();
             PowerUpRegistry.Clear();
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
 

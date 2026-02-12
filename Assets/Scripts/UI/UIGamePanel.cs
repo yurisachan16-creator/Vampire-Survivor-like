@@ -59,7 +59,7 @@ namespace VampireSurvivorLike
 			EnemyGenerator.EnemyCount.RegisterWithInitValue(EnemyCount =>
 			{
 				if (!IsGameTableReady()) return;
-				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", EnemyCount);
+				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", Mathf.Max(0, EnemyCount));
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			// 波次信息显示
@@ -209,7 +209,7 @@ namespace VampireSurvivorLike
 				if (!LocalizationManager.IsReady) return;
 				if (!LocalizationManager.TryGet("game.ui.level", out _)) return;
 
-				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", EnemyGenerator.EnemyCount.Value);
+				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", Mathf.Max(0, EnemyGenerator.EnemyCount.Value));
 				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
 				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
 				{

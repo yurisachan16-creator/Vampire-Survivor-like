@@ -418,8 +418,8 @@ namespace VampireSurvivorLike
         {
             if (_initialized)
             {
-                EnemyGenerator.EnemyCount.Value--;
-                EnemyGenerator.BossEnemyCount.Value--;
+                EnemyGenerator.EnemyCount.Value = Mathf.Max(0, EnemyGenerator.EnemyCount.Value - 1);
+                EnemyGenerator.BossEnemyCount.Value = Mathf.Max(0, EnemyGenerator.BossEnemyCount.Value - 1);
                 EnemyRegistry.Unregister(this);
                 _initialized = false;
             }
@@ -429,8 +429,8 @@ namespace VampireSurvivorLike
         {
             if (_initialized)
             {
-                EnemyGenerator.EnemyCount.Value--;
-                EnemyGenerator.BossEnemyCount.Value--;
+                EnemyGenerator.EnemyCount.Value = Mathf.Max(0, EnemyGenerator.EnemyCount.Value - 1);
+                EnemyGenerator.BossEnemyCount.Value = Mathf.Max(0, EnemyGenerator.BossEnemyCount.Value - 1);
                 EnemyRegistry.Unregister(this);
                 _initialized = false;
             }

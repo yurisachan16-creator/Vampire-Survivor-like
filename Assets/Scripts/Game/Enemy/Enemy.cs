@@ -221,8 +221,8 @@ namespace VampireSurvivorLike
 			// 反注册
 			if (_initialized)
 			{
-				EnemyGenerator.EnemyCount.Value--;
-				EnemyGenerator.SmallEnemyCount.Value--;
+				EnemyGenerator.EnemyCount.Value = Mathf.Max(0, EnemyGenerator.EnemyCount.Value - 1);
+				EnemyGenerator.SmallEnemyCount.Value = Mathf.Max(0, EnemyGenerator.SmallEnemyCount.Value - 1);
 				EnemyRegistry.Unregister(this);
 				_initialized = false;
 			}
@@ -233,8 +233,8 @@ namespace VampireSurvivorLike
 			// 真正销毁时也确保反注册（应对场景卸载等情况）
 			if (_initialized)
 			{
-				EnemyGenerator.EnemyCount.Value--;
-				EnemyGenerator.SmallEnemyCount.Value--;
+				EnemyGenerator.EnemyCount.Value = Mathf.Max(0, EnemyGenerator.EnemyCount.Value - 1);
+				EnemyGenerator.SmallEnemyCount.Value = Mathf.Max(0, EnemyGenerator.SmallEnemyCount.Value - 1);
 				EnemyRegistry.Unregister(this);
 				_initialized = false;
 			}

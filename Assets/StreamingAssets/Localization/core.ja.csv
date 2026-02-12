@@ -16,6 +16,10 @@ ui.settings.return_main_menu,メインメニュー
 ui.settings.quit,終了
 ui.settings.lang_en,English
 ui.settings.lang_zh,中国語
+ui.settings.lang_zh_hans,簡体字中国語
+ui.settings.lang_zh_hant,繁体字中国語
+ui.settings.lang_ja,日本語
+ui.settings.lang_ko,韓国語
 ui.start.start_game,ゲーム開始
 ui.start.settings,設定
 ui.start.achievement,実績
