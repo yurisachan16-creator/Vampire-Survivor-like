@@ -354,21 +354,38 @@ namespace VampireSurvivorLike
 		}
 	}
 
+	/// <summary>
+	/// 王者荣耀风格虚拟摇杆：左半屏触控区，按下时在触摸点显示，松手后1.5秒自动淡出隐藏
+	/// </summary>
 	public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 	{
-		[SerializeField] private RectTransform _background;
-		[SerializeField] private RectTransform _handle;
-		[SerializeField] private float _radius = 110f;
+		private RectTransform _touchArea;   // 触控区（左半屏，接收事件的区域）
+		private RectTransform _joystickRoot; // 摇杆根节点（动态移动到触摸点）
+		private RectTransform _background;
+		private RectTransform _handle;
+		private CanvasGroup _canvasGroup;
+		private float _radius = 140f;
+		private Camera _eventCamera;
 
 		private int _activePointerId = int.MinValue;
+		private float _hideTimer;
+		private const float HideDelay = 1.5f;
+		private const float FadeSpeed = 4f;
 
 		public Vector2 Value { get; private set; }
 
-		public void Initialize(RectTransform background, RectTransform handle, float radius)
+		public void Initialize(RectTransform touchArea, RectTransform joystickRoot,
+			RectTransform background, RectTransform handle, CanvasGroup canvasGroup, float radius)
 		{
+			_touchArea = touchArea;
+			_joystickRoot = joystickRoot;
 			_background = background;
 			_handle = handle;
+			_canvasGroup = canvasGroup;
 			_radius = Mathf.Max(1f, radius);
+
+			// 初始隐藏
+			if (_canvasGroup) _canvasGroup.alpha = 0f;
 			ResetState();
 		}
 
@@ -376,6 +393,26 @@ namespace VampireSurvivorLike
 		{
 			if (_activePointerId != int.MinValue) return;
 			_activePointerId = eventData.pointerId;
+			_eventCamera = eventData.pressEventCamera;
+
+			// 将触摸点转换为触控区的局部坐标，将摇杆根节点移动到该位置
+			if (_touchArea && _joystickRoot)
+			{
+				RectTransformUtility.ScreenPointToLocalPointInRectangle(
+					_touchArea, eventData.position, _eventCamera, out var localPos);
+
+				// 边界保护：确保摇杆不会超出触控区边界
+				var rect = _touchArea.rect;
+				localPos.x = Mathf.Clamp(localPos.x, rect.xMin + _radius, rect.xMax - _radius);
+				localPos.y = Mathf.Clamp(localPos.y, rect.yMin + _radius, rect.yMax - _radius);
+
+				_joystickRoot.anchoredPosition = localPos;
+			}
+
+			// 显示摇杆
+			_hideTimer = -1f; // 标记为活跃状态，不计时
+			if (_canvasGroup) _canvasGroup.alpha = 1f;
+
 			OnDrag(eventData);
 		}
 
@@ -387,7 +424,7 @@ namespace VampireSurvivorLike
 			RectTransformUtility.ScreenPointToLocalPointInRectangle(
 				_background,
 				eventData.position,
-				eventData.pressEventCamera,
+				_eventCamera,
 				out var localPoint
 			);
 
@@ -400,11 +437,34 @@ namespace VampireSurvivorLike
 		{
 			if (_activePointerId != eventData.pointerId) return;
 			ResetState();
+			// 开始隐藏计时
+			_hideTimer = HideDelay;
+		}
+
+		private void Update()
+		{
+			if (_canvasGroup == null) return;
+
+			if (_hideTimer > 0f)
+			{
+				_hideTimer -= Time.unscaledDeltaTime;
+				if (_hideTimer <= 0f)
+				{
+					_hideTimer = 0f;
+				}
+			}
+
+			// 淡出动画
+			if (_activePointerId == int.MinValue && _hideTimer <= 0f && _canvasGroup.alpha > 0f)
+			{
+				_canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, 0f, FadeSpeed * Time.unscaledDeltaTime);
+			}
 		}
 
 		private void OnDisable()
 		{
 			ResetState();
+			if (_canvasGroup) _canvasGroup.alpha = 0f;
 		}
 
 		private void ResetState()
@@ -461,44 +521,69 @@ namespace VampireSurvivorLike
 
 		private VirtualJoystick CreateJoystick(RectTransform parent)
 		{
-			var joystickRoot = new GameObject("Joystick", typeof(RectTransform));
-			var rt = (RectTransform)joystickRoot.transform;
-			rt.SetParent(parent, false);
-			rt.anchorMin = Vector2.zero;
-			rt.anchorMax = Vector2.zero;
-			rt.pivot = Vector2.zero;
-			rt.anchoredPosition = new Vector2(80f, 80f);
-			rt.sizeDelta = new Vector2(260f, 260f);
+			// === 左半屏触控区：anchorMin(0,0) → anchorMax(0.5,1) ===
+			var touchArea = new GameObject("JoystickTouchArea", typeof(RectTransform), typeof(Image));
+			var touchRt = (RectTransform)touchArea.transform;
+			touchRt.SetParent(parent, false);
+			touchRt.anchorMin = Vector2.zero;
+			touchRt.anchorMax = new Vector2(0.5f, 1f);
+			touchRt.offsetMin = Vector2.zero;
+			touchRt.offsetMax = Vector2.zero;
 
+			// 触控区透明但可接收触摸
+			var touchImg = touchArea.GetComponent<Image>();
+			touchImg.color = Color.clear;
+			touchImg.raycastTarget = true;
+
+			// === 摇杆根节点（动态定位到触摸点，带 CanvasGroup 控制淡入淡出） ===
+			var joystickRoot = new GameObject("JoystickRoot", typeof(RectTransform), typeof(CanvasGroup));
+			var rootRt = (RectTransform)joystickRoot.transform;
+			rootRt.SetParent(touchRt, false);
+			rootRt.anchorMin = new Vector2(0.5f, 0.5f);
+			rootRt.anchorMax = new Vector2(0.5f, 0.5f);
+			rootRt.pivot = new Vector2(0.5f, 0.5f);
+			rootRt.sizeDelta = new Vector2(280f, 280f);
+			rootRt.anchoredPosition = Vector2.zero;
+
+			var canvasGroup = joystickRoot.GetComponent<CanvasGroup>();
+			canvasGroup.alpha = 0f;
+			canvasGroup.blocksRaycasts = false; // 不阻挡触控区的事件
+			canvasGroup.interactable = false;
+
+			// === Background ===
 			var bg = new GameObject("Background", typeof(RectTransform), typeof(Image));
 			var bgRt = (RectTransform)bg.transform;
-			bgRt.SetParent(rt, false);
+			bgRt.SetParent(rootRt, false);
 			bgRt.anchorMin = new Vector2(0.5f, 0.5f);
 			bgRt.anchorMax = new Vector2(0.5f, 0.5f);
 			bgRt.pivot = new Vector2(0.5f, 0.5f);
-			bgRt.sizeDelta = new Vector2(220f, 220f);
+			bgRt.sizeDelta = new Vector2(280f, 280f);
 
+			// === Handle ===
 			var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image));
 			var handleRt = (RectTransform)handle.transform;
 			handleRt.SetParent(bgRt, false);
 			handleRt.anchorMin = new Vector2(0.5f, 0.5f);
 			handleRt.anchorMax = new Vector2(0.5f, 0.5f);
 			handleRt.pivot = new Vector2(0.5f, 0.5f);
-			handleRt.sizeDelta = new Vector2(110f, 110f);
+			handleRt.sizeDelta = new Vector2(140f, 140f);
 
 			var sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
 			var bgImg = bg.GetComponent<Image>();
 			bgImg.sprite = sprite;
 			bgImg.type = Image.Type.Sliced;
 			bgImg.color = new Color(1f, 1f, 1f, 0.18f);
+			bgImg.raycastTarget = false;
 
 			var handleImg = handle.GetComponent<Image>();
 			handleImg.sprite = sprite;
 			handleImg.type = Image.Type.Sliced;
 			handleImg.color = new Color(1f, 1f, 1f, 0.35f);
+			handleImg.raycastTarget = false;
 
-			var joy = joystickRoot.AddComponent<VirtualJoystick>();
-			joy.Initialize(bgRt, handleRt, 110f);
+			// === 将 VirtualJoystick 组件挂在触控区上（接收整个左半屏的触摸事件） ===
+			var joy = touchArea.AddComponent<VirtualJoystick>();
+			joy.Initialize(touchRt, rootRt, bgRt, handleRt, canvasGroup, 140f);
 			return joy;
 		}
 

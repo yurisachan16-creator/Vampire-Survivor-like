@@ -172,6 +172,58 @@ namespace VampireSurvivorLike
 				if (languageLabel) FontManager.Register(languageLabel);
 			}
 
+			// === 语言名称始终使用原生名称（不随语言切换变化） ===
+			string GetLanguageNativeName(LanguageId language)
+			{
+				if (language == LanguageId.ZhHans) return "简体中文";
+				if (language == LanguageId.ZhHant) return "繁體中文";
+				if (language == LanguageId.En) return "English";
+				if (language.ToString() == "ja") return "日本語";
+				if (language.ToString() == "ko") return "한국어";
+				if (language.ToString() == "fr") return "Français";
+				if (language.ToString() == "de") return "Deutsch";
+				if (language.ToString() == "es") return "Español";
+				return language.ToString();
+			}
+
+			// === 语言 Dropdown 只在初始化时填充一次（选项文本不随语言切换变化） ===
+			if (languageDropdown)
+			{
+				languageDropdownIds.Clear();
+				var supported = LocalizationManager.Settings.SupportedLanguages ?? new List<LanguageId> { LanguageId.ZhHans, LanguageId.En };
+				for (var i = 0; i < supported.Count; i++)
+				{
+					languageDropdownIds.Add(supported[i]);
+				}
+
+				var langOptions = languageDropdown.options;
+				langOptions.Clear();
+				for (var i = 0; i < languageDropdownIds.Count; i++)
+				{
+					var lang = languageDropdownIds[i];
+					langOptions.Add(new TMP_Dropdown.OptionData(GetLanguageNativeName(lang)));
+				}
+
+				var initSelectedIndex = 0;
+				for (var i = 0; i < languageDropdownIds.Count; i++)
+				{
+					if (languageDropdownIds[i] == LocalizationManager.CurrentLanguage.Value)
+					{
+						initSelectedIndex = i;
+						break;
+					}
+				}
+				languageDropdown.SetValueWithoutNotify(initSelectedIndex);
+				languageDropdown.RefreshShownValue();
+
+				if (initSelectedIndex >= 0 && initSelectedIndex < langOptions.Count)
+				{
+					var label = langOptions[initSelectedIndex].text;
+					if (languageText) languageText.text = label;
+					if (languageTmpText) languageTmpText.text = label;
+				}
+			}
+
 			System.Action refreshUiText = () =>
 			{
 				var isEn = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
@@ -179,30 +231,6 @@ namespace VampireSurvivorLike
 				{
 					if (LocalizationManager.IsReady) return LocalizationManager.T(key);
 					return isEn ? fallbackEn : fallbackZh;
-				}
-
-				string GetLanguageDisplayName(LanguageId language)
-				{
-					string key = language switch
-					{
-						_ when language == LanguageId.ZhHans => "ui.settings.lang_zh_hans",
-						_ when language == LanguageId.ZhHant => "ui.settings.lang_zh_hant",
-						_ when language == LanguageId.En => "ui.settings.lang_en",
-						_ when language.ToString() == "ja" => "ui.settings.lang_ja",
-						_ when language.ToString() == "ko" => "ui.settings.lang_ko",
-						_ => null
-					};
-					if (key != null && LocalizationManager.TryGet(key, out var value)) return value;
-					// fallback when key missing or language not in manifest
-					if (language == LanguageId.ZhHans) return "简体中文";
-					if (language == LanguageId.ZhHant) return "繁體中文";
-					if (language == LanguageId.En) return "English";
-					if (language.ToString() == "ja") return "日本語";
-					if (language.ToString() == "ko") return "한국어";
-					if (language.ToString() == "fr") return "Français";
-					if (language.ToString() == "de") return "Deutsch";
-					if (language.ToString() == "es") return "Español";
-					return language.ToString();
 				}
 
 				if (titleText) titleText.text = TL("ui.settings.title", "设置", "Settings");
@@ -227,28 +255,14 @@ namespace VampireSurvivorLike
 				{
 					var isEnToggle = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
 					languageToggle2.SetIsOnWithoutNotify(isEnToggle);
-					var langLabel = GetLanguageDisplayName(isEnToggle ? LanguageId.En : LanguageId.ZhHans);
+					var langLabel = GetLanguageNativeName(isEnToggle ? LanguageId.En : LanguageId.ZhHans);
 					if (languageText) languageText.text = langLabel;
 					if (languageTmpText) languageTmpText.text = langLabel;
 				}
 
+				// 语言 Dropdown：只同步选中项索引，不重建选项列表（选项文本始终用原生名称）
 				if (languageDropdown)
 				{
-					languageDropdownIds.Clear();
-					var supported = LocalizationManager.Settings.SupportedLanguages ?? new List<LanguageId> { LanguageId.ZhHans, LanguageId.En };
-					for (var i = 0; i < supported.Count; i++)
-					{
-						languageDropdownIds.Add(supported[i]);
-					}
-
-					var options = languageDropdown.options;
-					options.Clear();
-					for (var i = 0; i < languageDropdownIds.Count; i++)
-					{
-						var lang = languageDropdownIds[i];
-						options.Add(new TMP_Dropdown.OptionData(GetLanguageDisplayName(lang)));
-					}
-
 					var selectedIndex = 0;
 					for (var i = 0; i < languageDropdownIds.Count; i++)
 					{
@@ -261,9 +275,9 @@ namespace VampireSurvivorLike
 					languageDropdown.SetValueWithoutNotify(selectedIndex);
 					languageDropdown.RefreshShownValue();
 
-					if (selectedIndex >= 0 && selectedIndex < options.Count)
+					if (selectedIndex >= 0 && selectedIndex < languageDropdown.options.Count)
 					{
-						var label = options[selectedIndex].text;
+						var label = languageDropdown.options[selectedIndex].text;
 						if (languageText) languageText.text = label;
 						if (languageTmpText) languageTmpText.text = label;
 					}

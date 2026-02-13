@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2096817712
+CRC: 2298902302
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6233ac7ea2cf5c5c1a0bad6bd2740b8c
+    Hash: b66e9657da901d970c1ae769a5ba3486
   TypeTreeHash:
     serializedVersion: 2
     Hash: 033fafe2c9f6c610c3a734393882fd4c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 6233ac7ea2cf5c5c1a0bad6bd2740b8c
+    Hash: b66e9657da901d970c1ae769a5ba3486
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -20,5 +20,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Art/Sprite/UI/Icon/Icon.spriteatlasv2
+- Assets/Art/Sprite/Enemy/Enemy.spriteatlasv2
 Dependencies: []

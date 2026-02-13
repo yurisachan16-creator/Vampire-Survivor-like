@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1213193563
+CRC: 1987157087
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -40,3 +40,6 @@ AssetBundleManifest:
       Name: uigamesettingspanel_prefab
       Dependencies:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_11:
+      Name: enemy_spriteatlasv2
+      Dependencies: {}

@@ -6,6 +6,14 @@ using UnityEngine.UI;
 
 namespace VampireSurvivorLike
 {
+    /// <summary>
+    /// 字体管理器：语言切换时自动为所有已注册的 Text/TMP_Text 应用对应语言的字体。
+    /// 
+    /// 【重要】为避免跨语言文字显示为方块（如简体中文字体下显示日文/韩文），
+    /// 请在 LocalizationFontCatalog.asset 中为每个语言条目的 TmpFallbackFonts 添加
+    /// 其他语言的 TMP 字体作为 fallback（尤其是 zh-Hans、zh-Hant、en 条目需要添加
+    /// 日文和韩文字体 fallback，因为语言选择下拉列表始终显示所有语言的原生名称）。
+    /// </summary>
     public static class FontManager
     {
         private static LocalizationFontCatalog _catalog;
