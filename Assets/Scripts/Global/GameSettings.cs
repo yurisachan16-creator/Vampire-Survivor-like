@@ -185,10 +185,8 @@ namespace VampireSurvivorLike
         {
             #if UNITY_WEBGL && !UNITY_EDITOR
             return MaxSmallEnemyCountWebGL;
-            #elif UNITY_ANDROID && !UNITY_EDITOR
-            return 3000;
             #else
-            return 5000;
+            return 0;
             #endif
         }
 

@@ -19,7 +19,8 @@ namespace VampireSurvivorLike
         public static bool DisablePhysicsForFarEnemies = true;
         public static float PhysicsDisableDistance = 28f;
 
-        private readonly List<Enemy> _enemies = new List<Enemy>(8192);
+        private readonly HashSet<Enemy> _enemies = new HashSet<Enemy>();
+        private readonly List<Enemy> _iteration = new List<Enemy>(8192);
         private readonly Dictionary<Enemy, float> _nextMoveTime = new Dictionary<Enemy, float>(8192);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -41,15 +42,7 @@ namespace VampireSurvivorLike
         public static void Unregister(Enemy enemy)
         {
             if (!_instance || !enemy) return;
-            // swap-back-remove: O(1) 删除
-            var list = _instance._enemies;
-            var idx = list.IndexOf(enemy);
-            if (idx >= 0)
-            {
-                var last = list.Count - 1;
-                list[idx] = list[last];
-                list.RemoveAt(last);
-            }
+            _instance._enemies.Remove(enemy);
             _instance._nextMoveTime.Remove(enemy);
         }
 
@@ -58,6 +51,13 @@ namespace VampireSurvivorLike
             if (!Enabled) return;
             if (!Player.Default) return;
 
+            _iteration.Clear();
+            foreach (var e in _enemies)
+            {
+                if (!e) continue;
+                _iteration.Add(e);
+            }
+
             var playerPos = (Vector2)Player.Default.transform.position;
             var now = Time.fixedTime;
             var cam = Camera.main;
@@ -65,9 +65,9 @@ namespace VampireSurvivorLike
             var halfH = cam && cam.orthographic ? cam.orthographicSize : 0f;
             var halfW = cam && cam.orthographic ? cam.orthographicSize * cam.aspect : 0f;
 
-            for (var i = 0; i < _enemies.Count; i++)
+            for (var i = 0; i < _iteration.Count; i++)
             {
-                var e = _enemies[i];
+                var e = _iteration[i];
                 if (!e || e.IsDeadOrIgnoringHurt) continue;
                 if (!e.SelfRigidbody2D) continue;
 

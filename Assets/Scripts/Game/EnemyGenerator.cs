@@ -704,41 +704,24 @@ namespace VampireSurvivorLike
 			var pos = GetSpawnPositionOutsideCamera();
 			var seg = request.Segment;
 
-			// 缓存 prefab 名称用于 ConfigKey（避免每个实例做 string.Replace）
-			var prefabName = request.Prefab.name;
+			request.Prefab.Instantiate()
+				.Position(pos)
+				.Self(self =>
+				{
+					var enemy = self.GetComponent<IEnemy>();
+					if (enemy == null) return;
 
-			var go = ObjectPoolSystem.Spawn(request.Prefab, null, false);
-			if (!go) return false;
-
-			go.transform.position = pos;
-
-			var enemy = go.GetComponent<IEnemy>();
-			if (enemy != null && seg != null)
-			{
-				if (seg.BaseSpeed > 0) enemy.SetBaseSpeed(seg.BaseSpeed);
-				enemy.SetSpeedScale(seg.SpeedScale);
-				enemy.SetHPScale(seg.HPScale);
-				enemy.SetDamageScale(seg.DamageScale);
-				enemy.SetTreasureChest(seg.IsTreasureChest);
-				enemy.SetDropRates(seg.ExpDropRate, seg.CoinDropRate, seg.HpDropRate, seg.BombDropRate);
-			}
-
-			// 为 Enemy 传入 ConfigKey 避免池化时字符串分配
-			var smallEnemy = go.GetComponent<Enemy>();
-			if (smallEnemy != null)
-			{
-				smallEnemy.ConfigKey = prefabName;
-				smallEnemy.InitializeEnemy();
-			}
-
-			var boss = go.GetComponent<EnemyMiniBoss>();
-			if (boss != null)
-			{
-				boss.ConfigKey = prefabName;
-				boss.InitializeBoss();
-			}
-
-			go.SetActive(true);
+					if (seg != null)
+					{
+						if (seg.BaseSpeed > 0) enemy.SetBaseSpeed(seg.BaseSpeed);
+						enemy.SetSpeedScale(seg.SpeedScale);
+						enemy.SetHPScale(seg.HPScale);
+						enemy.SetDamageScale(seg.DamageScale);
+						enemy.SetTreasureChest(seg.IsTreasureChest);
+						enemy.SetDropRates(seg.ExpDropRate, seg.CoinDropRate, seg.HpDropRate, seg.BombDropRate);
+					}
+				})
+				.Show();
 
 			return true;
 		}
