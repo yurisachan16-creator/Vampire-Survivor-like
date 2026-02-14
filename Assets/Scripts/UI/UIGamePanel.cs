@@ -142,6 +142,8 @@ namespace VampireSurvivorLike
 				{
 					//暂停游戏
 					Time.timeScale = 0f;
+					//禁用触控覆盖层，避免摇杆拦截升级面板的触摸事件
+					MobileTouchOverlay.SetOverlayActive(false);
 					//显示升级面板
 					ExpUpgradePanel.Show();
 					//升级音效
@@ -237,6 +239,7 @@ namespace VampireSurvivorLike
 			OpenTreasureChestPanel.Register(()=>
 			{
 				Time.timeScale = 0f;
+				MobileTouchOverlay.SetOverlayActive(false);
 				TreasureChestPanel.Show();
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 		}
@@ -479,6 +482,20 @@ namespace VampireSurvivorLike
 	public class MobileTouchOverlay : MonoBehaviour
 	{
 		private VirtualJoystick _joystick;
+		private GameObject _overlayRoot;
+		private static MobileTouchOverlay _instance;
+
+		/// <summary>
+		/// 启用/禁用触控覆盖层（摇杆+暂停按钮），在弹出面板时应禁用以避免事件拦截
+		/// </summary>
+		public static void SetOverlayActive(bool active)
+		{
+			if (_instance != null && _instance._overlayRoot != null)
+			{
+				_instance._overlayRoot.SetActive(active);
+				if (!active) PlatformInput.SetMoveOverride(Vector2.zero);
+			}
+		}
 
 		public static void Ensure(GameObject host)
 		{
@@ -505,6 +522,8 @@ namespace VampireSurvivorLike
 			overlayRt.offsetMin = Vector2.zero;
 			overlayRt.offsetMax = Vector2.zero;
 
+			_overlayRoot = overlay;
+			_instance = this;
 			_joystick = CreateJoystick(overlayRt);
 			CreatePauseButton(overlayRt);
 		}
@@ -517,6 +536,11 @@ namespace VampireSurvivorLike
 		private void OnDisable()
 		{
 			PlatformInput.SetMoveOverride(Vector2.zero);
+		}
+
+		private void OnDestroy()
+		{
+			if (_instance == this) _instance = null;
 		}
 
 		private VirtualJoystick CreateJoystick(RectTransform parent)

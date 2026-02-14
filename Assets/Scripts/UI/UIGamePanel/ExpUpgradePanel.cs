@@ -42,6 +42,8 @@ namespace VampireSurvivorLike
 						Time.timeScale = 1f;
 						itemCache.Upgrade();
 						this.Hide();
+						//恢复触控覆盖层
+						MobileTouchOverlay.SetOverlayActive(true);
 						//TODO:播放升级音效
 						AudioKit.PlaySound("Retro Event Acute 08");
 					});

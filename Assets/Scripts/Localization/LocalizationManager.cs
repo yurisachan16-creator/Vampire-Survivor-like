@@ -12,6 +12,7 @@ namespace VampireSurvivorLike
         private static bool _initialized;
         private static bool _ready;
         private static bool _reloadRunning;
+        private static bool _pendingReload;
         private static Coroutine _reloadCoroutine;
         private static readonly Dictionary<string, Dictionary<string, string>> LoadedTables = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
         private static readonly List<string> PreloadedTableList = new List<string>();
@@ -179,7 +180,11 @@ namespace VampireSurvivorLike
 
         private static void TriggerReload()
         {
-            if (_reloadRunning) return;
+            if (_reloadRunning)
+            {
+                _pendingReload = true;
+                return;
+            }
             StartReload();
         }
 
@@ -196,8 +201,11 @@ namespace VampireSurvivorLike
 
         private static IEnumerator ReloadTables()
         {
-            LoadedTables.Clear();
+            // 标记为未就绪，防止中间状态下 T()/TryGet() 返回原始 key
+            _ready = false;
 
+            // 使用双缓冲：先加载到临时字典，完成后一次性替换，避免清空-加载的非原子操作
+            var newTables = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
             var tableOrder = BuildTableOrder();
             var currentLang = CurrentLanguage.Value;
 
@@ -209,7 +217,7 @@ namespace VampireSurvivorLike
 
                 if (entries != null && entries.Count > 0)
                 {
-                    LoadedTables[tableName] = entries;
+                    newTables[tableName] = entries;
                 }
                 else
                 {
@@ -220,16 +228,33 @@ namespace VampireSurvivorLike
                         yield return Provider.LoadTable(tableName, fallbackLang, dict => entries = dict);
                         if (entries != null && entries.Count > 0)
                         {
-                            LoadedTables[tableName] = entries;
+                            newTables[tableName] = entries;
                             break;
                         }
                     }
                 }
             }
 
-            _ready = true;
+            // 原子替换：一次性清空旧数据并写入新数据，避免中间状态
+            LoadedTables.Clear();
+            foreach (var kvp in newTables)
+            {
+                LoadedTables[kvp.Key] = kvp.Value;
+            }
+
             _reloadRunning = false;
             _reloadCoroutine = null;
+
+            // 如果在加载过程中有新的表被添加（如 PreloadTable 在 reload 期间被调用），
+            // 需要重新加载以包含新表，此时不触发 ReadyChanged 避免中间状态
+            if (_pendingReload)
+            {
+                _pendingReload = false;
+                StartReload();
+                yield break;
+            }
+
+            _ready = true;
             ReadyChanged.Trigger();
         }
 

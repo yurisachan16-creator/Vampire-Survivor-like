@@ -27,6 +27,7 @@ namespace VampireSurvivorLike
             {
                 Time.timeScale = 1f;
 				this.Hide();
+				MobileTouchOverlay.SetOverlayActive(true);
             });
 
             LocalizationManager.CurrentLanguage.Register(_ =>
