@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.biansh.app-auto-builder": "https://github.com/Bian-Sh/Unity-Application-Auto-Builder.git?path=Packages/App%20Auto%20Builder/",
+    "com.bshsf.appautobuilder": "file:Packages/com.bshsf.appautobuilder",
     "com.unity.collab-proxy": "2.10.2",
     "com.unity.feature.2d": "2.0.1",
     "com.unity.ide.rider": "3.0.36",
