@@ -145,7 +145,7 @@ namespace VampireSurvivorLike
             if (!Debug.isDebugBuild && !Application.isEditor) return;
 
             const float w = 520f;
-            const float h = 250f;
+            const float h = 420f;
 
             var rect = new Rect(12f, 12f, w, h);
             GUI.Box(rect, GUIContent.none);
@@ -184,6 +184,19 @@ namespace VampireSurvivorLike
 
             _sb.Append("SRP Batcher: ").Append(UnityEngine.Rendering.GraphicsSettings.useScriptableRenderPipelineBatching ? "On" : "Off").Append('\n');
             _sb.Append("PC Instanced Enemy: ").Append(PcInstancedEnemyRenderer.Enabled ? "On" : "Off").Append('\n');
+
+            _sb.Append("── Game State ──\n");
+            _sb.Append("Enemies: ").Append(EnemyGenerator.SmallEnemyCount.Value)
+                .Append(" small + ").Append(EnemyGenerator.BossEnemyCount.Value)
+                .Append(" boss (total ").Append(EnemyGenerator.EnemyCount.Value).Append(")\n");
+            _sb.Append("Minute: ").Append(EnemyGenerator.CurrentMinute.Value)
+                .Append("/30  Remaining: ").Append(EnemyGenerator.GameRemainingTime.Value.ToString("0")).Append("s\n");
+            _sb.Append("Channels: ").Append(EnemyGenerator.ActiveChannelCount.Value).Append(" active\n");
+            var chNames = EnemyGenerator.ActiveChannelNames.Value;
+            if (!string.IsNullOrEmpty(chNames))
+                _sb.Append("  ").Append(chNames).Append('\n');
+            _sb.Append("GameTime: ").Append(Global.CurrentSeconds.Value.ToString("0.0")).Append("s\n");
+            _sb.Append("MaxEnemy: ").Append(GameSettings.GetMaxSmallEnemyCountForCurrentPlatform()).Append('\n');
 
             _sb.Append("Samples: ").Append(_samples.Count).Append('\n');
 

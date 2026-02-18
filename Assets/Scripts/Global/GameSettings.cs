@@ -58,6 +58,7 @@ namespace VampireSurvivorLike
         private const string KEY_MOBILE_DEBUG_HUD = "GameSettings_MobileDebugHud";
         private const string KEY_PERFORMANCE_HUD = "GameSettings_PerformanceHud";
         private const string KEY_MAX_SMALL_ENEMY_WEBGL = "GameSettings_MaxSmallEnemy_WebGL";
+        private const string KEY_MAX_SMALL_ENEMY_PC = "GameSettings_MaxSmallEnemy_PC";
         private const string KEY_PC_INSTANCED_ENEMY_RENDERER = "GameSettings_PcInstancedEnemyRenderer";
 
         /// <summary>
@@ -181,12 +182,22 @@ namespace VampireSurvivorLike
             }
         }
 
+        public static int MaxSmallEnemyCountPC
+        {
+            get => PlayerPrefs.GetInt(KEY_MAX_SMALL_ENEMY_PC, 500);
+            set
+            {
+                PlayerPrefs.SetInt(KEY_MAX_SMALL_ENEMY_PC, Mathf.Max(0, value));
+                PlayerPrefs.Save();
+            }
+        }
+
         public static int GetMaxSmallEnemyCountForCurrentPlatform()
         {
             #if UNITY_WEBGL && !UNITY_EDITOR
             return MaxSmallEnemyCountWebGL;
             #else
-            return 0;
+            return MaxSmallEnemyCountPC;
             #endif
         }
 

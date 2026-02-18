@@ -304,14 +304,21 @@ namespace VampireSurvivorLike
 			runner.Initialize(sr, block, PulseDurationSeconds, ShaderProgressId);
 		}
 
+		private static int _active3DSoundCount;
+		private const int Max3DSounds = 8;
+
 		private static void Spawn3DSound(Vector3 worldPosition, string audioKey, float volume)
 		{
 			if (string.IsNullOrWhiteSpace(audioKey)) return;
+			if (_active3DSoundCount >= Max3DSounds) return;
+			if (!SfxThrottle.CanPlay("3D_" + audioKey)) return;
 
 			var loader = ResLoader.Allocate();
 			var clip = loader.LoadSync<AudioClip>(audioKey);
 			loader.Recycle2Cache();
 			if (!clip) return;
+
+			_active3DSoundCount++;
 
 			var go = new GameObject("LootGuide3DAudio");
 			go.transform.position = worldPosition;
@@ -326,7 +333,18 @@ namespace VampireSurvivorLike
 			source.clip = clip;
 			source.Play();
 
-			Destroy(go, Mathf.Min(clip.length + 0.2f, 3f));
+			var lifetime = Mathf.Min(clip.length + 0.2f, 3f);
+			Destroy(go, lifetime);
+
+			// 延迟递减并发计数
+			if (Current != null)
+				Current.StartCoroutine(DecrementAfter(lifetime));
+		}
+
+		private static System.Collections.IEnumerator DecrementAfter(float delay)
+		{
+			yield return new WaitForSeconds(delay);
+			_active3DSoundCount = Mathf.Max(0, _active3DSoundCount - 1);
 		}
 
 		private sealed class LootPulseRingRunner : MonoBehaviour

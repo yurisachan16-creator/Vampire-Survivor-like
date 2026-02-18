@@ -379,7 +379,8 @@ namespace VampireSurvivorLike
                 Global.GeneratePowerUpWithRates(gameObject, false, 0.8f, 0.5f, 0.2f, 0.1f);
             }
             
-            AudioKit.PlaySound(Sfx.ENEMYDIE);
+            if (SfxThrottle.CanPlay(Sfx.ENEMYDIE))
+                AudioKit.PlaySound(Sfx.ENEMYDIE);
             ObjectPoolSystem.Despawn(gameObject);
         }
 

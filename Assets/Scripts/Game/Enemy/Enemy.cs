@@ -172,7 +172,8 @@ namespace VampireSurvivorLike
 			if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
 
 			Global.GeneratePowerUpWithRates(gameObject, TreasureChestEnemy, ExpDropRate, CoinDropRate, HpDropRate, BombDropRate);
-			AudioKit.PlaySound(Sfx.ENEMYDIE);
+			if (SfxThrottle.CanPlay(Sfx.ENEMYDIE))
+				AudioKit.PlaySound(Sfx.ENEMYDIE);
 			FxController.Play(Sprite, DissolveColor);
 			ObjectPoolSystem.Despawn(gameObject);
 		}
