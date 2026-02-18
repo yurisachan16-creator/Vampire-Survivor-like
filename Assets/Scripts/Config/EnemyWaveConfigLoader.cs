@@ -9,27 +9,22 @@ using UnityEngine.Networking;
 namespace VampireSurvivorLike
 {
     /// <summary>
-    /// CSV 配置数据行
+    /// 时间轴频道 CSV 配置数据行
     /// </summary>
     [Serializable]
-    public class EnemyWaveConfigRow
+    public class SpawnChannelConfigRow
     {
-        public string GroupName;
-        public string GroupDescription;
-        public string WaveName;
-        public bool Active;
-        public bool AllowMixedWave = true;
-        public string MixedGroupId;
-        public string Phase;
+        public string ChannelName;
+        public bool Active = true;
         public string EnemyPrefabName;
-        public float GenerateDuration;
-        public int KeepSeconds;
+        public string Phase;
+        public float StartTimeSec;
+        public float EndTimeSec = -1f;
+        public float SpawnIntervalSec = 1f;
         public int SpawnCount = 0;
-        public float HPScale;
-        public float SpeedScale;
-        public float DamageScale;
-        // 刷新结束后最大等待时间（秒）：用于混合波次，避免清完小怪后还要等待未刷出的Boss
-        public float MaxWaitAfterSpawnSeconds = 3f;
+        public float HPScale = 1f;
+        public float SpeedScale = 1f;
+        public float DamageScale = 1f;
         public float BaseSpeed = 2f;
         public bool IsTreasureChest = false;
         public float ExpDropRate = 0.3f;
@@ -39,24 +34,24 @@ namespace VampireSurvivorLike
     }
 
     /// <summary>
-    /// 敌人波次 CSV 配置加载器
+    /// 时间轴频道 CSV 配置加载器
     /// 支持从 StreamingAssets 读取 CSV 文件
     /// </summary>
-    public static class EnemyWaveConfigLoader
+    public static class SpawnChannelConfigLoader
     {
         private const string CONFIG_FILE_NAME = "Config/EnemyWaveConfig.csv";
-        
+
         /// <summary>
         /// 同步加载配置（仅支持非 WebGL 平台）
         /// </summary>
-        public static List<EnemyWaveConfigRow> LoadSync()
+        public static List<SpawnChannelConfigRow> LoadSync()
         {
             var path = Path.Combine(Application.streamingAssetsPath, CONFIG_FILE_NAME);
-            
+
             if (!File.Exists(path))
             {
-                Debug.LogError($"[EnemyWaveConfigLoader] 配置文件不存在: {path}");
-                return new List<EnemyWaveConfigRow>();
+                Debug.LogError($"[SpawnChannelConfigLoader] 配置文件不存在: {path}");
+                return new List<SpawnChannelConfigRow>();
             }
 
             var csvContent = File.ReadAllText(path, Encoding.UTF8);
@@ -66,18 +61,18 @@ namespace VampireSurvivorLike
         /// <summary>
         /// 异步加载配置（支持所有平台，包括 WebGL）
         /// </summary>
-        public static IEnumerator LoadAsync(Action<List<EnemyWaveConfigRow>> onComplete)
+        public static IEnumerator LoadAsync(Action<List<SpawnChannelConfigRow>> onComplete)
         {
             var path = Path.Combine(Application.streamingAssetsPath, CONFIG_FILE_NAME);
-            
+
             using (var request = UnityWebRequest.Get(path))
             {
                 yield return request.SendWebRequest();
 
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    Debug.LogError($"[EnemyWaveConfigLoader] 加载配置失败: {request.error}");
-                    onComplete?.Invoke(new List<EnemyWaveConfigRow>());
+                    Debug.LogError($"[SpawnChannelConfigLoader] 加载配置失败: {request.error}");
+                    onComplete?.Invoke(new List<SpawnChannelConfigRow>());
                     yield break;
                 }
 
@@ -90,9 +85,9 @@ namespace VampireSurvivorLike
         /// <summary>
         /// 解析 CSV 内容
         /// </summary>
-        private static List<EnemyWaveConfigRow> ParseCSV(string csvContent)
+        private static List<SpawnChannelConfigRow> ParseCSV(string csvContent)
         {
-            var rows = new List<EnemyWaveConfigRow>();
+            var rows = new List<SpawnChannelConfigRow>();
             var lines = csvContent.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             // 跳过表头
@@ -102,53 +97,61 @@ namespace VampireSurvivorLike
                 if (string.IsNullOrEmpty(line)) continue;
 
                 var values = ParseCSVLine(line);
-                if (values.Length < 10)
+                if (values.Length < 6)
                 {
-                    Debug.LogWarning($"[EnemyWaveConfigLoader] 第 {i + 1} 行数据不完整，跳过");
+                    Debug.LogWarning($"[SpawnChannelConfigLoader] 第 {i + 1} 行数据不完整（至少需要6列），跳过");
                     continue;
                 }
 
                 try
                 {
-                    // CSV列顺序：
-                    // 0 GroupName, 1 GroupDescription, 2 WaveName, 3 Active, 4 EnemyPrefabName,
-                    // 5 GenerateDuration, 6 KeepSeconds, 7 HPScale, 8 SpeedScale, 9 DamageScale,
-                    // 10 MaxWaitAfterSpawnSeconds, 11 BaseSpeed, 12 IsTreasureChest,
-                    // 13 ExpDropRate, 14 CoinDropRate, 15 HpDropRate, 16 BombDropRate,
-                    // 17 AllowMixedWave, 18 MixedGroupId, 19 Phase, 20 SpawnCount
-                    var row = new EnemyWaveConfigRow
+                    // CSV列顺序（新时间轴格式）：
+                    // 0  ChannelName
+                    // 1  Active
+                    // 2  EnemyPrefabName
+                    // 3  Phase (small/boss)
+                    // 4  StartTimeSec
+                    // 5  EndTimeSec (-1 = 持续到游戏结束)
+                    // 6  SpawnIntervalSec
+                    // 7  SpawnCount (0 = 按时间持续刷)
+                    // 8  HPScale
+                    // 9  SpeedScale
+                    // 10 DamageScale
+                    // 11 BaseSpeed
+                    // 12 IsTreasureChest
+                    // 13 ExpDropRate
+                    // 14 CoinDropRate
+                    // 15 HpDropRate
+                    // 16 BombDropRate
+                    var row = new SpawnChannelConfigRow
                     {
-                        GroupName = values[0],
-                        GroupDescription = values[1],
-                        WaveName = values[2],
-                        Active = ParseBool(values[3]),
-                        EnemyPrefabName = values[4],
-                        GenerateDuration = float.Parse(values[5]),
-                        KeepSeconds = int.Parse(values[6]),
-                        HPScale = float.Parse(values[7]),
-                        SpeedScale = float.Parse(values[8]),
-                        DamageScale = float.Parse(values[9]),
-                        MaxWaitAfterSpawnSeconds = values.Length > 10 && !string.IsNullOrEmpty(values[10]) ? float.Parse(values[10]) : 3f,
+                        ChannelName = values[0],
+                        Active = ParseBool(values[1]),
+                        EnemyPrefabName = values[2],
+                        Phase = values[3],
+                        StartTimeSec = float.Parse(values[4]),
+                        EndTimeSec = float.Parse(values[5]),
+                        SpawnIntervalSec = values.Length > 6 && !string.IsNullOrEmpty(values[6]) ? float.Parse(values[6]) : 1f,
+                        SpawnCount = values.Length > 7 && !string.IsNullOrEmpty(values[7]) ? int.Parse(values[7]) : 0,
+                        HPScale = values.Length > 8 && !string.IsNullOrEmpty(values[8]) ? float.Parse(values[8]) : 1f,
+                        SpeedScale = values.Length > 9 && !string.IsNullOrEmpty(values[9]) ? float.Parse(values[9]) : 1f,
+                        DamageScale = values.Length > 10 && !string.IsNullOrEmpty(values[10]) ? float.Parse(values[10]) : 1f,
                         BaseSpeed = values.Length > 11 && !string.IsNullOrEmpty(values[11]) ? float.Parse(values[11]) : 2f,
                         IsTreasureChest = values.Length > 12 && !string.IsNullOrEmpty(values[12]) && ParseBool(values[12]),
                         ExpDropRate = values.Length > 13 && !string.IsNullOrEmpty(values[13]) ? float.Parse(values[13]) : 0.3f,
                         CoinDropRate = values.Length > 14 && !string.IsNullOrEmpty(values[14]) ? float.Parse(values[14]) : 0.3f,
                         HpDropRate = values.Length > 15 && !string.IsNullOrEmpty(values[15]) ? float.Parse(values[15]) : 0.1f,
-                        BombDropRate = values.Length > 16 && !string.IsNullOrEmpty(values[16]) ? float.Parse(values[16]) : 0.05f,
-                        AllowMixedWave = values.Length > 17 && !string.IsNullOrEmpty(values[17]) ? ParseBool(values[17]) : true,
-                        MixedGroupId = values.Length > 18 ? values[18] : null,
-                        Phase = values.Length > 19 ? values[19] : null,
-                        SpawnCount = values.Length > 20 && !string.IsNullOrEmpty(values[20]) ? int.Parse(values[20]) : 0
+                        BombDropRate = values.Length > 16 && !string.IsNullOrEmpty(values[16]) ? float.Parse(values[16]) : 0.05f
                     };
                     rows.Add(row);
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning($"[EnemyWaveConfigLoader] 第 {i + 1} 行解析失败: {ex.Message}");
+                    Debug.LogWarning($"[SpawnChannelConfigLoader] 第 {i + 1} 行解析失败: {ex.Message}");
                 }
             }
 
-            Debug.Log($"[EnemyWaveConfigLoader] 成功加载 {rows.Count} 条波次配置");
+            Debug.Log($"[SpawnChannelConfigLoader] 成功加载 {rows.Count} 条频道配置");
             return rows;
         }
 
@@ -191,25 +194,6 @@ namespace VampireSurvivorLike
         {
             value = value.ToUpper().Trim();
             return value == "TRUE" || value == "1" || value == "YES";
-        }
-
-        /// <summary>
-        /// 将配置行转换为按组分类的字典
-        /// </summary>
-        public static Dictionary<string, List<EnemyWaveConfigRow>> GroupByName(List<EnemyWaveConfigRow> rows)
-        {
-            var groups = new Dictionary<string, List<EnemyWaveConfigRow>>();
-
-            foreach (var row in rows)
-            {
-                if (!groups.ContainsKey(row.GroupName))
-                {
-                    groups[row.GroupName] = new List<EnemyWaveConfigRow>();
-                }
-                groups[row.GroupName].Add(row);
-            }
-
-            return groups;
         }
     }
 }

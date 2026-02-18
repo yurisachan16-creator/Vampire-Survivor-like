@@ -62,45 +62,45 @@ namespace VampireSurvivorLike
 				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", Mathf.Max(0, EnemyCount));
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			// 波次信息显示
-			EnemyGenerator.CurrentWaveIndex.RegisterWithInitValue(_ =>
+			// 时间轴频道信息显示（替代旧波次显示）
+			EnemyGenerator.ActiveChannelCount.RegisterWithInitValue(_ =>
 			{
 				if (!IsGameTableReady()) return;
-				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentMinute.Value, EnemyGenerator.TotalWaveCount.Value);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			EnemyGenerator.TotalWaveCount.RegisterWithInitValue(_ =>
+			EnemyGenerator.CurrentMinute.RegisterWithInitValue(_ =>
 			{
 				if (!IsGameTableReady()) return;
-				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentMinute.Value, EnemyGenerator.TotalWaveCount.Value);
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			// 波次剩余时间显示
-			EnemyGenerator.WaveRemainingTime.RegisterWithInitValue(_ =>
+			// 剩余时间与活跃频道显示
+			EnemyGenerator.GameRemainingTime.RegisterWithInitValue(_ =>
 			{
 				if (!IsGameTableReady()) return;
-				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				if (string.IsNullOrEmpty(EnemyGenerator.ActiveChannelNames.Value))
 				{
 					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
 				}
 				else
 				{
-					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
-					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
+					var remaining = Mathf.CeilToInt(EnemyGenerator.GameRemainingTime.Value);
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.ActiveChannelNames.Value, remaining);
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			EnemyGenerator.CurrentWaveName.RegisterWithInitValue(_ =>
+			EnemyGenerator.ActiveChannelNames.RegisterWithInitValue(_ =>
 			{
 				if (!IsGameTableReady()) return;
-				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				if (string.IsNullOrEmpty(EnemyGenerator.ActiveChannelNames.Value))
 				{
 					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
 				}
 				else
 				{
-					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
-					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
+					var remaining = Mathf.CeilToInt(EnemyGenerator.GameRemainingTime.Value);
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.ActiveChannelNames.Value, remaining);
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -212,15 +212,15 @@ namespace VampireSurvivorLike
 				if (!LocalizationManager.TryGet("game.ui.level", out _)) return;
 
 				EnemyCountText.text = LocalizationManager.Format("game.ui.enemy_count", Mathf.Max(0, EnemyGenerator.EnemyCount.Value));
-				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentWaveIndex.Value, EnemyGenerator.TotalWaveCount.Value);
-				if (string.IsNullOrEmpty(EnemyGenerator.CurrentWaveName.Value))
+				EnemyWaveCountText.text = LocalizationManager.Format("game.ui.wave", EnemyGenerator.CurrentMinute.Value, EnemyGenerator.TotalWaveCount.Value);
+				if (string.IsNullOrEmpty(EnemyGenerator.ActiveChannelNames.Value))
 				{
 					EnemyCountNextTimeText.text = LocalizationManager.T("game.ui.wait_next_wave");
 				}
 				else
 				{
-					var remaining = Mathf.CeilToInt(EnemyGenerator.WaveRemainingTime.Value);
-					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.CurrentWaveName.Value, remaining);
+					var remaining = Mathf.CeilToInt(EnemyGenerator.GameRemainingTime.Value);
+					EnemyCountNextTimeText.text = LocalizationManager.Format("game.ui.wave_remaining", EnemyGenerator.ActiveChannelNames.Value, remaining);
 				}
 
 				var secondsInt = Mathf.FloorToInt(Global.CurrentSeconds.Value);

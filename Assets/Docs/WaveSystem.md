@@ -1,60 +1,87 @@
-# 波次系统（现状）配置表与调用链
+# 时间轴刷怪系统（v2.0 — 模仿吸血鬼幸存者）
 
 相关文档：
-- 配置字段与使用指南：`Docs/GameConfig-Guide.md`
-- v0.10 版本线回溯（本分支整理）：`Docs/Changelog-v0.10.md`
+- 配置使用指南：`Docs/EnemyWaveConfig-Guide.md`
+- 难度公式常量：`Assets/Scripts/Config/Config.cs`
+
+## 核心概念
+
+从「顺序波次制」重构为「**时间轴驱动制**」：
+
+- **无需清波**：敌人刷新完全由游戏时钟 (`Global.CurrentSeconds`) 驱动
+- **多频道并行**：不同敌人类型在各自的时间窗口内同时活跃
+- **难度自动递增**：HP/速度/伤害/刷新频率随时间持续增长
+- **30 分钟**一局，到时出现死神
 
 ## 配置数据源
 
 - 主配置：`Assets/StreamingAssets/Config/EnemyWaveConfig.csv`
-- 解析：`EnemyWaveConfigLoader.ParseCSV()` → `EnemyWaveConfigRow`
-- 转换：`EnemyWave.FromConfigRow(row)`（定义在 `LevelConfig.cs`）
-- 生成：`EnemyGenerator.Start()` → `LoadFromCSVAsync()` → `EnemyGenerator.Update()`
+- 解析：`SpawnChannelConfigLoader.ParseCSV()` → `SpawnChannelConfigRow`
+- 控制器：`TimelineController`（纯 C#）
+- 生成：`EnemyGenerator.Start()` → `LoadFromCSVAsync()` → `Update()`
 
-## CSV 列定义（现状）
+## CSV 列定义
 
-| 列名 | 含义 | 旧列兼容 |
+| 列名 | 含义 | 默认值 |
 |---|---|---|
-| GroupName | 波次组名（用于把多行配置归为同一“波次组”） | 必填 |
-| GroupDescription | 波次组描述 | 可空 |
-| WaveName | 当前行的显示名 | 必填 |
-| Active | 是否启用 | 必填 |
-| EnemyPrefabName | 预制体 Key（由 EnemyPrefabMapping 映射到 Prefab） | 必填 |
-| GenerateDuration | 刷新间隔（秒）：每隔多少秒生成 1 个敌人 | 必填 |
-| KeepSeconds | 刷新持续时间（秒）：持续生成多久，超过后不再生成新敌人 | 必填 |
-| HPScale / SpeedScale / DamageScale | 数值倍率 | 必填 |
-| MaxWaitAfterSpawnSeconds | 刷新结束后最大等待时间（秒） | 新列（缺省按默认值） |
-| BaseSpeed | 敌人基础速度 | 旧列 |
-| IsTreasureChest | 是否掉宝箱（仅 Boss/特定怪有意义） | 旧列 |
-| ExpDropRate / CoinDropRate / HpDropRate / BombDropRate | 掉落概率 | 旧列 |
+| ChannelName | 频道名称（UI 显示用） | — |
+| Active | 是否启用 | — |
+| EnemyPrefabName | 预制体 Key | — |
+| Phase | small / boss | 自动推断 |
+| StartTimeSec | 激活时间（游戏秒） | — |
+| EndTimeSec | 结束时间（-1 = 不结束） | — |
+| SpawnIntervalSec | 刷新间隔（受难度缩放） | 1.0 |
+| SpawnCount | 总数量限制（0 = 无限） | 0 |
+| HPScale / SpeedScale / DamageScale | 基础倍率 | 1.0 |
+| BaseSpeed | 基础移动速度 | 2.0 |
+| IsTreasureChest | 掉宝箱 | FALSE |
+| ExpDropRate / CoinDropRate / HpDropRate / BombDropRate | 掉落概率 | 0.3/0.3/0.1/0.05 |
 
-## “波次组”与“行配置”的关系
+## 难度递增公式
 
-- **一个 GroupName 表示一个“波次组”**（例如“第一波幽灵”），组内可能有多行配置，代表不同怪物种类/段落。
-- 旧实现的生成逻辑是“按行逐个入队”，组内的每一行都被当成独立波次处理，因此会出现：小怪先刷完但 Boss 行还在后面（间隔很大）→ 玩家清空场景后仍要等待 Boss 行开始，体验上像“切波失效”。  
+| 属性 | 公式 | 常量 |
+|---|---|---|
+| HP | `HPScale × (1 + 0.25 × t)` | `HPGrowthPerMinute` |
+| Speed | `SpeedScale × (1 + 0.05 × t)` | `SpeedGrowthPerMinute` |
+| Damage | `DamageScale × (1 + 0.15 × t)` | `DamageGrowthPerMinute` |
+| 刷新间隔 | `SpawnIntervalSec / (1 + 0.1 × t)` | `SpawnRateGrowthPerMinute` |
 
-## 生成脚本调用链（现状）
+其中 `t` 为游戏经过的分钟数。
+
+## 调用链
 
 ```mermaid
 flowchart TD
-    A[Game.unity 场景启动] --> B[EnemyGenerator.Start()]
-    B --> C{UseCSVConfig?}
-    C -- yes --> D[LoadFromCSVAsync()]
-    D --> E[EnemyWaveConfigLoader.LoadAsync()]
-    E --> F[ParseCSV -> EnemyWaveConfigRow 列表]
-    F --> G[EnemyWave.FromConfigRow(row)]
-    G --> H[Enqueue 到 _mEnemyWaveQueue]
-    C -- no --> I[LoadFromScriptableObject()]
-    B --> J[Update()]
-    J --> K{_mCurrentWave == null?}
-    K -- yes --> L[Dequeue 作为当前行波次]
-    L --> M[按 GenerateDuration 刷新]
-    M --> N[达到 KeepSeconds 停止刷新]
-    N --> O[按清怪/超时切波]
+    A[Game.unity] --> B[EnemyGenerator.Start]
+    B --> C[LoadFromCSVAsync]
+    C --> D[SpawnChannelConfigLoader.LoadAsync]
+    D --> E[ParseCSV → SpawnChannelConfigRow]
+    E --> F[构建 SpawnChannel 列表]
+    F --> G[TimelineController.Load]
+    B --> H[Update 每帧]
+    H --> I[TimelineController.Tick]
+    I --> J[遍历所有频道]
+    J --> K{时间窗口内?}
+    K -- yes --> L[按缩放间隔 TrySpawn]
+    K -- no --> M[跳过]
+    H --> N{30分钟到?}
+    N -- yes --> O[SpawnReaper]
 ```
 
-## 关键切波点（现状）
+## 死神机制
 
-- 刷新阶段：持续到 `KeepSeconds` 或被“提前切波”逻辑打断。
-- 提前切波（当前已增强）：当场景内 `Enemy` 与 `EnemyMiniBoss` 均为 0 时，会触发切波。
-- 刷新结束后的最大等待：`MaxWaitAfterSpawnSeconds` 用于限制“刷新结束后仍未清怪”的拖波时间上限。
+- 触发时间：`Config.ReaperSpawnTimeSeconds`（1800s）
+- 预制体：`Enemy_Reaper`
+- 属性：HP=99999, Damage=999, Speed=5
+- 仅生成一次
+
+## UI 映射
+
+| 属性 | 来源 | 描述 |
+|---|---|---|
+| `CurrentMinute` | `TimelineController.Tick` | 当前分钟数 |
+| `ActiveChannelNames` | `TimelineController.Tick` | 当前活跃频道名（逗号分隔） |
+| `GameRemainingTime` | `TimelineController.Tick` | 距 30 分钟结束剩余秒数 |
+| `ActiveChannelCount` | `TimelineController.Tick` | 当前活跃频道数 |
+
+向后兼容别名：`CurrentWaveIndex` → `CurrentMinute`，`CurrentWaveName` → `ActiveChannelNames`，`WaveRemainingTime` → `GameRemainingTime`

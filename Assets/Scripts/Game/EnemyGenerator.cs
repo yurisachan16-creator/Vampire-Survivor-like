@@ -1,50 +1,56 @@
 using UnityEngine;
 using QFramework;
-using Unity.Mathematics;
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using System.Linq;
 
 namespace VampireSurvivorLike
 {
+	// ═══════════════════════════════════════════════════════════════
+	// 时间轴驱动波次系统 —— 模仿吸血鬼幸存者
+	// 所有频道由游戏时钟驱动，多种敌人可同时活跃，无需清波
+	// ═══════════════════════════════════════════════════════════════
+
 	public enum WaveSpawnPhase
 	{
 		Small = 0,
 		Boss = 1
 	}
 
-	public enum MixedWaveStrategy
-	{
-		SeparateBossWave = 0,
-		SeamlessBossAfterSmall = 1
-	}
-
+	/// <summary>
+	/// 刷怪频道定义：描述一种敌人在某个时间窗口内的刷新规则
+	/// </summary>
 	[Serializable]
-	public class WaveSegmentDefinition
+	public class SpawnChannel
 	{
-		public string DisplayName;
-		public WaveSpawnPhase Phase;
+		public string ChannelName;
+		public string EnemyPrefabName;
+
+		[NonSerialized]
 		public GameObject Prefab;
 
-		[Tooltip("刷新间隔（秒）：每隔多少秒生成 1 个该段落的敌人")]
-		public float SpawnIntervalSeconds = 1f;
+		public WaveSpawnPhase Phase = WaveSpawnPhase.Small;
 
-		[Tooltip("刷新持续时间（秒）：持续生成多久，超过后该段落不再生成新敌人")]
-		public float SpawnDurationSeconds = 10f;
+		[Tooltip("频道激活时间（游戏秒）")]
+		public float StartTimeSec = 0f;
 
-		[Tooltip("刷新数量上限（可选）：>0 时按数量刷新并忽略 SpawnDurationSeconds")]
+		[Tooltip("频道结束时间（游戏秒），-1 表示持续到游戏结束")]
+		public float EndTimeSec = 120f;
+
+		[Tooltip("刷新间隔（秒）：每隔多少秒生成 1 个敌人（受难度公式缩放）")]
+		public float SpawnIntervalSec = 1f;
+
+		[Tooltip("刷新数量上限（可选）：>0 时总共只刷这么多个，达到后频道关闭")]
 		public int SpawnCount = 0;
 
-		[Tooltip("该段落刷新结束后的最大等待时间（秒）：避免拖波/干等")]
-		public float MaxWaitAfterSpawnSeconds = 3f;
-
-		[Header("数值与掉落（来自配置）")]
+		[Header("基础数值（受时间难度公式缩放）")]
 		public float HPScale = 1f;
 		public float SpeedScale = 1f;
 		public float DamageScale = 1f;
 		public float BaseSpeed = 2f;
+
+		[Header("掉落配置")]
 		public bool IsTreasureChest = false;
 		public float ExpDropRate = 0.3f;
 		public float CoinDropRate = 0.3f;
@@ -52,32 +58,59 @@ namespace VampireSurvivorLike
 		public float BombDropRate = 0.05f;
 	}
 
-	[Serializable]
-	public class WaveGroupDefinition
+	/// <summary>
+	/// 频道运行时状态
+	/// </summary>
+	public sealed class SpawnChannelRuntime
 	{
-		public string GroupName;
-		public string GroupDescription;
+		public SpawnChannel Definition;
+		public float SpawnTimer;
+		public int SpawnedCount;
 
-		[Tooltip("是否允许将本组作为混合波处理（可被全局开关覆写）")]
-		public bool AllowMixedWave = true;
+		public bool IsActive(float gameTime)
+		{
+			if (gameTime < Definition.StartTimeSec) return false;
+			if (Definition.EndTimeSec >= 0 && gameTime >= Definition.EndTimeSec) return false;
+			if (Definition.SpawnCount > 0 && SpawnedCount >= Definition.SpawnCount) return false;
+			return true;
+		}
 
-		public List<WaveSegmentDefinition> Segments = new List<WaveSegmentDefinition>();
+		public bool IsExhausted(float gameTime)
+		{
+			if (Definition.SpawnCount > 0 && SpawnedCount >= Definition.SpawnCount) return true;
+			if (Definition.EndTimeSec >= 0 && gameTime >= Definition.EndTimeSec) return true;
+			return false;
+		}
 	}
 
+	/// <summary>
+	/// 刷怪请求结构体（传递给 IWaveWorld.TrySpawn）
+	/// </summary>
 	public readonly struct WaveSpawnRequest
 	{
 		public readonly WaveSpawnPhase Phase;
 		public readonly GameObject Prefab;
-		public readonly WaveSegmentDefinition Segment;
+		public readonly SpawnChannel Channel;
+		/// <summary>经过难度公式缩放后的实际属性</summary>
+		public readonly float EffectiveHPScale;
+		public readonly float EffectiveSpeedScale;
+		public readonly float EffectiveDamageScale;
 
-		public WaveSpawnRequest(WaveSpawnPhase phase, GameObject prefab, WaveSegmentDefinition segment)
+		public WaveSpawnRequest(WaveSpawnPhase phase, GameObject prefab, SpawnChannel channel,
+			float effectiveHP, float effectiveSpeed, float effectiveDamage)
 		{
 			Phase = phase;
 			Prefab = prefab;
-			Segment = segment;
+			Channel = channel;
+			EffectiveHPScale = effectiveHP;
+			EffectiveSpeedScale = effectiveSpeed;
+			EffectiveDamageScale = effectiveDamage;
 		}
 	}
 
+	/// <summary>
+	/// 世界接口：EnemyGenerator 实现此接口，TimelineController 通过它执行刷怪
+	/// </summary>
 	public interface IWaveWorld
 	{
 		int SmallAliveCount { get; }
@@ -86,512 +119,185 @@ namespace VampireSurvivorLike
 		bool TrySpawn(in WaveSpawnRequest request);
 	}
 
-	public enum WaveControllerState
+	/// <summary>
+	/// 时间轴控制器：纯 C# 类，无 MonoBehaviour 依赖。
+	/// 根据游戏时钟同时驱动多个刷怪频道，应用难度递增公式。
+	/// </summary>
+	public sealed class TimelineController
 	{
-		Waiting = 0,
-		SpawningSmall = 1,
-		SpawningBoss = 2,
-		Completed = 3
-	}
+		private List<SpawnChannelRuntime> _channels = new List<SpawnChannelRuntime>();
 
-	public sealed class WaveController
-	{
-		private sealed class SegmentRuntime
-		{
-			public WaveSegmentDefinition Definition;
-			public float SegmentTimer;
-			public float SpawnTimer;
-			public int SpawnedCount;
-			public bool Finished;
-		}
+		/// <summary>当前活跃的频道名称（供 UI 显示）</summary>
+		public string ActiveChannelNames { get; private set; } = string.Empty;
 
-		private sealed class GroupRuntime
-		{
-			public WaveGroupDefinition Definition;
-			public List<SegmentRuntime> SmallSegments = new List<SegmentRuntime>();
-			public List<SegmentRuntime> BossSegments = new List<SegmentRuntime>();
+		/// <summary>活跃频道数量</summary>
+		public int ActiveChannelCount { get; private set; }
 
-			public float MaxWaitAfterSpawnSeconds;
-			public bool BossSpawnSubmitted;
-			public bool AllSmallSpawningFinished;
-			public bool AllBossSpawningFinished;
-			public float PostSpawnTimer;
-			public float EmptySceneTimer;
-		}
+		/// <summary>总频道数</summary>
+		public int TotalChannelCount => _channels.Count;
 
-		public bool AllowMixedWave = true;
-		public MixedWaveStrategy MixedStrategy = MixedWaveStrategy.SeamlessBossAfterSmall;
-		public float EmptySceneBossTriggerSeconds = 0.5f;
-		public float EmptySceneCheckIntervalSeconds = 0.1f;
-
-		private readonly Queue<GroupRuntime> _queue = new Queue<GroupRuntime>();
-		private GroupRuntime _current;
-		private float _emptyCheckTimer;
-
-		public WaveControllerState State { get; private set; } = WaveControllerState.Waiting;
-		public int CurrentWaveIndex { get; private set; }
-		public int TotalWaveCount { get; private set; }
+		/// <summary>到游戏结束的剩余秒数</summary>
 		public float RemainingSeconds { get; private set; }
-		public string CurrentWaveName => _current == null ? string.Empty : GetDisplayName(_current);
 
-		public void Load(IReadOnlyList<WaveGroupDefinition> groups)
+		/// <summary>当前游戏分钟数（整数）</summary>
+		public int CurrentMinute { get; private set; }
+
+		/// <summary>所有频道是否都已耗尽且游戏时间到</summary>
+		public bool IsTimelineComplete(float gameTime)
 		{
-			_queue.Clear();
-			_current = null;
-			State = WaveControllerState.Waiting;
-			CurrentWaveIndex = 0;
-			TotalWaveCount = 0;
-			RemainingSeconds = 0;
-			_emptyCheckTimer = 0;
-
-			if (groups == null) return;
-
-			var normalized = NormalizeGroups(groups);
-			TotalWaveCount = normalized.Count;
-			foreach (var g in normalized)
-			{
-				_queue.Enqueue(BuildRuntime(g));
-			}
+			if (gameTime < Config.MaxGameSeconds) return false;
+			return _channels.All(ch => ch.IsExhausted(gameTime));
 		}
 
-		public void Tick(float deltaTime, IWaveWorld world)
+		public void Load(IReadOnlyList<SpawnChannel> channels)
 		{
-			if (world == null) return;
+			_channels.Clear();
+			ActiveChannelNames = string.Empty;
+			ActiveChannelCount = 0;
 
-			RemainingSeconds = 0;
+			if (channels == null) return;
 
-			if (_current == null)
+			foreach (var ch in channels)
 			{
-				TryStartNextWave();
+				if (ch == null || ch.Prefab == null) continue;
+				_channels.Add(new SpawnChannelRuntime { Definition = ch });
 			}
 
-			if (_current == null)
-			{
-				State = WaveControllerState.Waiting;
-				return;
-			}
-
-			switch (State)
-			{
-				case WaveControllerState.SpawningSmall:
-					TickSpawningSmall(deltaTime, world);
-					break;
-				case WaveControllerState.SpawningBoss:
-					TickSpawningBoss(deltaTime, world);
-					break;
-				case WaveControllerState.Completed:
-					TickCompleted(deltaTime, world);
-					break;
-				default:
-					State = WaveControllerState.Waiting;
-					break;
-			}
+			Debug.Log($"[TimelineController] 加载 {_channels.Count} 个刷怪频道");
 		}
 
-		private void TickSpawningSmall(float dt, IWaveWorld world)
+		public void Tick(float gameTime, float deltaTime, IWaveWorld world)
 		{
-			TickSegments(dt, world, _current.SmallSegments);
+			if (world == null || _channels.Count == 0) return;
 
-			var hasBoss = _current.BossSegments.Count > 0;
-			var isMixed = _current.SmallSegments.Count > 0 && _current.BossSegments.Count > 0;
-			var mixedAllowed = AllowMixedWave && _current.Definition.AllowMixedWave && isMixed;
+			CurrentMinute = Mathf.FloorToInt(gameTime / 60f);
+			RemainingSeconds = Mathf.Max(0f, Config.MaxGameSeconds - gameTime);
 
-			if (mixedAllowed && MixedStrategy == MixedWaveStrategy.SeamlessBossAfterSmall && hasBoss && !_current.BossSpawnSubmitted)
+			// 难度倍率（基于游戏分钟数）
+			var minutes = gameTime / 60f;
+			var hpMul = 1f + Config.HPGrowthPerMinute * minutes;
+			var speedMul = 1f + Config.SpeedGrowthPerMinute * minutes;
+			var damageMul = 1f + Config.DamageGrowthPerMinute * minutes;
+			var spawnRateMul = 1f + Config.SpawnRateGrowthPerMinute * minutes;
+
+			var activeNames = new List<string>();
+
+			foreach (var ch in _channels)
 			{
-				TickEmptySceneBossTrigger(dt, world);
-				if (_current.EmptySceneTimer >= EmptySceneBossTriggerSeconds)
+				if (!ch.IsActive(gameTime)) continue;
+
+				activeNames.Add(ch.Definition.ChannelName);
+
+				// 计算经过难度缩放后的刷新间隔
+				var effectiveInterval = ch.Definition.SpawnIntervalSec / spawnRateMul;
+				effectiveInterval = Mathf.Max(0.05f, effectiveInterval); // 最快 20/秒
+
+				ch.SpawnTimer += deltaTime;
+
+				if (ch.SpawnTimer >= effectiveInterval)
 				{
-					_current.AllSmallSpawningFinished = true;
-				}
-			}
+					ch.SpawnTimer -= effectiveInterval;
 
-			_current.AllSmallSpawningFinished = _current.AllSmallSpawningFinished || _current.SmallSegments.All(s => s.Finished);
+					// 计算缩放后属性
+					var effHP = ch.Definition.HPScale * hpMul;
+					var effSpeed = ch.Definition.SpeedScale * speedMul;
+					var effDamage = ch.Definition.DamageScale * damageMul;
 
-			if (mixedAllowed && MixedStrategy == MixedWaveStrategy.SeamlessBossAfterSmall && hasBoss && _current.AllSmallSpawningFinished)
-			{
-				State = WaveControllerState.SpawningBoss;
-				return;
-			}
+					var request = new WaveSpawnRequest(
+						ch.Definition.Phase,
+						ch.Definition.Prefab,
+						ch.Definition,
+						effHP, effSpeed, effDamage
+					);
 
-			if (!hasBoss && _current.AllSmallSpawningFinished)
-			{
-				State = WaveControllerState.Completed;
-				_current.PostSpawnTimer = 0;
-				return;
-			}
-
-			RemainingSeconds = GetSpawningRemainingSeconds(_current.SmallSegments);
-		}
-
-		private void TickSpawningBoss(float dt, IWaveWorld world)
-		{
-			_current.BossSpawnSubmitted = true;
-
-			foreach (var boss in _current.BossSegments)
-			{
-				SubmitBossSpawn(world, boss);
-			}
-
-			_current.AllBossSpawningFinished = _current.BossSegments.All(s => s.Finished);
-
-			if (_current.AllBossSpawningFinished)
-			{
-				State = WaveControllerState.Completed;
-				_current.PostSpawnTimer = 0;
-			}
-		}
-
-		private void TickCompleted(float dt, IWaveWorld world)
-		{
-			if (!world.HasAnyAliveEnemies)
-			{
-				EndWaveAndAdvance();
-				return;
-			}
-
-			if (_current.MaxWaitAfterSpawnSeconds > 0f)
-			{
-				_current.PostSpawnTimer += dt;
-				RemainingSeconds = Mathf.Max(0f, _current.MaxWaitAfterSpawnSeconds - _current.PostSpawnTimer);
-				if (_current.PostSpawnTimer >= _current.MaxWaitAfterSpawnSeconds)
-				{
-					EndWaveAndAdvance();
-				}
-			}
-		}
-
-		private void TickSegments(float dt, IWaveWorld world, List<SegmentRuntime> segments)
-		{
-			foreach (var seg in segments)
-			{
-				if (seg.Finished) continue;
-
-				if (seg.Definition.SpawnCount > 0 && seg.SpawnedCount >= seg.Definition.SpawnCount)
-				{
-					seg.Finished = true;
-					continue;
-				}
-
-				if (seg.Definition.SpawnCount <= 0)
-				{
-					seg.SegmentTimer += dt;
-					if (seg.SegmentTimer >= seg.Definition.SpawnDurationSeconds)
+					if (world.TrySpawn(request))
 					{
-						seg.Finished = true;
-						continue;
-					}
-				}
-
-				seg.SpawnTimer += dt;
-				if (seg.SpawnTimer >= Mathf.Max(0.01f, seg.Definition.SpawnIntervalSeconds))
-				{
-					seg.SpawnTimer = 0;
-					if (world.TrySpawn(new WaveSpawnRequest(seg.Definition.Phase, seg.Definition.Prefab, seg.Definition)))
-					{
-						seg.SpawnedCount++;
+						ch.SpawnedCount++;
 					}
 				}
 			}
-		}
 
-		private void TickEmptySceneBossTrigger(float dt, IWaveWorld world)
-		{
-			_emptyCheckTimer += dt;
-			var checkInterval = Mathf.Max(0.02f, EmptySceneCheckIntervalSeconds);
-			if (_emptyCheckTimer < checkInterval) return;
-			var elapsed = _emptyCheckTimer;
-			_emptyCheckTimer = 0;
-
-			if (world.SmallAliveCount == 0 && world.BossAliveCount == 0)
-			{
-				_current.EmptySceneTimer += elapsed;
-			}
-			else
-			{
-				_current.EmptySceneTimer = 0;
-			}
-		}
-
-		private void SubmitBossSpawn(IWaveWorld world, SegmentRuntime boss)
-		{
-			if (boss.Finished) return;
-
-			var targetCount = boss.Definition.SpawnCount > 0 ? boss.Definition.SpawnCount : 1;
-			while (boss.SpawnedCount < targetCount)
-			{
-				if (world.TrySpawn(new WaveSpawnRequest(WaveSpawnPhase.Boss, boss.Definition.Prefab, boss.Definition)))
-				{
-					boss.SpawnedCount++;
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			boss.Finished = boss.SpawnedCount >= targetCount;
-		}
-
-		private void TryStartNextWave()
-		{
-			if (_queue.Count == 0) return;
-			_current = _queue.Dequeue();
-			CurrentWaveIndex++;
-			State = _current.SmallSegments.Count > 0 ? WaveControllerState.SpawningSmall : WaveControllerState.SpawningBoss;
-		}
-
-		private void EndWaveAndAdvance()
-		{
-			_current = null;
-			State = WaveControllerState.Waiting;
-			RemainingSeconds = 0;
-			_emptyCheckTimer = 0;
-		}
-
-		private static float GetSpawningRemainingSeconds(List<SegmentRuntime> segments)
-		{
-			var seg = segments.FirstOrDefault(s => !s.Finished);
-			if (seg == null) return 0;
-			if (seg.Definition.SpawnCount > 0) return 0;
-			return Mathf.Max(0f, seg.Definition.SpawnDurationSeconds - seg.SegmentTimer);
-		}
-
-		private static string GetDisplayName(GroupRuntime g)
-		{
-			var seg = g.SmallSegments.FirstOrDefault(s => !s.Finished) ?? g.BossSegments.FirstOrDefault(s => !s.Finished);
-			return seg?.Definition.DisplayName ?? g.Definition.GroupName ?? string.Empty;
-		}
-
-		private List<WaveGroupDefinition> NormalizeGroups(IReadOnlyList<WaveGroupDefinition> groups)
-		{
-			var result = new List<WaveGroupDefinition>();
-
-			foreach (var g in groups)
-			{
-				if (g == null) continue;
-				var hasSmall = g.Segments.Any(s => s != null && s.Phase == WaveSpawnPhase.Small);
-				var hasBoss = g.Segments.Any(s => s != null && s.Phase == WaveSpawnPhase.Boss);
-				var isMixed = hasSmall && hasBoss;
-				var mixedAllowed = AllowMixedWave && g.AllowMixedWave && isMixed;
-
-				if (mixedAllowed && MixedStrategy == MixedWaveStrategy.SeparateBossWave)
-				{
-					var smallGroup = new WaveGroupDefinition
-					{
-						GroupName = g.GroupName,
-						GroupDescription = g.GroupDescription,
-						AllowMixedWave = g.AllowMixedWave,
-						Segments = g.Segments.Where(s => s != null && s.Phase == WaveSpawnPhase.Small).ToList()
-					};
-					if (smallGroup.Segments.Count > 0) result.Add(smallGroup);
-
-					var bossGroup = new WaveGroupDefinition
-					{
-						GroupName = g.GroupName,
-						GroupDescription = g.GroupDescription,
-						AllowMixedWave = g.AllowMixedWave,
-						Segments = g.Segments.Where(s => s != null && s.Phase == WaveSpawnPhase.Boss).ToList()
-					};
-					if (bossGroup.Segments.Count > 0) result.Add(bossGroup);
-				}
-				else if (isMixed && !mixedAllowed)
-				{
-					var legacyGroup = new WaveGroupDefinition
-					{
-						GroupName = g.GroupName,
-						GroupDescription = g.GroupDescription,
-						AllowMixedWave = false,
-						Segments = g.Segments
-							.Where(s => s != null)
-							.Select(s => new WaveSegmentDefinition
-							{
-								DisplayName = s.DisplayName,
-								Phase = WaveSpawnPhase.Small,
-								Prefab = s.Prefab,
-								SpawnIntervalSeconds = s.SpawnIntervalSeconds,
-								SpawnDurationSeconds = s.SpawnDurationSeconds,
-								SpawnCount = s.SpawnCount,
-								MaxWaitAfterSpawnSeconds = s.MaxWaitAfterSpawnSeconds,
-								HPScale = s.HPScale,
-								SpeedScale = s.SpeedScale,
-								DamageScale = s.DamageScale,
-								BaseSpeed = s.BaseSpeed,
-								IsTreasureChest = s.IsTreasureChest,
-								ExpDropRate = s.ExpDropRate,
-								CoinDropRate = s.CoinDropRate,
-								HpDropRate = s.HpDropRate,
-								BombDropRate = s.BombDropRate
-							})
-							.ToList()
-					};
-
-					result.Add(legacyGroup);
-				}
-				else
-				{
-					result.Add(g);
-				}
-			}
-
-			return result;
-		}
-
-		private static GroupRuntime BuildRuntime(WaveGroupDefinition def)
-		{
-			var rt = new GroupRuntime { Definition = def };
-
-			foreach (var seg in def.Segments)
-			{
-				if (seg == null) continue;
-				var srt = new SegmentRuntime { Definition = seg };
-				if (seg.Phase == WaveSpawnPhase.Boss) rt.BossSegments.Add(srt);
-				else rt.SmallSegments.Add(srt);
-			}
-
-			var maxWait = 0f;
-			foreach (var s in def.Segments)
-			{
-				if (s == null) continue;
-				maxWait = Mathf.Max(maxWait, s.MaxWaitAfterSpawnSeconds);
-			}
-			rt.MaxWaitAfterSpawnSeconds = maxWait;
-
-			return rt;
+			ActiveChannelCount = activeNames.Count;
+			ActiveChannelNames = activeNames.Count > 0 ? string.Join(" + ", activeNames) : string.Empty;
 		}
 	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// EnemyGenerator MonoBehaviour
+	// ═══════════════════════════════════════════════════════════════
 
 	public partial class EnemyGenerator : ViewController, IWaveWorld
 	{
 		[SerializeField]
-		public LevelConfig Config;
-
-		[SerializeField]
 		[Tooltip("敌人预制体映射表，用于将CSV中的敌人名称映射到实际预制体")]
 		public EnemyPrefabMapping PrefabMapping;
-
-		[SerializeField]
-		[Tooltip("是否从CSV配置文件加载波次数据")]
-		public bool UseCSVConfig = false;
-
-		[Header("混合波策略")]
-		[Tooltip("是否允许混合波处理（向后兼容开关，可用于线上热更回退）")]
-		public bool AllowMixedWave = true;
-
-		[Tooltip("混合波策略：A 拆分 Boss 为独立波；B 小怪清空后立即刷 Boss")]
-		public MixedWaveStrategy MixedStrategy = MixedWaveStrategy.SeamlessBossAfterSmall;
-
-		[Tooltip("空场检测阈值（秒）：小怪归零且 Boss 未生成时，连续空场达到该时间则强制刷 Boss")]
-		public float EmptySceneBossTriggerSeconds = 0.5f;
-
-		[Tooltip("空场检测节流（秒）：避免每帧做重检查")]
-		public float EmptySceneCheckIntervalSeconds = 0.1f;
 
 		public static BindableProperty<int> EnemyCount = new BindableProperty<int>(0);
 		public static BindableProperty<int> SmallEnemyCount = new BindableProperty<int>(0);
 		public static BindableProperty<int> BossEnemyCount = new BindableProperty<int>(0);
-		/// <summary>
-		/// 当前波次编号（可绑定显示）
-		/// </summary>
-		public static BindableProperty<int> CurrentWaveIndex = new BindableProperty<int>(0);
-		/// <summary>
-		/// 总波次数（可绑定显示）
-		/// </summary>
-		public static BindableProperty<int> TotalWaveCount = new BindableProperty<int>(0);
-		/// <summary>
-		/// 当前波次名称
-		/// </summary>
-		public static BindableProperty<string> CurrentWaveName = new BindableProperty<string>("");
-		/// <summary>
-		/// 当前波次剩余时间（秒）
-		/// </summary>
-		public static BindableProperty<float> WaveRemainingTime = new BindableProperty<float>(0);
-		[SerializeField]
-		public List<EnemyWave> EnemyWaves = new List<EnemyWave>();	//敌人波次列表
 
-		public int WaveCount=0;
-		private int _mToatalCount=0;
+		/// <summary>当前游戏时间对应的分钟数</summary>
+		public static BindableProperty<int> CurrentMinute = new BindableProperty<int>(0);
+		/// <summary>当前活跃的刷怪频道名称</summary>
+		public static BindableProperty<string> ActiveChannelNames = new BindableProperty<string>("");
+		/// <summary>到游戏结束的剩余秒数</summary>
+		public static BindableProperty<float> GameRemainingTime = new BindableProperty<float>(0);
+		/// <summary>活跃频道数量</summary>
+		public static BindableProperty<int> ActiveChannelCount = new BindableProperty<int>(0);
+
+		// ── 向后兼容旧 UI 引用（映射到新语义）──
+		/// <summary>[兼容] 当前分钟数（旧 CurrentWaveIndex）</summary>
+		public static BindableProperty<int> CurrentWaveIndex => CurrentMinute;
+		/// <summary>[兼容] 总分钟数 30（旧 TotalWaveCount）</summary>
+		public static BindableProperty<int> TotalWaveCount = new BindableProperty<int>(30);
+		/// <summary>[兼容] 当前活跃频道名（旧 CurrentWaveName）</summary>
+		public static BindableProperty<string> CurrentWaveName => ActiveChannelNames;
+		/// <summary>[兼容] 剩余时间（旧 WaveRemainingTime）</summary>
+		public static BindableProperty<float> WaveRemainingTime => GameRemainingTime;
+
 		public bool IsInitialized => _isInitialized;
-		public bool IsLastWave=> _isInitialized && WaveCount==_mToatalCount && _mToatalCount > 0;
-		public bool IsAllWavesFinished => _isInitialized && _waveController != null && _waveController.State == WaveControllerState.Waiting && _waveController.CurrentWaveIndex >= _mToatalCount;
+		/// <summary>游戏时间是否已到达上限（30分钟）</summary>
+		public bool IsGameTimeUp => _isInitialized && Global.CurrentSeconds.Value >= Config.MaxGameSeconds;
+		/// <summary>[兼容] 所有波次是否完成 → 游戏时间到且所有频道耗尽</summary>
+		public bool IsAllWavesFinished => _isInitialized && _timeline != null && _timeline.IsTimelineComplete(Global.CurrentSeconds.Value);
 
 		private bool _isInitialized = false;
-		private WaveController _waveController;
+		private TimelineController _timeline;
+		private bool _reaperSpawned = false;
 
-        IEnumerator Start()
-        {
-			_waveController = new WaveController
-			{
-				AllowMixedWave = AllowMixedWave,
-				MixedStrategy = MixedStrategy,
-				EmptySceneBossTriggerSeconds = EmptySceneBossTriggerSeconds,
-				EmptySceneCheckIntervalSeconds = EmptySceneCheckIntervalSeconds
-			};
+		IEnumerator Start()
+		{
+			_timeline = new TimelineController();
 
-			if (UseCSVConfig && PrefabMapping != null)
+			if (PrefabMapping != null)
 			{
-				// 从CSV加载配置
 				yield return LoadFromCSVAsync();
 			}
 			else
 			{
-				// 使用ScriptableObject配置
-				LoadFromScriptableObject();
+				Debug.LogError("[EnemyGenerator] PrefabMapping 未设置！无法加载频道配置。");
 			}
 
 			_isInitialized = true;
-			TotalWaveCount.Value = _mToatalCount;
-        }
-
-		/// <summary>
-		/// 从ScriptableObject加载波次配置
-		/// </summary>
-		private void LoadFromScriptableObject()
-		{
-			var groups = new List<WaveGroupDefinition>();
-
-			foreach (var group in Config.EnemyWaveGroups)
-			{
-				var g = new WaveGroupDefinition
-				{
-					GroupName = group.Name,
-					GroupDescription = group.Description,
-					AllowMixedWave = true
-				};
-
-				foreach (var wave in group.EnemyWaves)
-				{
-					if (!wave.Active) continue;
-					var prefab = wave.EnemyPrefab;
-					if (!prefab) continue;
-
-					g.Segments.Add(BuildSegmentFromEnemyWave(wave, prefab));
-				}
-
-				if (g.Segments.Count > 0) groups.Add(g);
-			}
-
-			_waveController.Load(groups);
-			_mToatalCount = _waveController.TotalWaveCount;
+			TotalWaveCount.Value = 30; // 30 分钟
 		}
 
 		/// <summary>
-		/// 异步从CSV加载波次配置
+		/// 异步从CSV加载时间轴频道配置
 		/// </summary>
 		private IEnumerator LoadFromCSVAsync()
 		{
-			List<EnemyWaveConfigRow> configRows = null;
-			
-			yield return EnemyWaveConfigLoader.LoadAsync(rows => configRows = rows);
+			List<SpawnChannelConfigRow> configRows = null;
+
+			yield return SpawnChannelConfigLoader.LoadAsync(rows => configRows = rows);
 
 			if (configRows == null || configRows.Count == 0)
 			{
-				Debug.LogWarning("[EnemyGenerator] CSV配置为空，回退到ScriptableObject配置");
-				LoadFromScriptableObject();
+				Debug.LogWarning("[EnemyGenerator] CSV频道配置为空！");
 				yield break;
 			}
 
-			var groups = new List<WaveGroupDefinition>();
-			var groupMap = new Dictionary<string, WaveGroupDefinition>(StringComparer.Ordinal);
+			var channels = new List<SpawnChannel>();
 
 			foreach (var row in configRows)
 			{
@@ -600,36 +306,42 @@ namespace VampireSurvivorLike
 				var prefab = PrefabMapping.GetPrefab(row.EnemyPrefabName);
 				if (prefab == null)
 				{
-					Debug.LogWarning($"[EnemyGenerator] 跳过配置行 '{row.WaveName}'：未找到预制体 '{row.EnemyPrefabName}'");
+					Debug.LogWarning($"[EnemyGenerator] 跳过频道 '{row.ChannelName}'：未找到预制体 '{row.EnemyPrefabName}'");
 					continue;
 				}
 
-				var groupKey = string.IsNullOrEmpty(row.MixedGroupId) ? row.GroupName : row.MixedGroupId;
-
-				if (!groupMap.TryGetValue(groupKey, out var g))
+				var phase = GuessPhase(prefab);
+				if (!string.IsNullOrEmpty(row.Phase))
 				{
-					g = new WaveGroupDefinition
-					{
-						GroupName = groupKey,
-						GroupDescription = row.GroupDescription,
-						AllowMixedWave = row.AllowMixedWave
-					};
-					groupMap[groupKey] = g;
-					groups.Add(g);
-				}
-				else
-				{
-					g.AllowMixedWave = g.AllowMixedWave && row.AllowMixedWave;
+					var p = row.Phase.Trim().ToLowerInvariant();
+					if (p == "boss") phase = WaveSpawnPhase.Boss;
+					else if (p == "small") phase = WaveSpawnPhase.Small;
 				}
 
-				var wave = EnemyWave.FromConfigRow(row);
-				wave.EnemyPrefab = prefab;
-				g.Segments.Add(BuildSegmentFromEnemyWave(wave, prefab));
+				channels.Add(new SpawnChannel
+				{
+					ChannelName = row.ChannelName,
+					EnemyPrefabName = row.EnemyPrefabName,
+					Prefab = prefab,
+					Phase = phase,
+					StartTimeSec = row.StartTimeSec,
+					EndTimeSec = row.EndTimeSec,
+					SpawnIntervalSec = row.SpawnIntervalSec,
+					SpawnCount = row.SpawnCount,
+					HPScale = row.HPScale,
+					SpeedScale = row.SpeedScale,
+					DamageScale = row.DamageScale,
+					BaseSpeed = row.BaseSpeed,
+					IsTreasureChest = row.IsTreasureChest,
+					ExpDropRate = row.ExpDropRate,
+					CoinDropRate = row.CoinDropRate,
+					HpDropRate = row.HpDropRate,
+					BombDropRate = row.BombDropRate
+				});
 			}
 
-			_waveController.Load(groups);
-			_mToatalCount = _waveController.TotalWaveCount;
-			Debug.Log($"[EnemyGenerator] 从CSV成功加载 {_mToatalCount} 个波次组");
+			_timeline.Load(channels);
+			Debug.Log($"[EnemyGenerator] 从CSV成功加载 {channels.Count} 个刷怪频道");
 		}
 
 		private static WaveSpawnPhase GuessPhase(GameObject prefab)
@@ -638,53 +350,58 @@ namespace VampireSurvivorLike
 			return prefab.GetComponent<EnemyMiniBoss>() ? WaveSpawnPhase.Boss : WaveSpawnPhase.Small;
 		}
 
-		private static WaveSegmentDefinition BuildSegmentFromEnemyWave(EnemyWave wave, GameObject prefab)
+		void Update()
 		{
-			var phase = GuessPhase(prefab);
-			if (!string.IsNullOrEmpty(wave.Phase))
-			{
-				var p = wave.Phase.Trim().ToLowerInvariant();
-				if (p == "boss") phase = WaveSpawnPhase.Boss;
-				else if (p == "small") phase = WaveSpawnPhase.Small;
-			}
+			if (!_isInitialized || _timeline == null) return;
 
-			return new WaveSegmentDefinition
+			var gameTime = Global.CurrentSeconds.Value;
+
+			_timeline.Tick(gameTime, Time.deltaTime, this);
+
+			CurrentMinute.Value = _timeline.CurrentMinute;
+			ActiveChannelNames.Value = _timeline.ActiveChannelNames;
+			GameRemainingTime.Value = _timeline.RemainingSeconds;
+			ActiveChannelCount.Value = _timeline.ActiveChannelCount;
+
+			// 死神生成检测
+			if (!_reaperSpawned && gameTime >= Config.ReaperSpawnTimeSeconds)
 			{
-				DisplayName = wave.WaveName,
-				Phase = phase,
-				Prefab = prefab,
-				SpawnIntervalSeconds = wave.GenerateDuration,
-				SpawnDurationSeconds = wave.KeepSeconds,
-				SpawnCount = wave.SpawnCount,
-				MaxWaitAfterSpawnSeconds = wave.MaxWaitAfterSpawnSeconds,
-				HPScale = wave.HPScale,
-				SpeedScale = wave.SpeedScale,
-				DamageScale = wave.DamageScale,
-				BaseSpeed = wave.BaseSpeed,
-				IsTreasureChest = wave.IsTreasureChest,
-				ExpDropRate = wave.ExpDropRate,
-				CoinDropRate = wave.CoinDropRate,
-				HpDropRate = wave.HpDropRate,
-				BombDropRate = wave.BombDropRate
-			};
+				SpawnReaper();
+			}
 		}
 
-        void Update()
-        {
-			if (!_isInitialized || _waveController == null) return;
+		private void SpawnReaper()
+		{
+			_reaperSpawned = true;
 
-			_waveController.AllowMixedWave = AllowMixedWave;
-			_waveController.MixedStrategy = MixedStrategy;
-			_waveController.EmptySceneBossTriggerSeconds = EmptySceneBossTriggerSeconds;
-			_waveController.EmptySceneCheckIntervalSeconds = EmptySceneCheckIntervalSeconds;
+			if (PrefabMapping == null) return;
+			var reaperPrefab = PrefabMapping.GetPrefab(Config.ReaperPrefabName);
+			if (reaperPrefab == null)
+			{
+				Debug.LogWarning($"[EnemyGenerator] 死神预制体 '{Config.ReaperPrefabName}' 未在 PrefabMapping 中注册，跳过生成");
+				return;
+			}
 
-			_waveController.Tick(Time.deltaTime, this);
+			var pos = GetSpawnPositionOutsideCamera();
+			reaperPrefab.Instantiate()
+				.Position(pos)
+				.Self(self =>
+				{
+					var enemy = self.GetComponent<IEnemy>();
+					if (enemy == null) return;
+					enemy.SetBaseSpeed(5f);
+					enemy.SetSpeedScale(2f);
+					enemy.SetHPScale(99999f);
+					enemy.SetDamageScale(999f);
+					enemy.SetTreasureChest(false);
+					enemy.SetDropRates(0, 0, 0, 0);
+				})
+				.Show();
 
-			WaveCount = _waveController.CurrentWaveIndex;
-			CurrentWaveIndex.Value = WaveCount;
-			CurrentWaveName.Value = _waveController.CurrentWaveName;
-			WaveRemainingTime.Value = _waveController.RemainingSeconds;
-        }
+			Debug.Log("[EnemyGenerator] 死神已降临！");
+		}
+
+		// ── IWaveWorld 实现 ──
 
 		public int SmallAliveCount => SmallEnemyCount.Value;
 		public int BossAliveCount => BossEnemyCount.Value;
@@ -702,7 +419,12 @@ namespace VampireSurvivorLike
 			}
 
 			var pos = GetSpawnPositionOutsideCamera();
-			var seg = request.Segment;
+			var ch = request.Channel;
+			
+			// 捕获值以避免 lambda 中使用 in 参数
+			var effectiveSpeed = request.EffectiveSpeedScale;
+			var effectiveHP = request.EffectiveHPScale;
+			var effectiveDamage = request.EffectiveDamageScale;
 
 			request.Prefab.Instantiate()
 				.Position(pos)
@@ -711,14 +433,15 @@ namespace VampireSurvivorLike
 					var enemy = self.GetComponent<IEnemy>();
 					if (enemy == null) return;
 
-					if (seg != null)
+					if (ch != null)
 					{
-						if (seg.BaseSpeed > 0) enemy.SetBaseSpeed(seg.BaseSpeed);
-						enemy.SetSpeedScale(seg.SpeedScale);
-						enemy.SetHPScale(seg.HPScale);
-						enemy.SetDamageScale(seg.DamageScale);
-						enemy.SetTreasureChest(seg.IsTreasureChest);
-						enemy.SetDropRates(seg.ExpDropRate, seg.CoinDropRate, seg.HpDropRate, seg.BombDropRate);
+						if (ch.BaseSpeed > 0) enemy.SetBaseSpeed(ch.BaseSpeed);
+						// 使用经过难度公式缩放后的属性值
+						enemy.SetSpeedScale(effectiveSpeed);
+						enemy.SetHPScale(effectiveHP);
+						enemy.SetDamageScale(effectiveDamage);
+						enemy.SetTreasureChest(ch.IsTreasureChest);
+						enemy.SetDropRates(ch.ExpDropRate, ch.CoinDropRate, ch.HpDropRate, ch.BombDropRate);
 					}
 				})
 				.Show();
@@ -742,5 +465,5 @@ namespace VampireSurvivorLike
 			}
 			return pos;
 		}
-    }
+	}
 }

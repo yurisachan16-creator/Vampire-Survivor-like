@@ -278,23 +278,18 @@ namespace VampireSurvivorLike
         private GameObject TryGetDefaultEnemyPrefab()
         {
             var gen = FindObjectOfType<EnemyGenerator>();
-            if (!gen || !gen.Config) return null;
+            if (!gen || !gen.PrefabMapping) return null;
 
-            var groups = gen.Config.EnemyWaveGroups;
-            if (groups == null) return null;
+            var enemies = gen.PrefabMapping.Enemies;
+            if (enemies == null || enemies.Count == 0) return null;
 
-            for (var gi = 0; gi < groups.Count; gi++)
+            // 返回第一个有效的敌人预制体
+            for (var i = 0; i < enemies.Count; i++)
             {
-                var waves = groups[gi].EnemyWaves;
-                if (waves == null) continue;
-
-                for (var wi = 0; wi < waves.Count; wi++)
+                var entry = enemies[i];
+                if (entry != null && entry.Prefab != null)
                 {
-                    var w = waves[wi];
-                    if (w == null) continue;
-                    if (!w.Active) continue;
-                    if (!w.EnemyPrefab) continue;
-                    return w.EnemyPrefab;
+                    return entry.Prefab;
                 }
             }
 

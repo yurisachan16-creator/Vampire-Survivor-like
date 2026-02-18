@@ -193,6 +193,11 @@ namespace VampireSurvivorLike
             EnemyGenerator.EnemyCount.Value = 0;
             EnemyGenerator.SmallEnemyCount.Value = 0;
             EnemyGenerator.BossEnemyCount.Value = 0;
+            EnemyGenerator.CurrentMinute.Value = 0;
+            EnemyGenerator.ActiveChannelNames.Value = "";
+            EnemyGenerator.GameRemainingTime.Value = 0;
+            EnemyGenerator.ActiveChannelCount.Value = 0;
+            EnemyGenerator.TotalWaveCount.Value = 30;
             EnemyRegistry.Clear();
             ObjectPoolSystem.ClearAll();
             PowerUpRegistry.Clear();
