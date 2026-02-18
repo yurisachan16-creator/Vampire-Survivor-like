@@ -452,7 +452,8 @@ namespace VampireSurvivorLike
             FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"), critical);
             
             Sprite.color = Color.red;
-            AudioKit.PlaySound("Hit");
+            if (SfxThrottle.CanPlay("Hit"))
+                AudioKit.PlaySound("Hit");
             
             // 使用计时器替代 ActionKit.Delay，零 GC 分配
             _pendingDamage = value;

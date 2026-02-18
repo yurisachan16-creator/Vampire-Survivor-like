@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using QFramework;
+using QAssetBundle;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,11 +47,13 @@ namespace VampireSurvivorLike
 		private readonly Dictionary<int, TargetInfo> _targets = new Dictionary<int, TargetInfo>(64);
 		private readonly List<TargetInfo> _visibleTargets = new List<TargetInfo>(64);
 		private readonly List<ArrowEntry> _arrowPool = new List<ArrowEntry>(MaxArrowCount);
+		private readonly Dictionary<string, AudioClip> _cached3DSfx = new Dictionary<string, AudioClip>(8);
 
 		private RectTransform _overlayRoot;
 		private Canvas _overlayCanvas;
 		private Camera _worldCamera;
 		private Transform _playerTransform;
+		private ResLoader _sfxLoader;
 
 		private static readonly int ShaderColorId = Shader.PropertyToID("_Color");
 		private static readonly int ShaderProgressId = Shader.PropertyToID("_Progress");
@@ -58,6 +61,7 @@ namespace VampireSurvivorLike
 		private void Awake()
 		{
 			Current = this;
+			_sfxLoader = ResLoader.Allocate();
 		}
 
 		private void OnDestroy()
@@ -78,6 +82,13 @@ namespace VampireSurvivorLike
 			_targets.Clear();
 			_visibleTargets.Clear();
 			_arrowPool.Clear();
+			_cached3DSfx.Clear();
+
+			if (_sfxLoader != null)
+			{
+				_sfxLoader.Recycle2Cache();
+				_sfxLoader = null;
+			}
 		}
 
 		public void Initialize(RectTransform overlayRoot, Canvas overlayCanvas, Camera worldCamera, Transform playerTransform)
@@ -107,7 +118,7 @@ namespace VampireSurvivorLike
 			var color = GetRarityColor(kind);
 			SpawnPulseRing(worldPosition, color);
 
-			var audioKey = kind == LootGuideKind.Bomb ? "Retro Event UI 01" : "Exp";
+			var audioKey = kind == LootGuideKind.Bomb ? Sfx.RETRO_EVENT_UI_01 : Sfx.EXP;
 			Spawn3DSound(worldPosition, audioKey, kind == LootGuideKind.Bomb ? 0.25f : 0.2f);
 		}
 
@@ -309,13 +320,12 @@ namespace VampireSurvivorLike
 
 		private static void Spawn3DSound(Vector3 worldPosition, string audioKey, float volume)
 		{
+			if (Current == null) return;
 			if (string.IsNullOrWhiteSpace(audioKey)) return;
 			if (_active3DSoundCount >= Max3DSounds) return;
 			if (!SfxThrottle.CanPlay("3D_" + audioKey)) return;
 
-			var loader = ResLoader.Allocate();
-			var clip = loader.LoadSync<AudioClip>(audioKey);
-			loader.Recycle2Cache();
+			var clip = Current.GetCached3DSfx(audioKey);
 			if (!clip) return;
 
 			_active3DSoundCount++;
@@ -339,6 +349,29 @@ namespace VampireSurvivorLike
 			// 延迟递减并发计数
 			if (Current != null)
 				Current.StartCoroutine(DecrementAfter(lifetime));
+		}
+
+		private AudioClip GetCached3DSfx(string audioKey)
+		{
+			if (string.IsNullOrWhiteSpace(audioKey)) return null;
+
+			if (_cached3DSfx.TryGetValue(audioKey, out var cached) && cached)
+			{
+				return cached;
+			}
+
+			if (_sfxLoader == null)
+			{
+				_sfxLoader = ResLoader.Allocate();
+			}
+
+			var clip = _sfxLoader.LoadSync<AudioClip>(Sfx.BundleName, audioKey);
+			if (clip)
+			{
+				_cached3DSfx[audioKey] = clip;
+			}
+
+			return clip;
 		}
 
 		private static System.Collections.IEnumerator DecrementAfter(float delay)

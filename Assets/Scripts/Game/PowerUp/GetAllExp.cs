@@ -76,8 +76,8 @@ namespace VampireSurvivorLike
             {
 				PowerUpManager.Default.StartCoroutine(FlyToPlayerStart());
 
-				//TODO：播放音效
-				AudioKit.PlaySound("Exp");
+				if (SfxThrottle.CanPlay("Exp", 0.1f))
+					AudioKit.PlaySound("Exp");
 				
 				this.DestroyGameObjGracefully();
             }

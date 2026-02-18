@@ -35,7 +35,8 @@ namespace VampireSurvivorLike
         //执行方法
         protected override void Execute()
         {
-            AudioKit.PlaySound("Exp");
+            if (SfxThrottle.CanPlay("Exp", 0.1f))
+                AudioKit.PlaySound("Exp");
             Global.Exp.Value += 1;
             this.DestroyGameObjGracefully();
         }

@@ -16,7 +16,7 @@ namespace VampireSurvivorLike
         private const float DefaultCooldown = 0.05f;
 
         /// <summary>每帧允许播放的最大音效总数</summary>
-        public const int MaxSoundsPerFrame = 8;
+        public const int MaxSoundsPerFrame = 4;
 
         private static readonly Dictionary<string, float> _lastPlayTime = new Dictionary<string, float>(32);
         private static int _frameSoundCount;

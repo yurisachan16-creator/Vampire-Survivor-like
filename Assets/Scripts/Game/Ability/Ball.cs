@@ -9,6 +9,8 @@ namespace VampireSurvivorLike
 		
 		void Start()
 		{
+			SelfRigidbody2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
 			SelfRigidbody2D.velocity = 
 				new Vector2(Random.Range(-1.0f,1.0f),Random.Range(-1.0f,1.0f))*
 				Random.Range(Global.BasketBallSpeed.Value-2,Global.BasketBallSpeed.Value+2);
@@ -46,6 +48,59 @@ namespace VampireSurvivorLike
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 		}
 
+		private void FixedUpdate()
+		{
+			if (!SelfRigidbody2D) return;
+			if (!CameraController.LBTransform || !CameraController.RTTransform) return;
+
+			var radius = HurtBox
+				? HurtBox.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y)
+				: 0.5f;
+
+			var lb = CameraController.LBTransform.position;
+			var rt = CameraController.RTTransform.position;
+			var minX = lb.x + radius;
+			var maxX = rt.x - radius;
+			var minY = lb.y + radius;
+			var maxY = rt.y - radius;
+
+			var pos = SelfRigidbody2D.position;
+			var vel = SelfRigidbody2D.velocity;
+			var corrected = false;
+
+			if (pos.x < minX)
+			{
+				pos.x = minX;
+				vel.x = Mathf.Abs(vel.x);
+				corrected = true;
+			}
+			else if (pos.x > maxX)
+			{
+				pos.x = maxX;
+				vel.x = -Mathf.Abs(vel.x);
+				corrected = true;
+			}
+
+			if (pos.y < minY)
+			{
+				pos.y = minY;
+				vel.y = Mathf.Abs(vel.y);
+				corrected = true;
+			}
+			else if (pos.y > maxY)
+			{
+				pos.y = maxY;
+				vel.y = -Mathf.Abs(vel.y);
+				corrected = true;
+			}
+
+			if (corrected)
+			{
+				SelfRigidbody2D.position = pos;
+				SelfRigidbody2D.velocity = vel;
+			}
+		}
+
 		private void OnCollisionEnter2D(Collision2D other)
         {
             var normal = other.GetContact(0).normal;
@@ -68,7 +123,8 @@ namespace VampireSurvivorLike
 				rb.angularVelocity = Random.Range(-360,360);
             }
 
-			AudioKit.PlaySound(Sfx.BALL);
+			if (SfxThrottle.CanPlay(Sfx.BALL))
+				AudioKit.PlaySound(Sfx.BALL);
         }
 	}
 }
