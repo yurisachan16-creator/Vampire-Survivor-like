@@ -119,6 +119,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -207,7 +220,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rpgItems_4
+      name: copper_helmet
       rect:
         serializedVersion: 2
         x: 64
@@ -1478,6 +1491,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Exp: -1385216426
+      copper_helmet: 1189292030
       rpgItems_0: 999823366
       rpgItems_1: 226087324
       rpgItems_10: -1130129159
@@ -1511,7 +1525,6 @@ TextureImporter:
       rpgItems_37: 719385315
       rpgItems_38: -63126752
       rpgItems_39: 1273609710
-      rpgItems_4: 1189292030
       rpgItems_40: 461342368
       rpgItems_41: 1459693657
       rpgItems_42: -383984133

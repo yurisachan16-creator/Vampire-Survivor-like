@@ -57,6 +57,16 @@ namespace VampireSurvivorLike
         [Tooltip("宝箱掉落概率（仅当DropTreasureChest为true时有效）")]
         [Range(0f, 1f)]
         public float TreasureChestDropRate = 0.3f;
+
+        [Header("Boss普通掉落（非宝箱时）")]
+        [Range(0f, 1f)]
+        public float ExpDropRate = 0.8f;
+        [Range(0f, 1f)]
+        public float CoinDropRate = 0.5f;
+        [Range(0f, 1f)]
+        public float HpDropRate = 0.2f;
+        [Range(0f, 1f)]
+        public float BombDropRate = 0.1f;
         
         [Header("配置来源")]
         [Tooltip("是否从EnemyStatsConfig读取属性，如果为false则使用预制体上的值")]
@@ -101,12 +111,34 @@ namespace VampireSurvivorLike
         private float _defaultHealth;
         private float _defaultMovementSpeed;
         private float _defaultDamageMultiplier;
+        private float _defaultExpDropRate;
+        private float _defaultCoinDropRate;
+        private float _defaultHpDropRate;
+        private float _defaultBombDropRate;
+
+        // 生成器在 Start 前注入的缩放/覆盖值缓存
+        private bool _hasPendingBaseSpeed;
+        private float _pendingBaseSpeed;
+        private float _pendingSpeedScale = 1f;
+        private float _pendingHPScale = 1f;
+        private float _pendingDamageScale = 1f;
+        private bool _hasPendingDropRates;
+        private float _pendingExpDropRate;
+        private float _pendingCoinDropRate;
+        private float _pendingHpDropRate;
+        private float _pendingBombDropRate;
+        private bool _hasPendingTreasureChest;
+        private bool _pendingTreasureChest;
 
         private void Awake()
         {
             _defaultHealth = Health;
             _defaultMovementSpeed = MovementSpeed;
             _defaultDamageMultiplier = DamageMultiplier;
+            _defaultExpDropRate = ExpDropRate;
+            _defaultCoinDropRate = CoinDropRate;
+            _defaultHpDropRate = HpDropRate;
+            _defaultBombDropRate = BombDropRate;
         }
         
         void Start()
@@ -129,6 +161,7 @@ namespace VampireSurvivorLike
             {
                 LoadStatsFromConfig();
             }
+            ApplyPendingSpawnOverrides();
             
             EnemyGenerator.EnemyCount.Value++;
             EnemyGenerator.BossEnemyCount.Value++;
@@ -160,6 +193,49 @@ namespace VampireSurvivorLike
             Health = stats.BaseHP;
             MovementSpeed = stats.BaseSpeed;
             DamageMultiplier = stats.BaseDamageMultiplier;
+        }
+
+        private void ApplyPendingSpawnOverrides()
+        {
+            if (_hasPendingBaseSpeed)
+            {
+                MovementSpeed = _pendingBaseSpeed;
+            }
+
+            MovementSpeed *= _pendingSpeedScale;
+            Health *= _pendingHPScale;
+            DamageMultiplier *= _pendingDamageScale;
+
+            if (_hasPendingDropRates)
+            {
+                ExpDropRate = _pendingExpDropRate;
+                CoinDropRate = _pendingCoinDropRate;
+                HpDropRate = _pendingHpDropRate;
+                BombDropRate = _pendingBombDropRate;
+            }
+
+            if (_hasPendingTreasureChest)
+            {
+                DropTreasureChest = _pendingTreasureChest;
+            }
+
+            ResetPendingSpawnOverrides();
+        }
+
+        private void ResetPendingSpawnOverrides()
+        {
+            _hasPendingBaseSpeed = false;
+            _pendingBaseSpeed = 0f;
+            _pendingSpeedScale = 1f;
+            _pendingHPScale = 1f;
+            _pendingDamageScale = 1f;
+            _hasPendingDropRates = false;
+            _pendingExpDropRate = 0f;
+            _pendingCoinDropRate = 0f;
+            _pendingHpDropRate = 0f;
+            _pendingBombDropRate = 0f;
+            _hasPendingTreasureChest = false;
+            _pendingTreasureChest = false;
         }
         
         /// <summary>
@@ -370,13 +446,13 @@ namespace VampireSurvivorLike
                 else
                 {
                     // 掉落普通道具
-                    Global.GeneratePowerUpWithRates(gameObject, false, 0.8f, 0.5f, 0.2f, 0.1f);
+                    Global.GeneratePowerUpWithRates(gameObject, false, ExpDropRate, CoinDropRate, HpDropRate, BombDropRate);
                 }
             }
             else
             {
                 // 使用普通掉落率（较高概率）
-                Global.GeneratePowerUpWithRates(gameObject, false, 0.8f, 0.5f, 0.2f, 0.1f);
+                Global.GeneratePowerUpWithRates(gameObject, false, ExpDropRate, CoinDropRate, HpDropRate, BombDropRate);
             }
             
             if (SfxThrottle.CanPlay(Sfx.ENEMYDIE))
@@ -396,12 +472,17 @@ namespace VampireSurvivorLike
             _initialized = false;
             ConfigKey = null;
             _currentSkill = null;
+            ResetPendingSpawnOverrides();
 
             Health = _defaultHealth;
             MovementSpeed = _defaultMovementSpeed;
             DamageMultiplier = _defaultDamageMultiplier;
             DropTreasureChest = true;
             TreasureChestDropRate = 0.3f;
+            ExpDropRate = _defaultExpDropRate;
+            CoinDropRate = _defaultCoinDropRate;
+            HpDropRate = _defaultHpDropRate;
+            BombDropRate = _defaultBombDropRate;
 
             if (Sprite) Sprite.color = Color.white;
             if (HitBox) HitBox.enabled = true;
@@ -463,32 +544,77 @@ namespace VampireSurvivorLike
         
         public void SetSpeedScale(float speedScale)
         {
+            if (!_initialized)
+            {
+                _pendingSpeedScale *= speedScale;
+                return;
+            }
+
             MovementSpeed *= speedScale;
         }
         
         public void SetHPScale(float hpScale)
         {
+            if (!_initialized)
+            {
+                _pendingHPScale *= hpScale;
+                return;
+            }
+
             Health *= hpScale;
             _initialHealth = Health;
         }
         
         public void SetDamageScale(float damageScale)
         {
+            if (!_initialized)
+            {
+                _pendingDamageScale *= damageScale;
+                return;
+            }
+
             DamageMultiplier *= damageScale;
         }
         
         public void SetBaseSpeed(float baseSpeed)
         {
+            if (!_initialized)
+            {
+                _hasPendingBaseSpeed = true;
+                _pendingBaseSpeed = baseSpeed;
+                return;
+            }
+
             MovementSpeed = baseSpeed;
         }
         
         public void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate)
         {
-            // Boss使用自己的掉落逻辑
+            if (!_initialized)
+            {
+                _hasPendingDropRates = true;
+                _pendingExpDropRate = expRate;
+                _pendingCoinDropRate = coinRate;
+                _pendingHpDropRate = hpRate;
+                _pendingBombDropRate = bombRate;
+                return;
+            }
+
+            ExpDropRate = expRate;
+            CoinDropRate = coinRate;
+            HpDropRate = hpRate;
+            BombDropRate = bombRate;
         }
         
         public void SetTreasureChest(bool isTreasureChest)
         {
+            if (!_initialized)
+            {
+                _hasPendingTreasureChest = true;
+                _pendingTreasureChest = isTreasureChest;
+                return;
+            }
+
             DropTreasureChest = isTreasureChest;
         }
         

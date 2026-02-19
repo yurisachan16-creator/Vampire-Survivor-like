@@ -51,6 +51,20 @@ namespace VampireSurvivorLike
 		private float _defaultBombDropRate;
 		private Color _defaultDissolveColor;
 
+		// 生成器在 Start 前注入的缩放/覆盖值缓存
+		private bool _hasPendingBaseSpeed;
+		private float _pendingBaseSpeed;
+		private float _pendingSpeedScale = 1f;
+		private float _pendingHPScale = 1f;
+		private float _pendingDamageScale = 1f;
+		private bool _hasPendingDropRates;
+		private float _pendingExpDropRate;
+		private float _pendingCoinDropRate;
+		private float _pendingHpDropRate;
+		private float _pendingBombDropRate;
+		private bool _hasPendingTreasureChest;
+		private bool _pendingTreasureChest;
+
 		private void Awake()
 		{
 			_animator = GetComponent<Animator>();
@@ -102,6 +116,8 @@ namespace VampireSurvivorLike
 				LoadStatsFromConfig();
 			}
 
+			ApplyPendingSpawnOverrides();
+
 			EnemyGenerator.EnemyCount.Value++;
 			EnemyGenerator.SmallEnemyCount.Value++;
 			EnemyRegistry.Register(this);
@@ -129,6 +145,49 @@ namespace VampireSurvivorLike
 			HpDropRate = stats.HpDropRate;
 			BombDropRate = stats.BombDropRate;
 			DissolveColor = stats.DissolveColor;
+		}
+
+		private void ApplyPendingSpawnOverrides()
+		{
+			if (_hasPendingBaseSpeed)
+			{
+				MovementSpeed = _pendingBaseSpeed;
+			}
+
+			MovementSpeed *= _pendingSpeedScale;
+			Health *= _pendingHPScale;
+			DamageMultiplier *= _pendingDamageScale;
+
+			if (_hasPendingDropRates)
+			{
+				ExpDropRate = _pendingExpDropRate;
+				CoinDropRate = _pendingCoinDropRate;
+				HpDropRate = _pendingHpDropRate;
+				BombDropRate = _pendingBombDropRate;
+			}
+
+			if (_hasPendingTreasureChest)
+			{
+				TreasureChestEnemy = _pendingTreasureChest;
+			}
+
+			ResetPendingSpawnOverrides();
+		}
+
+		private void ResetPendingSpawnOverrides()
+		{
+			_hasPendingBaseSpeed = false;
+			_pendingBaseSpeed = 0f;
+			_pendingSpeedScale = 1f;
+			_pendingHPScale = 1f;
+			_pendingDamageScale = 1f;
+			_hasPendingDropRates = false;
+			_pendingExpDropRate = 0f;
+			_pendingCoinDropRate = 0f;
+			_pendingHpDropRate = 0f;
+			_pendingBombDropRate = 0f;
+			_hasPendingTreasureChest = false;
+			_pendingTreasureChest = false;
 		}
 
         void Update()
@@ -190,6 +249,7 @@ namespace VampireSurvivorLike
 			_hurtTimer = 0f;
 			_initialized = false;
 			ConfigKey = null;
+			ResetPendingSpawnOverrides();
 
 			// 恢复默认属性值
 			Health = _defaultHealth;
@@ -291,26 +351,61 @@ namespace VampireSurvivorLike
 
         public void SetSpeedScale(float SpeedScale)
         {
+			if (!_initialized)
+			{
+				_pendingSpeedScale *= SpeedScale;
+				return;
+			}
+
             MovementSpeed *= SpeedScale;
         }
 
         public void SetHPScale(float HPScale)
         {
+			if (!_initialized)
+			{
+				_pendingHPScale *= HPScale;
+				return;
+			}
+
             Health *= HPScale;
         }
 
         public void SetDamageScale(float DamageScale)
         {
+			if (!_initialized)
+			{
+				_pendingDamageScale *= DamageScale;
+				return;
+			}
+
             DamageMultiplier *= DamageScale;
         }
 
         public void SetBaseSpeed(float baseSpeed)
         {
+			if (!_initialized)
+			{
+				_hasPendingBaseSpeed = true;
+				_pendingBaseSpeed = baseSpeed;
+				return;
+			}
+
             MovementSpeed = baseSpeed;
         }
 
         public void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate)
         {
+			if (!_initialized)
+			{
+				_hasPendingDropRates = true;
+				_pendingExpDropRate = expRate;
+				_pendingCoinDropRate = coinRate;
+				_pendingHpDropRate = hpRate;
+				_pendingBombDropRate = bombRate;
+				return;
+			}
+
             ExpDropRate = expRate;
             CoinDropRate = coinRate;
             HpDropRate = hpRate;
@@ -319,6 +414,13 @@ namespace VampireSurvivorLike
 
         public void SetTreasureChest(bool isTreasureChest)
         {
+			if (!_initialized)
+			{
+				_hasPendingTreasureChest = true;
+				_pendingTreasureChest = isTreasureChest;
+				return;
+			}
+
             TreasureChestEnemy = isTreasureChest;
         }
     }
