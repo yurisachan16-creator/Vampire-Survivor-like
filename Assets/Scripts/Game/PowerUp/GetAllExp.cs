@@ -14,11 +14,15 @@ namespace VampireSurvivorLike
 		private void OnEnable()
 		{
 			PowerUpRegistry.ActiveGetAllExpCount++;
+			var sr = GetComponent<SpriteRenderer>();
+			LootGuideSystem.Current?.Register(this, LootGuideKind.GetAllExp, sr ? sr.sprite : null);
+			LootGuideSystem.Current?.TryPlayDropFeedback(transform.position, LootGuideKind.GetAllExp);
 		}
 
 		private void OnDisable()
 		{
 			PowerUpRegistry.ActiveGetAllExpCount--;
+			LootGuideSystem.Current?.Unregister(this);
 		}
 
 		// 预分配列表，避免每次调用 FlyToPlayerStart 时分配

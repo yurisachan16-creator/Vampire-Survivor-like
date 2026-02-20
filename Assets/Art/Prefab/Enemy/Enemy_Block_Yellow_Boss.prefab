@@ -203,7 +203,12 @@ MonoBehaviour:
   MovementSpeed: 1.5
   DamageMultiplier: 1
   DropTreasureChest: 1
-  TreasureChestDropRate: 0.3
+  TreasureChestDropRate: 1
+  ExpDropRate: 0.8
+  CoinDropRate: 0.5
+  HpDropRate: 0.2
+  BombDropRate: 0.1
+  UseStatsConfig: 1
   BossType: 2
   BossProjectilePrefab: {fileID: 0}
   MinionPrefab: {fileID: 4169054150964862606, guid: 06ebcfe03d9bbea448274f5f9d5239f7, type: 3}

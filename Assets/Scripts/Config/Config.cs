@@ -39,11 +39,15 @@ namespace VampireSurvivorLike
         /// <summary>每分钟 HP 增长倍率（叠加到频道基础值上）</summary>
         public const float HPGrowthPerMinute = 0.25f;
         /// <summary>每分钟速度增长倍率</summary>
-        public const float SpeedGrowthPerMinute = 0.05f;
+        public const float SpeedGrowthPerMinute = 0.02f;
         /// <summary>每分钟伤害增长倍率</summary>
         public const float DamageGrowthPerMinute = 0.15f;
         /// <summary>每分钟刷新频率加速倍率（间隔缩短）</summary>
         public const float SpawnRateGrowthPerMinute = 0.1f;
+        /// <summary>允许多实例后回血道具概率缩放系数</summary>
+        public const float RecoverHpDropRateScaleWhenMulti = 0.22f;
+        /// <summary>允许多实例后全图吸附道具固定掉落率</summary>
+        public const float GetAllExpDropRateWhenMulti = 0.01f;
         /// <summary>死神出现的游戏时间（秒）</summary>
         public const float ReaperSpawnTimeSeconds = 1800f;
         /// <summary>死神预制体名称</summary>

@@ -327,7 +327,8 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent < hpDropRate && PowerUpRegistry.ActiveRecoverHPCount == 0)
+            var recoverHpDropRate = Mathf.Clamp01(hpDropRate * Config.RecoverHpDropRateScaleWhenMulti);
+            if(percent < recoverHpDropRate)
             {
                 //生成回血道具
                 PowerUpManager.Default.RecoverHP.Instantiate()
@@ -354,7 +355,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent<0.1f && PowerUpRegistry.ActiveGetAllExpCount == 0)
+            if(percent < Config.GetAllExpDropRateWhenMulti)
             {
                 //生成经验吸附道具
                 PowerUpManager.Default.GetAllExp.Instantiate()

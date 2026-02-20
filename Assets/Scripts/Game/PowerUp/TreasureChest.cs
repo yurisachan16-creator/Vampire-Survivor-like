@@ -5,6 +5,17 @@ namespace VampireSurvivorLike
 {
 	public partial class TreasureChest : GameplayObject
 	{
+		private void OnEnable()
+		{
+			var sr = GetComponent<SpriteRenderer>();
+			LootGuideSystem.Current?.Register(this, LootGuideKind.TreasureChest, sr ? sr.sprite : null);
+		}
+
+		private void OnDisable()
+		{
+			LootGuideSystem.Current?.Unregister(this);
+		}
+
 		void OnTriggerEnter2D(Collider2D other)
         {
             if (other.GetComponent<CollectableAera>())

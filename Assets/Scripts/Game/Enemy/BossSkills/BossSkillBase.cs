@@ -61,6 +61,17 @@ namespace VampireSurvivorLike
         {
             CooldownTimer = Cooldown;
         }
+
+        public void Interrupt()
+        {
+            if (IsExecuting)
+            {
+                IsExecuting = false;
+                OnExecuteEnd();
+            }
+
+            ResetCooldown();
+        }
         
         /// <summary>
         /// 结束技能执行

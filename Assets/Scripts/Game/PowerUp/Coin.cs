@@ -8,11 +8,14 @@ namespace VampireSurvivorLike
 		private void OnEnable()
 		{
 			PowerUpRegistry.RegisterCoin(this);
+			var sr = GetComponent<SpriteRenderer>();
+			LootGuideSystem.Current?.Register(this, LootGuideKind.Coin, sr ? sr.sprite : null);
 		}
 
 		private void OnDisable()
 		{
 			PowerUpRegistry.UnregisterCoin(this);
+			LootGuideSystem.Current?.Unregister(this);
 		}
 
         void OnTriggerEnter2D(Collider2D other)

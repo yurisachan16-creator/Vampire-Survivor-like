@@ -37,11 +37,27 @@ namespace VampireSurvivorLike
 						
 
 						//有50%的概率对敌人进行击退
-						if (Random.Range(0, 1.0f) < 0.5f&&collider&collider.attachedRigidbody&&Player.Default)
+						if (Random.Range(0, 1.0f) < 0.5f && Player.Default)
 						{
-							collider.attachedRigidbody.velocity =
-								collider.NormalizedDirection2DFrom(this) * 5 +
-								collider.NormalizedDirection2DFrom(Player.Default) * 10;
+							var knockbackDirection = collider.NormalizedDirection2DFrom(this);
+							var playerDirection = collider.NormalizedDirection2DFrom(Player.Default);
+							var combinedDirection = (knockbackDirection + playerDirection).normalized;
+							if (combinedDirection.sqrMagnitude <= 0.0001f)
+							{
+								combinedDirection = knockbackDirection.sqrMagnitude > 0.0001f
+									? knockbackDirection
+									: playerDirection;
+							}
+
+							var miniBoss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
+							if (miniBoss != null)
+							{
+								miniBoss.ApplyExternalKnockback(combinedDirection);
+							}
+							else if (collider && collider.attachedRigidbody)
+							{
+								collider.attachedRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
+							}
 						}
 					}
 				}

@@ -130,6 +130,15 @@ namespace VampireSurvivorLike
         private bool _hasPendingTreasureChest;
         private bool _pendingTreasureChest;
 
+        private const float ExternalKnockbackCooldownSeconds = 0.15f;
+        private const float ExternalKnockbackMinDuration = 0.05f;
+        private const float ExternalKnockbackMaxDuration = 0.4f;
+
+        private bool _knockbackActive;
+        private Vector2 _knockbackVelocity;
+        private float _knockbackRemainSeconds;
+        private float _knockbackCooldownUntil;
+
         private void Awake()
         {
             _defaultHealth = Health;
@@ -379,17 +388,101 @@ namespace VampireSurvivorLike
                 }
             }
         }
+
+        public void ApplyExternalKnockback(Vector2 direction, float speed = 5.5f, float duration = 0.14f)
+        {
+            if (_isDead || !SelfRigidbody2D) return;
+            if (Time.time < _knockbackCooldownUntil) return;
+            if (direction.sqrMagnitude <= 0.0001f) return;
+
+            direction.Normalize();
+
+            InterruptCurrentSkill();
+
+            _knockbackVelocity = direction * Mathf.Max(0f, speed);
+            _knockbackRemainSeconds = Mathf.Clamp(duration, ExternalKnockbackMinDuration, ExternalKnockbackMaxDuration);
+            _knockbackActive = true;
+            _knockbackCooldownUntil = Time.time + ExternalKnockbackCooldownSeconds;
+
+            SelfRigidbody2D.velocity = _knockbackVelocity;
+            if (_initialized)
+            {
+                FSM.ChangeState(States.Idle);
+            }
+        }
+
+        private void InterruptCurrentSkill()
+        {
+            if (_currentSkill == null) return;
+
+            if (_currentSkill is BossSkillBase skillBase)
+            {
+                skillBase.Interrupt();
+            }
+            else
+            {
+                _currentSkill.ResetCooldown();
+            }
+
+            _currentSkill = null;
+        }
+
+        private void UpdateExternalKnockback()
+        {
+            if (!_knockbackActive) return;
+
+            _knockbackRemainSeconds -= Time.deltaTime;
+            if (_knockbackRemainSeconds > 0f)
+            {
+                if (SelfRigidbody2D) SelfRigidbody2D.velocity = _knockbackVelocity;
+                return;
+            }
+
+            _knockbackActive = false;
+            _knockbackRemainSeconds = 0f;
+            _knockbackVelocity = Vector2.zero;
+
+            if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
+            if (_initialized && FSM.CurrentStateId != States.Idle)
+            {
+                FSM.ChangeState(States.Idle);
+            }
+        }
+
+        private void ResetExternalKnockback()
+        {
+            _knockbackActive = false;
+            _knockbackVelocity = Vector2.zero;
+            _knockbackRemainSeconds = 0f;
+            _knockbackCooldownUntil = 0f;
+        }
         
         void Update()
         {
-            FSM.Update();
-            
-            // 更新所有技能冷却
-            foreach (var skill in _skills)
+            UpdateExternalKnockback();
+
+            if (!_knockbackActive)
             {
-                if (skill != _currentSkill)
+                FSM.Update();
+
+                // 更新所有技能冷却
+                foreach (var skill in _skills)
                 {
-                    skill.OnUpdate();
+                    if (skill != _currentSkill)
+                    {
+                        skill.OnUpdate();
+                    }
+                }
+            }
+            else
+            {
+                // 击退期间只推进冷却，不执行技能逻辑
+                foreach (var skill in _skills)
+                {
+                    if (!skill.IsExecuting)
+                    {
+                        skill.OnUpdate();
+                    }
                 }
             }
             
@@ -423,6 +516,12 @@ namespace VampireSurvivorLike
         
         void FixedUpdate()
         {
+            if (_knockbackActive)
+            {
+                if (SelfRigidbody2D) SelfRigidbody2D.velocity = _knockbackVelocity;
+                return;
+            }
+
             FSM.FixedUpdate();
         }
         
@@ -432,6 +531,8 @@ namespace VampireSurvivorLike
             _isDead = true;
             _isIgnoreHurt = true;
             _hurtPending = false;
+            ResetExternalKnockback();
+            InterruptCurrentSkill();
             if (HitBox) HitBox.enabled = false;
             if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
 
@@ -473,6 +574,7 @@ namespace VampireSurvivorLike
             ConfigKey = null;
             _currentSkill = null;
             ResetPendingSpawnOverrides();
+            ResetExternalKnockback();
 
             Health = _defaultHealth;
             MovementSpeed = _defaultMovementSpeed;

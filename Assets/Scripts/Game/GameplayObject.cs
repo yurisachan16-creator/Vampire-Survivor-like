@@ -32,7 +32,11 @@ namespace VampireSurvivorLike
 	public enum LootGuideKind
 	{
 		Exp,
-		Bomb
+		Coin,
+		RecoverHP,
+		GetAllExp,
+		Bomb,
+		TreasureChest
 	}
 
 	public sealed class LootGuideSystem : MonoBehaviour
@@ -290,7 +294,26 @@ namespace VampireSurvivorLike
 
 		private static Color GetRarityColor(LootGuideKind kind)
 		{
-			return kind == LootGuideKind.Bomb ? new Color(1f, 0.55f, 0.1f, 1f) : new Color(0.2f, 0.85f, 1f, 1f);
+			return new Color(0.2f, 0.85f, 1f, 1f);
+		}
+
+		private static int GetGuidePriority(LootGuideKind kind)
+		{
+			switch (kind)
+			{
+				case LootGuideKind.GetAllExp:
+					return 500;
+				case LootGuideKind.RecoverHP:
+					return 400;
+				case LootGuideKind.TreasureChest:
+					return 350;
+				case LootGuideKind.Bomb:
+					return 300;
+				case LootGuideKind.Coin:
+					return 200;
+				default:
+					return 100;
+			}
 		}
 
 		private static void SpawnPulseRing(Vector3 worldPosition, Color color)
@@ -471,7 +494,7 @@ namespace VampireSurvivorLike
 
 			public int Compare(TargetInfo a, TargetInfo b)
 			{
-				var kindCompare = b.Kind.CompareTo(a.Kind);
+				var kindCompare = GetGuidePriority(b.Kind).CompareTo(GetGuidePriority(a.Kind));
 				if (kindCompare != 0) return kindCompare;
 				return a.Distance.CompareTo(b.Distance);
 			}
