@@ -130,6 +130,21 @@ namespace VampireSurvivorLike
 				}	
             }).UnRegisterWhenGameObjectDestroyed(this.gameObject);
 
+			Global.SuperAxe.Register(unlocked =>
+			{
+				if(unlocked)
+				{
+					if (_mUnlockedKeys.ContainsKey("simple_axe"))
+					{
+						var item = _mUnlockedKeys["simple_axe"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						var image = _mUnlockedKeys["simple_axe"].Item2;
+						image.sprite = sprite;
+						RefreshTooltip(image, item, item.CurrentLevel.Value);
+					}
+				}
+			}).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
 			LocalizationManager.CurrentLanguage.Register(_ =>
 			{
 				foreach (var kv in _mUnlockedKeys)
@@ -174,6 +189,7 @@ namespace VampireSurvivorLike
 				case "basket_ball": return Global.SuperBasketBall.Value;
 				case "simple_bomb": return Global.SuperBomb.Value;
 				case "simple_sword": return Global.SuperSword.Value;
+				case "simple_axe": return Global.SuperAxe.Value;
 				default: return false;
 			}
 		}

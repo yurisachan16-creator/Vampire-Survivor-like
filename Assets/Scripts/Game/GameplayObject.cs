@@ -34,6 +34,8 @@ namespace VampireSurvivorLike
 		Exp,
 		Coin,
 		RecoverHP,
+		Wine,
+		LemonBuff,
 		GetAllExp,
 		Bomb,
 		TreasureChest
@@ -305,6 +307,10 @@ namespace VampireSurvivorLike
 					return 500;
 				case LootGuideKind.RecoverHP:
 					return 400;
+				case LootGuideKind.Wine:
+					return 380;
+				case LootGuideKind.LemonBuff:
+					return 360;
 				case LootGuideKind.TreasureChest:
 					return 350;
 				case LootGuideKind.Bomb:

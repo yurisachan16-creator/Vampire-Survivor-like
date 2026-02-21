@@ -34,6 +34,7 @@ namespace VampireSurvivorLike
         public static BindableProperty<bool> RotateSwordUnlocked = new BindableProperty<bool>(false);   //旋转剑是否解锁
         public static BindableProperty<bool> BasketBallUnlocked = new BindableProperty<bool>(false);   //篮球是否解锁
         public static BindableProperty<bool> BombUnlocked = new BindableProperty<bool>(false);   //简单炸弹是否解锁
+        public static BindableProperty<bool> SimpleAxeUnlocked = new BindableProperty<bool>(false);   //斧头（simple_axe）是否解锁
         public static BindableProperty<float> SimpleAbilityDamage = new BindableProperty<float>(1); //简单攻击伤害
         public static BindableProperty<float> SimpleAbilityDuration = new BindableProperty<float>(1.5f);   //简单攻击间隔时间
 
@@ -56,6 +57,10 @@ namespace VampireSurvivorLike
 
         public static BindableProperty<float> BombDamage = new BindableProperty<float>(Config.InitBombDamage);
         public static BindableProperty<float> BombPercent = new BindableProperty<float>(Config.InitBombPercent);
+        public static BindableProperty<float> SimpleAxeDamage = new BindableProperty<float>(Config.InitSimpleAxeDamage);
+        public static BindableProperty<float> SimpleAxeDuration = new BindableProperty<float>(Config.InitSimpleAxeDuration);
+        public static BindableProperty<int> SimpleAxeCount = new BindableProperty<int>(Config.InitSimpleAxeCount);
+        public static BindableProperty<int> SimpleAxePierce = new BindableProperty<int>(Config.InitSimpleAxePierce);
 
         public static BindableProperty<float> CriticalRate = new BindableProperty<float>(Config.InitCriticalRate); //暴击率
         public static BindableProperty<float> DamageRate = new BindableProperty<float>(Config.InitDamageRate); //伤害倍率
@@ -70,8 +75,12 @@ namespace VampireSurvivorLike
         public static BindableProperty<bool> SuperRotateSword = new (false); //超级旋转剑
         public static BindableProperty<bool> SuperBasketBall = new (false); //超级篮球
         public static BindableProperty<bool> SuperBomb = new (false); //超级炸弹
+        public static BindableProperty<bool> SuperAxe = new (false); //超级斧头
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
+        public static BindableProperty<int> ArmorValue = new BindableProperty<int>(0); //护甲
+        public static BindableProperty<float> AreaMultiplier = new BindableProperty<float>(1f); //范围倍率
+        public static BindableProperty<float> LemonDamageBuffBonus = new BindableProperty<float>(0f); //柠檬伤害增益
 
         public static BindableProperty<bool> IsGameOver = new BindableProperty<bool>(false);
         public static EasyEvent RequestHPUIRefresh = new EasyEvent();
@@ -148,6 +157,7 @@ namespace VampireSurvivorLike
             RotateSwordUnlocked.Value = false;
             BasketBallUnlocked.Value = false;
             BombUnlocked.Value = false;
+            SimpleAxeUnlocked.Value = false;
 
             SimpleAbilityDamage.Value = Config.InitSimpleSwordDamage;
             SimpleAbilityDuration.Value = Config.InitSimpleSwordDuration;
@@ -171,6 +181,10 @@ namespace VampireSurvivorLike
 
             BombDamage.Value = Config.InitBombDamage;
             BombPercent.Value = Config.InitBombPercent;
+            SimpleAxeDamage.Value = Config.InitSimpleAxeDamage;
+            SimpleAxeDuration.Value = Config.InitSimpleAxeDuration;
+            SimpleAxeCount.Value = Config.InitSimpleAxeCount;
+            SimpleAxePierce.Value = Config.InitSimpleAxePierce;
 
             CriticalRate.Value = Config.InitCriticalRate;
 
@@ -189,6 +203,10 @@ namespace VampireSurvivorLike
             SuperRotateSword.Value = false;
             SuperBasketBall.Value = false;
             SuperBomb.Value = false;
+            SuperAxe.Value = false;
+            ArmorValue.Value = 0;
+            AreaMultiplier.Value = 1f;
+            LemonDamageBuffBonus.Value = 0f;
             
             EnemyGenerator.EnemyCount.Value = 0;
             EnemyGenerator.SmallEnemyCount.Value = 0;
@@ -270,6 +288,16 @@ namespace VampireSurvivorLike
             {
                 BombDamage.Value = bombConfig.Damage;
             }
+
+            // 斧头（simple_axe）
+            var axeConfig = AbilityConfigLoader.GetConfig("simple_axe");
+            if (axeConfig != null)
+            {
+                SimpleAxeDamage.Value = axeConfig.Damage;
+                SimpleAxeDuration.Value = axeConfig.Duration;
+                SimpleAxeCount.Value = axeConfig.Count;
+                SimpleAxePierce.Value = axeConfig.AttackCount > 0 ? axeConfig.AttackCount : Config.InitSimpleAxePierce;
+            }
         }
 
         /// <summary>
@@ -292,9 +320,12 @@ namespace VampireSurvivorLike
         public static void GeneratePowerUpWithRates(GameObject gameObject, bool genTreasureChest, 
             float expDropRate, float coinDropRate, float hpDropRate, float bombDropRate)
         {
+            var manager = PowerUpManager.Default;
+            if (!manager) return;
+
             if(genTreasureChest)
             {
-                PowerUpManager.Default.TreasureChest
+                manager.TreasureChest
                     .Instantiate()
                     .Position(gameObject.Position())
                     .Show();
@@ -306,7 +337,7 @@ namespace VampireSurvivorLike
             if (percent < expDropRate + AdditionalExpPercent.Value)
             {
                 //生成经验值
-                PowerUpManager.Default.Exp.Instantiate()
+                manager.Exp.Instantiate()
                     .Position(gameObject.Position())
                     .Show();
 
@@ -318,7 +349,7 @@ namespace VampireSurvivorLike
             if (percent < coinDropRate)
             {
                 //生成金币
-                PowerUpManager.Default.Coin.Instantiate()
+                manager.Coin.Instantiate()
                     .Position(gameObject.Position())
                     .Show();
 
@@ -331,11 +362,31 @@ namespace VampireSurvivorLike
             if(percent < recoverHpDropRate)
             {
                 //生成回血道具
-                PowerUpManager.Default.RecoverHP.Instantiate()
+                manager.RecoverHP.Instantiate()
                     .Position(gameObject.Position())
                     .Show();
 
                 return;
+            }
+
+            if (PowerUpRegistry.ActiveWineCount == 0)
+            {
+                percent = Random.Range(0, 1f);
+                if (percent < Config.WineDropRate)
+                {
+                    manager.SpawnWine(gameObject.Position());
+                    return;
+                }
+            }
+
+            if (PowerUpRegistry.ActiveLemonBuffCount == 0)
+            {
+                percent = Random.Range(0, 1f);
+                if (percent < Config.LemonBuffDropRate)
+                {
+                    manager.SpawnLemonBuff(gameObject.Position());
+                    return;
+                }
             }
 
             if (BombUnlocked.Value && PowerUpRegistry.ActiveBombCount == 0)
@@ -345,7 +396,7 @@ namespace VampireSurvivorLike
                 if(percent < bombDropRate)
                 {
                     //生成炸弹道具
-                    PowerUpManager.Default.Bomb.Instantiate()
+                    manager.Bomb.Instantiate()
                         .Position(gameObject.Position())
                         .Show();
 
@@ -358,7 +409,7 @@ namespace VampireSurvivorLike
             if(percent < Config.GetAllExpDropRateWhenMulti)
             {
                 //生成经验吸附道具
-                PowerUpManager.Default.GetAllExp.Instantiate()
+                manager.GetAllExp.Instantiate()
                     .Position(gameObject.Position())
                     .Show();
 

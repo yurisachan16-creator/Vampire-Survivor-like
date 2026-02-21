@@ -29,7 +29,7 @@ namespace VampireSurvivorLike
 
 				if (!Player.Default) return;
 
-				var range = Global.SimpleSwordRange.Value * distanceTimes;
+				var range = Global.SimpleSwordRange.Value * distanceTimes * Mathf.Max(1f, Global.AreaMultiplier.Value);
 				var targetCount = (Global.SimpleSwordCount.Value + Global.AdditionalFlyThingCount.Value) * countTimes;
 				EnemySpatialIndex.GetNearestTargets(Player.Default.transform.position, range, targetCount, TargetsBuffer);
 

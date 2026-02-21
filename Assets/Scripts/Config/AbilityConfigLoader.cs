@@ -130,7 +130,8 @@ namespace VampireSurvivorLike
                 { "simple_knife", new AbilityConfigRow { AbilityKey = "simple_knife", Damage = Config.InitSimpleKnifeDamage, Duration = Config.InitSimpleKnifeDuration, Count = Config.InitSimpleKnifeCount, AttackCount = Config.InitSimpleKnifeAttackCount } },
                 { "rotate_sword", new AbilityConfigRow { AbilityKey = "rotate_sword", Damage = Config.InitRotateSwordDamage, Count = Config.InitRotateSwordCount, Speed = Config.InitRotateSwordSpeed, Range = Config.InitRotateSwordRange } },
                 { "basket_ball", new AbilityConfigRow { AbilityKey = "basket_ball", Damage = Config.InitBasketBallDamage, Count = Config.InitBasketBallCount, Speed = Config.InitBasketBallSpeed } },
-                { "bomb", new AbilityConfigRow { AbilityKey = "bomb", Damage = Config.InitBombDamage } }
+                { "bomb", new AbilityConfigRow { AbilityKey = "bomb", Damage = Config.InitBombDamage } },
+                { "simple_axe", new AbilityConfigRow { AbilityKey = "simple_axe", Damage = Config.InitSimpleAxeDamage, Duration = Config.InitSimpleAxeDuration, Count = Config.InitSimpleAxeCount, AttackCount = Config.InitSimpleAxePierce } }
             };
         }
 

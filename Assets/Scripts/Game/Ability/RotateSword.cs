@@ -95,7 +95,7 @@ namespace VampireSurvivorLike
 
         void UpdateCirclePos()
         {
-            var radius = Global.RotateSwordRange.Value;
+            var radius = Global.RotateSwordRange.Value * Mathf.Max(1f, Global.AreaMultiplier.Value);
             var durationDegrees = 360 / _mSwords.Count;
 
             for(var i = 0; i < _mSwords.Count; i++)

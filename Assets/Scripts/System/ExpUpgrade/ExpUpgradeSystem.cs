@@ -28,12 +28,14 @@ namespace VampireSurvivorLike
             {"simple_knife","damage_rate"},
             {"basket_ball","movement_speed_rate"},
             {"rotate_sword","simple_exp_percent"},
+            {"simple_axe","yellow_potion"},
 
             {"simple_critical","simple_sword"},
             {"simple_fly_count","simple_bomb"},
             {"damage_rate","simple_knife"},
             {"movement_speed_rate","basket_ball"},
             {"simple_exp_percent","rotate_sword"},
+            {"yellow_potion","simple_axe"},
         };
 
         public Dictionary<string,BindableProperty<bool>> PairedProperties = 
@@ -44,6 +46,7 @@ namespace VampireSurvivorLike
                 {"simple_knife",Global.SuperKnife},
                 {"basket_ball",Global.SuperBasketBall},
                 {"rotate_sword",Global.SuperRotateSword},
+                {"simple_axe",Global.SuperAxe},
 
                 // {"simple_critical",Global.SuperSword},
                 // {"simple_fly_count",Global.SuperBomb},
@@ -538,6 +541,95 @@ namespace VampireSurvivorLike
                     }
                 }));
 
+                Add(new ExpUpgradeItem(true)
+                .WithKey("simple_axe")
+                .WithName("铜剑")
+                .WithNameKey("exp_upgrade.simple_axe.name")
+                .WithIconName("rpgItems_37")
+                .WithPairedName("死亡旋风")
+                .WithPairedNameKey("exp_upgrade.simple_axe.paired_name")
+                .WithPairedIconName("rpgItems_38")
+                .WithPairedDescription("360° 全屏穿透旋转投射物")
+                .WithPairedDescriptionKey("exp_upgrade.simple_axe.paired_desc")
+                .WithMaxLevel(10)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"铜剑Lv{lv}:\n向上抛出剑体，沿抛物线落下",
+                        2=>$"铜剑Lv{lv}：\n攻击力+3",
+                        3=>$"铜剑Lv{lv}：\n数量+1",
+                        4=>$"铜剑Lv{lv}：\n攻击力+3 间隔-0.1s",
+                        5=>$"铜剑Lv{lv}：\n穿透+1",
+                        6=>$"铜剑Lv{lv}：\n攻击力+4 数量+1",
+                        7=>$"铜剑Lv{lv}：\n间隔-0.2s",
+                        8=>$"铜剑Lv{lv}：\n攻击力+5",
+                        9=>$"铜剑Lv{lv}：\n数量+1 穿透+1",
+                        10=>$"铜剑Lv{lv}：\n攻击力+5 间隔-0.2s",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.simple_axe.lv1",
+                        2=>"exp_upgrade.simple_axe.lv2",
+                        3=>"exp_upgrade.simple_axe.lv3",
+                        4=>"exp_upgrade.simple_axe.lv4",
+                        5=>"exp_upgrade.simple_axe.lv5",
+                        6=>"exp_upgrade.simple_axe.lv6",
+                        7=>"exp_upgrade.simple_axe.lv7",
+                        8=>"exp_upgrade.simple_axe.lv8",
+                        9=>"exp_upgrade.simple_axe.lv9",
+                        10=>"exp_upgrade.simple_axe.lv10",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.SimpleAxeUnlocked.Value = true;
+                            break;
+                        case 2:
+                            Global.SimpleAxeDamage.Value += 3f;
+                            break;
+                        case 3:
+                            Global.SimpleAxeCount.Value += 1;
+                            break;
+                        case 4:
+                            Global.SimpleAxeDamage.Value += 3f;
+                            Global.SimpleAxeDuration.Value -= 0.1f;
+                            break;
+                        case 5:
+                            Global.SimpleAxePierce.Value += 1;
+                            break;
+                        case 6:
+                            Global.SimpleAxeDamage.Value += 4f;
+                            Global.SimpleAxeCount.Value += 1;
+                            break;
+                        case 7:
+                            Global.SimpleAxeDuration.Value -= 0.2f;
+                            break;
+                        case 8:
+                            Global.SimpleAxeDamage.Value += 5f;
+                            break;
+                        case 9:
+                            Global.SimpleAxeCount.Value += 1;
+                            Global.SimpleAxePierce.Value += 1;
+                            break;
+                        case 10:
+                            Global.SimpleAxeDamage.Value += 5f;
+                            Global.SimpleAxeDuration.Value -= 0.2f;
+                            break;
+                    }
+
+                    Global.SimpleAxeDuration.Value = UnityEngine.Mathf.Max(0.2f, Global.SimpleAxeDuration.Value);
+                    Global.SimpleAxePierce.Value = UnityEngine.Mathf.Max(1, Global.SimpleAxePierce.Value);
+                }));
+
                 Add(new ExpUpgradeItem(false)
                 .WithKey("simple_critical")
                 .WithName("暴击")
@@ -788,6 +880,76 @@ namespace VampireSurvivorLike
                             break;
                         
                     }
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("armor")
+                .WithName("护甲")
+                .WithNameKey("exp_upgrade.armor.name")
+                .WithIconName("copper_helmet")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"护甲Lv{lv}:\n受到伤害-1",
+                        2=>$"护甲Lv{lv}:\n受到伤害-2",
+                        3=>$"护甲Lv{lv}:\n受到伤害-3",
+                        4=>$"护甲Lv{lv}:\n受到伤害-4",
+                        5=>$"护甲Lv{lv}:\n受到伤害-5",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.armor.lv1",
+                        2=>"exp_upgrade.armor.lv2",
+                        3=>"exp_upgrade.armor.lv3",
+                        4=>"exp_upgrade.armor.lv4",
+                        5=>"exp_upgrade.armor.lv5",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, _) =>
+                {
+                    Global.ArmorValue.Value += 1;
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("yellow_potion")
+                .WithName("黄药水")
+                .WithNameKey("exp_upgrade.yellow_potion.name")
+                .WithIconName("rpgItems_3")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"黄药水Lv{lv}:\n武器范围+10%",
+                        2=>$"黄药水Lv{lv}:\n武器范围+20%",
+                        3=>$"黄药水Lv{lv}:\n武器范围+30%",
+                        4=>$"黄药水Lv{lv}:\n武器范围+40%",
+                        5=>$"黄药水Lv{lv}:\n武器范围+50%",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.yellow_potion.lv1",
+                        2=>"exp_upgrade.yellow_potion.lv2",
+                        3=>"exp_upgrade.yellow_potion.lv3",
+                        4=>"exp_upgrade.yellow_potion.lv4",
+                        5=>"exp_upgrade.yellow_potion.lv5",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, _) =>
+                {
+                    Global.AreaMultiplier.Value += 0.1f;
                 }));
 
                 Add(new ExpUpgradeItem(false)

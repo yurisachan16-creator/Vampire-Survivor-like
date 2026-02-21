@@ -46,6 +46,14 @@ namespace VampireSurvivorLike
 				
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
+			Global.SimpleAxeUnlocked.RegisterWithInitValue(unlocked =>
+			{
+				if (unlocked && SimpleAxe)
+				{
+					SimpleAxe.Show();
+				}
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
 			//随机解锁一个初始武器
 			this.GetSystem<ExpUpgradeSystem>().Items.Where(item=>item.IsWeapon)
 			.ToList()

@@ -10,6 +10,8 @@ namespace VampireSurvivorLike
     {
         // 用于 Global.GeneratePowerUpWithRates 中快速判断是否已存在
         public static int ActiveRecoverHPCount;
+        public static int ActiveWineCount;
+        public static int ActiveLemonBuffCount;
         public static int ActiveBombCount;
         public static int ActiveGetAllExpCount;
 
@@ -42,6 +44,8 @@ namespace VampireSurvivorLike
         public static void Clear()
         {
             ActiveRecoverHPCount = 0;
+            ActiveWineCount = 0;
+            ActiveLemonBuffCount = 0;
             ActiveBombCount = 0;
             ActiveGetAllExpCount = 0;
             ExpSet.Clear();

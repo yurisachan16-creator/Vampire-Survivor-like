@@ -60,7 +60,7 @@ namespace VampireSurvivorLike
 		{
 			if (IsGameOver) return false;
 
-			amount = Mathf.Max(1, amount);
+			amount = Mathf.Max(1, amount - Mathf.Max(0, Global.ArmorValue.Value));
 			damageSource ??= string.Empty;
 
 			if (_lastDamageFrame == Time.frameCount && _lastDamageSource == damageSource) return false;

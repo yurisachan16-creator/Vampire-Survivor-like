@@ -24,6 +24,11 @@ namespace VampireSurvivorLike
         public const float InitBombDamage=10f;
         public const float InitBombPercent=0.05f;
 
+        public const float InitSimpleAxeDamage = 8f;
+        public const float InitSimpleAxeDuration = 1.2f;
+        public const int InitSimpleAxeCount = 1;
+        public const int InitSimpleAxePierce = 1;
+
         public const float InitCriticalRate=0.05f;  //暴击率
 
         public const float InitDamageRate=1.0f; //伤害倍率
@@ -48,6 +53,14 @@ namespace VampireSurvivorLike
         public const float RecoverHpDropRateScaleWhenMulti = 0.22f;
         /// <summary>允许多实例后全图吸附道具固定掉落率</summary>
         public const float GetAllExpDropRateWhenMulti = 0.01f;
+        /// <summary>酒掉落概率</summary>
+        public const float WineDropRate = 0.03f;
+        /// <summary>柠檬 Buff 掉落概率</summary>
+        public const float LemonBuffDropRate = 0.025f;
+        /// <summary>柠檬 Buff 伤害加成（+40%）</summary>
+        public const float LemonBuffDamageBonus = 0.4f;
+        /// <summary>柠檬 Buff 持续时间（秒）</summary>
+        public const float LemonBuffDurationSeconds = 6f;
         /// <summary>死神出现的游戏时间（秒）</summary>
         public const float ReaperSpawnTimeSeconds = 1800f;
         /// <summary>死神预制体名称</summary>
