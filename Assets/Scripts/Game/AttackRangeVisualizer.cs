@@ -6,7 +6,7 @@ namespace VampireSurvivorLike
     public sealed class AttackRangeVisualizer : MonoBehaviour
     {
         private const int SegmentCount = 72;
-        private const float LineWidth = 0.10f;
+        private const float LineWidth = 0.02f;
 
         private readonly Vector3[] _points = new Vector3[SegmentCount + 1];
         private LineRenderer _lineRenderer;
@@ -29,10 +29,10 @@ namespace VampireSurvivorLike
             _lineRenderer.numCornerVertices = 8;
             _lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             _lineRenderer.receiveShadows = false;
-            _lineRenderer.sortingOrder = 40;
+            _lineRenderer.sortingOrder = 2;
             _lineRenderer.sharedMaterial = CreateMaterial();
-            _lineRenderer.startColor = new Color(0.15f, 0.95f, 1f, 0.9f);
-            _lineRenderer.endColor = new Color(0.15f, 0.95f, 1f, 0.9f);
+            _lineRenderer.startColor = new Color(0.96f, 0.98f, 1f, 0.08f);
+            _lineRenderer.endColor = new Color(0.96f, 0.98f, 1f, 0.08f);
             _lineRenderer.enabled = false;
         }
 
@@ -47,7 +47,7 @@ namespace VampireSurvivorLike
         {
             if (!_lineRenderer) return;
 
-            var shouldShow = !Global.IsGameOver.Value && (Global.SimpleSwordUnlocked.Value || Global.RotateSwordUnlocked.Value);
+            var shouldShow = !Global.IsGameOver.Value && Global.SimpleSwordUnlocked.Value;
             if (!shouldShow)
             {
                 _lineRenderer.enabled = false;
@@ -73,13 +73,9 @@ namespace VampireSurvivorLike
         private static float GetCurrentMeleeRangeRadius()
         {
             var area = Mathf.Max(1f, Global.AreaMultiplier.Value);
-            var swordRadius = Global.SimpleSwordUnlocked.Value
+            return Global.SimpleSwordUnlocked.Value
                 ? Global.SimpleSwordRange.Value * area * (Global.SuperSword.Value ? 2f : 1f)
                 : 0f;
-            var rotateRadius = Global.RotateSwordUnlocked.Value
-                ? Global.RotateSwordRange.Value * area
-                : 0f;
-            return Mathf.Max(swordRadius, rotateRadius);
         }
 
         private void UpdateCircle(float radius)

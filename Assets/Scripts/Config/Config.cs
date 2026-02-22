@@ -2,36 +2,36 @@ namespace VampireSurvivorLike
 {
     public class Config
     {
-        public const float InitSimpleSwordDamage=3f;
-        public const float InitSimpleSwordDuration=1.5f;
+        public const float InitSimpleSwordDamage=6f;
+        public const float InitSimpleSwordDuration=1.2f;
         public const int InitSimpleSwordCount=3;
         public const float InitSimpleSwordRange=3f;
 
-        public const float InitSimpleKnifeDamage=8f;
+        public const float InitSimpleKnifeDamage=6f;
         public const float InitSimpleKnifeDuration=1f;
-        public const int InitSimpleKnifeCount=3;
-        public const int InitSimpleKnifeAttackCount=2; //穿透数量
+        public const int InitSimpleKnifeCount=2;
+        public const int InitSimpleKnifeAttackCount=1; //穿透数量
 
-        public const float InitRotateSwordDamage=5;
+        public const float InitRotateSwordDamage=6;
         public const int InitRotateSwordCount=1;
         public const float InitRotateSwordSpeed=2f;
         public const float InitRotateSwordRange=2f;
 
-        public const float InitBasketBallDamage=5f;
+        public const float InitBasketBallDamage=6f;
         public const float InitBasketBallSpeed=10f;
         public const int InitBasketBallCount=1;
 
         public const float InitBombDamage=10f;
         public const float InitBombPercent=0.05f;
 
-        public const float InitSimpleAxeDamage = 8f;
-        public const float InitSimpleAxeDuration = 1.2f;
-        public const int InitSimpleAxeCount = 1;
+        public const float InitSimpleAxeDamage = 6f;
+        public const float InitSimpleAxeDuration = 1.0f;
+        public const int InitSimpleAxeCount = 2;
         public const int InitSimpleAxePierce = 1;
 
-        public const float InitMagicWandDamage = 4f;
-        public const float InitMagicWandDuration = 0.8f;
-        public const int InitMagicWandCount = 1;
+        public const float InitMagicWandDamage = 6f;
+        public const float InitMagicWandDuration = 0.9f;
+        public const int InitMagicWandCount = 2;
 
         public const float InitSimpleBowDamage = 6f;
         public const float InitSimpleBowDuration = 1.0f;

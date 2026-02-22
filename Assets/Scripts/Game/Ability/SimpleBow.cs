@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using QFramework;
 using QAssetBundle;
+using UnityEngine.U2D;
 
 namespace VampireSurvivorLike
 {
@@ -9,6 +10,7 @@ namespace VampireSurvivorLike
     {
         private static readonly List<Transform> TargetsBuffer = new List<Transform>(256);
         private static readonly float[] SuperArrowSpreadAngles = { -12f, 0f, 12f };
+        private const string ProjectileSpriteName = "rpgItems_53";
 
         private const float TargetSearchRadius = 30f;
         private const float ArrowSpeed = 18f;
@@ -17,6 +19,8 @@ namespace VampireSurvivorLike
         private float _currentSeconds;
         private GameObject _projectileTemplate;
         private GameObject _projectileSource;
+        private ResLoader _resLoader;
+        private SpriteAtlas _iconAtlas;
 
         public void SetProjectileSource(GameObject source)
         {
@@ -94,8 +98,16 @@ namespace VampireSurvivorLike
         private void EnsureTemplate()
         {
             if (_projectileTemplate) return;
+            EnsureAtlas();
             _projectileSource = ResolveProjectileSource();
-            _projectileTemplate = CreateProjectileTemplate("SimpleBow_ArrowTemplate", _projectileSource, 0.12f, new Vector3(0.45f, 0.9f, 1f));
+            _projectileTemplate = CreateProjectileTemplate("SimpleBow_ArrowTemplate", _projectileSource, ProjectileSpriteName, 0.12f, new Vector3(0.45f, 0.9f, 1f));
+        }
+
+        private void EnsureAtlas()
+        {
+            if (_iconAtlas) return;
+            _resLoader ??= ResLoader.Allocate();
+            _iconAtlas = _resLoader.LoadSync<SpriteAtlas>("icon");
         }
 
         private GameObject ResolveProjectileSource()
@@ -119,7 +131,7 @@ namespace VampireSurvivorLike
             return null;
         }
 
-        private GameObject CreateProjectileTemplate(string templateName, GameObject source, float colliderRadius, Vector3 fallbackScale)
+        private GameObject CreateProjectileTemplate(string templateName, GameObject source, string spriteName, float colliderRadius, Vector3 fallbackScale)
         {
             var template = new GameObject(templateName);
             template.transform.SetParent(transform, false);
@@ -127,12 +139,13 @@ namespace VampireSurvivorLike
 
             var spriteRenderer = template.AddComponent<SpriteRenderer>();
             var sourceRenderer = source ? source.GetComponentInChildren<SpriteRenderer>(true) : null;
-            if (sourceRenderer)
+            var projectileSprite = _iconAtlas ? _iconAtlas.GetSprite(spriteName) : null;
+            if (projectileSprite || sourceRenderer)
             {
-                spriteRenderer.sprite = sourceRenderer.sprite;
-                spriteRenderer.sortingLayerID = sourceRenderer.sortingLayerID;
-                spriteRenderer.sortingOrder = sourceRenderer.sortingOrder;
-                spriteRenderer.color = sourceRenderer.color;
+                spriteRenderer.sprite = projectileSprite ? projectileSprite : sourceRenderer.sprite;
+                spriteRenderer.sortingLayerID = sourceRenderer ? sourceRenderer.sortingLayerID : spriteRenderer.sortingLayerID;
+                spriteRenderer.sortingOrder = sourceRenderer ? sourceRenderer.sortingOrder : 0;
+                spriteRenderer.color = Color.white;
                 template.transform.localScale = fallbackScale;
             }
             else
@@ -160,6 +173,14 @@ namespace VampireSurvivorLike
                 Destroy(_projectileTemplate);
                 _projectileTemplate = null;
             }
+
+            if (_resLoader != null)
+            {
+                _resLoader.Recycle2Cache();
+                _resLoader = null;
+            }
+
+            _iconAtlas = null;
         }
     }
 }

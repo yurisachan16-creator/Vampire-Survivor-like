@@ -9,13 +9,15 @@ namespace VampireSurvivorLike
 		public float MoveSpeed = 5f;
 		[Tooltip("受击无敌时间（秒）：用于防止同帧/短时间内重复扣血")]
 		public float InvincibleSeconds = 1f;
-		private const float InvincibleHintCooldownSeconds = 0.2f;
-		private const float DamageHintOffsetY = 0.9f;
+		private const float InvincibleBlinkSpeed = 14f;
+		private const float InvincibleMinAlpha = 0.45f;
 		private AudioPlayer _mWalkSfx;
 		private float _invincibleUntilTime;
-		private float _nextInvincibleHintTime;
 		private int _lastDamageFrame = -1;
 		private string _lastDamageSource;
+		private SpriteRenderer[] _playerRenderers = System.Array.Empty<SpriteRenderer>();
+		private Color[] _rendererBaseColors = System.Array.Empty<Color>();
+		private bool _invincibleVisualActive;
 
 		public static Player Default { get; private set; }
 		public bool IsGameOver => Global.IsGameOver.Value;
@@ -25,6 +27,7 @@ namespace VampireSurvivorLike
 		void Awake()
         {
             Default = this;
+			CachePlayerRenderers();
         }
 
 		void Start()
@@ -87,7 +90,6 @@ namespace VampireSurvivorLike
 			if (_lastDamageFrame == Time.frameCount && _lastDamageSource == damageSource) return false;
 			if (!ignoreInvincible && _lastDamageFrame != Time.frameCount && Time.time < _invincibleUntilTime)
 			{
-				ShowInvincibleHint("无敌中");
 				return false;
 			}
 
@@ -105,17 +107,9 @@ namespace VampireSurvivorLike
 
 			AudioKit.PlaySound(Sfx.HURT);
 			CameraController.ShakeCamera();
-			ShowInvincibleHint($"无敌 {InvincibleSeconds:0.#} 秒", true);
+			_invincibleVisualActive = true;
 			Global.RequestHPUIRefresh.Trigger();
 			return true;
-		}
-
-		private void ShowInvincibleHint(string text, bool ignoreCooldown = false)
-		{
-			if (!ignoreCooldown && Time.time < _nextInvincibleHintTime) return;
-			_nextInvincibleHintTime = Time.time + InvincibleHintCooldownSeconds;
-
-			FloatingTextController.Play(transform.position + Vector3.up * DamageHintOffsetY, text, false);
 		}
 
 		private void GameOver(string bossId, string damageSource)
@@ -133,6 +127,9 @@ namespace VampireSurvivorLike
 				_mWalkSfx.Stop();
 				_mWalkSfx = null;
 			}
+
+			SetPlayerAlpha(1f);
+			_invincibleVisualActive = false;
 							
 			UIKit.ClosePanel<UIGamePanel>();
 			UIKit.OpenPanel<UIGameOverPanel>();
@@ -144,6 +141,8 @@ namespace VampireSurvivorLike
 
         void Update()
         {
+			UpdateInvincibleVisual();
+
             var move = PlatformInput.GetMoveAxisRaw();
             var horizontal = move.x;
 			var vertical = move.y;
@@ -202,9 +201,67 @@ namespace VampireSurvivorLike
 
         void OnDestroy()
         {
+			SetPlayerAlpha(1f);
             if (Default == this)
 				Default = null;
         }
+
+		private void CachePlayerRenderers()
+		{
+			if (Sprite)
+			{
+				_playerRenderers = Sprite.GetComponentsInChildren<SpriteRenderer>(true);
+			}
+
+			if (_playerRenderers == null || _playerRenderers.Length == 0)
+			{
+				_playerRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+			}
+
+			if (_playerRenderers == null)
+			{
+				_playerRenderers = System.Array.Empty<SpriteRenderer>();
+				_rendererBaseColors = System.Array.Empty<Color>();
+				return;
+			}
+
+			_rendererBaseColors = new Color[_playerRenderers.Length];
+			for (var i = 0; i < _playerRenderers.Length; i++)
+			{
+				_rendererBaseColors[i] = _playerRenderers[i] ? _playerRenderers[i].color : Color.white;
+			}
+		}
+
+		private void UpdateInvincibleVisual()
+		{
+			if (!_invincibleVisualActive) return;
+
+			if (Time.time >= _invincibleUntilTime || IsGameOver)
+			{
+				SetPlayerAlpha(1f);
+				_invincibleVisualActive = false;
+				return;
+			}
+
+			var pulse = Mathf.PingPong(Time.time * InvincibleBlinkSpeed, 1f);
+			var alpha = Mathf.Lerp(InvincibleMinAlpha, 1f, pulse);
+			SetPlayerAlpha(alpha);
+		}
+
+		private void SetPlayerAlpha(float alpha)
+		{
+			if (_playerRenderers == null || _playerRenderers.Length == 0) return;
+
+			alpha = Mathf.Clamp01(alpha);
+			for (var i = 0; i < _playerRenderers.Length; i++)
+			{
+				var renderer = _playerRenderers[i];
+				if (!renderer) continue;
+
+				var baseColor = i < _rendererBaseColors.Length ? _rendererBaseColors[i] : renderer.color;
+				renderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * alpha);
+			}
+		}
 		#endregion
     }
 }

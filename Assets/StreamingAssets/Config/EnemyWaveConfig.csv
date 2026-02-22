@@ -2,7 +2,7 @@ ChannelName,Active,EnemyPrefabName,Phase,StartTimeSec,EndTimeSec,SpawnIntervalSe
 幽灵-背景,TRUE,Enemy_Ghost,small,0,1800,2.2,0,0.8,0.9,1.0,1.8,FALSE,0.55,0.20,0.08,0.03
 幽灵-开场,TRUE,Enemy_Ghost,small,0,180,1.0,0,1.0,1.0,1.0,1.9,FALSE,0.50,0.22,0.08,0.03
 蝙蝠-侦察,TRUE,Enemy_Bat,small,90,300,1.2,0,0.9,1.15,1.0,2.3,FALSE,0.48,0.22,0.06,0.03
-方块-登场,TRUE,Enemy_Block_Yellow,small,150,420,1.1,0,1.2,0.95,1.0,1.8,FALSE,0.45,0.25,0.08,0.04
+方块-登场,TRUE,Enemy_Block_Yellow,small,150,420,1.1,0,0.55,0.95,1.0,1.8,FALSE,0.45,0.25,0.08,0.04
 幽灵-密集,TRUE,Enemy_Ghost,small,180,480,0.75,0,1.1,1.0,1.0,2.0,FALSE,0.48,0.23,0.08,0.03
 蝙蝠-群袭1,TRUE,Enemy_Bat,small,240,600,0.8,0,1.0,1.15,1.0,2.3,FALSE,0.45,0.24,0.06,0.03
 独眼-初见,TRUE,Enemy_Cyclops,small,300,720,1.0,0,1.4,0.9,1.05,1.8,FALSE,0.50,0.30,0.07,0.05
