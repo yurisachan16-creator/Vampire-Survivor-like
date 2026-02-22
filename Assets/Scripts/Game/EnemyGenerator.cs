@@ -179,6 +179,10 @@ namespace VampireSurvivorLike
 			var speedMul = 1f + Config.SpeedGrowthPerMinute * minutes;
 			var damageMul = 1f + Config.DamageGrowthPerMinute * minutes;
 			var spawnRateMul = 1f + Config.SpawnRateGrowthPerMinute * minutes;
+			if (gameTime < Config.EarlyGameSpawnBoostDurationSeconds)
+			{
+				spawnRateMul *= Config.EarlyGameSpawnRateMultiplier;
+			}
 
 			var activeNames = new List<string>();
 

@@ -417,7 +417,7 @@ namespace VampireSurvivorLike
                             Global.SimpleKnifeUnlocked.Value = true;
                             break;
                         case 2:
-                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeDamage.Value += 2;
                             Global.SimpleKnifeCount.Value += 2;
                             break;
                         case 3:
@@ -431,7 +431,7 @@ namespace VampireSurvivorLike
                             Global.SimpleKnifeCount.Value += 1;
                             break;
                         case 5:
-                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeDamage.Value += 2;
                             Global.SimpleKnifeCount.Value += 1;
                             break;
                         case 6:
@@ -444,7 +444,7 @@ namespace VampireSurvivorLike
                             Global.SimpleKnifeCount.Value += 1;
                             break;
                         case 8:
-                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeDamage.Value += 2;
                             Global.SimpleKnifeCount.Value += 1;
                             break;
                         case 9:
@@ -452,7 +452,7 @@ namespace VampireSurvivorLike
                             Global.SimpleKnifeCount.Value += 1;
                             break;
                         case 10:
-                            Global.SimpleKnifeDamage.Value += 3;
+                            Global.SimpleKnifeDamage.Value += 2;
                             Global.SimpleKnifeCount.Value += 1;
                             break;
                     }

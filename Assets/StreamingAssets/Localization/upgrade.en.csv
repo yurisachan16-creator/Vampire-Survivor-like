@@ -59,16 +59,16 @@ exp_upgrade.simple_bomb.lv10,Bomb Lv10:\\nDrop chance +10%, Damage +5
 exp_upgrade.simple_knife.name,Knife
 exp_upgrade.simple_knife.paired_name,Fused Knife
 exp_upgrade.simple_knife.paired_desc,Double damage
-exp_upgrade.simple_knife.lv1,Knife Lv1: Fires one at the nearest enemy
-exp_upgrade.simple_knife.lv2,Knife Lv2:\\nDamage +3, Count +2
-exp_upgrade.simple_knife.lv3,Knife Lv3:\\nInterval -0.1s, Damage +1, Count +1
+exp_upgrade.simple_knife.lv1,Knife Lv1: Fires one at the nearest enemy (Pierce +1)
+exp_upgrade.simple_knife.lv2,Knife Lv2:\\nDamage +2, Count +2
+exp_upgrade.simple_knife.lv3,Knife Lv3:\\nInterval -0.1s, Damage +2, Count +1
 exp_upgrade.simple_knife.lv4,Knife Lv4:\\nInterval -0.1s, Pierce +1, Count +1
-exp_upgrade.simple_knife.lv5,Knife Lv5:\\nDamage +3, Count +1
+exp_upgrade.simple_knife.lv5,Knife Lv5:\\nDamage +2, Count +1
 exp_upgrade.simple_knife.lv6,Knife Lv6:\\nInterval -0.1s, Count +1
 exp_upgrade.simple_knife.lv7,Knife Lv7:\\nInterval -0.1s, Pierce +1, Count +1
-exp_upgrade.simple_knife.lv8,Knife Lv8:\\nDamage +3, Count +1
+exp_upgrade.simple_knife.lv8,Knife Lv8:\\nDamage +2, Count +1
 exp_upgrade.simple_knife.lv9,Knife Lv9:\\nInterval -0.1s, Count +1
-exp_upgrade.simple_knife.lv10,Knife Lv10:\\nDamage +3, Count +1
+exp_upgrade.simple_knife.lv10,Knife Lv10:\\nDamage +2, Count +1
 exp_upgrade.basket_ball.name,Basketball
 exp_upgrade.basket_ball.paired_name,Fused Basketball
 exp_upgrade.basket_ball.paired_desc,Double damage and larger size

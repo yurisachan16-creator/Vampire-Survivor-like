@@ -15991,7 +15991,7 @@ MonoBehaviour:
   ArchitectureFullTypeName: 
   ViewControllerFullTypeName: 
   MoveSpeed: 5
-  InvincibleSeconds: 0.5
+  InvincibleSeconds: 1
   Sprite: {fileID: 1141027196}
   HurtBox: {fileID: 461601631}
   HPValue: {fileID: 387835361}

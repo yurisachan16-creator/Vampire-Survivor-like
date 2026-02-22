@@ -8,9 +8,12 @@ namespace VampireSurvivorLike
 	{
 		public float MoveSpeed = 5f;
 		[Tooltip("受击无敌时间（秒）：用于防止同帧/短时间内重复扣血")]
-		public float InvincibleSeconds = 0.5f;
+		public float InvincibleSeconds = 1f;
+		private const float InvincibleHintCooldownSeconds = 0.2f;
+		private const float DamageHintOffsetY = 0.9f;
 		private AudioPlayer _mWalkSfx;
 		private float _invincibleUntilTime;
+		private float _nextInvincibleHintTime;
 		private int _lastDamageFrame = -1;
 		private string _lastDamageSource;
 
@@ -64,7 +67,11 @@ namespace VampireSurvivorLike
 			damageSource ??= string.Empty;
 
 			if (_lastDamageFrame == Time.frameCount && _lastDamageSource == damageSource) return false;
-			if (!ignoreInvincible && _lastDamageFrame != Time.frameCount && Time.time < _invincibleUntilTime) return false;
+			if (!ignoreInvincible && _lastDamageFrame != Time.frameCount && Time.time < _invincibleUntilTime)
+			{
+				ShowInvincibleHint("无敌中");
+				return false;
+			}
 
 			_lastDamageFrame = Time.frameCount;
 			_lastDamageSource = damageSource;
@@ -80,8 +87,17 @@ namespace VampireSurvivorLike
 
 			AudioKit.PlaySound(Sfx.HURT);
 			CameraController.ShakeCamera();
+			ShowInvincibleHint($"无敌 {InvincibleSeconds:0.#} 秒", true);
 			Global.RequestHPUIRefresh.Trigger();
 			return true;
+		}
+
+		private void ShowInvincibleHint(string text, bool ignoreCooldown = false)
+		{
+			if (!ignoreCooldown && Time.time < _nextInvincibleHintTime) return;
+			_nextInvincibleHintTime = Time.time + InvincibleHintCooldownSeconds;
+
+			FloatingTextController.Play(transform.position + Vector3.up * DamageHintOffsetY, text, false);
 		}
 
 		private void GameOver(string bossId, string damageSource)

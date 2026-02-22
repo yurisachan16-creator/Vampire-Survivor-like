@@ -7,10 +7,10 @@ namespace VampireSurvivorLike
         public const int InitSimpleSwordCount=3;
         public const float InitSimpleSwordRange=3f;
 
-        public const float InitSimpleKnifeDamage=5f;
+        public const float InitSimpleKnifeDamage=8f;
         public const float InitSimpleKnifeDuration=1f;
         public const int InitSimpleKnifeCount=3;
-        public const int InitSimpleKnifeAttackCount=1; //穿透数量
+        public const int InitSimpleKnifeAttackCount=2; //穿透数量
 
         public const float InitRotateSwordDamage=5;
         public const int InitRotateSwordCount=1;
@@ -49,6 +49,10 @@ namespace VampireSurvivorLike
         public const float DamageGrowthPerMinute = 0.15f;
         /// <summary>每分钟刷新频率加速倍率（间隔缩短）</summary>
         public const float SpawnRateGrowthPerMinute = 0.1f;
+        /// <summary>前期增刷持续时间（秒）</summary>
+        public const float EarlyGameSpawnBoostDurationSeconds = 180f;
+        /// <summary>前期增刷倍率（>1 表示刷怪更快）</summary>
+        public const float EarlyGameSpawnRateMultiplier = 1.12f;
         /// <summary>允许多实例后回血道具概率缩放系数</summary>
         public const float RecoverHpDropRateScaleWhenMulti = 0.22f;
         /// <summary>允许多实例后全图吸附道具固定掉落率</summary>

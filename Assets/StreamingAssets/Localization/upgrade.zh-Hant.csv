@@ -59,16 +59,16 @@ exp_upgrade.simple_bomb.lv10,炸彈Lv10：\\n掉落概率+10% 攻擊力+5
 exp_upgrade.simple_knife.name,飛刀
 exp_upgrade.simple_knife.paired_name,合成後的飛刀
 exp_upgrade.simple_knife.paired_desc,攻擊力翻倍
-exp_upgrade.simple_knife.lv1,飛刀Lv1:向最近的敵人發射一把
-exp_upgrade.simple_knife.lv2,飛刀Lv2：\\n攻擊力+3 數量+2
-exp_upgrade.simple_knife.lv3,飛刀Lv3：\\n間隔-0.1s 攻擊力+1 數量+1
+exp_upgrade.simple_knife.lv1,飛刀Lv1:向最近的敵人發射一把（可穿透1名敵人）
+exp_upgrade.simple_knife.lv2,飛刀Lv2：\\n攻擊力+2 數量+2
+exp_upgrade.simple_knife.lv3,飛刀Lv3：\\n間隔-0.1s 攻擊力+2 數量+1
 exp_upgrade.simple_knife.lv4,飛刀Lv4：\\n間隔-0.1s 穿透+1 數量+1
-exp_upgrade.simple_knife.lv5,飛刀Lv5：\\n攻擊力+3 數量+1
+exp_upgrade.simple_knife.lv5,飛刀Lv5：\\n攻擊力+2 數量+1
 exp_upgrade.simple_knife.lv6,飛刀Lv6：\\n間隔-0.1s 數量+1
 exp_upgrade.simple_knife.lv7,飛刀Lv7：\\n間隔-0.1s 穿透+1 數量+1
-exp_upgrade.simple_knife.lv8,飛刀Lv8：\\n攻擊力+3 數量+1
+exp_upgrade.simple_knife.lv8,飛刀Lv8：\\n攻擊力+2 數量+1
 exp_upgrade.simple_knife.lv9,飛刀Lv9：\\n間隔-0.1s 數量+1
-exp_upgrade.simple_knife.lv10,飛刀Lv10：\\n攻擊力+3 數量+1
+exp_upgrade.simple_knife.lv10,飛刀Lv10：\\n攻擊力+2 數量+1
 exp_upgrade.basket_ball.name,籃球
 exp_upgrade.basket_ball.paired_name,合成後的籃球
 exp_upgrade.basket_ball.paired_desc,攻擊力翻倍 體型變大

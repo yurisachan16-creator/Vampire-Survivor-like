@@ -21,7 +21,7 @@ namespace VampireSurvivorLike
 
             _baseDamage = baseDamage;
             _superKnife = superKnife;
-            _maxHits = Mathf.Max(1, maxHits);
+            _maxHits = Mathf.Max(2, maxHits);
             _maxDistanceFromPlayer = Mathf.Max(0.1f, maxDistanceFromPlayer);
             _hitCount = 0;
         }
@@ -64,7 +64,7 @@ namespace VampireSurvivorLike
         {
             EnsureRefs();
             _hitCount = 0;
-            _maxHits = 1;
+            _maxHits = 2;
             _baseDamage = 0f;
             _superKnife = false;
             _maxDistanceFromPlayer = 20f;
