@@ -40,7 +40,8 @@ namespace VampireSurvivorLike
 			overlayRt.SetParent(transform, false);
 			overlayRt.anchorMin = Vector2.zero;
 			overlayRt.anchorMax = Vector2.one;
-			overlayRt.offsetMin = Vector2.zero;
+			var lootGuideBottomPadding = Mathf.Max(110f, Screen.height * 0.10f);
+			overlayRt.offsetMin = new Vector2(0f, lootGuideBottomPadding);
 			overlayRt.offsetMax = Vector2.zero;
 			overlayRt.pivot = new Vector2(0.5f, 0.5f);
 			var cg = overlayGo.GetComponent<CanvasGroup>();

@@ -28,7 +28,12 @@ namespace VampireSurvivorLike
         }
 
 		void Start()
-		{
+		{	
+			if (!GetComponent<AttackRangeVisualizer>())
+			{
+				gameObject.AddComponent<AttackRangeVisualizer>();
+			}
+
             HurtBox.OnTriggerEnter2DEvent(Collider2D =>
 			{
 				if (IsGameOver) return;

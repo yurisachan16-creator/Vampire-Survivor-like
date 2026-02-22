@@ -203,7 +203,7 @@ namespace VampireSurvivorLike
 			var uiCamera = _overlayCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : _overlayCanvas.worldCamera;
 			if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_overlayRoot, edgeScreen, uiCamera, out var local))
 			{
-				entry.Root.anchoredPosition = local;
+				entry.Root.anchoredPosition = ClampToOverlay(local, entry.Root.sizeDelta);
 			}
 
 			var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
@@ -255,6 +255,17 @@ namespace VampireSurvivorLike
 			p.x = Mathf.Clamp(p.x, min.x, max.x);
 			p.y = Mathf.Clamp(p.y, min.y, max.y);
 			return p;
+		}
+
+		private Vector2 ClampToOverlay(Vector2 localPos, Vector2 entrySize)
+		{
+			var rect = _overlayRoot.rect;
+			var halfW = entrySize.x * 0.5f;
+			var halfH = entrySize.y * 0.5f;
+			return new Vector2(
+				Mathf.Clamp(localPos.x, rect.xMin + halfW, rect.xMax - halfW),
+				Mathf.Clamp(localPos.y, rect.yMin + halfH, rect.yMax - halfH)
+			);
 		}
 
 		private static ArrowEntry CreateArrowEntry(RectTransform parent)
