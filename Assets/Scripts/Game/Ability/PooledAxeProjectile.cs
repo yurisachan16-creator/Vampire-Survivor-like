@@ -13,6 +13,8 @@ namespace VampireSurvivorLike
         private int _hitCount;
         private int _maxPierce;
         private bool _infinitePierce;
+        private float _spinSpeed;
+        private const float MaxDistanceFromPlayer = 32f;
         private readonly HashSet<int> _hitEnemyIds = new HashSet<int>(16);
 
         public void Configure(Vector2 velocity, float damage, float despawnAbovePlayerDistance, int maxPierce, bool infinitePierce)
@@ -24,13 +26,24 @@ namespace VampireSurvivorLike
             _maxPierce = Mathf.Max(1, maxPierce);
             _infinitePierce = infinitePierce;
             _hitCount = 0;
+            _spinSpeed = Random.Range(360f, 720f);
             _hitEnemyIds.Clear();
         }
 
         private void Update()
         {
             if (!Player.Default) return;
-            if (Player.Default.Position().y - transform.position.y > _despawnAbovePlayerDistance)
+
+            transform.Rotate(0f, 0f, _spinSpeed * Time.deltaTime);
+
+            var playerPos = (Vector2)Player.Default.Position();
+            if (playerPos.y - transform.position.y > _despawnAbovePlayerDistance)
+            {
+                ObjectPoolSystem.Despawn(gameObject);
+                return;
+            }
+
+            if (((Vector2)transform.position - playerPos).sqrMagnitude > MaxDistanceFromPlayer * MaxDistanceFromPlayer)
             {
                 ObjectPoolSystem.Despawn(gameObject);
             }
@@ -74,6 +87,7 @@ namespace VampireSurvivorLike
             _hitCount = 0;
             _maxPierce = 1;
             _infinitePierce = false;
+            _spinSpeed = 360f;
             _hitEnemyIds.Clear();
         }
 

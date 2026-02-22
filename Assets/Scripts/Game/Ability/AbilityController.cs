@@ -54,10 +54,19 @@ namespace VampireSurvivorLike
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			//随机解锁一个初始武器
-			this.GetSystem<ExpUpgradeSystem>().Items.Where(item=>item.IsWeapon)
-			.ToList()
-			.GetRandomItem().Upgrade();
+			// 随机解锁一个初始武器
+			var expUpgradeSystem = this.GetSystem<ExpUpgradeSystem>();
+			expUpgradeSystem.Items.Where(item => item.IsWeapon)
+				.ToList()
+				.GetRandomItem()
+				.Upgrade();
+
+			// 保底解锁铜剑，避免测试阶段被随机池掩盖
+			if (expUpgradeSystem.Dictionary.TryGetValue("simple_axe", out var simpleAxeItem)
+			    && simpleAxeItem.CurrentLevel.Value == 0)
+			{
+				simpleAxeItem.Upgrade();
+			}
 
             Global.SuperBomb.RegisterWithInitValue(unlocked =>
             {
