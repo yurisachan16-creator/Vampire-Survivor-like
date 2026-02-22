@@ -18,7 +18,7 @@ MonoBehaviour:
     isBuild: 1
     platform: 5
     saveLocation: D:\unity\Vampire Survivor-like\Build\Windows
-    productVersion: 0.11.8
+    productVersion: 0.11.12
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
@@ -32,7 +32,7 @@ MonoBehaviour:
     isBuild: 1
     platform: 13
     saveLocation: D:\unity\Vampire Survivor-like\Build\Android\Development
-    productVersion: 0.11.8
+    productVersion: 0.11.12
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
@@ -44,7 +44,7 @@ MonoBehaviour:
     isBuild: 1
     platform: 20
     saveLocation: D:\unity\Vampire Survivor-like\Build\WebGL
-    productVersion: 0.11.8
+    productVersion: 0.11.12
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
