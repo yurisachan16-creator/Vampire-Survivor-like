@@ -28,7 +28,7 @@ namespace VampireSurvivorLike
         }
 
 		void Start()
-		{	
+		{
             HurtBox.OnTriggerEnter2DEvent(Collider2D =>
 			{
 				if (IsGameOver) return;
@@ -39,8 +39,21 @@ namespace VampireSurvivorLike
 					if(hitHurtBox.Owner.CompareTag("Enemy"))
 					{
 						var boss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
+						var contactDamage = 1;
+						if (boss)
+						{
+							contactDamage = Mathf.Max(1, Mathf.CeilToInt(boss.DamageMultiplier));
+						}
+						else
+						{
+							var enemy = hitHurtBox.Owner.GetComponent<Enemy>();
+							if (enemy)
+							{
+								contactDamage = Mathf.Max(1, Mathf.CeilToInt(enemy.DamageMultiplier));
+							}
+						}
 						var bossId = boss ? boss.BossType.ToString() : string.Empty;
-						ApplyDamage(1, bossId, boss ? "BossMelee" : "EnemyMelee");
+						ApplyDamage(contactDamage, bossId, boss ? "BossMelee" : "EnemyMelee");
 						
 					}
 				}
