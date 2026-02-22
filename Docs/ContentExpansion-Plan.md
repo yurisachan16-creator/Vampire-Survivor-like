@@ -404,25 +404,25 @@ channel_name,enemy_type,start_time,end_time,spawn_interval,hp_scale,speed_scale,
 
 **目标**：新增魔杖 + 弓箭 + 2 个被动
 
-- [ ] **新武器：魔杖**
+- [x] **新武器：魔杖**
   - 创建 `MagicWand.cs` + `PooledMagicBullet.cs`
   - 自动瞄准最近敌人，发射魔弹
   - 精灵使用 `rpgItems_46`
 
-- [ ] **新武器：弓箭**
+- [x] **新武器：弓箭**
   - 创建 `SimpleBow.cs` + `PooledArrowProjectile.cs`
   - 高速穿透箭矢，弹体使用 `rpgItems_60`
   - 精灵使用 `rpgItems_52`
 
-- [ ] **新被动：空日之书**
+- [x] **新被动：空日之书**
   - 全局攻击间隔缩减
   - 图标使用 `rpgItems_51`
 
-- [ ] **新被动：幸运**
+- [x] **新被动：幸运**
   - 增加掉落品质 + 暴击率加成
   - 图标使用 `rpgItems_57`
 
-- [ ] **进化配对**
+- [x] **进化配对**
   - `magic_wand ↔ empty_tome` → 圣杖
   - `simple_bow ↔ armor` → 精灵弓
 

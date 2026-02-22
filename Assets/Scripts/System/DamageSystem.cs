@@ -10,8 +10,10 @@ namespace VampireSurvivorLike
 
             var lemonBonus = Mathf.Max(0f, Global.LemonDamageBuffBonus.Value);
             baseDamage *= Global.DamageRate.Value * (1f + lemonBonus); //应用伤害倍率与柠檬增伤
+            var bonusCriticalRate = Mathf.Max(0f, Global.LuckValue.Value * 0.5f);
+            var criticalRate = Mathf.Clamp01(Global.CriticalRate.Value + bonusCriticalRate);
             
-            if (UnityEngine.Random.Range(0, 1.0f) < Global.CriticalRate.Value)
+            if (UnityEngine.Random.Range(0, 1.0f) < criticalRate)
             {
                 //暴击
                 var criticalMax = Mathf.Max(2f, criticalDamageTimes);

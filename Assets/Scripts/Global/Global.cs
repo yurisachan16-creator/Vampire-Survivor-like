@@ -35,6 +35,8 @@ namespace VampireSurvivorLike
         public static BindableProperty<bool> BasketBallUnlocked = new BindableProperty<bool>(false);   //篮球是否解锁
         public static BindableProperty<bool> BombUnlocked = new BindableProperty<bool>(false);   //简单炸弹是否解锁
         public static BindableProperty<bool> SimpleAxeUnlocked = new BindableProperty<bool>(false);   //斧头（simple_axe）是否解锁
+        public static BindableProperty<bool> MagicWandUnlocked = new BindableProperty<bool>(false);   //魔杖（magic_wand）是否解锁
+        public static BindableProperty<bool> SimpleBowUnlocked = new BindableProperty<bool>(false);   //弓箭（simple_bow）是否解锁
         public static BindableProperty<float> SimpleAbilityDamage = new BindableProperty<float>(1); //简单攻击伤害
         public static BindableProperty<float> SimpleAbilityDuration = new BindableProperty<float>(1.5f);   //简单攻击间隔时间
 
@@ -62,6 +64,15 @@ namespace VampireSurvivorLike
         public static BindableProperty<int> SimpleAxeCount = new BindableProperty<int>(Config.InitSimpleAxeCount);
         public static BindableProperty<int> SimpleAxePierce = new BindableProperty<int>(Config.InitSimpleAxePierce);
 
+        public static BindableProperty<float> MagicWandDamage = new BindableProperty<float>(Config.InitMagicWandDamage);
+        public static BindableProperty<float> MagicWandDuration = new BindableProperty<float>(Config.InitMagicWandDuration);
+        public static BindableProperty<int> MagicWandCount = new BindableProperty<int>(Config.InitMagicWandCount);
+
+        public static BindableProperty<float> SimpleBowDamage = new BindableProperty<float>(Config.InitSimpleBowDamage);
+        public static BindableProperty<float> SimpleBowDuration = new BindableProperty<float>(Config.InitSimpleBowDuration);
+        public static BindableProperty<int> SimpleBowCount = new BindableProperty<int>(Config.InitSimpleBowCount);
+        public static BindableProperty<int> SimpleBowPierce = new BindableProperty<int>(Config.InitSimpleBowPierce);
+
         public static BindableProperty<float> CriticalRate = new BindableProperty<float>(Config.InitCriticalRate); //暴击率
         public static BindableProperty<float> DamageRate = new BindableProperty<float>(Config.InitDamageRate); //伤害倍率
         public static BindableProperty<int> AdditionalFlyThingCount = new BindableProperty<int>(0); //额外飞行物数量
@@ -76,10 +87,14 @@ namespace VampireSurvivorLike
         public static BindableProperty<bool> SuperBasketBall = new (false); //超级篮球
         public static BindableProperty<bool> SuperBomb = new (false); //超级炸弹
         public static BindableProperty<bool> SuperAxe = new (false); //超级斧头
+        public static BindableProperty<bool> SuperMagicWand = new(false); //超级魔杖
+        public static BindableProperty<bool> SuperBow = new(false); //超级弓箭
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
         public static BindableProperty<int> ArmorValue = new BindableProperty<int>(0); //护甲
         public static BindableProperty<float> AreaMultiplier = new BindableProperty<float>(1f); //范围倍率
+        public static BindableProperty<float> CooldownReduction = new BindableProperty<float>(0f); //冷却缩减
+        public static BindableProperty<float> LuckValue = new BindableProperty<float>(0f); //幸运
         public static BindableProperty<float> LemonDamageBuffBonus = new BindableProperty<float>(0f); //柠檬伤害增益
 
         public static BindableProperty<bool> IsGameOver = new BindableProperty<bool>(false);
@@ -158,6 +173,8 @@ namespace VampireSurvivorLike
             BasketBallUnlocked.Value = false;
             BombUnlocked.Value = false;
             SimpleAxeUnlocked.Value = false;
+            MagicWandUnlocked.Value = false;
+            SimpleBowUnlocked.Value = false;
 
             SimpleAbilityDamage.Value = Config.InitSimpleSwordDamage;
             SimpleAbilityDuration.Value = Config.InitSimpleSwordDuration;
@@ -185,6 +202,13 @@ namespace VampireSurvivorLike
             SimpleAxeDuration.Value = Config.InitSimpleAxeDuration;
             SimpleAxeCount.Value = Config.InitSimpleAxeCount;
             SimpleAxePierce.Value = Config.InitSimpleAxePierce;
+            MagicWandDamage.Value = Config.InitMagicWandDamage;
+            MagicWandDuration.Value = Config.InitMagicWandDuration;
+            MagicWandCount.Value = Config.InitMagicWandCount;
+            SimpleBowDamage.Value = Config.InitSimpleBowDamage;
+            SimpleBowDuration.Value = Config.InitSimpleBowDuration;
+            SimpleBowCount.Value = Config.InitSimpleBowCount;
+            SimpleBowPierce.Value = Config.InitSimpleBowPierce;
 
             CriticalRate.Value = Config.InitCriticalRate;
 
@@ -204,8 +228,12 @@ namespace VampireSurvivorLike
             SuperBasketBall.Value = false;
             SuperBomb.Value = false;
             SuperAxe.Value = false;
+            SuperMagicWand.Value = false;
+            SuperBow.Value = false;
             ArmorValue.Value = 0;
             AreaMultiplier.Value = 1f;
+            CooldownReduction.Value = 0f;
+            LuckValue.Value = 0f;
             LemonDamageBuffBonus.Value = 0f;
             
             EnemyGenerator.EnemyCount.Value = 0;
@@ -298,6 +326,25 @@ namespace VampireSurvivorLike
                 SimpleAxeCount.Value = axeConfig.Count;
                 SimpleAxePierce.Value = axeConfig.AttackCount > 0 ? axeConfig.AttackCount : Config.InitSimpleAxePierce;
             }
+
+            // 魔杖（magic_wand）
+            var magicWandConfig = AbilityConfigLoader.GetConfig("magic_wand");
+            if (magicWandConfig != null)
+            {
+                MagicWandDamage.Value = magicWandConfig.Damage;
+                MagicWandDuration.Value = magicWandConfig.Duration;
+                MagicWandCount.Value = magicWandConfig.Count > 0 ? magicWandConfig.Count : Config.InitMagicWandCount;
+            }
+
+            // 弓箭（simple_bow）
+            var simpleBowConfig = AbilityConfigLoader.GetConfig("simple_bow");
+            if (simpleBowConfig != null)
+            {
+                SimpleBowDamage.Value = simpleBowConfig.Damage;
+                SimpleBowDuration.Value = simpleBowConfig.Duration;
+                SimpleBowCount.Value = simpleBowConfig.Count > 0 ? simpleBowConfig.Count : Config.InitSimpleBowCount;
+                SimpleBowPierce.Value = simpleBowConfig.AttackCount > 0 ? simpleBowConfig.AttackCount : Config.InitSimpleBowPierce;
+            }
         }
 
         /// <summary>
@@ -331,6 +378,10 @@ namespace VampireSurvivorLike
                     .Show();
                 return;
             }
+
+            var luck = Mathf.Max(0f, LuckValue.Value);
+            var qualityDropMultiplier = 1f + luck * 1.2f;
+
             //根据概率生成经验值和金币
             var percent=Random.Range(0, 1f);
 
@@ -358,7 +409,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            var recoverHpDropRate = Mathf.Clamp01(hpDropRate * Config.RecoverHpDropRateScaleWhenMulti);
+            var recoverHpDropRate = Mathf.Clamp01(hpDropRate * Config.RecoverHpDropRateScaleWhenMulti * (1f + luck * 0.4f));
             if(percent < recoverHpDropRate)
             {
                 //生成回血道具
@@ -372,7 +423,7 @@ namespace VampireSurvivorLike
             if (PowerUpRegistry.ActiveWineCount < Config.MaxActiveWineCount)
             {
                 percent = Random.Range(0, 1f);
-                if (percent < Config.WineDropRate)
+                if (percent < Mathf.Clamp01(Config.WineDropRate * qualityDropMultiplier))
                 {
                     manager.SpawnWine(gameObject.Position());
                     return;
@@ -382,7 +433,7 @@ namespace VampireSurvivorLike
             if (PowerUpRegistry.ActiveLemonBuffCount < Config.MaxActiveLemonBuffCount)
             {
                 percent = Random.Range(0, 1f);
-                if (percent < Config.LemonBuffDropRate)
+                if (percent < Mathf.Clamp01(Config.LemonBuffDropRate * qualityDropMultiplier))
                 {
                     manager.SpawnLemonBuff(gameObject.Position());
                     return;
@@ -406,7 +457,7 @@ namespace VampireSurvivorLike
 
             percent=Random.Range(0, 1f);
 
-            if(percent < Config.GetAllExpDropRateWhenMulti)
+            if(percent < Mathf.Clamp01(Config.GetAllExpDropRateWhenMulti * qualityDropMultiplier))
             {
                 //生成经验吸附道具
                 manager.GetAllExp.Instantiate()

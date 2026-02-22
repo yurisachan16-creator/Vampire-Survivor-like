@@ -114,3 +114,41 @@ exp_upgrade.simple_collectable_area_radius.name,拾得範囲
 exp_upgrade.simple_collectable_area_radius.lv1,拾得範囲Lv1:\\n収集範囲+100%
 exp_upgrade.simple_collectable_area_radius.lv2,拾得範囲Lv2:\\n収集範囲+200%
 exp_upgrade.simple_collectable_area_radius.lv3,拾得範囲Lv3:\\n収集範囲+300%
+exp_upgrade.magic_wand.name,魔法の杖
+exp_upgrade.magic_wand.paired_name,聖杖
+exp_upgrade.magic_wand.paired_desc,連射 + 貫通 + ノックバック強化
+exp_upgrade.magic_wand.lv1,魔法の杖Lv1:\\n最も近い敵へ自動で魔弾を発射
+exp_upgrade.magic_wand.lv2,魔法の杖Lv2：\\n攻撃力+2
+exp_upgrade.magic_wand.lv3,魔法の杖Lv3：\\n数量+1
+exp_upgrade.magic_wand.lv4,魔法の杖Lv4：\\n間隔-0.08s
+exp_upgrade.magic_wand.lv5,魔法の杖Lv5：\\n攻撃力+3
+exp_upgrade.magic_wand.lv6,魔法の杖Lv6：\\n数量+1
+exp_upgrade.magic_wand.lv7,魔法の杖Lv7：\\n間隔-0.08s
+exp_upgrade.magic_wand.lv8,魔法の杖Lv8：\\n攻撃力+3
+exp_upgrade.magic_wand.lv9,魔法の杖Lv9：\\n数量+1
+exp_upgrade.magic_wand.lv10,魔法の杖Lv10：\\n攻撃力+4 間隔-0.1s
+exp_upgrade.simple_bow.name,弓
+exp_upgrade.simple_bow.paired_name,エルフの弓
+exp_upgrade.simple_bow.paired_desc,矢分裂 + 追尾
+exp_upgrade.simple_bow.lv1,弓Lv1:\\n高速で貫通する矢を放つ
+exp_upgrade.simple_bow.lv2,弓Lv2：\\n攻撃力+2
+exp_upgrade.simple_bow.lv3,弓Lv3：\\n数量+1
+exp_upgrade.simple_bow.lv4,弓Lv4：\\n貫通+1
+exp_upgrade.simple_bow.lv5,弓Lv5：\\n間隔-0.1s
+exp_upgrade.simple_bow.lv6,弓Lv6：\\n攻撃力+3
+exp_upgrade.simple_bow.lv7,弓Lv7：\\n数量+1
+exp_upgrade.simple_bow.lv8,弓Lv8：\\n貫通+1
+exp_upgrade.simple_bow.lv9,弓Lv9：\\n間隔-0.1s
+exp_upgrade.simple_bow.lv10,弓Lv10：\\n攻撃力+4
+exp_upgrade.empty_tome.name,空白の書
+exp_upgrade.empty_tome.lv1,空白の書Lv1:\\n全体クールダウン-8%
+exp_upgrade.empty_tome.lv2,空白の書Lv2:\\n全体クールダウン-16%
+exp_upgrade.empty_tome.lv3,空白の書Lv3:\\n全体クールダウン-24%
+exp_upgrade.empty_tome.lv4,空白の書Lv4:\\n全体クールダウン-32%
+exp_upgrade.empty_tome.lv5,空白の書Lv5:\\n全体クールダウン-40%
+exp_upgrade.luck.name,幸運
+exp_upgrade.luck.lv1,幸運Lv1:\\n幸運+5%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv2,幸運Lv2:\\n幸運+10%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv3,幸運Lv3:\\n幸運+15%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv4,幸運Lv4:\\n幸運+20%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv5,幸運Lv5:\\n幸運+25%（ドロップ品質とクリ率）

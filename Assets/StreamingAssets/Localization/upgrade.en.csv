@@ -114,3 +114,41 @@ exp_upgrade.simple_collectable_area_radius.name,Pickup Radius
 exp_upgrade.simple_collectable_area_radius.lv1,Pickup Radius Lv1:\\nPickup radius +100%
 exp_upgrade.simple_collectable_area_radius.lv2,Pickup Radius Lv2:\\nPickup radius +200%
 exp_upgrade.simple_collectable_area_radius.lv3,Pickup Radius Lv3:\\nPickup radius +300%
+exp_upgrade.magic_wand.name,Magic Wand
+exp_upgrade.magic_wand.paired_name,Holy Staff
+exp_upgrade.magic_wand.paired_desc,Barrage + pierce + stronger knockback
+exp_upgrade.magic_wand.lv1,Magic Wand Lv1:\\nAuto-fires at the nearest enemy
+exp_upgrade.magic_wand.lv2,Magic Wand Lv2:\\nDamage +2
+exp_upgrade.magic_wand.lv3,Magic Wand Lv3:\\nCount +1
+exp_upgrade.magic_wand.lv4,Magic Wand Lv4:\\nInterval -0.08s
+exp_upgrade.magic_wand.lv5,Magic Wand Lv5:\\nDamage +3
+exp_upgrade.magic_wand.lv6,Magic Wand Lv6:\\nCount +1
+exp_upgrade.magic_wand.lv7,Magic Wand Lv7:\\nInterval -0.08s
+exp_upgrade.magic_wand.lv8,Magic Wand Lv8:\\nDamage +3
+exp_upgrade.magic_wand.lv9,Magic Wand Lv9:\\nCount +1
+exp_upgrade.magic_wand.lv10,Magic Wand Lv10:\\nDamage +4 Interval -0.1s
+exp_upgrade.simple_bow.name,Simple Bow
+exp_upgrade.simple_bow.paired_name,Elven Bow
+exp_upgrade.simple_bow.paired_desc,Arrow split + tracking
+exp_upgrade.simple_bow.lv1,Simple Bow Lv1:\\nFire fast piercing arrows
+exp_upgrade.simple_bow.lv2,Simple Bow Lv2:\\nDamage +2
+exp_upgrade.simple_bow.lv3,Simple Bow Lv3:\\nCount +1
+exp_upgrade.simple_bow.lv4,Simple Bow Lv4:\\nPierce +1
+exp_upgrade.simple_bow.lv5,Simple Bow Lv5:\\nInterval -0.1s
+exp_upgrade.simple_bow.lv6,Simple Bow Lv6:\\nDamage +3
+exp_upgrade.simple_bow.lv7,Simple Bow Lv7:\\nCount +1
+exp_upgrade.simple_bow.lv8,Simple Bow Lv8:\\nPierce +1
+exp_upgrade.simple_bow.lv9,Simple Bow Lv9:\\nInterval -0.1s
+exp_upgrade.simple_bow.lv10,Simple Bow Lv10:\\nDamage +4
+exp_upgrade.empty_tome.name,Empty Tome
+exp_upgrade.empty_tome.lv1,Empty Tome Lv1:\\nGlobal cooldown -8%
+exp_upgrade.empty_tome.lv2,Empty Tome Lv2:\\nGlobal cooldown -16%
+exp_upgrade.empty_tome.lv3,Empty Tome Lv3:\\nGlobal cooldown -24%
+exp_upgrade.empty_tome.lv4,Empty Tome Lv4:\\nGlobal cooldown -32%
+exp_upgrade.empty_tome.lv5,Empty Tome Lv5:\\nGlobal cooldown -40%
+exp_upgrade.luck.name,Luck
+exp_upgrade.luck.lv1,Luck Lv1:\\nLuck +5% (drop quality and crit)
+exp_upgrade.luck.lv2,Luck Lv2:\\nLuck +10% (drop quality and crit)
+exp_upgrade.luck.lv3,Luck Lv3:\\nLuck +15% (drop quality and crit)
+exp_upgrade.luck.lv4,Luck Lv4:\\nLuck +20% (drop quality and crit)
+exp_upgrade.luck.lv5,Luck Lv5:\\nLuck +25% (drop quality and crit)

@@ -18,7 +18,9 @@ namespace VampireSurvivorLike
         void Update()
         {
             _mCurrentSecond += Time.deltaTime;
-			if(_mCurrentSecond>=Global.SimpleAbilityDuration.Value)
+			var cooldownReduction = Mathf.Clamp(Global.CooldownReduction.Value, 0f, 0.75f);
+			var attackInterval = Mathf.Max(0.08f, Global.SimpleAbilityDuration.Value * (1f - cooldownReduction));
+			if(_mCurrentSecond>=attackInterval)
 			{
                 _mCurrentSecond = 0;
 

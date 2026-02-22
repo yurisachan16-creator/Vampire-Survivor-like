@@ -6,10 +6,35 @@ namespace VampireSurvivorLike
 {
 	public partial class AbilityController : ViewController,IController
 	{
-        
+		private MagicWand _magicWand;
+		private SimpleBow _simpleBow;
+
+		private void EnsurePhase2Abilities()
+		{
+			if (!_magicWand)
+			{
+				_magicWand = GetComponent<MagicWand>();
+				if (!_magicWand) _magicWand = gameObject.AddComponent<MagicWand>();
+			}
+
+			if (!_simpleBow)
+			{
+				_simpleBow = GetComponent<SimpleBow>();
+				if (!_simpleBow) _simpleBow = gameObject.AddComponent<SimpleBow>();
+			}
+
+			var sharedTemplate = SimpleKnife && SimpleKnife.Knife
+				? SimpleKnife.Knife.gameObject
+				: (SimpleAxe && SimpleAxe.Axe ? SimpleAxe.Axe.gameObject : null);
+
+			_magicWand.SetProjectileSource(sharedTemplate);
+			_simpleBow.SetProjectileSource(sharedTemplate);
+		}
 
         void Start()
 		{
+			EnsurePhase2Abilities();
+
 			Global.SimpleSwordUnlocked.RegisterWithInitValue(unlocked =>
 			{
 				if (unlocked)
@@ -54,19 +79,22 @@ namespace VampireSurvivorLike
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
+			Global.MagicWandUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase2Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.SimpleBowUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase2Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
 			// 随机解锁一个初始武器
 			var expUpgradeSystem = this.GetSystem<ExpUpgradeSystem>();
 			expUpgradeSystem.Items.Where(item => item.IsWeapon)
 				.ToList()
 				.GetRandomItem()
 				.Upgrade();
-
-			// 保底解锁铜剑，避免测试阶段被随机池掩盖
-			if (expUpgradeSystem.Dictionary.TryGetValue("simple_axe", out var simpleAxeItem)
-			    && simpleAxeItem.CurrentLevel.Value == 0)
-			{
-				simpleAxeItem.Upgrade();
-			}
 
             Global.SuperBomb.RegisterWithInitValue(unlocked =>
             {

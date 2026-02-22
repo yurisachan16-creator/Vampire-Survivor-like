@@ -139,3 +139,41 @@ exp_upgrade.yellow_potion.lv2,黄药水Lv2:\\n武器范围+20%
 exp_upgrade.yellow_potion.lv3,黄药水Lv3:\\n武器范围+30%
 exp_upgrade.yellow_potion.lv4,黄药水Lv4:\\n武器范围+40%
 exp_upgrade.yellow_potion.lv5,黄药水Lv5:\\n武器范围+50%
+exp_upgrade.magic_wand.name,魔杖
+exp_upgrade.magic_wand.paired_name,圣杖
+exp_upgrade.magic_wand.paired_desc,连射 + 穿透 + 击退增强
+exp_upgrade.magic_wand.lv1,魔杖Lv1:\\n自动锁定最近敌人发射魔弹
+exp_upgrade.magic_wand.lv2,魔杖Lv2：\\n攻击力+2
+exp_upgrade.magic_wand.lv3,魔杖Lv3：\\n数量+1
+exp_upgrade.magic_wand.lv4,魔杖Lv4：\\n间隔-0.08s
+exp_upgrade.magic_wand.lv5,魔杖Lv5：\\n攻击力+3
+exp_upgrade.magic_wand.lv6,魔杖Lv6：\\n数量+1
+exp_upgrade.magic_wand.lv7,魔杖Lv7：\\n间隔-0.08s
+exp_upgrade.magic_wand.lv8,魔杖Lv8：\\n攻击力+3
+exp_upgrade.magic_wand.lv9,魔杖Lv9：\\n数量+1
+exp_upgrade.magic_wand.lv10,魔杖Lv10：\\n攻击力+4 间隔-0.1s
+exp_upgrade.simple_bow.name,弓箭
+exp_upgrade.simple_bow.paired_name,精灵弓
+exp_upgrade.simple_bow.paired_desc,箭矢分裂 + 追踪
+exp_upgrade.simple_bow.lv1,弓箭Lv1:\\n向最近敌人射出高速穿透箭矢
+exp_upgrade.simple_bow.lv2,弓箭Lv2：\\n攻击力+2
+exp_upgrade.simple_bow.lv3,弓箭Lv3：\\n数量+1
+exp_upgrade.simple_bow.lv4,弓箭Lv4：\\n穿透+1
+exp_upgrade.simple_bow.lv5,弓箭Lv5：\\n间隔-0.1s
+exp_upgrade.simple_bow.lv6,弓箭Lv6：\\n攻击力+3
+exp_upgrade.simple_bow.lv7,弓箭Lv7：\\n数量+1
+exp_upgrade.simple_bow.lv8,弓箭Lv8：\\n穿透+1
+exp_upgrade.simple_bow.lv9,弓箭Lv9：\\n间隔-0.1s
+exp_upgrade.simple_bow.lv10,弓箭Lv10：\\n攻击力+4
+exp_upgrade.empty_tome.name,空日之书
+exp_upgrade.empty_tome.lv1,空日之书Lv1:\\n全局冷却-8%
+exp_upgrade.empty_tome.lv2,空日之书Lv2:\\n全局冷却-16%
+exp_upgrade.empty_tome.lv3,空日之书Lv3:\\n全局冷却-24%
+exp_upgrade.empty_tome.lv4,空日之书Lv4:\\n全局冷却-32%
+exp_upgrade.empty_tome.lv5,空日之书Lv5:\\n全局冷却-40%
+exp_upgrade.luck.name,幸运
+exp_upgrade.luck.lv1,幸运Lv1:\\n幸运+5%（掉落品质与暴击）
+exp_upgrade.luck.lv2,幸运Lv2:\\n幸运+10%（掉落品质与暴击）
+exp_upgrade.luck.lv3,幸运Lv3:\\n幸运+15%（掉落品质与暴击）
+exp_upgrade.luck.lv4,幸运Lv4:\\n幸运+20%（掉落品质与暴击）
+exp_upgrade.luck.lv5,幸运Lv5:\\n幸运+25%（掉落品质与暴击）

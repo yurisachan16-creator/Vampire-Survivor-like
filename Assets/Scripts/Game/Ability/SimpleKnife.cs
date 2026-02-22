@@ -19,9 +19,11 @@ namespace VampireSurvivorLike
         void Update()
         {
             _mCurrentSeconds += Time.deltaTime;
+			var cooldownReduction = Mathf.Clamp(Global.CooldownReduction.Value, 0f, 0.75f);
+			var attackInterval = Mathf.Max(0.08f, Global.SimpleKnifeDuration.Value * (1f - cooldownReduction));
 
 			//每隔一段时间发射一把飞刀
-            if (_mCurrentSeconds >= Global.SimpleKnifeDuration.Value)
+            if (_mCurrentSeconds >= attackInterval)
             {
                 _mCurrentSeconds = 0;
 

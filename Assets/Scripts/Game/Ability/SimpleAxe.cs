@@ -20,8 +20,10 @@ namespace VampireSurvivorLike
         void Update()
         {
             _mCurrentSecond += Time.deltaTime;
+            var cooldownReduction = Mathf.Clamp(Global.CooldownReduction.Value, 0f, 0.75f);
+            var attackInterval = Mathf.Max(0.08f, Global.SimpleAxeDuration.Value * (1f - cooldownReduction));
 
-            if (_mCurrentSecond >= Global.SimpleAxeDuration.Value)
+            if (_mCurrentSecond >= attackInterval)
             {
 				var projectileCount = Mathf.Max(1, Global.SimpleAxeCount.Value + Global.AdditionalFlyThingCount.Value);
 				var superAxe = Global.SuperAxe.Value;

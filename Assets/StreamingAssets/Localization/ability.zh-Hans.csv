@@ -11,3 +11,7 @@ ability.bomb.name,炸弹
 ability.bomb.desc,爆炸伤害周围敌人
 ability.simple_axe.name,铜剑
 ability.simple_axe.desc,向上抛出剑体并沿抛物线落下
+ability.magic_wand.name,魔杖
+ability.magic_wand.desc,自动向最近敌人发射魔弹
+ability.simple_bow.name,弓箭
+ability.simple_bow.desc,向最近敌人射出高速穿透箭矢

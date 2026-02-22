@@ -29,6 +29,8 @@ namespace VampireSurvivorLike
             {"basket_ball","movement_speed_rate"},
             {"rotate_sword","simple_exp_percent"},
             {"simple_axe","yellow_potion"},
+            {"magic_wand","empty_tome"},
+            {"simple_bow","armor"},
 
             {"simple_critical","simple_sword"},
             {"simple_fly_count","simple_bomb"},
@@ -36,6 +38,8 @@ namespace VampireSurvivorLike
             {"movement_speed_rate","basket_ball"},
             {"simple_exp_percent","rotate_sword"},
             {"yellow_potion","simple_axe"},
+            {"empty_tome","magic_wand"},
+            {"armor","simple_bow"},
         };
 
         public Dictionary<string,BindableProperty<bool>> PairedProperties = 
@@ -47,6 +51,8 @@ namespace VampireSurvivorLike
                 {"basket_ball",Global.SuperBasketBall},
                 {"rotate_sword",Global.SuperRotateSword},
                 {"simple_axe",Global.SuperAxe},
+                {"magic_wand",Global.SuperMagicWand},
+                {"simple_bow",Global.SuperBow},
 
                 // {"simple_critical",Global.SuperSword},
                 // {"simple_fly_count",Global.SuperBomb},
@@ -630,6 +636,178 @@ namespace VampireSurvivorLike
                     Global.SimpleAxePierce.Value = UnityEngine.Mathf.Max(1, Global.SimpleAxePierce.Value);
                 }));
 
+                Add(new ExpUpgradeItem(true)
+                .WithKey("magic_wand")
+                .WithName("魔杖")
+                .WithNameKey("exp_upgrade.magic_wand.name")
+                .WithIconName("rpgItems_46")
+                .WithPairedName("圣杖")
+                .WithPairedNameKey("exp_upgrade.magic_wand.paired_name")
+                .WithPairedIconName("rpgItems_47")
+                .WithPairedDescription("连射 + 穿透 + 击退增强")
+                .WithPairedDescriptionKey("exp_upgrade.magic_wand.paired_desc")
+                .WithMaxLevel(10)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"魔杖Lv{lv}:\n自动锁定最近敌人发射魔弹",
+                        2=>$"魔杖Lv{lv}：\n攻击力+2",
+                        3=>$"魔杖Lv{lv}：\n数量+1",
+                        4=>$"魔杖Lv{lv}：\n间隔-0.08s",
+                        5=>$"魔杖Lv{lv}：\n攻击力+3",
+                        6=>$"魔杖Lv{lv}：\n数量+1",
+                        7=>$"魔杖Lv{lv}：\n间隔-0.08s",
+                        8=>$"魔杖Lv{lv}：\n攻击力+3",
+                        9=>$"魔杖Lv{lv}：\n数量+1",
+                        10=>$"魔杖Lv{lv}：\n攻击力+4 间隔-0.1s",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.magic_wand.lv1",
+                        2=>"exp_upgrade.magic_wand.lv2",
+                        3=>"exp_upgrade.magic_wand.lv3",
+                        4=>"exp_upgrade.magic_wand.lv4",
+                        5=>"exp_upgrade.magic_wand.lv5",
+                        6=>"exp_upgrade.magic_wand.lv6",
+                        7=>"exp_upgrade.magic_wand.lv7",
+                        8=>"exp_upgrade.magic_wand.lv8",
+                        9=>"exp_upgrade.magic_wand.lv9",
+                        10=>"exp_upgrade.magic_wand.lv10",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.MagicWandUnlocked.Value = true;
+                            break;
+                        case 2:
+                            Global.MagicWandDamage.Value += 2f;
+                            break;
+                        case 3:
+                            Global.MagicWandCount.Value += 1;
+                            break;
+                        case 4:
+                            Global.MagicWandDuration.Value -= 0.08f;
+                            break;
+                        case 5:
+                            Global.MagicWandDamage.Value += 3f;
+                            break;
+                        case 6:
+                            Global.MagicWandCount.Value += 1;
+                            break;
+                        case 7:
+                            Global.MagicWandDuration.Value -= 0.08f;
+                            break;
+                        case 8:
+                            Global.MagicWandDamage.Value += 3f;
+                            break;
+                        case 9:
+                            Global.MagicWandCount.Value += 1;
+                            break;
+                        case 10:
+                            Global.MagicWandDamage.Value += 4f;
+                            Global.MagicWandDuration.Value -= 0.1f;
+                            break;
+                    }
+
+                    Global.MagicWandDuration.Value = UnityEngine.Mathf.Max(0.12f, Global.MagicWandDuration.Value);
+                    Global.MagicWandCount.Value = UnityEngine.Mathf.Max(1, Global.MagicWandCount.Value);
+                }));
+
+                Add(new ExpUpgradeItem(true)
+                .WithKey("simple_bow")
+                .WithName("弓箭")
+                .WithNameKey("exp_upgrade.simple_bow.name")
+                .WithIconName("rpgItems_52")
+                .WithPairedName("精灵弓")
+                .WithPairedNameKey("exp_upgrade.simple_bow.paired_name")
+                .WithPairedIconName("rpgItems_53")
+                .WithPairedDescription("箭矢分裂 + 追踪")
+                .WithPairedDescriptionKey("exp_upgrade.simple_bow.paired_desc")
+                .WithMaxLevel(10)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"弓箭Lv{lv}:\n向最近敌人射出高速穿透箭矢",
+                        2=>$"弓箭Lv{lv}：\n攻击力+2",
+                        3=>$"弓箭Lv{lv}：\n数量+1",
+                        4=>$"弓箭Lv{lv}：\n穿透+1",
+                        5=>$"弓箭Lv{lv}：\n间隔-0.1s",
+                        6=>$"弓箭Lv{lv}：\n攻击力+3",
+                        7=>$"弓箭Lv{lv}：\n数量+1",
+                        8=>$"弓箭Lv{lv}：\n穿透+1",
+                        9=>$"弓箭Lv{lv}：\n间隔-0.1s",
+                        10=>$"弓箭Lv{lv}：\n攻击力+4",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.simple_bow.lv1",
+                        2=>"exp_upgrade.simple_bow.lv2",
+                        3=>"exp_upgrade.simple_bow.lv3",
+                        4=>"exp_upgrade.simple_bow.lv4",
+                        5=>"exp_upgrade.simple_bow.lv5",
+                        6=>"exp_upgrade.simple_bow.lv6",
+                        7=>"exp_upgrade.simple_bow.lv7",
+                        8=>"exp_upgrade.simple_bow.lv8",
+                        9=>"exp_upgrade.simple_bow.lv9",
+                        10=>"exp_upgrade.simple_bow.lv10",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.SimpleBowUnlocked.Value = true;
+                            break;
+                        case 2:
+                            Global.SimpleBowDamage.Value += 2f;
+                            break;
+                        case 3:
+                            Global.SimpleBowCount.Value += 1;
+                            break;
+                        case 4:
+                            Global.SimpleBowPierce.Value += 1;
+                            break;
+                        case 5:
+                            Global.SimpleBowDuration.Value -= 0.1f;
+                            break;
+                        case 6:
+                            Global.SimpleBowDamage.Value += 3f;
+                            break;
+                        case 7:
+                            Global.SimpleBowCount.Value += 1;
+                            break;
+                        case 8:
+                            Global.SimpleBowPierce.Value += 1;
+                            break;
+                        case 9:
+                            Global.SimpleBowDuration.Value -= 0.1f;
+                            break;
+                        case 10:
+                            Global.SimpleBowDamage.Value += 4f;
+                            break;
+                    }
+
+                    Global.SimpleBowDuration.Value = UnityEngine.Mathf.Max(0.12f, Global.SimpleBowDuration.Value);
+                    Global.SimpleBowCount.Value = UnityEngine.Mathf.Max(1, Global.SimpleBowCount.Value);
+                    Global.SimpleBowPierce.Value = UnityEngine.Mathf.Max(1, Global.SimpleBowPierce.Value);
+                }));
+
                 Add(new ExpUpgradeItem(false)
                 .WithKey("simple_critical")
                 .WithName("暴击")
@@ -950,6 +1128,78 @@ namespace VampireSurvivorLike
                 .OnUpgrade((_, _) =>
                 {
                     Global.AreaMultiplier.Value += 0.1f;
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("empty_tome")
+                .WithName("空日之书")
+                .WithNameKey("exp_upgrade.empty_tome.name")
+                .WithIconName("rpgItems_51")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"空日之书Lv{lv}:\n全局冷却-8%",
+                        2=>$"空日之书Lv{lv}:\n全局冷却-16%",
+                        3=>$"空日之书Lv{lv}:\n全局冷却-24%",
+                        4=>$"空日之书Lv{lv}:\n全局冷却-32%",
+                        5=>$"空日之书Lv{lv}:\n全局冷却-40%",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.empty_tome.lv1",
+                        2=>"exp_upgrade.empty_tome.lv2",
+                        3=>"exp_upgrade.empty_tome.lv3",
+                        4=>"exp_upgrade.empty_tome.lv4",
+                        5=>"exp_upgrade.empty_tome.lv5",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, _) =>
+                {
+                    Global.CooldownReduction.Value += 0.08f;
+                    Global.CooldownReduction.Value = UnityEngine.Mathf.Clamp(Global.CooldownReduction.Value, 0f, 0.75f);
+                }));
+
+                Add(new ExpUpgradeItem(false)
+                .WithKey("luck")
+                .WithName("幸运")
+                .WithNameKey("exp_upgrade.luck.name")
+                .WithIconName("rpgItems_57")
+                .WithMaxLevel(5)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"幸运Lv{lv}:\n幸运+5%（掉落品质与暴击）",
+                        2=>$"幸运Lv{lv}:\n幸运+10%（掉落品质与暴击）",
+                        3=>$"幸运Lv{lv}:\n幸运+15%（掉落品质与暴击）",
+                        4=>$"幸运Lv{lv}:\n幸运+20%（掉落品质与暴击）",
+                        5=>$"幸运Lv{lv}:\n幸运+25%（掉落品质与暴击）",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.luck.lv1",
+                        2=>"exp_upgrade.luck.lv2",
+                        3=>"exp_upgrade.luck.lv3",
+                        4=>"exp_upgrade.luck.lv4",
+                        5=>"exp_upgrade.luck.lv5",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, _) =>
+                {
+                    Global.LuckValue.Value += 0.05f;
+                    Global.LuckValue.Value = UnityEngine.Mathf.Clamp(Global.LuckValue.Value, 0f, 1f);
                 }));
 
                 Add(new ExpUpgradeItem(false)

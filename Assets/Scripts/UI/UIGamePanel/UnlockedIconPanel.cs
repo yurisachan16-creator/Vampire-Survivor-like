@@ -145,6 +145,36 @@ namespace VampireSurvivorLike
 				}
 			}).UnRegisterWhenGameObjectDestroyed(this.gameObject);
 
+			Global.SuperMagicWand.Register(unlocked =>
+			{
+				if(unlocked)
+				{
+					if (_mUnlockedKeys.ContainsKey("magic_wand"))
+					{
+						var item = _mUnlockedKeys["magic_wand"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						var image = _mUnlockedKeys["magic_wand"].Item2;
+						image.sprite = sprite;
+						RefreshTooltip(image, item, item.CurrentLevel.Value);
+					}
+				}
+			}).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
+			Global.SuperBow.Register(unlocked =>
+			{
+				if(unlocked)
+				{
+					if (_mUnlockedKeys.ContainsKey("simple_bow"))
+					{
+						var item = _mUnlockedKeys["simple_bow"].Item1;
+						var sprite = iconAtlas.GetSprite(item.PairedIconName);
+						var image = _mUnlockedKeys["simple_bow"].Item2;
+						image.sprite = sprite;
+						RefreshTooltip(image, item, item.CurrentLevel.Value);
+					}
+				}
+			}).UnRegisterWhenGameObjectDestroyed(this.gameObject);
+
 			LocalizationManager.CurrentLanguage.Register(_ =>
 			{
 				foreach (var kv in _mUnlockedKeys)
@@ -190,6 +220,8 @@ namespace VampireSurvivorLike
 				case "simple_bomb": return Global.SuperBomb.Value;
 				case "simple_sword": return Global.SuperSword.Value;
 				case "simple_axe": return Global.SuperAxe.Value;
+				case "magic_wand": return Global.SuperMagicWand.Value;
+				case "simple_bow": return Global.SuperBow.Value;
 				default: return false;
 			}
 		}

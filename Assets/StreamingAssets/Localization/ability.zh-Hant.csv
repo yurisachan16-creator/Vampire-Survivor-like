@@ -9,3 +9,9 @@ ability.basket_ball.name,籃球
 ability.basket_ball.desc,彈射攻擊敵人的籃球
 ability.bomb.name,炸彈
 ability.bomb.desc,爆炸傷害周圍敵人
+ability.simple_axe.name,銅劍
+ability.simple_axe.desc,向上拋出劍體並沿拋物線落下
+ability.magic_wand.name,魔杖
+ability.magic_wand.desc,自動朝最近敵人發射魔彈
+ability.simple_bow.name,弓箭
+ability.simple_bow.desc,向最近敵人射出高速穿透箭矢

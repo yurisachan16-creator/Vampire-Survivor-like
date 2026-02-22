@@ -114,3 +114,41 @@ exp_upgrade.simple_collectable_area_radius.name,수집 범위
 exp_upgrade.simple_collectable_area_radius.lv1,수집 범위Lv1:\\n수집 범위+100%
 exp_upgrade.simple_collectable_area_radius.lv2,수집 범위Lv2:\\n수집 범위+200%
 exp_upgrade.simple_collectable_area_radius.lv3,수집 범위Lv3:\\n수집 범위+300%
+exp_upgrade.magic_wand.name,마법 지팡이
+exp_upgrade.magic_wand.paired_name,성스러운 지팡이
+exp_upgrade.magic_wand.paired_desc,연사 + 관통 + 넉백 강화
+exp_upgrade.magic_wand.lv1,마법 지팡이Lv1:\\n가장 가까운 적에게 자동 마탄 발사
+exp_upgrade.magic_wand.lv2,마법 지팡이Lv2：\\n공격력+2
+exp_upgrade.magic_wand.lv3,마법 지팡이Lv3：\\n수량+1
+exp_upgrade.magic_wand.lv4,마법 지팡이Lv4：\\n간격-0.08s
+exp_upgrade.magic_wand.lv5,마법 지팡이Lv5：\\n공격력+3
+exp_upgrade.magic_wand.lv6,마법 지팡이Lv6：\\n수량+1
+exp_upgrade.magic_wand.lv7,마법 지팡이Lv7：\\n간격-0.08s
+exp_upgrade.magic_wand.lv8,마법 지팡이Lv8：\\n공격력+3
+exp_upgrade.magic_wand.lv9,마법 지팡이Lv9：\\n수량+1
+exp_upgrade.magic_wand.lv10,마법 지팡이Lv10：\\n공격력+4 간격-0.1s
+exp_upgrade.simple_bow.name,활
+exp_upgrade.simple_bow.paired_name,엘븐 보우
+exp_upgrade.simple_bow.paired_desc,화살 분열 + 추적
+exp_upgrade.simple_bow.lv1,활Lv1:\\n고속 관통 화살 발사
+exp_upgrade.simple_bow.lv2,활Lv2：\\n공격력+2
+exp_upgrade.simple_bow.lv3,활Lv3：\\n수량+1
+exp_upgrade.simple_bow.lv4,활Lv4：\\n관통+1
+exp_upgrade.simple_bow.lv5,활Lv5：\\n간격-0.1s
+exp_upgrade.simple_bow.lv6,활Lv6：\\n공격력+3
+exp_upgrade.simple_bow.lv7,활Lv7：\\n수량+1
+exp_upgrade.simple_bow.lv8,활Lv8：\\n관통+1
+exp_upgrade.simple_bow.lv9,활Lv9：\\n간격-0.1s
+exp_upgrade.simple_bow.lv10,활Lv10：\\n공격력+4
+exp_upgrade.empty_tome.name,빈 서적
+exp_upgrade.empty_tome.lv1,빈 서적Lv1:\\n전역 쿨다운-8%
+exp_upgrade.empty_tome.lv2,빈 서적Lv2:\\n전역 쿨다운-16%
+exp_upgrade.empty_tome.lv3,빈 서적Lv3:\\n전역 쿨다운-24%
+exp_upgrade.empty_tome.lv4,빈 서적Lv4:\\n전역 쿨다운-32%
+exp_upgrade.empty_tome.lv5,빈 서적Lv5:\\n전역 쿨다운-40%
+exp_upgrade.luck.name,행운
+exp_upgrade.luck.lv1,행운Lv1:\\n행운+5%（드롭 품질과 치명타）
+exp_upgrade.luck.lv2,행운Lv2:\\n행운+10%（드롭 품질과 치명타）
+exp_upgrade.luck.lv3,행운Lv3:\\n행운+15%（드롭 품질과 치명타）
+exp_upgrade.luck.lv4,행운Lv4:\\n행운+20%（드롭 품질과 치명타）
+exp_upgrade.luck.lv5,행운Lv5:\\n행운+25%（드롭 품질과 치명타）

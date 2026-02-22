@@ -29,6 +29,15 @@ namespace VampireSurvivorLike
         public const int InitSimpleAxeCount = 1;
         public const int InitSimpleAxePierce = 1;
 
+        public const float InitMagicWandDamage = 4f;
+        public const float InitMagicWandDuration = 0.8f;
+        public const int InitMagicWandCount = 1;
+
+        public const float InitSimpleBowDamage = 6f;
+        public const float InitSimpleBowDuration = 1.0f;
+        public const int InitSimpleBowCount = 2;
+        public const int InitSimpleBowPierce = 3;
+
         public const float InitCriticalRate=0.05f;  //暴击率
 
         public const float InitDamageRate=1.0f; //伤害倍率

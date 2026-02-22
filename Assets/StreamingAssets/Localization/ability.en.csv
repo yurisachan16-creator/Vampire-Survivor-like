@@ -9,3 +9,9 @@ ability.basket_ball.name,Basketball
 ability.basket_ball.desc,A bouncing ball that hits enemies
 ability.bomb.name,Bomb
 ability.bomb.desc,Explodes to damage nearby enemies
+ability.simple_axe.name,Copper Sword
+ability.simple_axe.desc,Throws a blade upward in an arc
+ability.magic_wand.name,Magic Wand
+ability.magic_wand.desc,Auto-fires magic bullets at the nearest enemy
+ability.simple_bow.name,Simple Bow
+ability.simple_bow.desc,Fires fast piercing arrows at nearby enemies
