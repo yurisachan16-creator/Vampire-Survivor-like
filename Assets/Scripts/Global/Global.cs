@@ -369,7 +369,7 @@ namespace VampireSurvivorLike
                 return;
             }
 
-            if (PowerUpRegistry.ActiveWineCount == 0)
+            if (PowerUpRegistry.ActiveWineCount < Config.MaxActiveWineCount)
             {
                 percent = Random.Range(0, 1f);
                 if (percent < Config.WineDropRate)
@@ -379,7 +379,7 @@ namespace VampireSurvivorLike
                 }
             }
 
-            if (PowerUpRegistry.ActiveLemonBuffCount == 0)
+            if (PowerUpRegistry.ActiveLemonBuffCount < Config.MaxActiveLemonBuffCount)
             {
                 percent = Random.Range(0, 1f);
                 if (percent < Config.LemonBuffDropRate)

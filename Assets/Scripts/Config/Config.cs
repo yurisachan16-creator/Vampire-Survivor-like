@@ -58,9 +58,13 @@ namespace VampireSurvivorLike
         /// <summary>允许多实例后全图吸附道具固定掉落率</summary>
         public const float GetAllExpDropRateWhenMulti = 0.01f;
         /// <summary>酒掉落概率</summary>
-        public const float WineDropRate = 0.03f;
+        public const float WineDropRate = 0.08f;
         /// <summary>柠檬 Buff 掉落概率</summary>
-        public const float LemonBuffDropRate = 0.025f;
+        public const float LemonBuffDropRate = 0.06f;
+        /// <summary>场上最多同时存在的酒数量</summary>
+        public const int MaxActiveWineCount = 2;
+        /// <summary>场上最多同时存在的柠檬 Buff 数量</summary>
+        public const int MaxActiveLemonBuffCount = 2;
         /// <summary>柠檬 Buff 伤害加成（+40%）</summary>
         public const float LemonBuffDamageBonus = 0.4f;
         /// <summary>柠檬 Buff 持续时间（秒）</summary>
