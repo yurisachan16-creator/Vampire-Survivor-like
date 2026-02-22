@@ -28,10 +28,5 @@ namespace VampireSurvivorLike
 				GameStartController.ToggleSettingsPanel(true);
 			}
 		}
-
-        void OnDestroy()
-        {
-			UIKit.ClosePanel<UIGamePanel>();
-        }
     }
 }
