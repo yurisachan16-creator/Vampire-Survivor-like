@@ -92,6 +92,12 @@ namespace VampireSurvivorLike
         public const float BossDamageGrowthPerMinute = 0.04f;
         /// <summary>Boss 每分钟刷新频率加速倍率</summary>
         public const float BossSpawnRateGrowthPerMinute = 0.03f;
+        /// <summary>Boss 成长钝化起始分钟（超过后使用较低斜率）</summary>
+        public const float BossGrowthSoftNerfStartMinute = 15f;
+        /// <summary>Boss 成长钝化系数（15分钟后每分钟按该比例计入）</summary>
+        public const float BossGrowthSoftNerfFactor = 0.45f;
+        /// <summary>Boss 单次伤害上限（按玩家最大生命比例，避免满血被秒）</summary>
+        public const float BossSingleHitDamageCapRatio = 0.6f;
         /// <summary>前期增刷持续时间（秒）</summary>
         public const float EarlyGameSpawnBoostDurationSeconds = 180f;
         /// <summary>前期增刷倍率（>1 表示刷怪更快）</summary>

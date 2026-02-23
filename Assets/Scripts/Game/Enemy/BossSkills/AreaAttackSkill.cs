@@ -130,7 +130,8 @@ namespace VampireSurvivorLike
         {
             var projectile = ObjectPoolSystem.Spawn(_projectilePrefab, null, false);
             if (!projectile) return;
-            projectile.transform.position = Boss.transform.position;
+            var spawnOffset = direction.normalized * 0.45f;
+            projectile.transform.position = Boss.transform.position + (Vector3)spawnOffset;
             projectile.transform.rotation = Quaternion.identity;
             projectile.SetActive(true);
             

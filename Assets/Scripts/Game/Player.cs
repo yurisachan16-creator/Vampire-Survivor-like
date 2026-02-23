@@ -86,6 +86,7 @@ namespace VampireSurvivorLike
 
 			amount = Mathf.Max(1, amount - Mathf.Max(0, Global.ArmorValue.Value));
 			damageSource ??= string.Empty;
+			amount = ApplyBossDamageCap(amount, damageSource);
 
 			if (_lastDamageFrame == Time.frameCount && _lastDamageSource == damageSource) return false;
 			if (!ignoreInvincible && _lastDamageFrame != Time.frameCount && Time.time < _invincibleUntilTime)
@@ -110,6 +111,21 @@ namespace VampireSurvivorLike
 			_invincibleVisualActive = true;
 			Global.RequestHPUIRefresh.Trigger();
 			return true;
+		}
+
+		private static int ApplyBossDamageCap(int amount, string damageSource)
+		{
+			if (Global.MaxHP.Value <= 0) return amount;
+			if (!IsBossDamageSource(damageSource)) return amount;
+
+			var cap = Mathf.Max(1, Mathf.FloorToInt(Global.MaxHP.Value * Config.BossSingleHitDamageCapRatio));
+			return Mathf.Min(amount, cap);
+		}
+
+		private static bool IsBossDamageSource(string damageSource)
+		{
+			if (string.IsNullOrEmpty(damageSource)) return false;
+			return damageSource.StartsWith("Boss", System.StringComparison.Ordinal);
 		}
 
 		private void GameOver(string bossId, string damageSource)

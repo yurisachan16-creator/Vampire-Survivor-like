@@ -183,6 +183,7 @@ namespace VampireSurvivorLike
 
 			// 难度倍率（基于游戏分钟数）
 			var minutes = gameTime / 60f;
+			var bossEffectiveMinutes = GetBossEffectiveMinutes(minutes);
 
 			var activeNames = new List<string>();
 
@@ -197,10 +198,11 @@ namespace VampireSurvivorLike
 				var speedGrowth = isBossPhase ? Config.BossSpeedGrowthPerMinute : Config.SpeedGrowthPerMinute;
 				var damageGrowth = isBossPhase ? Config.BossDamageGrowthPerMinute : Config.DamageGrowthPerMinute;
 				var spawnGrowth = isBossPhase ? Config.BossSpawnRateGrowthPerMinute : Config.SpawnRateGrowthPerMinute;
-				var hpMul = 1f + hpGrowth * minutes;
-				var speedMul = 1f + speedGrowth * minutes;
-				var damageMul = 1f + damageGrowth * minutes;
-				var spawnRateMul = 1f + spawnGrowth * minutes;
+				var growthMinutes = isBossPhase ? bossEffectiveMinutes : minutes;
+				var hpMul = 1f + hpGrowth * growthMinutes;
+				var speedMul = 1f + speedGrowth * growthMinutes;
+				var damageMul = 1f + damageGrowth * growthMinutes;
+				var spawnRateMul = 1f + spawnGrowth * growthMinutes;
 				if (!isBossPhase && gameTime < Config.EarlyGameSpawnBoostDurationSeconds)
 				{
 					spawnRateMul *= Config.EarlyGameSpawnRateMultiplier;
@@ -237,6 +239,14 @@ namespace VampireSurvivorLike
 
 			ActiveChannelCount = activeNames.Count;
 			ActiveChannelNames = activeNames.Count > 0 ? string.Join(" + ", activeNames) : string.Empty;
+		}
+
+		private static float GetBossEffectiveMinutes(float rawMinutes)
+		{
+			var pivot = Mathf.Max(0f, Config.BossGrowthSoftNerfStartMinute);
+			var softFactor = Mathf.Clamp01(Config.BossGrowthSoftNerfFactor);
+			if (rawMinutes <= pivot) return rawMinutes;
+			return pivot + (rawMinutes - pivot) * softFactor;
 		}
 	}
 
@@ -485,47 +495,47 @@ namespace VampireSurvivorLike
 
 		private Vector2 ResolveSpawnPosition(in WaveSpawnRequest request, int burstIndex, int burstCount)
 		{
-			var channel = request.Channel;
-			var pattern = channel != null && !string.IsNullOrWhiteSpace(channel.SpawnPattern)
-				? channel.SpawnPattern.Trim().ToLowerInvariant()
-				: "edge";
-			var radius = channel != null ? Mathf.Max(1f, channel.SpawnRadius) : 12f;
-
-			switch (pattern)
-			{
-				case "swarm":
-				{
-					var center = (Vector2)Player.Default.transform.position;
-					return center + UnityEngine.Random.insideUnitCircle * radius;
-				}
-				case "ring":
-				{
-					var center = (Vector2)Player.Default.transform.position;
-					var count = Mathf.Max(1, burstCount);
-					var angle = (Mathf.PI * 2f) * (burstIndex / (float)count);
-					return center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-				}
-				case "edge":
-				default:
-					return GetSpawnPositionOutsideCamera();
-			}
+			// 回归旧逻辑：始终从屏幕边缘刷怪，避免在玩家附近直接生成。
+			return GetSpawnPositionOutsideCamera();
 		}
 
 		private Vector2 GetSpawnPositionOutsideCamera()
 		{
-			var xOry = RandomUtility.Choose(-1, 1);
-			var pos = Vector2.zero;
-			if (xOry == -1)
+			if (!CameraController.LBTransform || !CameraController.RTTransform)
 			{
-				pos.x = RandomUtility.Choose(CameraController.LBTransform.position.x, CameraController.RTTransform.position.x);
-				pos.y = UnityEngine.Random.Range(CameraController.LBTransform.position.y, CameraController.RTTransform.position.y);
+				return Player.Default ? (Vector2)Player.Default.transform.position : Vector2.zero;
 			}
-			else
+
+			var lb = (Vector2)CameraController.LBTransform.position;
+			var rt = (Vector2)CameraController.RTTransform.position;
+
+			// 玩家不在屏幕中心时，优先在“对侧边缘”生成，更接近“最远端”体验。
+			if (Player.Default)
 			{
-				pos.x = UnityEngine.Random.Range(CameraController.LBTransform.position.x, CameraController.RTTransform.position.x);
-				pos.y = RandomUtility.Choose(CameraController.LBTransform.position.y, CameraController.RTTransform.position.y);
+				var player = (Vector2)Player.Default.transform.position;
+				var center = (lb + rt) * 0.5f;
+				var delta = player - center;
+
+				if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+				{
+					var spawnX = delta.x >= 0f ? lb.x : rt.x;
+					return new Vector2(spawnX, UnityEngine.Random.Range(lb.y, rt.y));
+				}
+
+				if (Mathf.Abs(delta.y) > 0.01f)
+				{
+					var spawnY = delta.y >= 0f ? lb.y : rt.y;
+					return new Vector2(UnityEngine.Random.Range(lb.x, rt.x), spawnY);
+				}
 			}
-			return pos;
+
+			var xOrY = RandomUtility.Choose(-1, 1);
+			if (xOrY == -1)
+			{
+				return new Vector2(RandomUtility.Choose(lb.x, rt.x), UnityEngine.Random.Range(lb.y, rt.y));
+			}
+
+			return new Vector2(UnityEngine.Random.Range(lb.x, rt.x), RandomUtility.Choose(lb.y, rt.y));
 		}
 	}
 }

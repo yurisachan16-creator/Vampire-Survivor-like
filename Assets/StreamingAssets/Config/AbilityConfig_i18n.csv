@@ -8,4 +8,4 @@ simple_axe,ability.simple_axe.name,6,1.0,2,0,0,1,ability.simple_axe.desc
 magic_wand,ability.magic_wand.name,6,0.9,2,0,0,1,ability.magic_wand.desc
 simple_bow,ability.simple_bow.name,6,1.0,2,0,0,3,ability.simple_bow.desc
 boomerang,ability.boomerang.name,5,1.5,1,0,0,2,ability.boomerang.desc
-holy_water,ability.holy_water.name,2,3.0,1,2.2,0.5,1,ability.holy_water.desc
+holy_water,ability.holy_water.name,3,2.2,1,2.8,0.45,1,ability.holy_water.desc
