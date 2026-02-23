@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace VampireSurvivorLike
 {
     public class Config
@@ -48,11 +50,19 @@ namespace VampireSurvivorLike
         public const int InitBoomerangMaxHits = 2;
         public const int InitBoomerangReturnCount = 1;
 
-        public const float InitHolyWaterDamage = 2f;
-        public const float InitHolyWaterDuration = 3.0f;
-        public const float InitHolyWaterTickInterval = 0.5f;
-        public const float InitHolyWaterSlowMultiplier = 0.75f;
+        public const float InitHolyWaterDamage = 3f;
+        public const float InitHolyWaterDuration = 2.2f;
+        public const float InitHolyWaterTickInterval = 0.45f;
+        public const float InitHolyWaterSlowMultiplier = 0.72f;
         public const float InitHolyWaterSlowDuration = 0.35f;
+        public static readonly Color HolyWaterVfxInnerColor = new Color(0.42f, 0.76f, 1f, 0.22f);
+        public static readonly Color HolyWaterVfxOuterColor = new Color(0.1f, 0.34f, 0.7f, 0.36f);
+        public static readonly Color HolyWaterVfxRingColor = new Color(0.55f, 0.88f, 1f, 0.3f);
+        public const float HolyWaterVfxNoiseScale = 2.2f;
+        public const float HolyWaterVfxSwirlSpeed = 0.35f;
+        public const float HolyWaterVfxGuideAlpha = 0.26f;
+        public const float HolyWaterBreathEmissionRate = 34f;
+        public const float HolyWaterBreathCoreEmissionRate = 14f;
 
         public const float InitCriticalRate=0.05f;  //暴击率
 
