@@ -152,3 +152,60 @@ exp_upgrade.luck.lv2,幸運Lv2:\\n幸運+10%（ドロップ品質とクリ率）
 exp_upgrade.luck.lv3,幸運Lv3:\\n幸運+15%（ドロップ品質とクリ率）
 exp_upgrade.luck.lv4,幸運Lv4:\\n幸運+20%（ドロップ品質とクリ率）
 exp_upgrade.luck.lv5,幸運Lv5:\\n幸運+25%（ドロップ品質とクリ率）
+exp_upgrade.boomerang.name,ブーメラン
+exp_upgrade.boomerang.paired_name,レイザーブーメラン
+exp_upgrade.boomerang.paired_desc,往復回数増加 + 貫通強化
+exp_upgrade.boomerang.lv1,ブーメランLv1:\\n投げて戻り、往復でダメージ
+exp_upgrade.boomerang.lv2,ブーメランLv2:\\nダメージ+2
+exp_upgrade.boomerang.lv3,ブーメランLv3:\\n数量+1
+exp_upgrade.boomerang.lv4,ブーメランLv4:\\n往復回数+1
+exp_upgrade.boomerang.lv5,ブーメランLv5:\\n間隔-0.12s
+exp_upgrade.boomerang.lv6,ブーメランLv6:\\nダメージ+3
+exp_upgrade.boomerang.lv7,ブーメランLv7:\\n貫通+1
+exp_upgrade.boomerang.lv8,ブーメランLv8:\\n数量+1
+exp_upgrade.boomerang.lv9,ブーメランLv9:\\n間隔-0.12s
+exp_upgrade.boomerang.lv10,ブーメランLv10:\\nダメージ+4 往復回数+1
+exp_upgrade.holy_water.name,聖水
+exp_upgrade.holy_water.paired_name,ラ・ボラ
+exp_upgrade.holy_water.paired_desc,水場が追従 + 範囲拡大
+exp_upgrade.holy_water.lv1,聖水Lv1:\\n持続ダメージ水場を生成し敵を減速
+exp_upgrade.holy_water.lv2,聖水Lv2:\\nTickダメージ+1
+exp_upgrade.holy_water.lv3,聖水Lv3:\\nTick間隔-0.05s
+exp_upgrade.holy_water.lv4,聖水Lv4:\\n減速強化
+exp_upgrade.holy_water.lv5,聖水Lv5:\\n発動間隔-0.2s
+exp_upgrade.holy_water.lv6,聖水Lv6:\\nTickダメージ+1
+exp_upgrade.holy_water.lv7,聖水Lv7:\\n減速時間+0.1s
+exp_upgrade.holy_water.lv8,聖水Lv8:\\nTick間隔-0.05s
+exp_upgrade.holy_water.lv9,聖水Lv9:\\nTickダメージ+2
+exp_upgrade.holy_water.lv10,聖水Lv10:\\n発動間隔-0.25s 減速強化
+exp_upgrade.attractorb.name,アトラクトオーブ
+exp_upgrade.attractorb.lv1,アトラクトオーブLv1:\\n回収半径+0.8
+exp_upgrade.attractorb.lv2,アトラクトオーブLv2:\\n回収半径+1.6
+exp_upgrade.attractorb.lv3,アトラクトオーブLv3:\\n回収半径+2.4
+exp_upgrade.attractorb.lv4,アトラクトオーブLv4:\\n回収半径+3.2
+exp_upgrade.attractorb.lv5,アトラクトオーブLv5:\\n回収半径+4.0
+exp_upgrade.simple_axe.name,銅の剣
+exp_upgrade.simple_axe.paired_name,デススパイラル
+exp_upgrade.simple_axe.paired_desc,360°全画面貫通の回転投射
+exp_upgrade.simple_axe.lv1,銅の剣Lv1:\\n上方向へ投げ、放物線で落下
+exp_upgrade.simple_axe.lv2,銅の剣Lv2：\\nダメージ+3
+exp_upgrade.simple_axe.lv3,銅の剣Lv3：\\n数量+1
+exp_upgrade.simple_axe.lv4,銅の剣Lv4：\\nダメージ+3 間隔-0.1s
+exp_upgrade.simple_axe.lv5,銅の剣Lv5：\\n貫通+1
+exp_upgrade.simple_axe.lv6,銅の剣Lv6：\\nダメージ+4 数量+1
+exp_upgrade.simple_axe.lv7,銅の剣Lv7：\\n間隔-0.2s
+exp_upgrade.simple_axe.lv8,銅の剣Lv8：\\nダメージ+5
+exp_upgrade.simple_axe.lv9,銅の剣Lv9：\\n数量+1 貫通+1
+exp_upgrade.simple_axe.lv10,銅の剣Lv10：\\nダメージ+5 間隔-0.2s
+exp_upgrade.armor.name,アーマー
+exp_upgrade.armor.lv1,アーマーLv1:\\n被ダメージ-1
+exp_upgrade.armor.lv2,アーマーLv2:\\n被ダメージ-2
+exp_upgrade.armor.lv3,アーマーLv3:\\n被ダメージ-3
+exp_upgrade.armor.lv4,アーマーLv4:\\n被ダメージ-4
+exp_upgrade.armor.lv5,アーマーLv5:\\n被ダメージ-5
+exp_upgrade.yellow_potion.name,黄色のポーション
+exp_upgrade.yellow_potion.lv1,黄色のポーションLv1:\\n武器範囲+10%
+exp_upgrade.yellow_potion.lv2,黄色のポーションLv2:\\n武器範囲+20%
+exp_upgrade.yellow_potion.lv3,黄色のポーションLv3:\\n武器範囲+30%
+exp_upgrade.yellow_potion.lv4,黄色のポーションLv4:\\n武器範囲+40%
+exp_upgrade.yellow_potion.lv5,黄色のポーションLv5:\\n武器範囲+50%

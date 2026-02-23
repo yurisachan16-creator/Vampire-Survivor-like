@@ -9,6 +9,7 @@ namespace VampireSurvivorLike
 		public static PowerUpManager Default { get; private set; }
         private CircleCollider2D _wineTemplate;
         private CircleCollider2D _lemonBuffTemplate;
+        private CircleCollider2D _cherryTemplate;
         private ResLoader _resLoader;
         private SpriteAtlas _iconAtlas;
 
@@ -56,6 +57,7 @@ namespace VampireSurvivorLike
 
             PrepareSceneTemplate(EnsureTemplate<Wine>(ref _wineTemplate, "WineTemplate", "rpgItems_32"));
             PrepareSceneTemplate(EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", "rpgItems_19"));
+            PrepareSceneTemplate(EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", "rpgItems_11"));
         }
 
         private CircleCollider2D EnsureTemplate<T>(ref CircleCollider2D cache, string templateName, string spriteName) where T : PowerUp
@@ -98,6 +100,16 @@ namespace VampireSurvivorLike
         public void SpawnLemonBuff(Vector3 worldPosition)
         {
             var template = EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", "rpgItems_19");
+            if (!template) return;
+
+            template.Instantiate()
+                .Position(worldPosition)
+                .Show();
+        }
+
+        public void SpawnCherry(Vector3 worldPosition)
+        {
+            var template = EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", "rpgItems_11");
             if (!template) return;
 
             template.Instantiate()

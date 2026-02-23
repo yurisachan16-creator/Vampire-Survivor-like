@@ -152,3 +152,60 @@ exp_upgrade.luck.lv2,幸運Lv2:\\n幸運+10%（掉落品質與暴擊）
 exp_upgrade.luck.lv3,幸運Lv3:\\n幸運+15%（掉落品質與暴擊）
 exp_upgrade.luck.lv4,幸運Lv4:\\n幸運+20%（掉落品質與暴擊）
 exp_upgrade.luck.lv5,幸運Lv5:\\n幸運+25%（掉落品質與暴擊）
+exp_upgrade.boomerang.name,飛鏢
+exp_upgrade.boomerang.paired_name,回旋刃
+exp_upgrade.boomerang.paired_desc,多次往返 + 更高穿透
+exp_upgrade.boomerang.lv1,飛鏢Lv1:\\n投出後返回，往返都可造成傷害
+exp_upgrade.boomerang.lv2,飛鏢Lv2:\\n攻擊力+2
+exp_upgrade.boomerang.lv3,飛鏢Lv3:\\n數量+1
+exp_upgrade.boomerang.lv4,飛鏢Lv4:\\n往返次數+1
+exp_upgrade.boomerang.lv5,飛鏢Lv5:\\n間隔-0.12s
+exp_upgrade.boomerang.lv6,飛鏢Lv6:\\n攻擊力+3
+exp_upgrade.boomerang.lv7,飛鏢Lv7:\\n穿透+1
+exp_upgrade.boomerang.lv8,飛鏢Lv8:\\n數量+1
+exp_upgrade.boomerang.lv9,飛鏢Lv9:\\n間隔-0.12s
+exp_upgrade.boomerang.lv10,飛鏢Lv10:\\n攻擊力+4 往返次數+1
+exp_upgrade.holy_water.name,聖水
+exp_upgrade.holy_water.paired_name,短絨
+exp_upgrade.holy_water.paired_desc,水圈跟隨玩家 + 範圍增強
+exp_upgrade.holy_water.lv1,聖水Lv1:\\n生成持續傷害水圈並減速敵人
+exp_upgrade.holy_water.lv2,聖水Lv2:\\n每跳傷害+1
+exp_upgrade.holy_water.lv3,聖水Lv3:\\n傷害間隔-0.05s
+exp_upgrade.holy_water.lv4,聖水Lv4:\\n減速更強
+exp_upgrade.holy_water.lv5,聖水Lv5:\\n施放間隔-0.2s
+exp_upgrade.holy_water.lv6,聖水Lv6:\\n每跳傷害+1
+exp_upgrade.holy_water.lv7,聖水Lv7:\\n減速持續時間+0.1s
+exp_upgrade.holy_water.lv8,聖水Lv8:\\n傷害間隔-0.05s
+exp_upgrade.holy_water.lv9,聖水Lv9:\\n每跳傷害+2
+exp_upgrade.holy_water.lv10,聖水Lv10:\\n施放間隔-0.25s 減速更強
+exp_upgrade.attractorb.name,吸引器
+exp_upgrade.attractorb.lv1,吸引器Lv1:\\n拾取範圍半徑+0.8
+exp_upgrade.attractorb.lv2,吸引器Lv2:\\n拾取範圍半徑+1.6
+exp_upgrade.attractorb.lv3,吸引器Lv3:\\n拾取範圍半徑+2.4
+exp_upgrade.attractorb.lv4,吸引器Lv4:\\n拾取範圍半徑+3.2
+exp_upgrade.attractorb.lv5,吸引器Lv5:\\n拾取範圍半徑+4.0
+exp_upgrade.simple_axe.name,銅劍
+exp_upgrade.simple_axe.paired_name,死亡旋風
+exp_upgrade.simple_axe.paired_desc,360° 全屏穿透旋轉投射物
+exp_upgrade.simple_axe.lv1,銅劍Lv1:\\n向上拋出劍體，沿拋物線落下
+exp_upgrade.simple_axe.lv2,銅劍Lv2：\\n攻擊力+3
+exp_upgrade.simple_axe.lv3,銅劍Lv3：\\n數量+1
+exp_upgrade.simple_axe.lv4,銅劍Lv4：\\n攻擊力+3 間隔-0.1s
+exp_upgrade.simple_axe.lv5,銅劍Lv5：\\n穿透+1
+exp_upgrade.simple_axe.lv6,銅劍Lv6：\\n攻擊力+4 數量+1
+exp_upgrade.simple_axe.lv7,銅劍Lv7：\\n間隔-0.2s
+exp_upgrade.simple_axe.lv8,銅劍Lv8：\\n攻擊力+5
+exp_upgrade.simple_axe.lv9,銅劍Lv9：\\n數量+1 穿透+1
+exp_upgrade.simple_axe.lv10,銅劍Lv10：\\n攻擊力+5 間隔-0.2s
+exp_upgrade.armor.name,護甲
+exp_upgrade.armor.lv1,護甲Lv1:\\n受到傷害-1
+exp_upgrade.armor.lv2,護甲Lv2:\\n受到傷害-2
+exp_upgrade.armor.lv3,護甲Lv3:\\n受到傷害-3
+exp_upgrade.armor.lv4,護甲Lv4:\\n受到傷害-4
+exp_upgrade.armor.lv5,護甲Lv5:\\n受到傷害-5
+exp_upgrade.yellow_potion.name,黃藥水
+exp_upgrade.yellow_potion.lv1,黃藥水Lv1:\\n武器範圍+10%
+exp_upgrade.yellow_potion.lv2,黃藥水Lv2:\\n武器範圍+20%
+exp_upgrade.yellow_potion.lv3,黃藥水Lv3:\\n武器範圍+30%
+exp_upgrade.yellow_potion.lv4,黃藥水Lv4:\\n武器範圍+40%
+exp_upgrade.yellow_potion.lv5,黃藥水Lv5:\\n武器範圍+50%

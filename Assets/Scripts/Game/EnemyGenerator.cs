@@ -56,6 +56,14 @@ namespace VampireSurvivorLike
 		public float CoinDropRate = 0.3f;
 		public float HpDropRate = 0.1f;
 		public float BombDropRate = 0.05f;
+
+		[Header("事件扩展")]
+		[Tooltip("edge/swarm/ring，默认 edge")]
+		public string SpawnPattern = "edge";
+		[Tooltip("每次触发时生成数量")]
+		public int BurstCount = 1;
+		[Tooltip("swarm/ring 模式半径（世界单位）")]
+		public float SpawnRadius = 12f;
 	}
 
 	/// <summary>
@@ -175,14 +183,6 @@ namespace VampireSurvivorLike
 
 			// 难度倍率（基于游戏分钟数）
 			var minutes = gameTime / 60f;
-			var hpMul = 1f + Config.HPGrowthPerMinute * minutes;
-			var speedMul = 1f + Config.SpeedGrowthPerMinute * minutes;
-			var damageMul = 1f + Config.DamageGrowthPerMinute * minutes;
-			var spawnRateMul = 1f + Config.SpawnRateGrowthPerMinute * minutes;
-			if (gameTime < Config.EarlyGameSpawnBoostDurationSeconds)
-			{
-				spawnRateMul *= Config.EarlyGameSpawnRateMultiplier;
-			}
 
 			var activeNames = new List<string>();
 
@@ -191,6 +191,20 @@ namespace VampireSurvivorLike
 				if (!ch.IsActive(gameTime)) continue;
 
 				activeNames.Add(ch.Definition.ChannelName);
+
+				var isBossPhase = ch.Definition.Phase == WaveSpawnPhase.Boss;
+				var hpGrowth = isBossPhase ? Config.BossHPGrowthPerMinute : Config.HPGrowthPerMinute;
+				var speedGrowth = isBossPhase ? Config.BossSpeedGrowthPerMinute : Config.SpeedGrowthPerMinute;
+				var damageGrowth = isBossPhase ? Config.BossDamageGrowthPerMinute : Config.DamageGrowthPerMinute;
+				var spawnGrowth = isBossPhase ? Config.BossSpawnRateGrowthPerMinute : Config.SpawnRateGrowthPerMinute;
+				var hpMul = 1f + hpGrowth * minutes;
+				var speedMul = 1f + speedGrowth * minutes;
+				var damageMul = 1f + damageGrowth * minutes;
+				var spawnRateMul = 1f + spawnGrowth * minutes;
+				if (!isBossPhase && gameTime < Config.EarlyGameSpawnBoostDurationSeconds)
+				{
+					spawnRateMul *= Config.EarlyGameSpawnRateMultiplier;
+				}
 
 				// 计算经过难度缩放后的刷新间隔
 				var effectiveInterval = ch.Definition.SpawnIntervalSec / spawnRateMul;
@@ -340,7 +354,10 @@ namespace VampireSurvivorLike
 					ExpDropRate = row.ExpDropRate,
 					CoinDropRate = row.CoinDropRate,
 					HpDropRate = row.HpDropRate,
-					BombDropRate = row.BombDropRate
+					BombDropRate = row.BombDropRate,
+					SpawnPattern = row.SpawnPattern,
+					BurstCount = row.BurstCount,
+					SpawnRadius = row.SpawnRadius
 				});
 			}
 
@@ -415,17 +432,31 @@ namespace VampireSurvivorLike
 		{
 			if (!request.Prefab) return false;
 			if (!Player.Default) return false;
+			var ch = request.Channel;
+			var burstCount = ch != null ? Mathf.Max(1, ch.BurstCount) : 1;
+			var spawnedAny = false;
 
-			if (request.Phase != WaveSpawnPhase.Boss)
+			for (var i = 0; i < burstCount; i++)
 			{
-				var limit = GameSettings.GetMaxSmallEnemyCountForCurrentPlatform();
-				if (limit > 0 && SmallEnemyCount.Value >= limit) return false;
+				if (request.Phase != WaveSpawnPhase.Boss)
+				{
+					var limit = GameSettings.GetMaxSmallEnemyCountForCurrentPlatform();
+					if (limit > 0 && SmallEnemyCount.Value >= limit) break;
+				}
+
+				var pos = ResolveSpawnPosition(request, i, burstCount);
+				if (TrySpawnSingle(request, pos))
+				{
+					spawnedAny = true;
+				}
 			}
 
-			var pos = GetSpawnPositionOutsideCamera();
+			return spawnedAny;
+		}
+
+		private bool TrySpawnSingle(in WaveSpawnRequest request, Vector2 pos)
+		{
 			var ch = request.Channel;
-			
-			// 捕获值以避免 lambda 中使用 in 参数
 			var effectiveSpeed = request.EffectiveSpeedScale;
 			var effectiveHP = request.EffectiveHPScale;
 			var effectiveDamage = request.EffectiveDamageScale;
@@ -440,7 +471,6 @@ namespace VampireSurvivorLike
 					if (ch != null)
 					{
 						if (ch.BaseSpeed > 0) enemy.SetBaseSpeed(ch.BaseSpeed);
-						// 使用经过难度公式缩放后的属性值
 						enemy.SetSpeedScale(effectiveSpeed);
 						enemy.SetHPScale(effectiveHP);
 						enemy.SetDamageScale(effectiveDamage);
@@ -451,6 +481,34 @@ namespace VampireSurvivorLike
 				.Show();
 
 			return true;
+		}
+
+		private Vector2 ResolveSpawnPosition(in WaveSpawnRequest request, int burstIndex, int burstCount)
+		{
+			var channel = request.Channel;
+			var pattern = channel != null && !string.IsNullOrWhiteSpace(channel.SpawnPattern)
+				? channel.SpawnPattern.Trim().ToLowerInvariant()
+				: "edge";
+			var radius = channel != null ? Mathf.Max(1f, channel.SpawnRadius) : 12f;
+
+			switch (pattern)
+			{
+				case "swarm":
+				{
+					var center = (Vector2)Player.Default.transform.position;
+					return center + UnityEngine.Random.insideUnitCircle * radius;
+				}
+				case "ring":
+				{
+					var center = (Vector2)Player.Default.transform.position;
+					var count = Mathf.Max(1, burstCount);
+					var angle = (Mathf.PI * 2f) * (burstIndex / (float)count);
+					return center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+				}
+				case "edge":
+				default:
+					return GetSpawnPositionOutsideCamera();
+			}
 		}
 
 		private Vector2 GetSpawnPositionOutsideCamera()

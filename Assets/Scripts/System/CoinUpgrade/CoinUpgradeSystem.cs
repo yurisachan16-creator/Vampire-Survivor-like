@@ -71,7 +71,7 @@ namespace VampireSurvivorLike
                 .WithPrice(1000)
                 .OnUpgrade((item)=>
                 {
-                    Global.MaxHP.Value++;
+                    Global.MaxHP.Value = Mathf.Min(Config.PlayerMaxHPCap, Global.MaxHP.Value + 1);
                     Global.Coin.Value -= item.Price;
                 }))
             .Next(Add(new CoinUpgradeItem()
@@ -80,7 +80,7 @@ namespace VampireSurvivorLike
                 .WithPrice(2000)
                 .OnUpgrade((item)=>
                 {
-                    Global.MaxHP.Value++;
+                    Global.MaxHP.Value = Mathf.Min(Config.PlayerMaxHPCap, Global.MaxHP.Value + 1);
                     Global.Coin.Value -= item.Price;
                 })))
             .Next(Add(new CoinUpgradeItem()
@@ -89,7 +89,7 @@ namespace VampireSurvivorLike
                 .WithPrice(3000)
                 .OnUpgrade((item)=>
                 {
-                    Global.MaxHP.Value++;
+                    Global.MaxHP.Value = Mathf.Min(Config.PlayerMaxHPCap, Global.MaxHP.Value + 1);
                     Global.Coin.Value -= item.Price;
                 })))
             .Next(Add(new CoinUpgradeItem()
@@ -98,7 +98,7 @@ namespace VampireSurvivorLike
                 .WithPrice(4000)
                 .OnUpgrade((item)=>
                 {
-                    Global.MaxHP.Value++;
+                    Global.MaxHP.Value = Mathf.Min(Config.PlayerMaxHPCap, Global.MaxHP.Value + 1);
                     Global.Coin.Value -= item.Price;
                 })))
             .Next(Add(new CoinUpgradeItem()
@@ -107,52 +107,7 @@ namespace VampireSurvivorLike
                 .WithPrice(5000)
                 .OnUpgrade((item)=>
                 {
-                    Global.MaxHP.Value++;
-                    Global.Coin.Value -= item.Price;
-                })))
-            .Next(Add(new CoinUpgradeItem()
-                .WithKey("player_max_hp5")
-                .WithDescriptionKey("coin_upgrade.player_max_hp5.desc")
-                .WithPrice(6000)
-                .OnUpgrade((item)=>
-                {
-                    Global.MaxHP.Value++;
-                    Global.Coin.Value -= item.Price;
-                })))
-            .Next(Add(new CoinUpgradeItem()
-                .WithKey("player_max_hp6")
-                .WithDescriptionKey("coin_upgrade.player_max_hp6.desc")
-                .WithPrice(7000)
-                .OnUpgrade((item)=>
-                {
-                    Global.MaxHP.Value++;
-                    Global.Coin.Value -= item.Price;
-                })))
-            .Next(Add(new CoinUpgradeItem()
-                .WithKey("player_max_hp7")
-                .WithDescriptionKey("coin_upgrade.player_max_hp7.desc")
-                .WithPrice(8000)
-                .OnUpgrade((item)=>
-                {
-                    Global.MaxHP.Value++;
-                    Global.Coin.Value -= item.Price;
-                })))
-            .Next(Add(new CoinUpgradeItem()
-                .WithKey("player_max_hp8")
-                .WithDescriptionKey("coin_upgrade.player_max_hp8.desc")
-                .WithPrice(9000)
-                .OnUpgrade((item)=>
-                {
-                    Global.MaxHP.Value++;
-                    Global.Coin.Value -= item.Price;
-                })))
-            .Next(Add(new CoinUpgradeItem()
-                .WithKey("player_max_hp9")
-                .WithDescriptionKey("coin_upgrade.player_max_hp9.desc")
-                .WithPrice(10000)
-                .OnUpgrade((item)=>
-                {
-                    Global.MaxHP.Value++;
+                    Global.MaxHP.Value = Mathf.Min(Config.PlayerMaxHPCap, Global.MaxHP.Value + 1);
                     Global.Coin.Value -= item.Price;
                 })));
 

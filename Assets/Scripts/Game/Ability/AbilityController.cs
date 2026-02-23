@@ -8,6 +8,8 @@ namespace VampireSurvivorLike
 	{
 		private MagicWand _magicWand;
 		private SimpleBow _simpleBow;
+		private Boomerang _boomerang;
+		private HolyWater _holyWater;
 
 		private void EnsurePhase2Abilities()
 		{
@@ -31,9 +33,30 @@ namespace VampireSurvivorLike
 			_simpleBow.SetProjectileSource(sharedTemplate);
 		}
 
+		private void EnsurePhase3Abilities()
+		{
+			if (!_boomerang)
+			{
+				_boomerang = GetComponent<Boomerang>();
+				if (!_boomerang) _boomerang = gameObject.AddComponent<Boomerang>();
+			}
+
+			if (!_holyWater)
+			{
+				_holyWater = GetComponent<HolyWater>();
+				if (!_holyWater) _holyWater = gameObject.AddComponent<HolyWater>();
+			}
+
+			var sharedTemplate = SimpleKnife && SimpleKnife.Knife
+				? SimpleKnife.Knife.gameObject
+				: (SimpleAxe && SimpleAxe.Axe ? SimpleAxe.Axe.gameObject : null);
+			_boomerang.SetProjectileSource(sharedTemplate);
+		}
+
         void Start()
 		{
 			EnsurePhase2Abilities();
+			EnsurePhase3Abilities();
 
 			Global.SimpleSwordUnlocked.RegisterWithInitValue(unlocked =>
 			{
@@ -87,6 +110,16 @@ namespace VampireSurvivorLike
 			Global.SimpleBowUnlocked.RegisterWithInitValue(_ =>
 			{
 				EnsurePhase2Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.BoomerangUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase3Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.HolyWaterUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase3Abilities();
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			// 随机解锁一个初始武器

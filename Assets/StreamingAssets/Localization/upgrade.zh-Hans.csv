@@ -177,3 +177,35 @@ exp_upgrade.luck.lv2,幸运Lv2:\\n幸运+10%（掉落品质与暴击）
 exp_upgrade.luck.lv3,幸运Lv3:\\n幸运+15%（掉落品质与暴击）
 exp_upgrade.luck.lv4,幸运Lv4:\\n幸运+20%（掉落品质与暴击）
 exp_upgrade.luck.lv5,幸运Lv5:\\n幸运+25%（掉落品质与暴击）
+exp_upgrade.boomerang.name,飞镖
+exp_upgrade.boomerang.paired_name,回旋刃
+exp_upgrade.boomerang.paired_desc,多次往返 + 更高穿透
+exp_upgrade.boomerang.lv1,飞镖Lv1:\\n投出后返回，往返都可造成伤害
+exp_upgrade.boomerang.lv2,飞镖Lv2:\\n攻击力+2
+exp_upgrade.boomerang.lv3,飞镖Lv3:\\n数量+1
+exp_upgrade.boomerang.lv4,飞镖Lv4:\\n往返次数+1
+exp_upgrade.boomerang.lv5,飞镖Lv5:\\n间隔-0.12s
+exp_upgrade.boomerang.lv6,飞镖Lv6:\\n攻击力+3
+exp_upgrade.boomerang.lv7,飞镖Lv7:\\n穿透+1
+exp_upgrade.boomerang.lv8,飞镖Lv8:\\n数量+1
+exp_upgrade.boomerang.lv9,飞镖Lv9:\\n间隔-0.12s
+exp_upgrade.boomerang.lv10,飞镖Lv10:\\n攻击力+4 往返次数+1
+exp_upgrade.holy_water.name,圣水
+exp_upgrade.holy_water.paired_name,短绒
+exp_upgrade.holy_water.paired_desc,水圈跟随玩家 + 范围增强
+exp_upgrade.holy_water.lv1,圣水Lv1:\\n生成持续伤害水圈并减速敌人
+exp_upgrade.holy_water.lv2,圣水Lv2:\\n每跳伤害+1
+exp_upgrade.holy_water.lv3,圣水Lv3:\\n伤害间隔-0.05s
+exp_upgrade.holy_water.lv4,圣水Lv4:\\n减速更强
+exp_upgrade.holy_water.lv5,圣水Lv5:\\n施放间隔-0.2s
+exp_upgrade.holy_water.lv6,圣水Lv6:\\n每跳伤害+1
+exp_upgrade.holy_water.lv7,圣水Lv7:\\n减速持续时间+0.1s
+exp_upgrade.holy_water.lv8,圣水Lv8:\\n伤害间隔-0.05s
+exp_upgrade.holy_water.lv9,圣水Lv9:\\n每跳伤害+2
+exp_upgrade.holy_water.lv10,圣水Lv10:\\n施放间隔-0.25s 减速更强
+exp_upgrade.attractorb.name,吸引器
+exp_upgrade.attractorb.lv1,吸引器Lv1:\\n拾取范围半径+0.8
+exp_upgrade.attractorb.lv2,吸引器Lv2:\\n拾取范围半径+1.6
+exp_upgrade.attractorb.lv3,吸引器Lv3:\\n拾取范围半径+2.4
+exp_upgrade.attractorb.lv4,吸引器Lv4:\\n拾取范围半径+3.2
+exp_upgrade.attractorb.lv5,吸引器Lv5:\\n拾取范围半径+4.0

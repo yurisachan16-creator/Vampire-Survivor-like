@@ -31,6 +31,9 @@ namespace VampireSurvivorLike
         public float CoinDropRate = 0.3f;
         public float HpDropRate = 0.1f;
         public float BombDropRate = 0.05f;
+        public string SpawnPattern = "edge";
+        public int BurstCount = 1;
+        public float SpawnRadius = 12f;
     }
 
     /// <summary>
@@ -123,6 +126,9 @@ namespace VampireSurvivorLike
                     // 14 CoinDropRate
                     // 15 HpDropRate
                     // 16 BombDropRate
+                    // 17 SpawnPattern
+                    // 18 BurstCount
+                    // 19 SpawnRadius
                     var row = new SpawnChannelConfigRow
                     {
                         ChannelName = values[0],
@@ -141,7 +147,10 @@ namespace VampireSurvivorLike
                         ExpDropRate = values.Length > 13 && !string.IsNullOrEmpty(values[13]) ? float.Parse(values[13]) : 0.3f,
                         CoinDropRate = values.Length > 14 && !string.IsNullOrEmpty(values[14]) ? float.Parse(values[14]) : 0.3f,
                         HpDropRate = values.Length > 15 && !string.IsNullOrEmpty(values[15]) ? float.Parse(values[15]) : 0.1f,
-                        BombDropRate = values.Length > 16 && !string.IsNullOrEmpty(values[16]) ? float.Parse(values[16]) : 0.05f
+                        BombDropRate = values.Length > 16 && !string.IsNullOrEmpty(values[16]) ? float.Parse(values[16]) : 0.05f,
+                        SpawnPattern = values.Length > 17 && !string.IsNullOrEmpty(values[17]) ? values[17].Trim().ToLowerInvariant() : "edge",
+                        BurstCount = values.Length > 18 && !string.IsNullOrEmpty(values[18]) ? int.Parse(values[18]) : 1,
+                        SpawnRadius = values.Length > 19 && !string.IsNullOrEmpty(values[19]) ? float.Parse(values[19]) : 12f
                     };
                     rows.Add(row);
                 }

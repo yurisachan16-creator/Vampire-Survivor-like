@@ -1,4 +1,4 @@
-ChannelName,Active,EnemyPrefabName,Phase,StartTimeSec,EndTimeSec,SpawnIntervalSec,SpawnCount,HPScale,SpeedScale,DamageScale,BaseSpeed,IsTreasureChest,ExpDropRate,CoinDropRate,HpDropRate,BombDropRate
+ChannelName,Active,EnemyPrefabName,Phase,StartTimeSec,EndTimeSec,SpawnIntervalSec,SpawnCount,HPScale,SpeedScale,DamageScale,BaseSpeed,IsTreasureChest,ExpDropRate,CoinDropRate,HpDropRate,BombDropRate,SpawnPattern,BurstCount,SpawnRadius
 幽灵-背景,TRUE,Enemy_Ghost,small,0,1800,2.2,0,0.8,0.9,1.0,1.8,FALSE,0.55,0.20,0.08,0.03
 幽灵-开场,TRUE,Enemy_Ghost,small,0,180,1.0,0,1.0,1.0,1.0,1.9,FALSE,0.50,0.22,0.08,0.03
 蝙蝠-侦察,TRUE,Enemy_Bat,small,90,300,1.2,0,0.9,1.15,1.0,2.3,FALSE,0.48,0.22,0.06,0.03
@@ -28,3 +28,11 @@ ChannelName,Active,EnemyPrefabName,Phase,StartTimeSec,EndTimeSec,SpawnIntervalSe
 兽人Boss-21分,TRUE,Enemy_Orc_Boss,boss,1260,1300,4.0,1,1.9,0.8,1.9,0.95,TRUE,0,0,0,0
 螃蟹Boss-25分双生,TRUE,Enemy_Crab_Boss,boss,1500,1540,8.0,2,2.0,0.75,2.1,0.9,TRUE,0,0,0,0
 龟Boss-28分,TRUE,Enemy_Turtle_Boss,boss,1680,1750,5.0,1,2.3,0.7,2.3,0.8,TRUE,0,0,0,0
+幽灵-集群-7分,TRUE,Enemy_Ghost,small,420,450,1.0,0,0.9,1.15,0.9,2.0,FALSE,0.50,0.20,0.06,0.03,swarm,5,9
+蝙蝠-风暴-12分,TRUE,Enemy_Bat,small,720,750,1.0,0,1.0,1.25,1.0,2.6,FALSE,0.42,0.25,0.05,0.03,edge,8,12
+方块-围墙-16分,TRUE,Enemy_Block_Yellow,small,960,970,5.0,2,1.8,0.95,1.15,1.9,FALSE,0.42,0.28,0.08,0.04,ring,20,14
+精英冲锋-22分-独眼,TRUE,Enemy_Cyclops,small,1320,1350,3.0,3,2.2,1.08,1.25,2.25,FALSE,0.45,0.32,0.06,0.05,swarm,10,10
+精英冲锋-22分-盗贼,TRUE,Enemy_Rouge,small,1320,1350,3.0,3,2.0,1.2,1.2,2.55,FALSE,0.38,0.36,0.05,0.04,swarm,10,10
+终局预演-27分-幽灵,TRUE,Enemy_Ghost,small,1620,1650,0.9,0,2.2,1.18,1.28,2.3,FALSE,0.45,0.26,0.08,0.04,edge,6,12
+终局预演-27分-蝙蝠,TRUE,Enemy_Bat,small,1620,1650,0.9,0,2.0,1.28,1.25,2.75,FALSE,0.42,0.30,0.06,0.03,edge,8,12
+终局预演-27分-独眼,TRUE,Enemy_Cyclops,small,1620,1650,1.2,0,2.5,1.12,1.35,2.3,FALSE,0.44,0.34,0.07,0.05,swarm,6,11

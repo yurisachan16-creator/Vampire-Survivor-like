@@ -27,6 +27,8 @@ namespace VampireSurvivorLike
 
         private bool _isDead = false;
         private bool _initialized = false;
+        private float _slowMultiplier = 1f;
+        private float _slowUntilTime;
 
         // 缓存 configKey，避免每次 string.Replace 分配
         internal string ConfigKey;
@@ -250,6 +252,8 @@ namespace VampireSurvivorLike
 			_initialized = false;
 			ConfigKey = null;
 			ResetPendingSpawnOverrides();
+			_slowMultiplier = 1f;
+			_slowUntilTime = 0f;
 
 			// 恢复默认属性值
 			Health = _defaultHealth;
@@ -310,8 +314,12 @@ namespace VampireSurvivorLike
                 if(Player.Default)
                 {
                     var direction=(Player.Default.transform.position-transform.position).normalized;
+                    if (Time.time >= _slowUntilTime)
+                    {
+                        _slowMultiplier = 1f;
+                    }
 
-                    SelfRigidbody2D.velocity = direction * MovementSpeed;
+                    SelfRigidbody2D.velocity = direction * MovementSpeed * _slowMultiplier;
                 }
                 else
                 {
@@ -423,5 +431,20 @@ namespace VampireSurvivorLike
 
             TreasureChestEnemy = isTreasureChest;
         }
+
+		public void ApplySlow(float multiplier, float durationSeconds)
+		{
+			multiplier = Mathf.Clamp(multiplier, 0.2f, 1f);
+			durationSeconds = Mathf.Max(0f, durationSeconds);
+			if (durationSeconds <= 0f) return;
+
+			if (Time.time < _slowUntilTime && multiplier >= _slowMultiplier)
+			{
+				return;
+			}
+
+			_slowMultiplier = multiplier;
+			_slowUntilTime = Time.time + durationSeconds;
+		}
     }
 }

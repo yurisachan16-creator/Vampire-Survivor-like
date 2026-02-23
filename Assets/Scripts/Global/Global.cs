@@ -20,8 +20,8 @@ namespace VampireSurvivorLike
 
         #region Model
 
-        public static BindableProperty<int> HP = new BindableProperty<int>(3);
-        public static BindableProperty<int> MaxHP = new BindableProperty<int>(3);
+        public static BindableProperty<int> HP = new BindableProperty<int>(Config.PlayerBaseMaxHP);
+        public static BindableProperty<int> MaxHP = new BindableProperty<int>(Config.PlayerBaseMaxHP);
         /// <summary>
         /// 玩家经验值
         /// </summary>
@@ -72,6 +72,18 @@ namespace VampireSurvivorLike
         public static BindableProperty<float> SimpleBowDuration = new BindableProperty<float>(Config.InitSimpleBowDuration);
         public static BindableProperty<int> SimpleBowCount = new BindableProperty<int>(Config.InitSimpleBowCount);
         public static BindableProperty<int> SimpleBowPierce = new BindableProperty<int>(Config.InitSimpleBowPierce);
+        public static BindableProperty<bool> BoomerangUnlocked = new BindableProperty<bool>(false);   // 飞镖（boomerang）是否解锁
+        public static BindableProperty<float> BoomerangDamage = new BindableProperty<float>(Config.InitBoomerangDamage);
+        public static BindableProperty<float> BoomerangDuration = new BindableProperty<float>(Config.InitBoomerangDuration);
+        public static BindableProperty<int> BoomerangCount = new BindableProperty<int>(Config.InitBoomerangCount);
+        public static BindableProperty<int> BoomerangMaxHits = new BindableProperty<int>(Config.InitBoomerangMaxHits);
+        public static BindableProperty<int> BoomerangReturnCount = new BindableProperty<int>(Config.InitBoomerangReturnCount);
+        public static BindableProperty<bool> HolyWaterUnlocked = new BindableProperty<bool>(false);   // 圣水（holy_water）是否解锁
+        public static BindableProperty<float> HolyWaterDamage = new BindableProperty<float>(Config.InitHolyWaterDamage);
+        public static BindableProperty<float> HolyWaterDuration = new BindableProperty<float>(Config.InitHolyWaterDuration);
+        public static BindableProperty<float> HolyWaterTickInterval = new BindableProperty<float>(Config.InitHolyWaterTickInterval);
+        public static BindableProperty<float> HolyWaterSlowMultiplier = new BindableProperty<float>(Config.InitHolyWaterSlowMultiplier);
+        public static BindableProperty<float> HolyWaterSlowDuration = new BindableProperty<float>(Config.InitHolyWaterSlowDuration);
 
         public static BindableProperty<float> CriticalRate = new BindableProperty<float>(Config.InitCriticalRate); //暴击率
         public static BindableProperty<float> DamageRate = new BindableProperty<float>(Config.InitDamageRate); //伤害倍率
@@ -89,6 +101,8 @@ namespace VampireSurvivorLike
         public static BindableProperty<bool> SuperAxe = new (false); //超级斧头
         public static BindableProperty<bool> SuperMagicWand = new(false); //超级魔杖
         public static BindableProperty<bool> SuperBow = new(false); //超级弓箭
+        public static BindableProperty<bool> SuperBoomerang = new(false); //超级飞镖
+        public static BindableProperty<bool> SuperHolyWater = new(false); //超级圣水
         public static BindableProperty<float> ExpPercent = new BindableProperty<float>(0.3f); //经验值掉落概率
         public static BindableProperty<float> CoinPercent = new BindableProperty<float>(0.3f); //金币掉落概率
         public static BindableProperty<int> ArmorValue = new BindableProperty<int>(0); //护甲
@@ -125,11 +139,15 @@ namespace VampireSurvivorLike
 #else
             ResKit.Init();
 #endif
+            ApplyMaxHpBalanceMigration();
             UIKit.Root.SetResolution(1920, 1080, 0);
             Global.Coin.Value=PlayerPrefs.GetInt(nameof(Global.Coin),0);
-            
-            Global.HP.Value=PlayerPrefs.GetInt(nameof(Global.MaxHP),3);
-            HP.Value=MaxHP.Value;
+
+            MaxHP.Value = Mathf.Clamp(
+                PlayerPrefs.GetInt(nameof(Global.MaxHP), Config.PlayerBaseMaxHP),
+                Config.PlayerBaseMaxHP,
+                Config.PlayerMaxHPCap);
+            Global.HP.Value = MaxHP.Value;
 
             Global.ExpPercent.Value=PlayerPrefs.GetFloat(nameof(Global.ExpPercent),0.3f);
             Global.CoinPercent.Value=PlayerPrefs.GetFloat(nameof(Global.CoinPercent),0.3f);
@@ -154,7 +172,13 @@ namespace VampireSurvivorLike
 
             Global.MaxHP.Register((maxHp) =>
             {
-                PlayerPrefs.SetInt(nameof(Global.MaxHP), maxHp);
+                var clamped = Mathf.Clamp(maxHp, Config.PlayerBaseMaxHP, Config.PlayerMaxHPCap);
+                if (MaxHP.Value != clamped)
+                {
+                    MaxHP.Value = clamped;
+                    return;
+                }
+                PlayerPrefs.SetInt(nameof(Global.MaxHP), clamped);
             });
 
             var _ = Interface;
@@ -162,6 +186,7 @@ namespace VampireSurvivorLike
         public static void ResetData()
         {
             IsGameOver.Value = false;
+            MaxHP.Value = Mathf.Clamp(MaxHP.Value, Config.PlayerBaseMaxHP, Config.PlayerMaxHPCap);
             HP.Value = MaxHP.Value;
             Exp.Value = 0;
             Level.Value = 1;
@@ -175,6 +200,8 @@ namespace VampireSurvivorLike
             SimpleAxeUnlocked.Value = false;
             MagicWandUnlocked.Value = false;
             SimpleBowUnlocked.Value = false;
+            BoomerangUnlocked.Value = false;
+            HolyWaterUnlocked.Value = false;
 
             SimpleAbilityDamage.Value = Config.InitSimpleSwordDamage;
             SimpleAbilityDuration.Value = Config.InitSimpleSwordDuration;
@@ -209,6 +236,16 @@ namespace VampireSurvivorLike
             SimpleBowDuration.Value = Config.InitSimpleBowDuration;
             SimpleBowCount.Value = Config.InitSimpleBowCount;
             SimpleBowPierce.Value = Config.InitSimpleBowPierce;
+            BoomerangDamage.Value = Config.InitBoomerangDamage;
+            BoomerangDuration.Value = Config.InitBoomerangDuration;
+            BoomerangCount.Value = Config.InitBoomerangCount;
+            BoomerangMaxHits.Value = Config.InitBoomerangMaxHits;
+            BoomerangReturnCount.Value = Config.InitBoomerangReturnCount;
+            HolyWaterDamage.Value = Config.InitHolyWaterDamage;
+            HolyWaterDuration.Value = Config.InitHolyWaterDuration;
+            HolyWaterTickInterval.Value = Config.InitHolyWaterTickInterval;
+            HolyWaterSlowMultiplier.Value = Config.InitHolyWaterSlowMultiplier;
+            HolyWaterSlowDuration.Value = Config.InitHolyWaterSlowDuration;
 
             CriticalRate.Value = Config.InitCriticalRate;
 
@@ -230,6 +267,8 @@ namespace VampireSurvivorLike
             SuperAxe.Value = false;
             SuperMagicWand.Value = false;
             SuperBow.Value = false;
+            SuperBoomerang.Value = false;
+            SuperHolyWater.Value = false;
             ArmorValue.Value = 0;
             AreaMultiplier.Value = 1f;
             CooldownReduction.Value = 0f;
@@ -344,6 +383,23 @@ namespace VampireSurvivorLike
                 SimpleBowDuration.Value = simpleBowConfig.Duration;
                 SimpleBowCount.Value = simpleBowConfig.Count > 0 ? simpleBowConfig.Count : Config.InitSimpleBowCount;
                 SimpleBowPierce.Value = simpleBowConfig.AttackCount > 0 ? simpleBowConfig.AttackCount : Config.InitSimpleBowPierce;
+            }
+
+            var boomerangConfig = AbilityConfigLoader.GetConfig("boomerang");
+            if (boomerangConfig != null)
+            {
+                BoomerangDamage.Value = boomerangConfig.Damage;
+                BoomerangDuration.Value = boomerangConfig.Duration;
+                BoomerangCount.Value = boomerangConfig.Count > 0 ? boomerangConfig.Count : Config.InitBoomerangCount;
+                BoomerangMaxHits.Value = boomerangConfig.AttackCount > 0 ? boomerangConfig.AttackCount : Config.InitBoomerangMaxHits;
+            }
+
+            var holyWaterConfig = AbilityConfigLoader.GetConfig("holy_water");
+            if (holyWaterConfig != null)
+            {
+                HolyWaterDamage.Value = holyWaterConfig.Damage;
+                HolyWaterDuration.Value = holyWaterConfig.Duration > 0 ? holyWaterConfig.Duration : Config.InitHolyWaterDuration;
+                HolyWaterTickInterval.Value = holyWaterConfig.Speed > 0 ? holyWaterConfig.Speed : Config.InitHolyWaterTickInterval;
             }
         }
 
@@ -476,6 +532,37 @@ namespace VampireSurvivorLike
             this.RegisterSystem(new CoinUpgradeSystem());
             this.RegisterSystem(new ExpUpgradeSystem());
             this.RegisterSystem(new AchievementSystem());
+        }
+
+        private static void ApplyMaxHpBalanceMigration()
+        {
+            if (PlayerPrefs.GetInt(Config.MaxHpBalanceResetKey, 0) == 1)
+            {
+                return;
+            }
+
+            var hpUpgradeKeys = new[]
+            {
+                "player_max_hp",
+                "player_max_hp1",
+                "player_max_hp2",
+                "player_max_hp3",
+                "player_max_hp4",
+                "player_max_hp5",
+                "player_max_hp6",
+                "player_max_hp7",
+                "player_max_hp8",
+                "player_max_hp9"
+            };
+
+            for (var i = 0; i < hpUpgradeKeys.Length; i++)
+            {
+                PlayerPrefs.DeleteKey(hpUpgradeKeys[i]);
+            }
+
+            PlayerPrefs.SetInt(nameof(MaxHP), Config.PlayerBaseMaxHP);
+            PlayerPrefs.SetInt(Config.MaxHpBalanceResetKey, 1);
+            PlayerPrefs.Save();
         }
     }
 }

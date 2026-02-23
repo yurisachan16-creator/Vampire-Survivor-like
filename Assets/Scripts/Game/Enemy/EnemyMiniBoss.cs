@@ -138,6 +138,8 @@ namespace VampireSurvivorLike
         private Vector2 _knockbackVelocity;
         private float _knockbackRemainSeconds;
         private float _knockbackCooldownUntil;
+        private float _slowMultiplier = 1f;
+        private float _slowUntilTime;
 
         private void Awake()
         {
@@ -306,7 +308,7 @@ namespace VampireSurvivorLike
                     {
                         // 追踪玩家
                         var direction = (Player.Default.transform.position - transform.position).normalized;
-                        SelfRigidbody2D.velocity = direction * MovementSpeed;
+                        SelfRigidbody2D.velocity = direction * MovementSpeed * GetCurrentSlowMultiplier();
                     }
                     else
                     {
@@ -456,6 +458,13 @@ namespace VampireSurvivorLike
             _knockbackRemainSeconds = 0f;
             _knockbackCooldownUntil = 0f;
         }
+
+        private float GetCurrentSlowMultiplier()
+        {
+            if (Time.time < _slowUntilTime) return _slowMultiplier;
+            _slowMultiplier = 1f;
+            return 1f;
+        }
         
         void Update()
         {
@@ -536,6 +545,11 @@ namespace VampireSurvivorLike
             if (HitBox) HitBox.enabled = false;
             if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
 
+            if (PowerUpRegistry.ActiveCherryCount < Config.MaxActiveCherryCount && Random.value <= Config.CherryDropRate)
+            {
+                PowerUpManager.Default?.SpawnCherry(transform.position);
+            }
+
             // 根据配置决定掉落
             if (DropTreasureChest)
             {
@@ -575,6 +589,8 @@ namespace VampireSurvivorLike
             _currentSkill = null;
             ResetPendingSpawnOverrides();
             ResetExternalKnockback();
+            _slowMultiplier = 1f;
+            _slowUntilTime = 0f;
 
             Health = _defaultHealth;
             MovementSpeed = _defaultMovementSpeed;
@@ -718,6 +734,21 @@ namespace VampireSurvivorLike
             }
 
             DropTreasureChest = isTreasureChest;
+        }
+
+        public void ApplySlow(float multiplier, float durationSeconds)
+        {
+            multiplier = Mathf.Clamp(multiplier, 0.2f, 1f);
+            durationSeconds = Mathf.Max(0f, durationSeconds);
+            if (durationSeconds <= 0f) return;
+
+            if (Time.time < _slowUntilTime && multiplier >= _slowMultiplier)
+            {
+                return;
+            }
+
+            _slowMultiplier = multiplier;
+            _slowUntilTime = Time.time + durationSeconds;
         }
         
         #endregion

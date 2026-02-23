@@ -2,6 +2,10 @@ namespace VampireSurvivorLike
 {
     public class Config
     {
+        public const int PlayerBaseMaxHP = 5;
+        public const int PlayerMaxHPCap = 10;
+        public const string MaxHpBalanceResetKey = "balance.maxhp_reset_v1";
+
         public const float InitSimpleSwordDamage=6f;
         public const float InitSimpleSwordDuration=1.2f;
         public const int InitSimpleSwordCount=3;
@@ -38,6 +42,18 @@ namespace VampireSurvivorLike
         public const int InitSimpleBowCount = 2;
         public const int InitSimpleBowPierce = 3;
 
+        public const float InitBoomerangDamage = 5f;
+        public const float InitBoomerangDuration = 1.5f;
+        public const int InitBoomerangCount = 1;
+        public const int InitBoomerangMaxHits = 2;
+        public const int InitBoomerangReturnCount = 1;
+
+        public const float InitHolyWaterDamage = 2f;
+        public const float InitHolyWaterDuration = 3.0f;
+        public const float InitHolyWaterTickInterval = 0.5f;
+        public const float InitHolyWaterSlowMultiplier = 0.75f;
+        public const float InitHolyWaterSlowDuration = 0.35f;
+
         public const float InitCriticalRate=0.05f;  //暴击率
 
         public const float InitDamageRate=1.0f; //伤害倍率
@@ -58,6 +74,14 @@ namespace VampireSurvivorLike
         public const float DamageGrowthPerMinute = 0.15f;
         /// <summary>每分钟刷新频率加速倍率（间隔缩短）</summary>
         public const float SpawnRateGrowthPerMinute = 0.1f;
+        /// <summary>Boss 每分钟 HP 增长倍率</summary>
+        public const float BossHPGrowthPerMinute = 0.18f;
+        /// <summary>Boss 每分钟速度增长倍率</summary>
+        public const float BossSpeedGrowthPerMinute = 0.012f;
+        /// <summary>Boss 每分钟伤害增长倍率</summary>
+        public const float BossDamageGrowthPerMinute = 0.04f;
+        /// <summary>Boss 每分钟刷新频率加速倍率</summary>
+        public const float BossSpawnRateGrowthPerMinute = 0.03f;
         /// <summary>前期增刷持续时间（秒）</summary>
         public const float EarlyGameSpawnBoostDurationSeconds = 180f;
         /// <summary>前期增刷倍率（>1 表示刷怪更快）</summary>
@@ -74,6 +98,10 @@ namespace VampireSurvivorLike
         public const int MaxActiveWineCount = 2;
         /// <summary>场上最多同时存在的柠檬 Buff 数量</summary>
         public const int MaxActiveLemonBuffCount = 2;
+        /// <summary>樱桃掉落概率（Boss）</summary>
+        public const float CherryDropRate = 0.05f;
+        /// <summary>场上最多同时存在的樱桃数量</summary>
+        public const int MaxActiveCherryCount = 1;
         /// <summary>柠檬 Buff 伤害加成（+40%）</summary>
         public const float LemonBuffDamageBonus = 0.4f;
         /// <summary>柠檬 Buff 持续时间（秒）</summary>

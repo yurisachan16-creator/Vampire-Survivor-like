@@ -9,5 +9,6 @@ namespace VampireSurvivorLike
         void SetBaseSpeed(float baseSpeed);
         void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate);
         void SetTreasureChest(bool isTreasureChest);
+        void ApplySlow(float multiplier, float durationSeconds);
     }
 }

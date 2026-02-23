@@ -1,8 +1,8 @@
 # 内容扩展方案 —— 基于 rpgItems 素材表与吸血鬼幸存者系统研究
 
-> 版本：v0.11-draft  
+> 版本：v0.11  
 > 日期：2026-02-21  
-> 状态：方案设计阶段
+> 状态：Phase3 已完成
 
 ---
 
@@ -430,29 +430,29 @@ channel_name,enemy_type,start_time,end_time,spawn_interval,hp_scale,speed_scale,
 
 **目标**：新增飞镖 + 圣水 + 波次事件 + 掉落物
 
-- [ ] **新武器：飞镖**
+- [x] **新武器：飞镖**
   - 创建 `Boomerang.cs` + `PooledBoomerangProjectile.cs`
   - 飞出后沿路径返回，来回伤害
   - 精灵使用 `rpgItems_49`
 
-- [ ] **新武器：圣水**
+- [x] **新武器：圣水**
   - 创建 `HolyWater.cs` + `HolyWaterZone.cs`
   - 地面 AOE 持续伤害 + 减速
   - 精灵使用 `rpgItems_42`
 
-- [ ] **新被动：吸引器**（改造现有拾取范围）
+- [x] **新被动：吸引器**（改造现有拾取范围）
   - 重构 `simple_collectable_area_radius` → `attractorb`
   - 添加与圣水的配对关系
 
-- [ ] **波次事件系统**
+- [x] **波次事件系统**
   - 在 `EnemyGenerator` 中添加事件频道支持
   - 配置集群/围墙波次到 CSV
 
-- [ ] **新掉落物：樱桃**
+- [x] **新掉落物：樱桃**
   - 创建 `Cherry.cs` — 弱化全屏伤害
   - 精灵使用 `rpgItems_11`
 
-- [ ] **进化配对**
+- [x] **进化配对**
   - `boomerang ↔ luck` → 回旋刃
   - `holy_water ↔ attractorb` → 短绒
 

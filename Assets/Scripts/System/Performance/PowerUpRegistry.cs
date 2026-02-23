@@ -12,6 +12,7 @@ namespace VampireSurvivorLike
         public static int ActiveRecoverHPCount;
         public static int ActiveWineCount;
         public static int ActiveLemonBuffCount;
+        public static int ActiveCherryCount;
         public static int ActiveBombCount;
         public static int ActiveGetAllExpCount;
 
@@ -46,6 +47,7 @@ namespace VampireSurvivorLike
             ActiveRecoverHPCount = 0;
             ActiveWineCount = 0;
             ActiveLemonBuffCount = 0;
+            ActiveCherryCount = 0;
             ActiveBombCount = 0;
             ActiveGetAllExpCount = 0;
             ExpSet.Clear();

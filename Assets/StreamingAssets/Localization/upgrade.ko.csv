@@ -152,3 +152,60 @@ exp_upgrade.luck.lv2,행운Lv2:\\n행운+10%（드롭 품질과 치명타）
 exp_upgrade.luck.lv3,행운Lv3:\\n행운+15%（드롭 품질과 치명타）
 exp_upgrade.luck.lv4,행운Lv4:\\n행운+20%（드롭 품질과 치명타）
 exp_upgrade.luck.lv5,행운Lv5:\\n행운+25%（드롭 품질과 치명타）
+exp_upgrade.boomerang.name,부메랑
+exp_upgrade.boomerang.paired_name,레이저 부메랑
+exp_upgrade.boomerang.paired_desc,왕복 횟수 증가 + 관통 강화
+exp_upgrade.boomerang.lv1,부메랑Lv1:\\n던지고 돌아오며 왕복 모두 피해
+exp_upgrade.boomerang.lv2,부메랑Lv2:\\n공격력+2
+exp_upgrade.boomerang.lv3,부메랑Lv3:\\n개수+1
+exp_upgrade.boomerang.lv4,부메랑Lv4:\\n왕복 횟수+1
+exp_upgrade.boomerang.lv5,부메랑Lv5:\\n간격-0.12s
+exp_upgrade.boomerang.lv6,부메랑Lv6:\\n공격력+3
+exp_upgrade.boomerang.lv7,부메랑Lv7:\\n관통+1
+exp_upgrade.boomerang.lv8,부메랑Lv8:\\n개수+1
+exp_upgrade.boomerang.lv9,부메랑Lv9:\\n간격-0.12s
+exp_upgrade.boomerang.lv10,부메랑Lv10:\\n공격력+4 왕복 횟수+1
+exp_upgrade.holy_water.name,성수
+exp_upgrade.holy_water.paired_name,라 보라
+exp_upgrade.holy_water.paired_desc,장판 추적 + 범위 증가
+exp_upgrade.holy_water.lv1,성수Lv1:\\n지속 피해 장판을 생성하고 적을 감속
+exp_upgrade.holy_water.lv2,성수Lv2:\\n틱 피해+1
+exp_upgrade.holy_water.lv3,성수Lv3:\\n틱 간격-0.05s
+exp_upgrade.holy_water.lv4,성수Lv4:\\n감속 강화
+exp_upgrade.holy_water.lv5,성수Lv5:\\n시전 간격-0.2s
+exp_upgrade.holy_water.lv6,성수Lv6:\\n틱 피해+1
+exp_upgrade.holy_water.lv7,성수Lv7:\\n감속 지속시간+0.1s
+exp_upgrade.holy_water.lv8,성수Lv8:\\n틱 간격-0.05s
+exp_upgrade.holy_water.lv9,성수Lv9:\\n틱 피해+2
+exp_upgrade.holy_water.lv10,성수Lv10:\\n시전 간격-0.25s 감속 강화
+exp_upgrade.attractorb.name,어트랙터브
+exp_upgrade.attractorb.lv1,어트랙터브Lv1:\\n획득 반경+0.8
+exp_upgrade.attractorb.lv2,어트랙터브Lv2:\\n획득 반경+1.6
+exp_upgrade.attractorb.lv3,어트랙터브Lv3:\\n획득 반경+2.4
+exp_upgrade.attractorb.lv4,어트랙터브Lv4:\\n획득 반경+3.2
+exp_upgrade.attractorb.lv5,어트랙터브Lv5:\\n획득 반경+4.0
+exp_upgrade.simple_axe.name,구리 검
+exp_upgrade.simple_axe.paired_name,데스 스파이럴
+exp_upgrade.simple_axe.paired_desc,360도 전화면 관통 회전 투사체
+exp_upgrade.simple_axe.lv1,구리 검Lv1:\\n위로 던져 포물선으로 낙하
+exp_upgrade.simple_axe.lv2,구리 검Lv2：\\n공격력+3
+exp_upgrade.simple_axe.lv3,구리 검Lv3：\\n개수+1
+exp_upgrade.simple_axe.lv4,구리 검Lv4：\\n공격력+3 간격-0.1s
+exp_upgrade.simple_axe.lv5,구리 검Lv5：\\n관통+1
+exp_upgrade.simple_axe.lv6,구리 검Lv6：\\n공격력+4 개수+1
+exp_upgrade.simple_axe.lv7,구리 검Lv7：\\n간격-0.2s
+exp_upgrade.simple_axe.lv8,구리 검Lv8：\\n공격력+5
+exp_upgrade.simple_axe.lv9,구리 검Lv9：\\n개수+1 관통+1
+exp_upgrade.simple_axe.lv10,구리 검Lv10：\\n공격력+5 간격-0.2s
+exp_upgrade.armor.name,방어구
+exp_upgrade.armor.lv1,방어구Lv1:\\n받는 피해-1
+exp_upgrade.armor.lv2,방어구Lv2:\\n받는 피해-2
+exp_upgrade.armor.lv3,방어구Lv3:\\n받는 피해-3
+exp_upgrade.armor.lv4,방어구Lv4:\\n받는 피해-4
+exp_upgrade.armor.lv5,방어구Lv5:\\n받는 피해-5
+exp_upgrade.yellow_potion.name,노란 물약
+exp_upgrade.yellow_potion.lv1,노란 물약Lv1:\\n무기 범위+10%
+exp_upgrade.yellow_potion.lv2,노란 물약Lv2:\\n무기 범위+20%
+exp_upgrade.yellow_potion.lv3,노란 물약Lv3:\\n무기 범위+30%
+exp_upgrade.yellow_potion.lv4,노란 물약Lv4:\\n무기 범위+40%
+exp_upgrade.yellow_potion.lv5,노란 물약Lv5:\\n무기 범위+50%

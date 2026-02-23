@@ -31,6 +31,8 @@ namespace VampireSurvivorLike
             {"simple_axe","yellow_potion"},
             {"magic_wand","empty_tome"},
             {"simple_bow","armor"},
+            {"boomerang","luck"},
+            {"holy_water","attractorb"},
 
             {"simple_critical","simple_sword"},
             {"simple_fly_count","simple_bomb"},
@@ -40,6 +42,8 @@ namespace VampireSurvivorLike
             {"yellow_potion","simple_axe"},
             {"empty_tome","magic_wand"},
             {"armor","simple_bow"},
+            {"luck","boomerang"},
+            {"attractorb","holy_water"},
         };
 
         public Dictionary<string,BindableProperty<bool>> PairedProperties = 
@@ -53,6 +57,8 @@ namespace VampireSurvivorLike
                 {"simple_axe",Global.SuperAxe},
                 {"magic_wand",Global.SuperMagicWand},
                 {"simple_bow",Global.SuperBow},
+                {"boomerang",Global.SuperBoomerang},
+                {"holy_water",Global.SuperHolyWater},
 
                 // {"simple_critical",Global.SuperSword},
                 // {"simple_fly_count",Global.SuperBomb},
@@ -808,6 +814,182 @@ namespace VampireSurvivorLike
                     Global.SimpleBowPierce.Value = UnityEngine.Mathf.Max(1, Global.SimpleBowPierce.Value);
                 }));
 
+                Add(new ExpUpgradeItem(true)
+                .WithKey("boomerang")
+                .WithName("飞镖")
+                .WithNameKey("exp_upgrade.boomerang.name")
+                .WithIconName("rpgItems_49")
+                .WithPairedName("回旋刃")
+                .WithPairedNameKey("exp_upgrade.boomerang.paired_name")
+                .WithPairedIconName("rpgItems_50")
+                .WithPairedDescription("多次往返 + 更高穿透")
+                .WithPairedDescriptionKey("exp_upgrade.boomerang.paired_desc")
+                .WithMaxLevel(10)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"飞镖Lv{lv}:\n投出后返回，往返都可造成伤害",
+                        2=>$"飞镖Lv{lv}：\n攻击力+2",
+                        3=>$"飞镖Lv{lv}：\n数量+1",
+                        4=>$"飞镖Lv{lv}：\n往返次数+1",
+                        5=>$"飞镖Lv{lv}：\n间隔-0.12s",
+                        6=>$"飞镖Lv{lv}：\n攻击力+3",
+                        7=>$"飞镖Lv{lv}：\n穿透+1",
+                        8=>$"飞镖Lv{lv}：\n数量+1",
+                        9=>$"飞镖Lv{lv}：\n间隔-0.12s",
+                        10=>$"飞镖Lv{lv}：\n攻击力+4 往返次数+1",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.boomerang.lv1",
+                        2=>"exp_upgrade.boomerang.lv2",
+                        3=>"exp_upgrade.boomerang.lv3",
+                        4=>"exp_upgrade.boomerang.lv4",
+                        5=>"exp_upgrade.boomerang.lv5",
+                        6=>"exp_upgrade.boomerang.lv6",
+                        7=>"exp_upgrade.boomerang.lv7",
+                        8=>"exp_upgrade.boomerang.lv8",
+                        9=>"exp_upgrade.boomerang.lv9",
+                        10=>"exp_upgrade.boomerang.lv10",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.BoomerangUnlocked.Value = true;
+                            break;
+                        case 2:
+                            Global.BoomerangDamage.Value += 2f;
+                            break;
+                        case 3:
+                            Global.BoomerangCount.Value += 1;
+                            break;
+                        case 4:
+                            Global.BoomerangReturnCount.Value += 1;
+                            break;
+                        case 5:
+                            Global.BoomerangDuration.Value -= 0.12f;
+                            break;
+                        case 6:
+                            Global.BoomerangDamage.Value += 3f;
+                            break;
+                        case 7:
+                            Global.BoomerangMaxHits.Value += 1;
+                            break;
+                        case 8:
+                            Global.BoomerangCount.Value += 1;
+                            break;
+                        case 9:
+                            Global.BoomerangDuration.Value -= 0.12f;
+                            break;
+                        case 10:
+                            Global.BoomerangDamage.Value += 4f;
+                            Global.BoomerangReturnCount.Value += 1;
+                            break;
+                    }
+
+                    Global.BoomerangDuration.Value = UnityEngine.Mathf.Max(0.2f, Global.BoomerangDuration.Value);
+                    Global.BoomerangCount.Value = UnityEngine.Mathf.Max(1, Global.BoomerangCount.Value);
+                    Global.BoomerangMaxHits.Value = UnityEngine.Mathf.Max(1, Global.BoomerangMaxHits.Value);
+                    Global.BoomerangReturnCount.Value = UnityEngine.Mathf.Max(1, Global.BoomerangReturnCount.Value);
+                }));
+
+                Add(new ExpUpgradeItem(true)
+                .WithKey("holy_water")
+                .WithName("圣水")
+                .WithNameKey("exp_upgrade.holy_water.name")
+                .WithIconName("rpgItems_42")
+                .WithPairedName("短绒")
+                .WithPairedNameKey("exp_upgrade.holy_water.paired_name")
+                .WithPairedIconName("rpgItems_43")
+                .WithPairedDescription("水圈跟随玩家 + 范围增强")
+                .WithPairedDescriptionKey("exp_upgrade.holy_water.paired_desc")
+                .WithMaxLevel(10)
+                .WithDescription(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>$"圣水Lv{lv}:\n生成持续伤害水圈并减速敌人",
+                        2=>$"圣水Lv{lv}：\n每跳伤害+1",
+                        3=>$"圣水Lv{lv}：\n伤害间隔-0.05s",
+                        4=>$"圣水Lv{lv}：\n减速更强",
+                        5=>$"圣水Lv{lv}：\n施放间隔-0.2s",
+                        6=>$"圣水Lv{lv}：\n每跳伤害+1",
+                        7=>$"圣水Lv{lv}：\n减速持续时间+0.1s",
+                        8=>$"圣水Lv{lv}：\n伤害间隔-0.05s",
+                        9=>$"圣水Lv{lv}：\n每跳伤害+2",
+                        10=>$"圣水Lv{lv}：\n施放间隔-0.25s 减速更强",
+                        _=>null
+                    };
+                })
+                .WithDescriptionKey(lv =>
+                {
+                    return lv switch
+                    {
+                        1=>"exp_upgrade.holy_water.lv1",
+                        2=>"exp_upgrade.holy_water.lv2",
+                        3=>"exp_upgrade.holy_water.lv3",
+                        4=>"exp_upgrade.holy_water.lv4",
+                        5=>"exp_upgrade.holy_water.lv5",
+                        6=>"exp_upgrade.holy_water.lv6",
+                        7=>"exp_upgrade.holy_water.lv7",
+                        8=>"exp_upgrade.holy_water.lv8",
+                        9=>"exp_upgrade.holy_water.lv9",
+                        10=>"exp_upgrade.holy_water.lv10",
+                        _=>null
+                    };
+                })
+                .OnUpgrade((_, level) =>
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            Global.HolyWaterUnlocked.Value = true;
+                            break;
+                        case 2:
+                            Global.HolyWaterDamage.Value += 1f;
+                            break;
+                        case 3:
+                            Global.HolyWaterTickInterval.Value -= 0.05f;
+                            break;
+                        case 4:
+                            Global.HolyWaterSlowMultiplier.Value -= 0.05f;
+                            break;
+                        case 5:
+                            Global.HolyWaterDuration.Value -= 0.2f;
+                            break;
+                        case 6:
+                            Global.HolyWaterDamage.Value += 1f;
+                            break;
+                        case 7:
+                            Global.HolyWaterSlowDuration.Value += 0.1f;
+                            break;
+                        case 8:
+                            Global.HolyWaterTickInterval.Value -= 0.05f;
+                            break;
+                        case 9:
+                            Global.HolyWaterDamage.Value += 2f;
+                            break;
+                        case 10:
+                            Global.HolyWaterDuration.Value -= 0.25f;
+                            Global.HolyWaterSlowMultiplier.Value -= 0.05f;
+                            break;
+                    }
+
+                    Global.HolyWaterDuration.Value = UnityEngine.Mathf.Max(1.2f, Global.HolyWaterDuration.Value);
+                    Global.HolyWaterTickInterval.Value = UnityEngine.Mathf.Max(0.12f, Global.HolyWaterTickInterval.Value);
+                    Global.HolyWaterSlowMultiplier.Value = UnityEngine.Mathf.Clamp(Global.HolyWaterSlowMultiplier.Value, 0.25f, 1f);
+                    Global.HolyWaterSlowDuration.Value = UnityEngine.Mathf.Clamp(Global.HolyWaterSlowDuration.Value, 0.1f, 2f);
+                }));
+
                 Add(new ExpUpgradeItem(false)
                 .WithKey("simple_critical")
                 .WithName("暴击")
@@ -1203,18 +1385,20 @@ namespace VampireSurvivorLike
                 }));
 
                 Add(new ExpUpgradeItem(false)
-                .WithKey("simple_collectable_area_radius")
-                .WithName("拾取范围半径")
-                .WithNameKey("exp_upgrade.simple_collectable_area_radius.name")
-                .WithIconName("collectable_icon")
-                .WithMaxLevel(3)
+                .WithKey("attractorb")
+                .WithName("吸引器")
+                .WithNameKey("exp_upgrade.attractorb.name")
+                .WithIconName("rpgItems_58")
+                .WithMaxLevel(5)
                 .WithDescription(lv =>
                 {
                     return lv switch
                     {
-                        1=>$"拾取范围半径Lv{lv}:\n增加100%可收集物品范围半径",
-                        2=>$"拾取范围半径Lv{lv}:\n增加200%可收集物品范围半径",
-                        3=>$"拾取范围半径Lv{lv}:\n增加300%可收集物品范围半径",
+                        1=>$"吸引器Lv{lv}:\n拾取范围半径+0.8",
+                        2=>$"吸引器Lv{lv}:\n拾取范围半径+1.6",
+                        3=>$"吸引器Lv{lv}:\n拾取范围半径+2.4",
+                        4=>$"吸引器Lv{lv}:\n拾取范围半径+3.2",
+                        5=>$"吸引器Lv{lv}:\n拾取范围半径+4.0",
                         _=>null
                     };
                 })
@@ -1222,26 +1406,17 @@ namespace VampireSurvivorLike
                 {
                     return lv switch
                     {
-                        1=>"exp_upgrade.simple_collectable_area_radius.lv1",
-                        2=>"exp_upgrade.simple_collectable_area_radius.lv2",
-                        3=>"exp_upgrade.simple_collectable_area_radius.lv3",
+                        1=>"exp_upgrade.attractorb.lv1",
+                        2=>"exp_upgrade.attractorb.lv2",
+                        3=>"exp_upgrade.attractorb.lv3",
+                        4=>"exp_upgrade.attractorb.lv4",
+                        5=>"exp_upgrade.attractorb.lv5",
                         _=>null
                     };
                 })
-                .OnUpgrade((_, level) =>
+                .OnUpgrade((_, _) =>
                 {
-                    switch (level)
-                    {
-                        case 1:
-                            Global.CollectableAreaRadius.Value += 1.0f;
-                            break;
-                        case 2:
-                            Global.CollectableAreaRadius.Value += 1.0f;
-                            break;
-                        case 3:
-                            Global.CollectableAreaRadius.Value += 1.0f;
-                            break;
-                    }
+                    Global.CollectableAreaRadius.Value += 0.8f;
                 }));
 
             Dictionary = Items.ToDictionary(i=>i.Key);

@@ -133,7 +133,9 @@ namespace VampireSurvivorLike
                 { "bomb", new AbilityConfigRow { AbilityKey = "bomb", Damage = Config.InitBombDamage } },
                 { "simple_axe", new AbilityConfigRow { AbilityKey = "simple_axe", Damage = Config.InitSimpleAxeDamage, Duration = Config.InitSimpleAxeDuration, Count = Config.InitSimpleAxeCount, AttackCount = Config.InitSimpleAxePierce } },
                 { "magic_wand", new AbilityConfigRow { AbilityKey = "magic_wand", Damage = Config.InitMagicWandDamage, Duration = Config.InitMagicWandDuration, Count = Config.InitMagicWandCount, AttackCount = 1 } },
-                { "simple_bow", new AbilityConfigRow { AbilityKey = "simple_bow", Damage = Config.InitSimpleBowDamage, Duration = Config.InitSimpleBowDuration, Count = Config.InitSimpleBowCount, AttackCount = Config.InitSimpleBowPierce } }
+                { "simple_bow", new AbilityConfigRow { AbilityKey = "simple_bow", Damage = Config.InitSimpleBowDamage, Duration = Config.InitSimpleBowDuration, Count = Config.InitSimpleBowCount, AttackCount = Config.InitSimpleBowPierce } },
+                { "boomerang", new AbilityConfigRow { AbilityKey = "boomerang", Damage = Config.InitBoomerangDamage, Duration = Config.InitBoomerangDuration, Count = Config.InitBoomerangCount, AttackCount = Config.InitBoomerangMaxHits } },
+                { "holy_water", new AbilityConfigRow { AbilityKey = "holy_water", Damage = Config.InitHolyWaterDamage, Duration = Config.InitHolyWaterDuration, Count = 1, Speed = Config.InitHolyWaterTickInterval, AttackCount = 1 } }
             };
         }
 

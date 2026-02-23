@@ -16,8 +16,8 @@ namespace VampireSurvivorLike
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGamePanelData ?? new UIGamePanelData();
-			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
 			NormalizeHudLayout();
+			ApplySafeAreaNow();
 			// please add init code here
 			LocalizationManager.PreloadTable("game");
 			if (!FindObjectOfType<EventSystem>())
@@ -252,6 +252,7 @@ namespace VampireSurvivorLike
 		protected override void OnShow()
 		{
 			NormalizeHudLayout();
+			ApplySafeAreaNow();
 		}
 		
 		protected override void OnHide()
@@ -274,6 +275,14 @@ namespace VampireSurvivorLike
 				root.anchorMax = Vector2.one;
 				root.localScale = Vector3.one;
 			}
+		}
+
+		private void ApplySafeAreaNow()
+		{
+			if (!Application.isMobilePlatform) return;
+			var fitter = GetComponent<SafeAreaFitter>();
+			if (!fitter) fitter = gameObject.AddComponent<SafeAreaFitter>();
+			fitter.ForceApply();
 		}
 	}
 
@@ -355,6 +364,12 @@ namespace VampireSurvivorLike
 			_rect.anchorMax = anchorMax;
 			_rect.offsetMin = Vector2.zero;
 			_rect.offsetMax = Vector2.zero;
+		}
+
+		public void ForceApply()
+		{
+			if (_rect == null) _rect = transform as RectTransform;
+			Apply();
 		}
 	}
 

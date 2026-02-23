@@ -152,3 +152,60 @@ exp_upgrade.luck.lv2,Luck Lv2:\\nLuck +10% (drop quality and crit)
 exp_upgrade.luck.lv3,Luck Lv3:\\nLuck +15% (drop quality and crit)
 exp_upgrade.luck.lv4,Luck Lv4:\\nLuck +20% (drop quality and crit)
 exp_upgrade.luck.lv5,Luck Lv5:\\nLuck +25% (drop quality and crit)
+exp_upgrade.boomerang.name,Boomerang
+exp_upgrade.boomerang.paired_name,Razor Boomerang
+exp_upgrade.boomerang.paired_desc,More returns + higher pierce
+exp_upgrade.boomerang.lv1,Boomerang Lv1:\\nThrow and return, dealing damage both ways
+exp_upgrade.boomerang.lv2,Boomerang Lv2:\\nDamage +2
+exp_upgrade.boomerang.lv3,Boomerang Lv3:\\nCount +1
+exp_upgrade.boomerang.lv4,Boomerang Lv4:\\nReturn Count +1
+exp_upgrade.boomerang.lv5,Boomerang Lv5:\\nInterval -0.12s
+exp_upgrade.boomerang.lv6,Boomerang Lv6:\\nDamage +3
+exp_upgrade.boomerang.lv7,Boomerang Lv7:\\nPierce +1
+exp_upgrade.boomerang.lv8,Boomerang Lv8:\\nCount +1
+exp_upgrade.boomerang.lv9,Boomerang Lv9:\\nInterval -0.12s
+exp_upgrade.boomerang.lv10,Boomerang Lv10:\\nDamage +4 Return Count +1
+exp_upgrade.holy_water.name,Holy Water
+exp_upgrade.holy_water.paired_name,La Borra
+exp_upgrade.holy_water.paired_desc,Aura follows player + larger area
+exp_upgrade.holy_water.lv1,Holy Water Lv1:\\nCreate a damaging zone that also slows enemies
+exp_upgrade.holy_water.lv2,Holy Water Lv2:\\nTick Damage +1
+exp_upgrade.holy_water.lv3,Holy Water Lv3:\\nTick Interval -0.05s
+exp_upgrade.holy_water.lv4,Holy Water Lv4:\\nStronger Slow
+exp_upgrade.holy_water.lv5,Holy Water Lv5:\\nCast Interval -0.2s
+exp_upgrade.holy_water.lv6,Holy Water Lv6:\\nTick Damage +1
+exp_upgrade.holy_water.lv7,Holy Water Lv7:\\nSlow Duration +0.1s
+exp_upgrade.holy_water.lv8,Holy Water Lv8:\\nTick Interval -0.05s
+exp_upgrade.holy_water.lv9,Holy Water Lv9:\\nTick Damage +2
+exp_upgrade.holy_water.lv10,Holy Water Lv10:\\nCast Interval -0.25s Stronger Slow
+exp_upgrade.attractorb.name,Attractorb
+exp_upgrade.attractorb.lv1,Attractorb Lv1:\\nPickup Radius +0.8
+exp_upgrade.attractorb.lv2,Attractorb Lv2:\\nPickup Radius +1.6
+exp_upgrade.attractorb.lv3,Attractorb Lv3:\\nPickup Radius +2.4
+exp_upgrade.attractorb.lv4,Attractorb Lv4:\\nPickup Radius +3.2
+exp_upgrade.attractorb.lv5,Attractorb Lv5:\\nPickup Radius +4.0
+exp_upgrade.simple_axe.name,Copper Sword
+exp_upgrade.simple_axe.paired_name,Death Spiral
+exp_upgrade.simple_axe.paired_desc,360-degree full-screen piercing spin
+exp_upgrade.simple_axe.lv1,Copper Sword Lv1:\\nThrow upward in an arc
+exp_upgrade.simple_axe.lv2,Copper Sword Lv2:\\nDamage +3
+exp_upgrade.simple_axe.lv3,Copper Sword Lv3:\\nCount +1
+exp_upgrade.simple_axe.lv4,Copper Sword Lv4:\\nDamage +3 Interval -0.1s
+exp_upgrade.simple_axe.lv5,Copper Sword Lv5:\\nPierce +1
+exp_upgrade.simple_axe.lv6,Copper Sword Lv6:\\nDamage +4 Count +1
+exp_upgrade.simple_axe.lv7,Copper Sword Lv7:\\nInterval -0.2s
+exp_upgrade.simple_axe.lv8,Copper Sword Lv8:\\nDamage +5
+exp_upgrade.simple_axe.lv9,Copper Sword Lv9:\\nCount +1 Pierce +1
+exp_upgrade.simple_axe.lv10,Copper Sword Lv10:\\nDamage +5 Interval -0.2s
+exp_upgrade.armor.name,Armor
+exp_upgrade.armor.lv1,Armor Lv1:\\nIncoming damage -1
+exp_upgrade.armor.lv2,Armor Lv2:\\nIncoming damage -2
+exp_upgrade.armor.lv3,Armor Lv3:\\nIncoming damage -3
+exp_upgrade.armor.lv4,Armor Lv4:\\nIncoming damage -4
+exp_upgrade.armor.lv5,Armor Lv5:\\nIncoming damage -5
+exp_upgrade.yellow_potion.name,Yellow Potion
+exp_upgrade.yellow_potion.lv1,Yellow Potion Lv1:\\nWeapon area +10%
+exp_upgrade.yellow_potion.lv2,Yellow Potion Lv2:\\nWeapon area +20%
+exp_upgrade.yellow_potion.lv3,Yellow Potion Lv3:\\nWeapon area +30%
+exp_upgrade.yellow_potion.lv4,Yellow Potion Lv4:\\nWeapon area +40%
+exp_upgrade.yellow_potion.lv5,Yellow Potion Lv5:\\nWeapon area +50%
