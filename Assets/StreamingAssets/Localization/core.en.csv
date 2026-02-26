@@ -1,5 +1,10 @@
 key,value
 ui.settings.language,Language
+ui.settings.difficulty,Difficulty
+ui.settings.difficulty_easy,Easy
+ui.settings.difficulty_normal,Normal
+ui.settings.difficulty_hard,Hard
+ui.settings.difficulty_next_run_notice,Change applies next run
 ui.settings.fullscreen,Fullscreen
 ui.settings.windowed,Windowed
 ui.settings.screen_mode,Windowed/Fullscreen
@@ -28,6 +33,10 @@ ui.achievement.completed,[Completed]
 ui.achievement.unlocked_title,<b>Achievement {0} unlocked!</b>
 ui.gameover.title,Game Over
 ui.gamepass.title,Stage Clear
+ui.result.difficulty_label,Difficulty: {0}
+ui.result.enemy_strength_modifier,Enemy Strength {0}
+ui.result.reward_modifier,Rewards {0}
+ui.result.difficulty_summary,{0} | {1} | {2}
 achievement.3_minutes.name,Survive 3 minutes
 achievement.3_minutes.desc,Survive for 3 minutes\\nReward: 1000 coins
 achievement.5_minutes.name,Survive 5 minutes

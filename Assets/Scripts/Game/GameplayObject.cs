@@ -6,16 +6,29 @@ using UnityEngine.UI;
 
 namespace VampireSurvivorLike
 {
-    public abstract class GameplayObject : ViewController
+    public abstract class GameplayObject : ViewController, ObjectPoolSystem.IPoolable
     {
         public bool InScreen { get; set; }
         protected abstract Collider2D Collider2D { get; }
+
+        public virtual void OnSpawned()
+        {
+            InScreen = false;
+            if (Collider2D) Collider2D.enabled = true;
+        }
+
+        public virtual void OnDespawned()
+        {
+            InScreen = false;
+            if (Collider2D) Collider2D.enabled = false;
+        }
+
         /// <summary>
         /// 当物体进入摄像机视野时启用碰撞器，离开视野时禁用碰撞器
         /// </summary>
         private void OnBecameVisible()
         {
-            Collider2D.enabled = true;
+            if (Collider2D) Collider2D.enabled = true;
             InScreen = true;
         }
 
@@ -24,7 +37,7 @@ namespace VampireSurvivorLike
         /// </summary>
         private void OnBecameInvisible()
         {
-            Collider2D.enabled = false;
+            if (Collider2D) Collider2D.enabled = false;
             InScreen = false;
         }
     }

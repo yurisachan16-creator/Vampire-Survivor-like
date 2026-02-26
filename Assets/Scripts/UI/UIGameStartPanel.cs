@@ -45,6 +45,7 @@ namespace VampireSurvivorLike
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				//开始游戏
 				Global.ResetData();
+				GameSettings.CaptureRunDifficulty();
 				this.CloseSelf();
 				SceneManager.LoadScene("Game");
 

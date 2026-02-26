@@ -180,6 +180,7 @@ namespace VampireSurvivorLike
 
 			CurrentMinute = Mathf.FloorToInt(gameTime / 60f);
 			RemainingSeconds = Mathf.Max(0f, Config.MaxGameSeconds - gameTime);
+			var difficultyProfile = GameSettings.GetActiveRunProfile();
 
 			// 难度倍率（基于游戏分钟数）
 			var minutes = gameTime / 60f;
@@ -207,6 +208,10 @@ namespace VampireSurvivorLike
 				{
 					spawnRateMul *= Config.EarlyGameSpawnRateMultiplier;
 				}
+				hpMul *= difficultyProfile.EnemyHpMultiplier;
+				speedMul *= difficultyProfile.EnemySpeedMultiplier;
+				damageMul *= difficultyProfile.EnemyDamageMultiplier;
+				spawnRateMul *= difficultyProfile.SpawnRateMultiplier;
 
 				// 计算经过难度缩放后的刷新间隔
 				var effectiveInterval = ch.Definition.SpawnIntervalSec / spawnRateMul;

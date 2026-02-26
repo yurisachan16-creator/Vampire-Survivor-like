@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace VampireSurvivorLike
 {
@@ -19,6 +20,11 @@ namespace VampireSurvivorLike
         // 用于 GetAllExp 收集全场经验球/金币（替代 FindObjectsByType）
         private static readonly HashSet<Exp> ExpSet = new HashSet<Exp>();
         private static readonly HashSet<Coin> CoinSet = new HashSet<Coin>();
+        private static readonly List<ExpDistanceCandidate> ExpCandidates = new List<ExpDistanceCandidate>(512);
+        private static readonly List<CoinDistanceCandidate> CoinCandidates = new List<CoinDistanceCandidate>(512);
+
+        public static int ExpCount => ExpSet.Count;
+        public static int CoinCount => CoinSet.Count;
 
         public static void RegisterExp(Exp exp) { if (exp) ExpSet.Add(exp); }
         public static void UnregisterExp(Exp exp) { ExpSet.Remove(exp); }
@@ -42,6 +48,56 @@ namespace VampireSurvivorLike
             }
         }
 
+        public static void GetFarthestExps(Vector3 playerPos, int count, List<Exp> results)
+        {
+            results.Clear();
+            if (count <= 0 || ExpSet.Count == 0) return;
+
+            ExpCandidates.Clear();
+            foreach (var exp in ExpSet)
+            {
+                if (!exp || !exp.gameObject.activeInHierarchy || exp.FlyingToPalyer) continue;
+                var sqrDistance = ((Vector2)exp.transform.position - (Vector2)playerPos).sqrMagnitude;
+                ExpCandidates.Add(new ExpDistanceCandidate(exp, sqrDistance));
+            }
+
+            if (ExpCandidates.Count == 0) return;
+
+            ExpCandidates.Sort(ExpDistanceCandidateComparer.Instance);
+
+            var take = Mathf.Min(count, ExpCandidates.Count);
+            for (var i = 0; i < take; i++)
+            {
+                var exp = ExpCandidates[i].Exp;
+                if (exp) results.Add(exp);
+            }
+        }
+
+        public static void GetFarthestCoins(Vector3 playerPos, int count, List<Coin> results)
+        {
+            results.Clear();
+            if (count <= 0 || CoinSet.Count == 0) return;
+
+            CoinCandidates.Clear();
+            foreach (var coin in CoinSet)
+            {
+                if (!coin || !coin.gameObject.activeInHierarchy || coin.FlyingToPalyer) continue;
+                var sqrDistance = ((Vector2)coin.transform.position - (Vector2)playerPos).sqrMagnitude;
+                CoinCandidates.Add(new CoinDistanceCandidate(coin, sqrDistance));
+            }
+
+            if (CoinCandidates.Count == 0) return;
+
+            CoinCandidates.Sort(CoinDistanceCandidateComparer.Instance);
+
+            var take = Mathf.Min(count, CoinCandidates.Count);
+            for (var i = 0; i < take; i++)
+            {
+                var coin = CoinCandidates[i].Coin;
+                if (coin) results.Add(coin);
+            }
+        }
+
         public static void Clear()
         {
             ActiveRecoverHPCount = 0;
@@ -52,6 +108,52 @@ namespace VampireSurvivorLike
             ActiveGetAllExpCount = 0;
             ExpSet.Clear();
             CoinSet.Clear();
+            ExpCandidates.Clear();
+            CoinCandidates.Clear();
+        }
+
+        private readonly struct ExpDistanceCandidate
+        {
+            public readonly Exp Exp;
+            public readonly float SqrDistance;
+
+            public ExpDistanceCandidate(Exp exp, float sqrDistance)
+            {
+                Exp = exp;
+                SqrDistance = sqrDistance;
+            }
+        }
+
+        private sealed class ExpDistanceCandidateComparer : IComparer<ExpDistanceCandidate>
+        {
+            public static readonly ExpDistanceCandidateComparer Instance = new ExpDistanceCandidateComparer();
+
+            public int Compare(ExpDistanceCandidate x, ExpDistanceCandidate y)
+            {
+                return y.SqrDistance.CompareTo(x.SqrDistance);
+            }
+        }
+
+        private readonly struct CoinDistanceCandidate
+        {
+            public readonly Coin Coin;
+            public readonly float SqrDistance;
+
+            public CoinDistanceCandidate(Coin coin, float sqrDistance)
+            {
+                Coin = coin;
+                SqrDistance = sqrDistance;
+            }
+        }
+
+        private sealed class CoinDistanceCandidateComparer : IComparer<CoinDistanceCandidate>
+        {
+            public static readonly CoinDistanceCandidateComparer Instance = new CoinDistanceCandidateComparer();
+
+            public int Compare(CoinDistanceCandidate x, CoinDistanceCandidate y)
+            {
+                return y.SqrDistance.CompareTo(x.SqrDistance);
+            }
         }
     }
 }

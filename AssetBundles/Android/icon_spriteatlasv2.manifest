@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3224731811
+CRC: 2806103879
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ff1d4483cdb9a11cb5c693b439f511f1
+    Hash: ff9e67cf152d6532e6cf3c9012ac5142
   TypeTreeHash:
     serializedVersion: 2
     Hash: 033fafe2c9f6c610c3a734393882fd4c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: ff1d4483cdb9a11cb5c693b439f511f1
+    Hash: ff9e67cf152d6532e6cf3c9012ac5142
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -21,4 +21,5 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Art/Sprite/UI/Icon/Icon.spriteatlasv2
-Dependencies: []
+Dependencies:
+- D:/unity/Vampire Survivor-like/AssetBundles/Android/rpgitems_png

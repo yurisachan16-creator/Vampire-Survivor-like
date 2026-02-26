@@ -118,6 +118,14 @@ namespace VampireSurvivorLike
         public const float CherryDropRate = 0.05f;
         /// <summary>场上最多同时存在的樱桃数量</summary>
         public const int MaxActiveCherryCount = 1;
+        /// <summary>场上最多同时存在的经验球数量</summary>
+        public const int MaxActiveExpCount = 300;
+        /// <summary>场上最多同时存在的金币数量</summary>
+        public const int MaxActiveCoinCount = 200;
+        /// <summary>经验球/金币合并时的搜索半径（世界单位）</summary>
+        public const float ExpMergeRadius = 1.5f;
+        /// <summary>经验球/金币合并检查间隔（秒）</summary>
+        public const float ExpMergeCheckInterval = 2f;
         /// <summary>柠檬 Buff 伤害加成（+40%）</summary>
         public const float LemonBuffDamageBonus = 0.4f;
         /// <summary>柠檬 Buff 持续时间（秒）</summary>

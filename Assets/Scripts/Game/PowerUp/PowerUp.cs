@@ -9,8 +9,40 @@ namespace VampireSurvivorLike
         //吃掉exp物体时，exp不是直接消失，而是会飞向玩家
         public bool FlyingToPalyer { get; set; }
         private int _flyingToPlayerFrameCount = 0;
+        private SpriteRenderer _spriteRenderer;
+        private bool _hasDefaultSortingOrder;
+        private int _defaultSortingOrder;
 
         protected abstract void Execute();
+
+        protected virtual void ResetState()
+        {
+            FlyingToPalyer = false;
+            _flyingToPlayerFrameCount = 0;
+
+            if (!_spriteRenderer) _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_spriteRenderer)
+            {
+                if (!_hasDefaultSortingOrder)
+                {
+                    _defaultSortingOrder = _spriteRenderer.sortingOrder;
+                    _hasDefaultSortingOrder = true;
+                }
+                _spriteRenderer.sortingOrder = _defaultSortingOrder;
+            }
+        }
+
+        public override void OnSpawned()
+        {
+            base.OnSpawned();
+            ResetState();
+        }
+
+        public override void OnDespawned()
+        {
+            ResetState();
+            base.OnDespawned();
+        }
 
         private void Update()
         {
@@ -19,7 +51,8 @@ namespace VampireSurvivorLike
             {
                 if(_flyingToPlayerFrameCount == 0)
                 {
-                    GetComponent<SpriteRenderer>().sortingOrder = 5; //确保在最前面显示
+                    if (!_spriteRenderer) _spriteRenderer = GetComponent<SpriteRenderer>();
+                    if (_spriteRenderer) _spriteRenderer.sortingOrder = 5; //确保在最前面显示
                 }
 
                 _flyingToPlayerFrameCount++;
@@ -42,7 +75,7 @@ namespace VampireSurvivorLike
                     {
                         if (Global.IsGameOver.Value)
                         {
-                            this.DestroyGameObjGracefully();
+                            ObjectPoolSystem.Despawn(gameObject);
                             return;
                         }
                         Execute();

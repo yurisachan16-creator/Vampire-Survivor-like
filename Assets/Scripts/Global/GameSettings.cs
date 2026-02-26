@@ -2,12 +2,58 @@ using UnityEngine;
 using UnityEngine.UI;
 using QFramework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace VampireSurvivorLike
 {
+    public enum GameDifficulty
+    {
+        Easy = 0,
+        Normal = 1,
+        Hard = 2
+    }
+
+    public readonly struct DifficultyProfile
+    {
+        public readonly float EnemyHpMultiplier;
+        public readonly float EnemySpeedMultiplier;
+        public readonly float EnemyDamageMultiplier;
+        public readonly float SpawnRateMultiplier;
+        public readonly float ExpDropRateMultiplier;
+        public readonly float CoinDropRateMultiplier;
+        public readonly float HpDropRateMultiplier;
+        public readonly float BombDropRateMultiplier;
+        public readonly float ExpValueMultiplier;
+        public readonly float CoinValueMultiplier;
+
+        public DifficultyProfile(
+            float enemyHpMultiplier,
+            float enemySpeedMultiplier,
+            float enemyDamageMultiplier,
+            float spawnRateMultiplier,
+            float expDropRateMultiplier,
+            float coinDropRateMultiplier,
+            float hpDropRateMultiplier,
+            float bombDropRateMultiplier,
+            float expValueMultiplier,
+            float coinValueMultiplier)
+        {
+            EnemyHpMultiplier = enemyHpMultiplier;
+            EnemySpeedMultiplier = enemySpeedMultiplier;
+            EnemyDamageMultiplier = enemyDamageMultiplier;
+            SpawnRateMultiplier = spawnRateMultiplier;
+            ExpDropRateMultiplier = expDropRateMultiplier;
+            CoinDropRateMultiplier = coinDropRateMultiplier;
+            HpDropRateMultiplier = hpDropRateMultiplier;
+            BombDropRateMultiplier = bombDropRateMultiplier;
+            ExpValueMultiplier = expValueMultiplier;
+            CoinValueMultiplier = coinValueMultiplier;
+        }
+    }
+
     /// <summary>
     /// 分辨率选项数据
     /// </summary>
@@ -60,6 +106,7 @@ namespace VampireSurvivorLike
         private const string KEY_MAX_SMALL_ENEMY_WEBGL = "GameSettings_MaxSmallEnemy_WebGL";
         private const string KEY_MAX_SMALL_ENEMY_PC = "GameSettings_MaxSmallEnemy_PC";
         private const string KEY_PC_INSTANCED_ENEMY_RENDERER = "GameSettings_PcInstancedEnemyRenderer";
+        private const string KEY_SELECTED_DIFFICULTY = "GameSettings_SelectedDifficulty";
 
         /// <summary>
         /// 预设分辨率列表（覆盖主流屏幕比例）
@@ -76,6 +123,57 @@ namespace VampireSurvivorLike
         };
 
         private static List<ResolutionOption> _cachedResolutions;
+        private static bool _difficultyStateInitialized;
+        private static bool _difficultyConfigLoaded;
+        private static GameDifficulty _selectedDifficulty = GameDifficulty.Normal;
+        private static GameDifficulty _activeRunDifficulty = GameDifficulty.Normal;
+        private static bool _activeRunCaptured;
+        private static readonly Dictionary<GameDifficulty, DifficultyProfile> RuntimeDifficultyProfiles = new Dictionary<GameDifficulty, DifficultyProfile>(3);
+        private static readonly Dictionary<GameDifficulty, DifficultyProfile> DefaultDifficultyProfiles = new Dictionary<GameDifficulty, DifficultyProfile>(3)
+        {
+            {
+                GameDifficulty.Easy,
+                new DifficultyProfile(
+                    enemyHpMultiplier: 0.85f,
+                    enemySpeedMultiplier: 0.85f,
+                    enemyDamageMultiplier: 0.85f,
+                    spawnRateMultiplier: 0.85f,
+                    expDropRateMultiplier: 0.8f,
+                    coinDropRateMultiplier: 0.8f,
+                    hpDropRateMultiplier: 0.8f,
+                    bombDropRateMultiplier: 0.8f,
+                    expValueMultiplier: 0.8f,
+                    coinValueMultiplier: 0.8f)
+            },
+            {
+                GameDifficulty.Normal,
+                new DifficultyProfile(
+                    enemyHpMultiplier: 1f,
+                    enemySpeedMultiplier: 1f,
+                    enemyDamageMultiplier: 1f,
+                    spawnRateMultiplier: 1f,
+                    expDropRateMultiplier: 1f,
+                    coinDropRateMultiplier: 1f,
+                    hpDropRateMultiplier: 1f,
+                    bombDropRateMultiplier: 1f,
+                    expValueMultiplier: 1f,
+                    coinValueMultiplier: 1f)
+            },
+            {
+                GameDifficulty.Hard,
+                new DifficultyProfile(
+                    enemyHpMultiplier: 1.2f,
+                    enemySpeedMultiplier: 1.2f,
+                    enemyDamageMultiplier: 1.2f,
+                    spawnRateMultiplier: 1.2f,
+                    expDropRateMultiplier: 1.3f,
+                    coinDropRateMultiplier: 1.3f,
+                    hpDropRateMultiplier: 1.3f,
+                    bombDropRateMultiplier: 1.3f,
+                    expValueMultiplier: 1.3f,
+                    coinValueMultiplier: 1.3f)
+            }
+        };
 
         /// <summary>
         /// 是否全屏（向后兼容，分辨率模式下 Android/WebGL 始终全屏，PC 按分辨率切换）
@@ -199,6 +297,200 @@ namespace VampireSurvivorLike
             #else
             return MaxSmallEnemyCountPC;
             #endif
+        }
+
+        public static GameDifficulty SelectedDifficulty
+        {
+            get
+            {
+                EnsureDifficultyStateInitialized();
+                return _selectedDifficulty;
+            }
+            set
+            {
+                EnsureDifficultyStateInitialized();
+                var normalized = NormalizeDifficulty(value);
+                if (_selectedDifficulty == normalized) return;
+
+                _selectedDifficulty = normalized;
+                PlayerPrefs.SetInt(KEY_SELECTED_DIFFICULTY, (int)_selectedDifficulty);
+                PlayerPrefs.Save();
+            }
+        }
+
+        public static GameDifficulty ActiveRunDifficulty
+        {
+            get
+            {
+                EnsureDifficultyStateInitialized();
+                return _activeRunCaptured ? _activeRunDifficulty : _selectedDifficulty;
+            }
+        }
+
+        public static bool HasPendingDifficultyChange
+        {
+            get
+            {
+                EnsureDifficultyStateInitialized();
+                return _activeRunCaptured && _activeRunDifficulty != _selectedDifficulty;
+            }
+        }
+
+        public static bool DifficultyConfigLoaded => _difficultyConfigLoaded;
+
+        public static void SetSelectedDifficultyByIndex(int index)
+        {
+            SelectedDifficulty = (GameDifficulty)index;
+        }
+
+        public static void CaptureRunDifficulty()
+        {
+            EnsureDifficultyStateInitialized();
+            _activeRunDifficulty = _selectedDifficulty;
+            _activeRunCaptured = true;
+        }
+
+        public static void CaptureRunDifficultyIfNeeded()
+        {
+            EnsureDifficultyStateInitialized();
+            if (_activeRunCaptured) return;
+            CaptureRunDifficulty();
+        }
+
+        public static void ClearActiveRunDifficulty()
+        {
+            EnsureDifficultyStateInitialized();
+            _activeRunCaptured = false;
+            _activeRunDifficulty = _selectedDifficulty;
+        }
+
+        public static DifficultyProfile GetSelectedProfile()
+        {
+            EnsureDifficultyStateInitialized();
+            return GetProfileByDifficulty(_selectedDifficulty);
+        }
+
+        public static DifficultyProfile GetActiveRunProfile()
+        {
+            EnsureDifficultyStateInitialized();
+            return GetProfileByDifficulty(ActiveRunDifficulty);
+        }
+
+        public static float GetEnemyStrengthDeltaPercent(DifficultyProfile profile)
+        {
+            var average =
+                (profile.EnemyHpMultiplier +
+                 profile.EnemySpeedMultiplier +
+                 profile.EnemyDamageMultiplier +
+                 profile.SpawnRateMultiplier) / 4f;
+            return (average - 1f) * 100f;
+        }
+
+        public static float GetRewardDeltaPercent(DifficultyProfile profile)
+        {
+            var average =
+                (profile.ExpDropRateMultiplier +
+                 profile.CoinDropRateMultiplier +
+                 profile.HpDropRateMultiplier +
+                 profile.BombDropRateMultiplier +
+                 profile.ExpValueMultiplier +
+                 profile.CoinValueMultiplier) / 6f;
+            return (average - 1f) * 100f;
+        }
+
+        public static string GetDifficultyLocalizationKey(GameDifficulty difficulty)
+        {
+            switch (difficulty)
+            {
+                case GameDifficulty.Easy:
+                    return "ui.settings.difficulty_easy";
+                case GameDifficulty.Hard:
+                    return "ui.settings.difficulty_hard";
+                default:
+                    return "ui.settings.difficulty_normal";
+            }
+        }
+
+        public static IEnumerator LoadDifficultyConfigAsync()
+        {
+            EnsureDifficultyStateInitialized();
+            if (_difficultyConfigLoaded) yield break;
+
+            Dictionary<GameDifficulty, DifficultyProfile> loadedProfiles = null;
+            yield return DifficultyConfigLoader.LoadAsync(dict => loadedProfiles = dict);
+            ApplyDifficultyProfiles(loadedProfiles);
+            _difficultyConfigLoaded = true;
+        }
+
+        public static void ApplyDifficultyProfiles(Dictionary<GameDifficulty, DifficultyProfile> loadedProfiles)
+        {
+            EnsureDifficultyStateInitialized();
+            RuntimeDifficultyProfiles.Clear();
+            foreach (var pair in DefaultDifficultyProfiles)
+            {
+                RuntimeDifficultyProfiles[pair.Key] = pair.Value;
+            }
+
+            if (loadedProfiles == null) return;
+
+            foreach (var pair in loadedProfiles)
+            {
+                RuntimeDifficultyProfiles[pair.Key] = NormalizeProfile(pair.Value);
+            }
+        }
+
+        private static DifficultyProfile GetProfileByDifficulty(GameDifficulty difficulty)
+        {
+            EnsureDifficultyStateInitialized();
+            var normalized = NormalizeDifficulty(difficulty);
+            if (RuntimeDifficultyProfiles.TryGetValue(normalized, out var profile))
+            {
+                return profile;
+            }
+
+            return DefaultDifficultyProfiles[GameDifficulty.Normal];
+        }
+
+        private static void EnsureDifficultyStateInitialized()
+        {
+            if (_difficultyStateInitialized) return;
+
+            RuntimeDifficultyProfiles.Clear();
+            foreach (var pair in DefaultDifficultyProfiles)
+            {
+                RuntimeDifficultyProfiles[pair.Key] = pair.Value;
+            }
+
+            var raw = PlayerPrefs.GetInt(KEY_SELECTED_DIFFICULTY, (int)GameDifficulty.Normal);
+            _selectedDifficulty = NormalizeDifficulty((GameDifficulty)raw);
+            _activeRunDifficulty = _selectedDifficulty;
+            _activeRunCaptured = false;
+            _difficultyStateInitialized = true;
+        }
+
+        private static DifficultyProfile NormalizeProfile(DifficultyProfile profile)
+        {
+            return new DifficultyProfile(
+                enemyHpMultiplier: Mathf.Max(0.01f, profile.EnemyHpMultiplier),
+                enemySpeedMultiplier: Mathf.Max(0.01f, profile.EnemySpeedMultiplier),
+                enemyDamageMultiplier: Mathf.Max(0.01f, profile.EnemyDamageMultiplier),
+                spawnRateMultiplier: Mathf.Max(0.01f, profile.SpawnRateMultiplier),
+                expDropRateMultiplier: Mathf.Max(0f, profile.ExpDropRateMultiplier),
+                coinDropRateMultiplier: Mathf.Max(0f, profile.CoinDropRateMultiplier),
+                hpDropRateMultiplier: Mathf.Max(0f, profile.HpDropRateMultiplier),
+                bombDropRateMultiplier: Mathf.Max(0f, profile.BombDropRateMultiplier),
+                expValueMultiplier: Mathf.Max(0f, profile.ExpValueMultiplier),
+                coinValueMultiplier: Mathf.Max(0f, profile.CoinValueMultiplier));
+        }
+
+        private static GameDifficulty NormalizeDifficulty(GameDifficulty difficulty)
+        {
+            if ((int)difficulty < (int)GameDifficulty.Easy || (int)difficulty > (int)GameDifficulty.Hard)
+            {
+                return GameDifficulty.Normal;
+            }
+
+            return difficulty;
         }
 
         /// <summary>
@@ -443,6 +735,8 @@ namespace VampireSurvivorLike
             MobileDebugHud.ApplyStartup();
             PerformanceHud.ApplyStartup();
             PcInstancedEnemyRenderer.ApplyStartup();
+
+            EnsureDifficultyStateInitialized();
         }
 
         /// <summary>
@@ -618,7 +912,8 @@ namespace VampireSurvivorLike
 
             _text = textGo.GetComponent<Text>();
             _text.alignment = TextAnchor.UpperLeft;
-            _text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            var fallbackFont = GetBuiltinFallbackFont();
+            if (fallbackFont) _text.font = fallbackFont;
             _text.fontSize = 22;
             _text.color = Color.white;
             _text.supportRichText = false;
@@ -691,6 +986,25 @@ namespace VampireSurvivorLike
             catch (Exception e)
             {
                 EnqueueLog($"{DateTime.Now:HH:mm:ss} [E] Dump failed: {e.Message}");
+            }
+        }
+
+        private static Font GetBuiltinFallbackFont()
+        {
+            try
+            {
+                return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            }
+            catch
+            {
+                try
+                {
+                    return Resources.GetBuiltinResource<Font>("Arial.ttf");
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
     }

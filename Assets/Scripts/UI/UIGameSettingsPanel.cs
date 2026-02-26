@@ -57,6 +57,30 @@ namespace VampireSurvivorLike
 				}
 			}
 
+			var difficultySettings = transform.Find("SettingsPanel/Scroll View/Viewport/Content/DifficultySettings");
+			var difficultyTextTransform = difficultySettings ? difficultySettings.Find("DifficultyText") : null;
+			var difficultyText = difficultyTextTransform ? difficultyTextTransform.GetComponent<Text>() : null;
+			var difficultyTmpText = difficultyTextTransform ? difficultyTextTransform.GetComponent<TMP_Text>() : null;
+			if (difficultyText) FontManager.Register(difficultyText);
+			if (difficultyTmpText) FontManager.Register(difficultyTmpText);
+			var difficultyNoticeText = EnsureDifficultyNextRunNotice(difficultySettings as RectTransform);
+			if (difficultyNoticeText)
+			{
+				FontManager.Register(difficultyNoticeText);
+				difficultyNoticeText.gameObject.SetActive(false);
+			}
+
+			TMP_Dropdown difficultyDropdown = null;
+			if (difficultySettings)
+			{
+				difficultyDropdown = difficultySettings.GetComponentInChildren<TMP_Dropdown>(true);
+				if (difficultyDropdown)
+				{
+					if (difficultyDropdown.captionText) FontManager.Register(difficultyDropdown.captionText);
+					if (difficultyDropdown.itemText) FontManager.Register(difficultyDropdown.itemText);
+				}
+			}
+
 			Toggle debugHudToggle = null;
 			Text debugHudLabel = null;
 			GameObject debugHudRow = null;
@@ -244,6 +268,25 @@ namespace VampireSurvivorLike
 					PopulateResolutionDropdown(resolutionDropdown);
 				}
 
+				if (difficultyText) difficultyText.text = TL("ui.settings.difficulty", "难度", "Difficulty");
+				if (difficultyTmpText) difficultyTmpText.text = TL("ui.settings.difficulty", "难度", "Difficulty");
+				if (difficultyDropdown)
+				{
+					PopulateDifficultyDropdown(difficultyDropdown);
+				}
+				if (difficultyNoticeText)
+				{
+					var showNotice = mData.IsFromGame && GameSettings.HasPendingDifficultyChange;
+					difficultyNoticeText.gameObject.SetActive(showNotice);
+					if (showNotice)
+					{
+						difficultyNoticeText.text = TL(
+							"ui.settings.difficulty_next_run_notice",
+							"切换将在下一局生效",
+							"Change applies next run");
+					}
+				}
+
 				if (musicLabel) musicLabel.text = TL("ui.settings.music", "音乐", "Music");
 				if (soundLabel) soundLabel.text = TL("ui.settings.sfx", "音效", "SFX");
 
@@ -335,6 +378,17 @@ namespace VampireSurvivorLike
 				});
 			}
 
+			if (difficultyDropdown)
+			{
+				difficultyDropdown.onValueChanged.RemoveAllListeners();
+				difficultyDropdown.onValueChanged.AddListener(index =>
+				{
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					GameSettings.SetSelectedDifficultyByIndex(index);
+					refreshUiText();
+				});
+			}
+
 			if (debugHudToggle)
 			{
 				debugHudToggle.onValueChanged.RemoveAllListeners();
@@ -385,6 +439,7 @@ namespace VampireSurvivorLike
 				AudioKit.StopAllSound();
 				//关闭所有面板
 				UIKit.CloseAllPanel();
+				GameSettings.ClearActiveRunDifficulty();
 				//加载主菜单场景（会清理 Game 场景的所有游戏对象）
 				SceneManager.LoadScene("GameStart");
 				//恢复时间流逝
@@ -450,6 +505,83 @@ namespace VampireSurvivorLike
 			if (savedIndex < 0 || savedIndex >= options.Count) savedIndex = 0;
 			dropdown.SetValueWithoutNotify(savedIndex);
 			dropdown.RefreshShownValue();
+		}
+
+		private void PopulateDifficultyDropdown(TMP_Dropdown dropdown)
+		{
+			var options = dropdown.options;
+			options.Clear();
+
+			options.Add(new TMP_Dropdown.OptionData(GetDifficultyOptionText(GameDifficulty.Easy)));
+			options.Add(new TMP_Dropdown.OptionData(GetDifficultyOptionText(GameDifficulty.Normal)));
+			options.Add(new TMP_Dropdown.OptionData(GetDifficultyOptionText(GameDifficulty.Hard)));
+
+			var savedIndex = (int)GameSettings.SelectedDifficulty;
+			if (savedIndex < 0 || savedIndex > 2) savedIndex = (int)GameDifficulty.Normal;
+			dropdown.SetValueWithoutNotify(savedIndex);
+			dropdown.RefreshShownValue();
+		}
+
+		private static string GetDifficultyOptionText(GameDifficulty difficulty)
+		{
+			var isEn = LocalizationManager.CurrentLanguage.Value == LanguageId.En;
+			switch (difficulty)
+			{
+				case GameDifficulty.Easy:
+					return LocalizationManager.IsReady ? LocalizationManager.T("ui.settings.difficulty_easy") : (isEn ? "Easy" : "简单");
+				case GameDifficulty.Hard:
+					return LocalizationManager.IsReady ? LocalizationManager.T("ui.settings.difficulty_hard") : (isEn ? "Hard" : "高难");
+				default:
+					return LocalizationManager.IsReady ? LocalizationManager.T("ui.settings.difficulty_normal") : (isEn ? "Normal" : "普通");
+			}
+		}
+
+		private Text EnsureDifficultyNextRunNotice(RectTransform difficultySettings)
+		{
+			if (!difficultySettings) return null;
+
+			var existing = difficultySettings.Find("DifficultyNextRunNotice");
+			var text = existing ? existing.GetComponent<Text>() : null;
+			if (text) return text;
+
+			var go = new GameObject("DifficultyNextRunNotice", typeof(RectTransform), typeof(Text));
+			var rt = (RectTransform)go.transform;
+			rt.SetParent(difficultySettings, false);
+			rt.anchorMin = new Vector2(0f, 0f);
+			rt.anchorMax = new Vector2(1f, 0f);
+			rt.pivot = new Vector2(0.5f, 0f);
+			rt.sizeDelta = new Vector2(0f, 20f);
+			rt.anchoredPosition = new Vector2(0f, 2f);
+
+			text = go.GetComponent<Text>();
+			var fallbackFont = GetBuiltinFallbackFont();
+			if (fallbackFont) text.font = fallbackFont;
+			text.fontSize = 16;
+			text.alignment = TextAnchor.MiddleRight;
+			text.horizontalOverflow = HorizontalWrapMode.Wrap;
+			text.verticalOverflow = VerticalWrapMode.Truncate;
+			text.color = new Color(1f, 0.93f, 0.45f, 1f);
+			text.raycastTarget = false;
+			return text;
+		}
+
+		private static Font GetBuiltinFallbackFont()
+		{
+			try
+			{
+				return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+			}
+			catch
+			{
+				try
+				{
+					return Resources.GetBuiltinResource<Font>("Arial.ttf");
+				}
+				catch
+				{
+					return null;
+				}
+			}
 		}
 
 		/// <summary>

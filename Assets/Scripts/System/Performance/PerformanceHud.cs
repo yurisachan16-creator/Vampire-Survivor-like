@@ -189,6 +189,8 @@ namespace VampireSurvivorLike
             _sb.Append("Enemies: ").Append(EnemyGenerator.SmallEnemyCount.Value)
                 .Append(" small + ").Append(EnemyGenerator.BossEnemyCount.Value)
                 .Append(" boss (total ").Append(EnemyGenerator.EnemyCount.Value).Append(")\n");
+            _sb.Append("Drops: ").Append(PowerUpRegistry.ExpCount).Append(" exp / ")
+                .Append(PowerUpRegistry.CoinCount).Append(" coin\n");
             _sb.Append("Minute: ").Append(EnemyGenerator.CurrentMinute.Value)
                 .Append("/30  Remaining: ").Append(EnemyGenerator.GameRemainingTime.Value.ToString("0")).Append("s\n");
             _sb.Append("Channels: ").Append(EnemyGenerator.ActiveChannelCount.Value).Append(" active\n");

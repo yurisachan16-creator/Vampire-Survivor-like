@@ -16,6 +16,9 @@ namespace VampireSurvivorLike
 				yield return WebGLPreloader.PreloadAllAssets();
 			}
 			#endif
+
+			yield return GameSettings.LoadDifficultyConfigAsync();
+			GameSettings.CaptureRunDifficultyIfNeeded();
 			
 			UIKit.OpenPanel<UIGamePanel>();
 			yield break;

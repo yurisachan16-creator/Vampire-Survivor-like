@@ -654,7 +654,8 @@ namespace VampireSurvivorLike
 
 			var text = textGo.GetComponent<Text>();
 			text.alignment = TextAnchor.MiddleCenter;
-			text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+			var fallbackFont = GetBuiltinFallbackFont();
+			if (fallbackFont) text.font = fallbackFont;
 			text.text = "Ⅱ";
 			text.fontSize = 42;
 			text.color = Color.white;
@@ -665,6 +666,25 @@ namespace VampireSurvivorLike
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				PlatformInput.RequestBack();
 			});
+		}
+
+		private static Font GetBuiltinFallbackFont()
+		{
+			try
+			{
+				return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+			}
+			catch
+			{
+				try
+				{
+					return Resources.GetBuiltinResource<Font>("Arial.ttf");
+				}
+				catch
+				{
+					return null;
+				}
+			}
 		}
 	}
 }

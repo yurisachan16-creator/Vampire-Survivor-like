@@ -1,5 +1,10 @@
 key,value
 ui.settings.language,언어
+ui.settings.difficulty,난이도
+ui.settings.difficulty_easy,쉬움
+ui.settings.difficulty_normal,보통
+ui.settings.difficulty_hard,어려움
+ui.settings.difficulty_next_run_notice,다음 판부터 적용됩니다
 ui.settings.fullscreen,전체 화면
 ui.settings.windowed,창 모드
 ui.settings.screen_mode,창 모드/전체 화면
@@ -28,6 +33,10 @@ ui.achievement.completed,【완료】
 ui.achievement.unlocked_title,<b>업적{0} 달성!</b>
 ui.gameover.title,게임 오버
 ui.gamepass.title,스테이지 클리어
+ui.result.difficulty_label,난이도: {0}
+ui.result.enemy_strength_modifier,적 강도 {0}
+ui.result.reward_modifier,보상 {0}
+ui.result.difficulty_summary,{0} | {1} | {2}
 achievement.3_minutes.name,3분 생존
 achievement.3_minutes.desc,3분 생존\\n보상: 코인 1000개
 achievement.5_minutes.name,5분 생존

@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 4267668162
+CRC: 2428977511
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -32,7 +32,8 @@ AssetBundleManifest:
       Dependencies: {}
     Info_8:
       Name: icon_spriteatlasv2
-      Dependencies: {}
+      Dependencies:
+        Dependency_0: rpgitems_png
     Info_9:
       Name: fusion-pixel-12px-proportional-zh_hans_ttf
       Dependencies: {}
@@ -42,4 +43,7 @@ AssetBundleManifest:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
     Info_11:
       Name: enemy_spriteatlasv2
+      Dependencies: {}
+    Info_12:
+      Name: rpgitems_png
       Dependencies: {}

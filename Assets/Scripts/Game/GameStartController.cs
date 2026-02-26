@@ -14,6 +14,8 @@ namespace VampireSurvivorLike
 			yield return ResKit.InitAsync();
 			yield return WebGLPreloader.PreloadAllAssets();
 			#endif
+
+			yield return GameSettings.LoadDifficultyConfigAsync();
 			
 			// 加载技能配置
 			yield return AbilityConfigLoader.LoadAsync();

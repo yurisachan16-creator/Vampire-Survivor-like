@@ -425,6 +425,7 @@ namespace VampireSurvivorLike
         {
             var manager = PowerUpManager.Default;
             if (!manager) return;
+            var difficultyProfile = GameSettings.GetActiveRunProfile();
 
             if(genTreasureChest)
             {
@@ -437,35 +438,67 @@ namespace VampireSurvivorLike
 
             var luck = Mathf.Max(0f, LuckValue.Value);
             var qualityDropMultiplier = 1f + luck * 1.2f;
+            var effectiveExpDropRate = Mathf.Clamp01((expDropRate + AdditionalExpPercent.Value) * difficultyProfile.ExpDropRateMultiplier);
+            var effectiveCoinDropRate = Mathf.Clamp01(coinDropRate * difficultyProfile.CoinDropRateMultiplier);
+            var effectiveHpDropRate = Mathf.Clamp01(hpDropRate * difficultyProfile.HpDropRateMultiplier);
+            var effectiveBombDropRate = Mathf.Clamp01(bombDropRate * difficultyProfile.BombDropRateMultiplier);
 
             //根据概率生成经验值和金币
             var percent=Random.Range(0, 1f);
 
-            if (percent < expDropRate + AdditionalExpPercent.Value)
+            if (percent < effectiveExpDropRate)
             {
-                //生成经验值
-                manager.Exp.Instantiate()
-                    .Position(gameObject.Position())
-                    .Show();
+                var dropPos = gameObject.Position();
+                if (PowerUpRegistry.ExpCount >= Config.MaxActiveExpCount)
+                {
+                    var mergePos = Player.Default ? Player.Default.transform.position : (Vector3)dropPos;
+                    PowerUpMergeSystem.TryMergeExpNow(mergePos);
+                }
+
+                var expGo = ObjectPoolSystem.Spawn(manager.Exp.gameObject, null, true);
+                if (expGo)
+                {
+                    expGo.transform.position = dropPos;
+                    var exp = expGo.GetComponent<Exp>();
+                    if (exp)
+                    {
+                        var scaledValue = Mathf.Max(1, Mathf.RoundToInt(Mathf.Max(1, exp.ExpValue) * difficultyProfile.ExpValueMultiplier));
+                        exp.SetExpValue(scaledValue);
+                    }
+                }
 
                 return;
             }
 
             percent=Random.Range(0, 1f);
 
-            if (percent < coinDropRate)
+            if (percent < effectiveCoinDropRate)
             {
-                //生成金币
-                manager.Coin.Instantiate()
-                    .Position(gameObject.Position())
-                    .Show();
+                var dropPos = gameObject.Position();
+                if (PowerUpRegistry.CoinCount >= Config.MaxActiveCoinCount)
+                {
+                    var mergePos = Player.Default ? Player.Default.transform.position : (Vector3)dropPos;
+                    PowerUpMergeSystem.TryMergeCoinNow(mergePos);
+                }
+
+                var coinGo = ObjectPoolSystem.Spawn(manager.Coin.gameObject, null, true);
+                if (coinGo)
+                {
+                    coinGo.transform.position = dropPos;
+                    var coin = coinGo.GetComponent<Coin>();
+                    if (coin)
+                    {
+                        var scaledValue = Mathf.Max(1, Mathf.RoundToInt(Mathf.Max(1, coin.CoinValue) * difficultyProfile.CoinValueMultiplier));
+                        coin.SetCoinValue(scaledValue);
+                    }
+                }
 
                 return;
             }
 
             percent=Random.Range(0, 1f);
 
-            var recoverHpDropRate = Mathf.Clamp01(hpDropRate * Config.RecoverHpDropRateScaleWhenMulti * (1f + luck * 0.4f));
+            var recoverHpDropRate = Mathf.Clamp01(effectiveHpDropRate * Config.RecoverHpDropRateScaleWhenMulti * (1f + luck * 0.4f));
             if(percent < recoverHpDropRate)
             {
                 //生成回血道具
@@ -500,7 +533,7 @@ namespace VampireSurvivorLike
             {
                 percent=Random.Range(0, 1f);
 
-                if(percent < bombDropRate)
+                if(percent < effectiveBombDropRate)
                 {
                     //生成炸弹道具
                     manager.Bomb.Instantiate()
