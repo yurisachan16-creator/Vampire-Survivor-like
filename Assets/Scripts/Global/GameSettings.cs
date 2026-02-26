@@ -105,6 +105,7 @@ namespace VampireSurvivorLike
         private const string KEY_PERFORMANCE_HUD = "GameSettings_PerformanceHud";
         private const string KEY_MAX_SMALL_ENEMY_WEBGL = "GameSettings_MaxSmallEnemy_WebGL";
         private const string KEY_MAX_SMALL_ENEMY_PC = "GameSettings_MaxSmallEnemy_PC";
+        private const string KEY_MAX_SMALL_ENEMY_MOBILE = "GameSettings_MaxSmallEnemy_Mobile";
         private const string KEY_PC_INSTANCED_ENEMY_RENDERER = "GameSettings_PcInstancedEnemyRenderer";
         private const string KEY_SELECTED_DIFFICULTY = "GameSettings_SelectedDifficulty";
 
@@ -290,11 +291,22 @@ namespace VampireSurvivorLike
             }
         }
 
+        public static int MaxSmallEnemyCountMobile
+        {
+            get => PlayerPrefs.GetInt(KEY_MAX_SMALL_ENEMY_MOBILE, 220);
+            set
+            {
+                PlayerPrefs.SetInt(KEY_MAX_SMALL_ENEMY_MOBILE, Mathf.Max(0, value));
+                PlayerPrefs.Save();
+            }
+        }
+
         public static int GetMaxSmallEnemyCountForCurrentPlatform()
         {
             #if UNITY_WEBGL && !UNITY_EDITOR
             return MaxSmallEnemyCountWebGL;
             #else
+            if (Application.isMobilePlatform) return MaxSmallEnemyCountMobile;
             return MaxSmallEnemyCountPC;
             #endif
         }
@@ -717,6 +729,8 @@ namespace VampireSurvivorLike
                 Screen.autorotateToLandscapeLeft = true;
                 Screen.autorotateToLandscapeRight = true;
                 Screen.orientation = ScreenOrientation.LandscapeLeft;
+                QualitySettings.vSyncCount = 0;
+                Application.targetFrameRate = 60;
             }
 
             // 应用保存的分辨率设置

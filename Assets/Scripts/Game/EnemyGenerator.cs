@@ -3,7 +3,7 @@ using QFramework;
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
 namespace VampireSurvivorLike
 {
@@ -133,7 +133,12 @@ namespace VampireSurvivorLike
 	/// </summary>
 	public sealed class TimelineController
 	{
-		private List<SpawnChannelRuntime> _channels = new List<SpawnChannelRuntime>();
+		private const float ActiveChannelRefreshIntervalSeconds = 0.25f;
+
+		private readonly List<SpawnChannelRuntime> _channels = new List<SpawnChannelRuntime>();
+		private readonly List<string> _activeNames = new List<string>(16);
+		private readonly StringBuilder _activeNamesBuilder = new StringBuilder(256);
+		private float _nextActiveNameRefreshTime;
 
 		/// <summary>当前活跃的频道名称（供 UI 显示）</summary>
 		public string ActiveChannelNames { get; private set; } = string.Empty;
@@ -154,12 +159,19 @@ namespace VampireSurvivorLike
 		public bool IsTimelineComplete(float gameTime)
 		{
 			if (gameTime < Config.MaxGameSeconds) return false;
-			return _channels.All(ch => ch.IsExhausted(gameTime));
+			for (var i = 0; i < _channels.Count; i++)
+			{
+				if (!_channels[i].IsExhausted(gameTime)) return false;
+			}
+			return true;
 		}
 
 		public void Load(IReadOnlyList<SpawnChannel> channels)
 		{
 			_channels.Clear();
+			_activeNames.Clear();
+			_activeNamesBuilder.Length = 0;
+			_nextActiveNameRefreshTime = 0f;
 			ActiveChannelNames = string.Empty;
 			ActiveChannelCount = 0;
 
@@ -185,14 +197,23 @@ namespace VampireSurvivorLike
 			// 难度倍率（基于游戏分钟数）
 			var minutes = gameTime / 60f;
 			var bossEffectiveMinutes = GetBossEffectiveMinutes(minutes);
-
-			var activeNames = new List<string>();
+			var shouldRefreshActiveNames = gameTime >= _nextActiveNameRefreshTime;
+			if (shouldRefreshActiveNames)
+			{
+				_nextActiveNameRefreshTime = gameTime + ActiveChannelRefreshIntervalSeconds;
+				_activeNames.Clear();
+			}
+			var activeCount = 0;
 
 			foreach (var ch in _channels)
 			{
 				if (!ch.IsActive(gameTime)) continue;
 
-				activeNames.Add(ch.Definition.ChannelName);
+				activeCount++;
+				if (shouldRefreshActiveNames)
+				{
+					_activeNames.Add(ch.Definition.ChannelName);
+				}
 
 				var isBossPhase = ch.Definition.Phase == WaveSpawnPhase.Boss;
 				var hpGrowth = isBossPhase ? Config.BossHPGrowthPerMinute : Config.HPGrowthPerMinute;
@@ -242,8 +263,22 @@ namespace VampireSurvivorLike
 				}
 			}
 
-			ActiveChannelCount = activeNames.Count;
-			ActiveChannelNames = activeNames.Count > 0 ? string.Join(" + ", activeNames) : string.Empty;
+			ActiveChannelCount = activeCount;
+			if (!shouldRefreshActiveNames) return;
+
+			if (_activeNames.Count == 0)
+			{
+				ActiveChannelNames = string.Empty;
+				return;
+			}
+
+			_activeNamesBuilder.Length = 0;
+			for (var i = 0; i < _activeNames.Count; i++)
+			{
+				if (i > 0) _activeNamesBuilder.Append(" + ");
+				_activeNamesBuilder.Append(_activeNames[i]);
+			}
+			ActiveChannelNames = _activeNamesBuilder.ToString();
 		}
 
 		private static float GetBossEffectiveMinutes(float rawMinutes)
@@ -394,10 +429,22 @@ namespace VampireSurvivorLike
 
 			_timeline.Tick(gameTime, Time.deltaTime, this);
 
-			CurrentMinute.Value = _timeline.CurrentMinute;
-			ActiveChannelNames.Value = _timeline.ActiveChannelNames;
-			GameRemainingTime.Value = _timeline.RemainingSeconds;
-			ActiveChannelCount.Value = _timeline.ActiveChannelCount;
+			if (CurrentMinute.Value != _timeline.CurrentMinute)
+			{
+				CurrentMinute.Value = _timeline.CurrentMinute;
+			}
+			if (ActiveChannelCount.Value != _timeline.ActiveChannelCount)
+			{
+				ActiveChannelCount.Value = _timeline.ActiveChannelCount;
+			}
+			if (!string.Equals(ActiveChannelNames.Value, _timeline.ActiveChannelNames, StringComparison.Ordinal))
+			{
+				ActiveChannelNames.Value = _timeline.ActiveChannelNames;
+			}
+			if (Mathf.Abs(GameRemainingTime.Value - _timeline.RemainingSeconds) >= 0.1f || _timeline.RemainingSeconds <= 0.01f)
+			{
+				GameRemainingTime.Value = _timeline.RemainingSeconds;
+			}
 
 			// 死神生成检测
 			if (!_reaperSpawned && gameTime >= Config.ReaperSpawnTimeSeconds)
@@ -419,20 +466,26 @@ namespace VampireSurvivorLike
 			}
 
 			var pos = GetSpawnPositionOutsideCamera();
-			reaperPrefab.Instantiate()
-				.Position(pos)
-				.Self(self =>
-				{
-					var enemy = self.GetComponent<IEnemy>();
-					if (enemy == null) return;
-					enemy.SetBaseSpeed(5f);
-					enemy.SetSpeedScale(2f);
-					enemy.SetHPScale(99999f);
-					enemy.SetDamageScale(999f);
-					enemy.SetTreasureChest(false);
-					enemy.SetDropRates(0, 0, 0, 0);
-				})
-				.Show();
+			var reaperGo = ObjectPoolSystem.Spawn(reaperPrefab, null, false);
+			if (!reaperGo) return;
+
+			reaperGo.transform.position = pos;
+			reaperGo.transform.rotation = Quaternion.identity;
+			var enemy = reaperGo.GetComponent<IEnemy>();
+			if (enemy == null)
+			{
+				ObjectPoolSystem.Despawn(reaperGo);
+				return;
+			}
+			enemy.SetBaseSpeed(5f);
+			enemy.SetSpeedScale(2f);
+			enemy.SetHPScale(99999f);
+			enemy.SetDamageScale(999f);
+			enemy.SetTreasureChest(false);
+			enemy.SetDropRates(0f, 0f, 0f, 0f);
+
+			reaperGo.SetActive(true);
+			FinalizeSpawnInitialization(reaperGo);
 
 			Debug.Log("[EnemyGenerator] 死神已降临！");
 		}
@@ -476,26 +529,51 @@ namespace VampireSurvivorLike
 			var effectiveHP = request.EffectiveHPScale;
 			var effectiveDamage = request.EffectiveDamageScale;
 
-			request.Prefab.Instantiate()
-				.Position(pos)
-				.Self(self =>
-				{
-					var enemy = self.GetComponent<IEnemy>();
-					if (enemy == null) return;
+			var enemyGo = ObjectPoolSystem.Spawn(request.Prefab, null, false);
+			if (!enemyGo) return false;
 
-					if (ch != null)
-					{
-						if (ch.BaseSpeed > 0) enemy.SetBaseSpeed(ch.BaseSpeed);
-						enemy.SetSpeedScale(effectiveSpeed);
-						enemy.SetHPScale(effectiveHP);
-						enemy.SetDamageScale(effectiveDamage);
-						enemy.SetTreasureChest(ch.IsTreasureChest);
-						enemy.SetDropRates(ch.ExpDropRate, ch.CoinDropRate, ch.HpDropRate, ch.BombDropRate);
-					}
-				})
-				.Show();
+			enemyGo.transform.position = pos;
+			enemyGo.transform.rotation = Quaternion.identity;
+
+			var enemy = enemyGo.GetComponent<IEnemy>();
+			if (enemy == null)
+			{
+				ObjectPoolSystem.Despawn(enemyGo);
+				return false;
+			}
+
+			if (ch != null)
+			{
+				if (ch.BaseSpeed > 0f) enemy.SetBaseSpeed(ch.BaseSpeed);
+				enemy.SetSpeedScale(effectiveSpeed);
+				enemy.SetHPScale(effectiveHP);
+				enemy.SetDamageScale(effectiveDamage);
+				enemy.SetTreasureChest(ch.IsTreasureChest);
+				enemy.SetDropRates(ch.ExpDropRate, ch.CoinDropRate, ch.HpDropRate, ch.BombDropRate);
+			}
+
+			enemyGo.SetActive(true);
+			FinalizeSpawnInitialization(enemyGo);
 
 			return true;
+		}
+
+		private static void FinalizeSpawnInitialization(GameObject enemyGo)
+		{
+			if (!enemyGo) return;
+
+			var enemy = enemyGo.GetComponent<Enemy>();
+			if (enemy)
+			{
+				enemy.InitializeEnemy();
+				return;
+			}
+
+			var boss = enemyGo.GetComponent<EnemyMiniBoss>();
+			if (boss)
+			{
+				boss.InitializeBoss();
+			}
 		}
 
 		private Vector2 ResolveSpawnPosition(in WaveSpawnRequest request, int burstIndex, int burstCount)

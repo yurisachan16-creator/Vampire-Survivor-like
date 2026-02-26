@@ -648,7 +648,7 @@ namespace VampireSurvivorLike
             _isIgnoreHurt = true;
             
             // 显示伤害数字
-            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"), critical);
+            FloatingTextController.PlayDamage(transform.position + Vector3.up * 0.5f, value, critical);
             
             Sprite.color = Color.red;
             if (SfxThrottle.CanPlay("Hit"))

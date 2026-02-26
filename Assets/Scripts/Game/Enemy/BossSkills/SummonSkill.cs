@@ -114,6 +114,17 @@ namespace VampireSurvivorLike
             minion.transform.position = spawnPos;
             minion.transform.rotation = Quaternion.identity;
             minion.SetActive(true);
+
+            var spawnedEnemy = minion.GetComponent<Enemy>();
+            if (spawnedEnemy)
+            {
+                spawnedEnemy.InitializeEnemy();
+            }
+            else
+            {
+                var spawnedBoss = minion.GetComponent<EnemyMiniBoss>();
+                if (spawnedBoss) spawnedBoss.InitializeBoss();
+            }
             
             // 播放召唤特效
             SpawnSummonEffect(spawnPos);

@@ -24,21 +24,27 @@ namespace VampireSurvivorLike
             GameObject go = null;
             while (pool.Count > 0 && !go) go = pool.Pop();
 
+            PooledObjectTag tag;
             if (!go)
             {
                 go = Object.Instantiate(prefab);
-                var tag = go.GetComponent<PooledObjectTag>();
+                tag = go.GetComponent<PooledObjectTag>();
                 if (!tag) tag = go.AddComponent<PooledObjectTag>();
-                tag.PrefabId = prefabId;
+            }
+            else
+            {
+                tag = go.GetComponent<PooledObjectTag>();
+                if (!tag) tag = go.AddComponent<PooledObjectTag>();
             }
 
+            tag.PrefabId = prefabId;
+            tag.EnsurePoolablesCached();
+
             if (go.activeSelf) go.SetActive(false);
-            go.transform.SetParent(parent ? parent : null, false);
-            if (!parent) go.transform.SetParent(null, false);
+            go.transform.SetParent(parent, false);
             go.SetActive(activate);
 
-            var poolables = go.GetComponents<IPoolable>();
-            for (var i = 0; i < poolables.Length; i++) poolables[i].OnSpawned();
+            tag.InvokeOnSpawned();
 
             return go;
         }
@@ -59,8 +65,8 @@ namespace VampireSurvivorLike
                 PoolsByPrefabId.Add(tag.PrefabId, pool);
             }
 
-            var poolables = go.GetComponents<IPoolable>();
-            for (var i = 0; i < poolables.Length; i++) poolables[i].OnDespawned();
+            tag.EnsurePoolablesCached();
+            tag.InvokeOnDespawned();
 
             EnsureRoot();
             if (go.activeSelf) go.SetActive(false);
@@ -85,6 +91,14 @@ namespace VampireSurvivorLike
             PoolsByPrefabId.Clear();
         }
 
+        public static void RefreshPoolableCache(GameObject go)
+        {
+            if (!go) return;
+            var tag = go.GetComponent<PooledObjectTag>();
+            if (!tag) return;
+            tag.RefreshPoolablesCache();
+        }
+
         private static void EnsureRoot()
         {
             if (_poolRoot) return;
@@ -102,7 +116,34 @@ namespace VampireSurvivorLike
         private sealed class PooledObjectTag : MonoBehaviour
         {
             public int PrefabId;
+            private IPoolable[] _poolables;
+            private bool _poolablesCached;
+
+            public void EnsurePoolablesCached()
+            {
+                if (_poolablesCached) return;
+                RefreshPoolablesCache();
+            }
+
+            public void RefreshPoolablesCache()
+            {
+                _poolables = GetComponents<IPoolable>();
+                _poolablesCached = true;
+            }
+
+            public void InvokeOnSpawned()
+            {
+                EnsurePoolablesCached();
+                if (_poolables == null) return;
+                for (var i = 0; i < _poolables.Length; i++) _poolables[i].OnSpawned();
+            }
+
+            public void InvokeOnDespawned()
+            {
+                EnsurePoolablesCached();
+                if (_poolables == null) return;
+                for (var i = 0; i < _poolables.Length; i++) _poolables[i].OnDespawned();
+            }
         }
     }
 }
-

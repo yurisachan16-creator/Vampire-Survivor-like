@@ -11,6 +11,7 @@ namespace VampireSurvivorLike
         private float _t;
         private float _baseY;
         private bool _playing;
+        private bool _countedActive;
 
         private const float ScaleInSeconds = 0.5f;
         private const float HoldSeconds = 0.5f;
@@ -73,11 +74,28 @@ namespace VampireSurvivorLike
             _t = 0f;
             EnsureRefs();
             if (_text) _text.ColorAlpha(1f);
+            if (!_countedActive)
+            {
+                _countedActive = true;
+                FloatingTextController.NotifyItemSpawned();
+            }
         }
 
         public void OnDespawned()
         {
             _playing = false;
+            if (_countedActive)
+            {
+                _countedActive = false;
+                FloatingTextController.NotifyItemDespawned();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (!_countedActive) return;
+            _countedActive = false;
+            FloatingTextController.NotifyItemDespawned();
         }
     }
 }

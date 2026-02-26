@@ -22,6 +22,8 @@ namespace VampireSurvivorLike
         private readonly HashSet<Enemy> _enemies = new HashSet<Enemy>();
         private readonly List<Enemy> _iteration = new List<Enemy>(8192);
         private readonly Dictionary<Enemy, float> _nextMoveTime = new Dictionary<Enemy, float>(8192);
+        private Camera _cachedMainCamera;
+        private float _nextCameraRefreshTime;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -30,6 +32,17 @@ namespace VampireSurvivorLike
             var go = new GameObject("EnemySimulationManager");
             DontDestroyOnLoad(go);
             _instance = go.AddComponent<EnemySimulationManager>();
+        }
+
+        private void Awake()
+        {
+            if (!Application.isMobilePlatform) return;
+
+            NearDistance = 8f;
+            MidDistance = 16f;
+            MidIntervalSeconds = 0.16f;
+            FarIntervalSeconds = 0.35f;
+            PhysicsDisableDistance = 22f;
         }
 
         public static void Register(Enemy enemy)
@@ -60,7 +73,7 @@ namespace VampireSurvivorLike
 
             var playerPos = (Vector2)Player.Default.transform.position;
             var now = Time.fixedTime;
-            var cam = Camera.main;
+            var cam = GetMainCamera();
             var camPos = cam ? (Vector2)cam.transform.position : Vector2.zero;
             var halfH = cam && cam.orthographic ? cam.orthographicSize : 0f;
             var halfW = cam && cam.orthographic ? cam.orthographicSize * cam.aspect : 0f;
@@ -113,6 +126,16 @@ namespace VampireSurvivorLike
                     e.ApplyLod(enableAnimation, enableShadow, enableSprite);
                 }
             }
+        }
+
+        private Camera GetMainCamera()
+        {
+            if (_cachedMainCamera && _cachedMainCamera.isActiveAndEnabled) return _cachedMainCamera;
+            if (Time.unscaledTime < _nextCameraRefreshTime) return _cachedMainCamera;
+
+            _nextCameraRefreshTime = Time.unscaledTime + 0.5f;
+            _cachedMainCamera = Camera.main;
+            return _cachedMainCamera;
         }
 
         private static void TryApplyMeleeDamageFallback(Enemy enemy, Vector2 enemyPos, Vector2 playerPos)
