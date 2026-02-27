@@ -6,10 +6,58 @@ namespace VampireSurvivorLike
 {
 	public partial class AbilityController : ViewController,IController
 	{
-        
+		private MagicWand _magicWand;
+		private SimpleBow _simpleBow;
+		private Boomerang _boomerang;
+		private HolyWater _holyWater;
+
+		private void EnsurePhase2Abilities()
+		{
+			if (!_magicWand)
+			{
+				_magicWand = GetComponent<MagicWand>();
+				if (!_magicWand) _magicWand = gameObject.AddComponent<MagicWand>();
+			}
+
+			if (!_simpleBow)
+			{
+				_simpleBow = GetComponent<SimpleBow>();
+				if (!_simpleBow) _simpleBow = gameObject.AddComponent<SimpleBow>();
+			}
+
+			var sharedTemplate = SimpleKnife && SimpleKnife.Knife
+				? SimpleKnife.Knife.gameObject
+				: (SimpleAxe && SimpleAxe.Axe ? SimpleAxe.Axe.gameObject : null);
+
+			_magicWand.SetProjectileSource(sharedTemplate);
+			_simpleBow.SetProjectileSource(sharedTemplate);
+		}
+
+		private void EnsurePhase3Abilities()
+		{
+			if (!_boomerang)
+			{
+				_boomerang = GetComponent<Boomerang>();
+				if (!_boomerang) _boomerang = gameObject.AddComponent<Boomerang>();
+			}
+
+			if (!_holyWater)
+			{
+				_holyWater = GetComponent<HolyWater>();
+				if (!_holyWater) _holyWater = gameObject.AddComponent<HolyWater>();
+			}
+
+			var sharedTemplate = SimpleKnife && SimpleKnife.Knife
+				? SimpleKnife.Knife.gameObject
+				: (SimpleAxe && SimpleAxe.Axe ? SimpleAxe.Axe.gameObject : null);
+			_boomerang.SetProjectileSource(sharedTemplate);
+		}
 
         void Start()
 		{
+			EnsurePhase2Abilities();
+			EnsurePhase3Abilities();
+
 			Global.SimpleSwordUnlocked.RegisterWithInitValue(unlocked =>
 			{
 				if (unlocked)
@@ -46,10 +94,40 @@ namespace VampireSurvivorLike
 				
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			//随机解锁一个初始武器
-			this.GetSystem<ExpUpgradeSystem>().Items.Where(item=>item.IsWeapon)
-			.ToList()
-			.GetRandomItem().Upgrade();
+			Global.SimpleAxeUnlocked.RegisterWithInitValue(unlocked =>
+			{
+				if (unlocked && SimpleAxe)
+				{
+					SimpleAxe.Show();
+				}
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.MagicWandUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase2Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.SimpleBowUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase2Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.BoomerangUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase3Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			Global.HolyWaterUnlocked.RegisterWithInitValue(_ =>
+			{
+				EnsurePhase3Abilities();
+			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+			// 随机解锁一个初始武器
+			var expUpgradeSystem = this.GetSystem<ExpUpgradeSystem>();
+			expUpgradeSystem.Items.Where(item => item.IsWeapon)
+				.ToList()
+				.GetRandomItem()
+				.Upgrade();
 
             Global.SuperBomb.RegisterWithInitValue(unlocked =>
             {

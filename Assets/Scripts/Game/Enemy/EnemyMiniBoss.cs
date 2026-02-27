@@ -1,165 +1,756 @@
 using UnityEngine;
 using QFramework;
+using System.Collections.Generic;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
-	public partial class EnemyMiniBoss : ViewController,IEnemy
-	{
-		public enum States
-        {
-            FlowingPlayer,
-			Warning,
-			Dash,
-            Wait
-        }
+    /// <summary>
+    /// Boss类型枚举 - 每种类型对应不同的技能组合
+    /// </summary>
+    public enum BossType
+    {
+        /// <summary>
+        /// 冲刺型Boss - 擅长高速冲刺攻击
+        /// </summary>
+        Dasher,
+        
+        /// <summary>
+        /// 弹幕型Boss - 发射环形弹幕
+        /// </summary>
+        Shooter,
+        
+        /// <summary>
+        /// 召唤型Boss - 召唤小怪援助
+        /// </summary>
+        Summoner,
+        
+        /// <summary>
+        /// 狂战士型Boss - 旋转攻击 + 冲刺
+        /// </summary>
+        Berserker,
+        
+        /// <summary>
+        /// 混合型Boss - 拥有多种技能
+        /// </summary>
+        Hybrid
+    }
+    
+    /// <summary>
+    /// MiniBoss - 可配置不同技能组合的Boss敌人
+    /// </summary>
+    public partial class EnemyMiniBoss : ViewController, IEnemy, ObjectPoolSystem.IPoolable
+    {
+        [Header("Boss基础属性（可被EnemyStatsConfig覆盖）")]
+        [Tooltip("Boss血量 - 建议设置为200+以增加挑战性")]
+        public float Health = 200f;
+        
+        [Tooltip("移动速度")]
+        public float MovementSpeed = 1.5f;
+        
+        [Tooltip("伤害倍率")]
+        public float DamageMultiplier = 1f;
+        
+        [Tooltip("是否掉落宝箱（设为false则使用普通掉落率）")]
+        public bool DropTreasureChest = true;
+        
+        [Tooltip("宝箱掉落概率（仅当DropTreasureChest为true时有效）")]
+        [Range(0f, 1f)]
+        public float TreasureChestDropRate = 0.3f;
 
-		public FSM<States> FSM = new FSM<States>();
-		public float Health = 20f;
-		public float MovementSpeed = 1.5f;
+        [Header("Boss普通掉落（非宝箱时）")]
+        [Range(0f, 1f)]
+        public float ExpDropRate = 0.8f;
+        [Range(0f, 1f)]
+        public float CoinDropRate = 0.5f;
+        [Range(0f, 1f)]
+        public float HpDropRate = 0.2f;
+        [Range(0f, 1f)]
+        public float BombDropRate = 0.1f;
+        
+        [Header("配置来源")]
+        [Tooltip("是否从EnemyStatsConfig读取属性，如果为false则使用预制体上的值")]
+        public bool UseStatsConfig = true;
+        
+        [Header("Boss类型与技能")]
+        [Tooltip("Boss类型决定技能组合")]
+        public BossType BossType = BossType.Dasher;
+        
+        [Header("技能预制体（根据Boss类型配置）")]
+        [Tooltip("弹幕预制体 - 用于Shooter类型")]
+        public GameObject BossProjectilePrefab;
+        
+        [Tooltip("小怪预制体 - 用于Summoner类型")]
+        public GameObject MinionPrefab;
+        
+        // 状态机 - 简化为基础状态
+        public enum States
+        {
+            Idle,           // 待机/追踪玩家
+            ExecutingSkill  // 执行技能中
+        }
+        
+        public FSM<States> FSM = new FSM<States>();
+        
+        // 技能列表
+        private List<IBossSkill> _skills = new List<IBossSkill>();
+        private IBossSkill _currentSkill;
+        private float _initialHealth;
+        private bool _isDead = false;
+        private bool _initialized = false;
+
+        // 缓存 configKey，避免每次 string.Replace 分配
+        internal string ConfigKey;
+
+        // 受击计时器（替代 ActionKit.Delay，零 GC）
+        private float _hurtTimer;
+        private float _pendingDamage;
+        private bool _hurtPending;
+
+        // 缓存默认值
+        private float _defaultHealth;
+        private float _defaultMovementSpeed;
+        private float _defaultDamageMultiplier;
+        private float _defaultExpDropRate;
+        private float _defaultCoinDropRate;
+        private float _defaultHpDropRate;
+        private float _defaultBombDropRate;
+
+        // 生成器在 Start 前注入的缩放/覆盖值缓存
+        private bool _hasPendingBaseSpeed;
+        private float _pendingBaseSpeed;
+        private float _pendingSpeedScale = 1f;
+        private float _pendingHPScale = 1f;
+        private float _pendingDamageScale = 1f;
+        private bool _hasPendingDropRates;
+        private float _pendingExpDropRate;
+        private float _pendingCoinDropRate;
+        private float _pendingHpDropRate;
+        private float _pendingBombDropRate;
+        private bool _hasPendingTreasureChest;
+        private bool _pendingTreasureChest;
+
+        private const float ExternalKnockbackCooldownSeconds = 0.15f;
+        private const float ExternalKnockbackMinDuration = 0.05f;
+        private const float ExternalKnockbackMaxDuration = 0.4f;
+
+        private bool _knockbackActive;
+        private Vector2 _knockbackVelocity;
+        private float _knockbackRemainSeconds;
+        private float _knockbackCooldownUntil;
+        private float _slowMultiplier = 1f;
+        private float _slowUntilTime;
+
+        private void Awake()
+        {
+            _defaultHealth = Health;
+            _defaultMovementSpeed = MovementSpeed;
+            _defaultDamageMultiplier = DamageMultiplier;
+            _defaultExpDropRate = ExpDropRate;
+            _defaultCoinDropRate = CoinDropRate;
+            _defaultHpDropRate = HpDropRate;
+            _defaultBombDropRate = BombDropRate;
+        }
         
         void Start()
-		{
-			EnemyGenerator.EnemyCount.Value++;
-
-			FSM.State(States.FlowingPlayer)
-            .OnFixedUpdate(() =>
+        {
+            if (!_initialized)
             {
-                if(Player.Default)
-				{
-					var direction=(Player.Default.transform.position-transform.position).normalized;
+                InitializeBoss();
+            }
+        }
 
-					SelfRigidbody2D.velocity = direction * MovementSpeed;
-					//距离玩家15单位内则进入警戒状态
-                    if ((Player.Default.transform.Position() - transform.Position()).magnitude <= 15)
-                    {
-                        FSM.ChangeState(States.Warning);
-                    }
-				}
-				else
-				{
-					SelfRigidbody2D.velocity = Vector2.zero;
-				}
-            });
+        /// <summary>
+        /// 初始化Boss（首次 Start 或从池中取出时调用）
+        /// </summary>
+        internal void InitializeBoss()
+        {
+            if (_initialized) return;
 
-			FSM.State(States.Warning)
-            .OnEnter(() =>
+            // 从配置中读取属性
+            if (UseStatsConfig)
             {
-                SelfRigidbody2D.velocity = Vector2.zero;
-            })
-            .OnUpdate(() =>
+                LoadStatsFromConfig();
+            }
+            ApplyPendingSpawnOverrides();
+            
+            EnemyGenerator.EnemyCount.Value++;
+            EnemyGenerator.BossEnemyCount.Value++;
+            EnemyRegistry.Register(this);
+            _initialHealth = Health;
+            _initialized = true;
+            
+            // 根据Boss类型初始化技能
+            InitializeSkills();
+            
+            // 设置状态机
+            SetupFSM();
+            
+            FSM.StartState(States.Idle);
+        }
+        
+        /// <summary>
+        /// 从EnemyStatsConfig加载属性
+        /// </summary>
+        private void LoadStatsFromConfig()
+        {
+            var config = EnemyStatsConfig.Instance;
+            if (config == null) return;
+            
+            var key = !string.IsNullOrEmpty(ConfigKey) ? ConfigKey : gameObject.name.Replace("(Clone)", "").Trim();
+            var stats = config.GetStats(key);
+            if (stats == null) return;
+            
+            Health = stats.BaseHP;
+            MovementSpeed = stats.BaseSpeed;
+            DamageMultiplier = stats.BaseDamageMultiplier;
+        }
+
+        private void ApplyPendingSpawnOverrides()
+        {
+            if (_hasPendingBaseSpeed)
             {
-                //冲刺预警
-                var frames =  3 + (60*3-FSM.FrameCountOfCurrentState)/10;
-                if(FSM.FrameCountOfCurrentState / frames % 2 ==0)
+                MovementSpeed = _pendingBaseSpeed;
+            }
+
+            MovementSpeed *= _pendingSpeedScale;
+            Health *= _pendingHPScale;
+            DamageMultiplier *= _pendingDamageScale;
+
+            if (_hasPendingDropRates)
+            {
+                ExpDropRate = _pendingExpDropRate;
+                CoinDropRate = _pendingCoinDropRate;
+                HpDropRate = _pendingHpDropRate;
+                BombDropRate = _pendingBombDropRate;
+            }
+
+            if (_hasPendingTreasureChest)
+            {
+                DropTreasureChest = _pendingTreasureChest;
+            }
+
+            ResetPendingSpawnOverrides();
+        }
+
+        private void ResetPendingSpawnOverrides()
+        {
+            _hasPendingBaseSpeed = false;
+            _pendingBaseSpeed = 0f;
+            _pendingSpeedScale = 1f;
+            _pendingHPScale = 1f;
+            _pendingDamageScale = 1f;
+            _hasPendingDropRates = false;
+            _pendingExpDropRate = 0f;
+            _pendingCoinDropRate = 0f;
+            _pendingHpDropRate = 0f;
+            _pendingBombDropRate = 0f;
+            _hasPendingTreasureChest = false;
+            _pendingTreasureChest = false;
+        }
+        
+        /// <summary>
+        /// 根据BossType初始化技能组合
+        /// </summary>
+        private void InitializeSkills()
+        {
+            _skills.Clear();
+            
+            switch (BossType)
+            {
+                case BossType.Dasher:
+                    // 冲刺型：强化冲刺 + 快速冲刺
+                    _skills.Add(new DashSkill(cooldown: 4f, warningDuration: 1.2f, dashSpeedMultiplier: 15f, triggerDistance: 18f));
+                    _skills.Add(new DashSkill(cooldown: 2f, warningDuration: 0.5f, dashSpeedMultiplier: 20f, triggerDistance: 10f));
+                    break;
+                    
+                case BossType.Shooter:
+                    // 弹幕型：多波弹幕
+                    _skills.Add(new AreaAttackSkill(cooldown: 5f, projectileCount: 8, waveCount: 2, triggerDistance: 15f));
+                    _skills.Add(new AreaAttackSkill(cooldown: 8f, projectileCount: 12, waveCount: 3, triggerDistance: 20f));
+                    break;
+                    
+                case BossType.Summoner:
+                    // 召唤型：召唤 + 防御性冲刺
+                    _skills.Add(new SummonSkill(cooldown: 10f, summonCount: 4, triggerHPPercent: 0.8f));
+                    _skills.Add(new SummonSkill(cooldown: 15f, summonCount: 6, triggerHPPercent: 0.4f));
+                    _skills.Add(new DashSkill(cooldown: 6f, warningDuration: 1f, dashSpeedMultiplier: 10f, triggerDistance: 8f));
+                    break;
+                    
+                case BossType.Berserker:
+                    // 狂战士型：旋转攻击 + 冲刺
+                    _skills.Add(new SpinAttackSkill(cooldown: 5f, spinDuration: 2.5f, triggerDistance: 10f));
+                    _skills.Add(new DashSkill(cooldown: 4f, warningDuration: 0.8f, dashSpeedMultiplier: 12f, triggerDistance: 15f));
+                    break;
+                    
+                case BossType.Hybrid:
+                    // 混合型：所有技能
+                    _skills.Add(new DashSkill(cooldown: 5f, warningDuration: 1.5f, dashSpeedMultiplier: 12f, triggerDistance: 15f));
+                    _skills.Add(new AreaAttackSkill(cooldown: 8f, projectileCount: 6, waveCount: 2, triggerDistance: 12f));
+                    _skills.Add(new SummonSkill(cooldown: 12f, summonCount: 3, triggerHPPercent: 0.5f));
+                    _skills.Add(new SpinAttackSkill(cooldown: 7f, spinDuration: 2f, triggerDistance: 8f));
+                    break;
+            }
+            
+            // 初始化所有技能
+            foreach (var skill in _skills)
+            {
+                skill.Initialize(this);
+            }
+        }
+        
+        private void SetupFSM()
+        {
+            FSM.State(States.Idle)
+                .OnFixedUpdate(() =>
                 {
-                    Sprite.color = Color.red;
+                    if (Player.Default)
+                    {
+                        // 追踪玩家
+                        var direction = (Player.Default.transform.position - transform.position).normalized;
+                        SelfRigidbody2D.velocity = direction * MovementSpeed * GetCurrentSlowMultiplier();
+                    }
+                    else
+                    {
+                        SelfRigidbody2D.velocity = Vector2.zero;
+                    }
+                })
+                .OnUpdate(() =>
+                {
+                    // 尝试触发技能
+                    TryTriggerSkill();
+                });
+            
+            FSM.State(States.ExecutingSkill)
+                .OnEnter(() =>
+                {
+                    SelfRigidbody2D.velocity = Vector2.zero;
+                })
+                .OnUpdate(() =>
+                {
+                    if (_currentSkill != null)
+                    {
+                        _currentSkill.OnUpdate();
+                        
+                        // 技能执行完毕，返回待机状态
+                        if (!_currentSkill.IsExecuting)
+                        {
+                            _currentSkill = null;
+                            FSM.ChangeState(States.Idle);
+                        }
+                    }
+                    else
+                    {
+                        FSM.ChangeState(States.Idle);
+                    }
+                })
+                .OnFixedUpdate(() =>
+                {
+                    _currentSkill?.OnFixedUpdate();
+                });
+        }
+        
+        private void TryTriggerSkill()
+        {
+            if (!Player.Default) return;
+            
+            float distanceToPlayer = Vector2.Distance(transform.position, Player.Default.transform.position);
+            float hpPercent = Health / _initialHealth;
+            
+            // 遍历技能，找到可以触发的技能
+            foreach (var skill in _skills)
+            {
+                if (!skill.IsReady) continue;
+                
+                bool shouldTrigger = false;
+                
+                // 根据技能类型检查触发条件
+                if (skill is DashSkill dashSkill)
+                {
+                    shouldTrigger = distanceToPlayer <= dashSkill.TriggerDistance;
+                }
+                else if (skill is AreaAttackSkill areaSkill)
+                {
+                    shouldTrigger = distanceToPlayer <= areaSkill.TriggerDistance;
+                }
+                else if (skill is SummonSkill summonSkill)
+                {
+                    shouldTrigger = summonSkill.ShouldTrigger();
+                }
+                else if (skill is SpinAttackSkill spinSkill)
+                {
+                    shouldTrigger = distanceToPlayer <= spinSkill.TriggerDistance;
+                }
+                
+                if (shouldTrigger && skill.TryExecute())
+                {
+                    _currentSkill = skill;
+                    FSM.ChangeState(States.ExecutingSkill);
+                    return;
+                }
+            }
+        }
+
+        public void ApplyExternalKnockback(Vector2 direction, float speed = 5.5f, float duration = 0.14f)
+        {
+            if (_isDead || !SelfRigidbody2D) return;
+            if (Time.time < _knockbackCooldownUntil) return;
+            if (direction.sqrMagnitude <= 0.0001f) return;
+
+            direction.Normalize();
+
+            InterruptCurrentSkill();
+
+            _knockbackVelocity = direction * Mathf.Max(0f, speed);
+            _knockbackRemainSeconds = Mathf.Clamp(duration, ExternalKnockbackMinDuration, ExternalKnockbackMaxDuration);
+            _knockbackActive = true;
+            _knockbackCooldownUntil = Time.time + ExternalKnockbackCooldownSeconds;
+
+            SelfRigidbody2D.velocity = _knockbackVelocity;
+            if (_initialized)
+            {
+                FSM.ChangeState(States.Idle);
+            }
+        }
+
+        private void InterruptCurrentSkill()
+        {
+            if (_currentSkill == null) return;
+
+            if (_currentSkill is BossSkillBase skillBase)
+            {
+                skillBase.Interrupt();
+            }
+            else
+            {
+                _currentSkill.ResetCooldown();
+            }
+
+            _currentSkill = null;
+        }
+
+        private void UpdateExternalKnockback()
+        {
+            if (!_knockbackActive) return;
+
+            _knockbackRemainSeconds -= Time.deltaTime;
+            if (_knockbackRemainSeconds > 0f)
+            {
+                if (SelfRigidbody2D) SelfRigidbody2D.velocity = _knockbackVelocity;
+                return;
+            }
+
+            _knockbackActive = false;
+            _knockbackRemainSeconds = 0f;
+            _knockbackVelocity = Vector2.zero;
+
+            if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
+            if (_initialized && FSM.CurrentStateId != States.Idle)
+            {
+                FSM.ChangeState(States.Idle);
+            }
+        }
+
+        private void ResetExternalKnockback()
+        {
+            _knockbackActive = false;
+            _knockbackVelocity = Vector2.zero;
+            _knockbackRemainSeconds = 0f;
+            _knockbackCooldownUntil = 0f;
+        }
+
+        private float GetCurrentSlowMultiplier()
+        {
+            if (Time.time < _slowUntilTime) return _slowMultiplier;
+            _slowMultiplier = 1f;
+            return 1f;
+        }
+        
+        void Update()
+        {
+            UpdateExternalKnockback();
+
+            if (!_knockbackActive)
+            {
+                FSM.Update();
+
+                // 更新所有技能冷却
+                foreach (var skill in _skills)
+                {
+                    if (skill != _currentSkill)
+                    {
+                        skill.OnUpdate();
+                    }
+                }
+            }
+            else
+            {
+                // 击退期间只推进冷却，不执行技能逻辑
+                foreach (var skill in _skills)
+                {
+                    if (!skill.IsExecuting)
+                    {
+                        skill.OnUpdate();
+                    }
+                }
+            }
+            
+            // 死亡检查
+            if (!_isDead && Health <= 0)
+            {
+                OnDeath();
+            }
+
+            // 受击计时器：替代 ActionKit.Delay，零 GC
+            if (_hurtPending)
+            {
+                _hurtTimer -= Time.deltaTime;
+                if (_hurtTimer <= 0f)
+                {
+                    _hurtPending = false;
+                    if (!_isDead)
+                    {
+                        Health -= _pendingDamage;
+                        if (Health <= 0)
+                        {
+                            OnDeath();
+                            return;
+                        }
+                        if (Sprite) Sprite.color = Color.white;
+                        _isIgnoreHurt = false;
+                    }
+                }
+            }
+        }
+        
+        void FixedUpdate()
+        {
+            if (_knockbackActive)
+            {
+                if (SelfRigidbody2D) SelfRigidbody2D.velocity = _knockbackVelocity;
+                return;
+            }
+
+            FSM.FixedUpdate();
+        }
+        
+        private void OnDeath()
+        {
+            if (_isDead) return;
+            _isDead = true;
+            _isIgnoreHurt = true;
+            _hurtPending = false;
+            ResetExternalKnockback();
+            InterruptCurrentSkill();
+            if (HitBox) HitBox.enabled = false;
+            if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
+
+            if (PowerUpRegistry.ActiveCherryCount < Config.MaxActiveCherryCount && Random.value <= Config.CherryDropRate)
+            {
+                PowerUpManager.Default?.SpawnCherry(transform.position);
+            }
+
+            // 根据配置决定掉落
+            if (DropTreasureChest)
+            {
+                // 概率掉落宝箱
+                if (Random.value <= TreasureChestDropRate)
+                {
+                    Global.GeneratePowerUp(gameObject, true);
                 }
                 else
                 {
-                    Sprite.color = Color.white;
+                    // 掉落普通道具
+                    Global.GeneratePowerUpWithRates(gameObject, false, ExpDropRate, CoinDropRate, HpDropRate, BombDropRate);
                 }
-				//警戒2秒后冲刺
-                if (FSM.FrameCountOfCurrentState >= 60 * 3)
-                {
-                    FSM.ChangeState(States.Dash);
-                }
-            })
-            .OnExit(() =>
+            }
+            else
             {
-                Sprite.color = Color.white;
-            });
+                // 使用普通掉落率（较高概率）
+                Global.GeneratePowerUpWithRates(gameObject, false, ExpDropRate, CoinDropRate, HpDropRate, BombDropRate);
+            }
+            
+            if (SfxThrottle.CanPlay(Sfx.ENEMYDIE))
+                AudioKit.PlaySound(Sfx.ENEMYDIE);
+            ObjectPoolSystem.Despawn(gameObject);
+        }
 
-			var dashStartPos = Vector3.zero;
-			var dashStartDistanceToPlayer = 0f;
-			FSM.State(States.Dash)
-            .OnEnter(() =>
-            {
-                var direction=(Player.Default.transform.position-transform.position).normalized;
-				SelfRigidbody2D.velocity = direction * MovementSpeed * 10;
-				dashStartPos = transform.Position();
-				dashStartDistanceToPlayer = (Player.Default.transform.Position() - dashStartPos).magnitude;
-				
-            })
-            .OnUpdate(() =>
-            {
-				var distance = (transform.Position() - dashStartPos).magnitude;
-				//冲刺距离超过一定值则返回追踪玩家状态
-                if (distance >= dashStartDistanceToPlayer +5)
-                {
-					FSM.ChangeState(States.Wait);
-                }
-                
-            });
-			
+        /// <summary>
+        /// 从池中取出时的回调
+        /// </summary>
+        public void OnSpawned()
+        {
+            _isDead = false;
+            _isIgnoreHurt = false;
+            _hurtPending = false;
+            _hurtTimer = 0f;
+            _initialized = false;
+            ConfigKey = null;
+            _currentSkill = null;
+            ResetPendingSpawnOverrides();
+            ResetExternalKnockback();
+            _slowMultiplier = 1f;
+            _slowUntilTime = 0f;
 
-            FSM.State(States.Wait)
-            .OnEnter(() =>
+            Health = _defaultHealth;
+            MovementSpeed = _defaultMovementSpeed;
+            DamageMultiplier = _defaultDamageMultiplier;
+            DropTreasureChest = true;
+            TreasureChestDropRate = 0.3f;
+            ExpDropRate = _defaultExpDropRate;
+            CoinDropRate = _defaultCoinDropRate;
+            HpDropRate = _defaultHpDropRate;
+            BombDropRate = _defaultBombDropRate;
+
+            if (Sprite) Sprite.color = Color.white;
+            if (HitBox) HitBox.enabled = true;
+            if (SelfRigidbody2D)
             {
                 SelfRigidbody2D.velocity = Vector2.zero;
-            })
-            .OnUpdate(() =>
-            {
-                if(FSM.FrameCountOfCurrentState >= 30)
-                {
-                    FSM.ChangeState(States.FlowingPlayer);
-                }
-            });
-
-            FSM.StartState(States.FlowingPlayer);
-		}
-
-		void Update()
-        {
-			FSM.Update();
-
-            if (Health <= 0)
-            {
-				//生成掉落物
-				Global.GeneratePowerUp(gameObject, true);
-
-				
-                this.DestroyGameObjGracefully();
+                SelfRigidbody2D.simulated = true;
             }
-			
         }
 
-		void FixedUpdate()
+        /// <summary>
+        /// 回收进池时的回调
+        /// </summary>
+        public void OnDespawned()
         {
-            FSM.FixedUpdate();
+            if (_initialized)
+            {
+                EnemyGenerator.EnemyCount.Value = Mathf.Max(0, EnemyGenerator.EnemyCount.Value - 1);
+                EnemyGenerator.BossEnemyCount.Value = Mathf.Max(0, EnemyGenerator.BossEnemyCount.Value - 1);
+                EnemyRegistry.Unregister(this);
+                _initialized = false;
+            }
         }
-
-		void OnDestroy()
+        
+        void OnDestroy()
         {
-            EnemyGenerator.EnemyCount.Value--;
+            if (_initialized)
+            {
+                EnemyGenerator.EnemyCount.Value = Mathf.Max(0, EnemyGenerator.EnemyCount.Value - 1);
+                EnemyGenerator.BossEnemyCount.Value = Mathf.Max(0, EnemyGenerator.BossEnemyCount.Value - 1);
+                EnemyRegistry.Unregister(this);
+                _initialized = false;
+            }
         }
-
-		private bool _isIgnoreHurt = false;
-		public void Hurt(float value, bool force = false,bool critical=false)
+        
+        #region IEnemy Implementation
+        
+        private bool _isIgnoreHurt = false;
+        
+        public void Hurt(float value, bool force = false, bool critical = false)
         {
-            if (_isIgnoreHurt&&!force) return;
-
-            //显示伤害数字
-            FloatingTextController.Play(transform.position + Vector3.up * 0.5f, value.ToString("0"),critical);
-
+            if (_isDead) return;
+            if (_isIgnoreHurt && !force) return;
+            
+            _isIgnoreHurt = true;
+            
+            // 显示伤害数字
+            FloatingTextController.PlayDamage(transform.position + Vector3.up * 0.5f, value, critical);
+            
             Sprite.color = Color.red;
-			AudioKit.PlaySound("Hit");		
-			//延时0.3秒后判断攻击，恢复颜色并扣血
-			ActionKit.Delay(0.2f,() =>
-			{
-				this.Health -= value;
-				this.Sprite.color = Color.white;
-				_isIgnoreHurt = false;
-			}).Start(this);
+            if (SfxThrottle.CanPlay("Hit"))
+                AudioKit.PlaySound("Hit");
+            
+            // 使用计时器替代 ActionKit.Delay，零 GC 分配
+            _pendingDamage = value;
+            _hurtTimer = 0.2f;
+            _hurtPending = true;
+        }
+        
+        public void SetSpeedScale(float speedScale)
+        {
+            if (!_initialized)
+            {
+                _pendingSpeedScale *= speedScale;
+                return;
+            }
+
+            MovementSpeed *= speedScale;
+        }
+        
+        public void SetHPScale(float hpScale)
+        {
+            if (!_initialized)
+            {
+                _pendingHPScale *= hpScale;
+                return;
+            }
+
+            Health *= hpScale;
+            _initialHealth = Health;
+        }
+        
+        public void SetDamageScale(float damageScale)
+        {
+            if (!_initialized)
+            {
+                _pendingDamageScale *= damageScale;
+                return;
+            }
+
+            DamageMultiplier *= damageScale;
+        }
+        
+        public void SetBaseSpeed(float baseSpeed)
+        {
+            if (!_initialized)
+            {
+                _hasPendingBaseSpeed = true;
+                _pendingBaseSpeed = baseSpeed;
+                return;
+            }
+
+            MovementSpeed = baseSpeed;
+        }
+        
+        public void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate)
+        {
+            if (!_initialized)
+            {
+                _hasPendingDropRates = true;
+                _pendingExpDropRate = expRate;
+                _pendingCoinDropRate = coinRate;
+                _pendingHpDropRate = hpRate;
+                _pendingBombDropRate = bombRate;
+                return;
+            }
+
+            ExpDropRate = expRate;
+            CoinDropRate = coinRate;
+            HpDropRate = hpRate;
+            BombDropRate = bombRate;
+        }
+        
+        public void SetTreasureChest(bool isTreasureChest)
+        {
+            if (!_initialized)
+            {
+                _hasPendingTreasureChest = true;
+                _pendingTreasureChest = isTreasureChest;
+                return;
+            }
+
+            DropTreasureChest = isTreasureChest;
         }
 
-        public void SetSpeedScale(float SpeedScale)
+        public void ApplySlow(float multiplier, float durationSeconds)
         {
-            MovementSpeed *= SpeedScale;
-        }
+            multiplier = Mathf.Clamp(multiplier, 0.2f, 1f);
+            durationSeconds = Mathf.Max(0f, durationSeconds);
+            if (durationSeconds <= 0f) return;
 
-        public void SetHPScale(float HPScale)
-        {
-            Health *= HPScale;
+            if (Time.time < _slowUntilTime && multiplier >= _slowMultiplier)
+            {
+                return;
+            }
+
+            _slowMultiplier = multiplier;
+            _slowUntilTime = Time.time + durationSeconds;
         }
+        
+        #endregion
     }
 }

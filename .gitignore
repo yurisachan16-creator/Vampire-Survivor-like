@@ -4,6 +4,8 @@
 #
 # 临时文件目录
 .utmp/
+.trae/
+~$*.xlsx
 
 # Unity 自动生成的目录
 /[Ll]ibrary/
@@ -81,6 +83,8 @@ mono_crash.*
 # Packages 目录仅保留 manifest.json
 /[Pp]ackages/*
 !/[Pp]ackages/manifest.json
+!/[Pp]ackages/com.bshsf.appautobuilder/
+!/[Pp]ackages/com.bshsf.appautobuilder/**
 
 # Crashlytics 生成的文件
 crashlytics-build.properties

@@ -9,6 +9,8 @@ namespace VampireSurvivorLike
 		
 		void Start()
 		{
+			SelfRigidbody2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
 			SelfRigidbody2D.velocity = 
 				new Vector2(Random.Range(-1.0f,1.0f),Random.Range(-1.0f,1.0f))*
 				Random.Range(Global.BasketBallSpeed.Value-2,Global.BasketBallSpeed.Value+2);
@@ -35,15 +37,84 @@ namespace VampireSurvivorLike
 						
 
 						//有50%的概率对敌人进行击退
-						if (Random.Range(0, 1.0f) < 0.5f&&collider&collider.attachedRigidbody&&Player.Default)
+						if (Random.Range(0, 1.0f) < 0.5f && Player.Default)
 						{
-							collider.attachedRigidbody.velocity =
-								collider.NormalizedDirection2DFrom(this) * 5 +
-								collider.NormalizedDirection2DFrom(Player.Default) * 10;
+							var knockbackDirection = collider.NormalizedDirection2DFrom(this);
+							var playerDirection = collider.NormalizedDirection2DFrom(Player.Default);
+							var combinedDirection = (knockbackDirection + playerDirection).normalized;
+							if (combinedDirection.sqrMagnitude <= 0.0001f)
+							{
+								combinedDirection = knockbackDirection.sqrMagnitude > 0.0001f
+									? knockbackDirection
+									: playerDirection;
+							}
+
+							var miniBoss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
+							if (miniBoss != null)
+							{
+								miniBoss.ApplyExternalKnockback(combinedDirection);
+							}
+							else if (collider && collider.attachedRigidbody)
+							{
+								collider.attachedRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
+							}
 						}
 					}
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
+		}
+
+		private void FixedUpdate()
+		{
+			if (!SelfRigidbody2D) return;
+			if (!CameraController.LBTransform || !CameraController.RTTransform) return;
+
+			var radius = HurtBox
+				? HurtBox.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y)
+				: 0.5f;
+
+			var lb = CameraController.LBTransform.position;
+			var rt = CameraController.RTTransform.position;
+			var minX = lb.x + radius;
+			var maxX = rt.x - radius;
+			var minY = lb.y + radius;
+			var maxY = rt.y - radius;
+
+			var pos = SelfRigidbody2D.position;
+			var vel = SelfRigidbody2D.velocity;
+			var corrected = false;
+
+			if (pos.x < minX)
+			{
+				pos.x = minX;
+				vel.x = Mathf.Abs(vel.x);
+				corrected = true;
+			}
+			else if (pos.x > maxX)
+			{
+				pos.x = maxX;
+				vel.x = -Mathf.Abs(vel.x);
+				corrected = true;
+			}
+
+			if (pos.y < minY)
+			{
+				pos.y = minY;
+				vel.y = Mathf.Abs(vel.y);
+				corrected = true;
+			}
+			else if (pos.y > maxY)
+			{
+				pos.y = maxY;
+				vel.y = -Mathf.Abs(vel.y);
+				corrected = true;
+			}
+
+			if (corrected)
+			{
+				SelfRigidbody2D.position = pos;
+				SelfRigidbody2D.velocity = vel;
+			}
 		}
 
 		private void OnCollisionEnter2D(Collision2D other)
@@ -68,7 +139,8 @@ namespace VampireSurvivorLike
 				rb.angularVelocity = Random.Range(-360,360);
             }
 
-			AudioKit.PlaySound(Sfx.BALL);
+			if (SfxThrottle.CanPlay(Sfx.BALL))
+				AudioKit.PlaySound(Sfx.BALL);
         }
 	}
 }

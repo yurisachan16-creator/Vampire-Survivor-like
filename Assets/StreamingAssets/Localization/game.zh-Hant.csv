@@ -1,0 +1,11 @@
+key,value
+game.ui.enemy_count,敵人數量:{0}
+game.ui.wave,波次: {0}/{1}
+game.ui.wait_next_wave,等待下一波...
+game.ui.wave_remaining,{0} 剩餘: {1}s
+game.ui.time,時間:{0}
+game.ui.level,等級:{0}
+game.ui.coin,金幣:{0}
+game.treasure.heal_1,恢復1點生命值
+game.treasure.add_coin_50,增加50點金幣
+game.treasure.paired_content,<b>{0}</b>\n{1}

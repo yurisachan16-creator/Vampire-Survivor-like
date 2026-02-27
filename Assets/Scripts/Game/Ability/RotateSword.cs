@@ -27,17 +27,35 @@ namespace VampireSurvivorLike
                             {
                                 if(hitHurtBox.Owner.CompareTag("Enemy"))
                                 {
+                                    var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
+                                    if (enemy == null) return;
                                     var damageTimes=Global.SuperRotateSword.Value ? Random.Range(2,3+1) : 1;
 
                                     DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value * damageTimes,
-                                            hitHurtBox.Owner.GetComponent<Enemy>());
+                                            enemy);
 
                                     //有50%的概率对敌人进行击退
-                                    if (Random.Range(0, 1.0f) < 0.5f)
+                                    if (Random.Range(0, 1.0f) < 0.5f && Player.Default)
                                     {
-                                        collider.attachedRigidbody.velocity =
-                                            collider.NormalizedDirection2DFrom(self) * 5 +
-                                            collider.NormalizedDirection2DFrom(Player.Default) * 10;
+                                        var knockbackDirection = collider.NormalizedDirection2DFrom(self);
+                                        var playerDirection = collider.NormalizedDirection2DFrom(Player.Default);
+                                        var combinedDirection = (knockbackDirection + playerDirection).normalized;
+                                        if (combinedDirection.sqrMagnitude <= 0.0001f)
+                                        {
+                                            combinedDirection = knockbackDirection.sqrMagnitude > 0.0001f
+                                                ? knockbackDirection
+                                                : playerDirection;
+                                        }
+
+                                        var miniBoss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
+                                        if (miniBoss != null)
+                                        {
+                                            miniBoss.ApplyExternalKnockback(combinedDirection);
+                                        }
+                                        else if (collider && collider.attachedRigidbody)
+                                        {
+                                            collider.attachedRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
+                                        }
                                     }
                                 }
                             }
@@ -77,7 +95,7 @@ namespace VampireSurvivorLike
 
         void UpdateCirclePos()
         {
-            var radius = Global.RotateSwordRange.Value;
+            var radius = Global.RotateSwordRange.Value * Mathf.Max(1f, Global.AreaMultiplier.Value);
             var durationDegrees = 360 / _mSwords.Count;
 
             for(var i = 0; i < _mSwords.Count; i++)
@@ -91,13 +109,16 @@ namespace VampireSurvivorLike
           
         }
 
+        private float _rotationAngle;
+
         void Update()
         {
             var speed = Global.SuperRotateSword.Value 
-                ? Time.frameCount * 10 
-                :Global.RotateSwordSpeed.Value * Time.frameCount;
+                ? 10f * 60f 
+                : Global.RotateSwordSpeed.Value * 60f;
 
-            this.LocalEulerAnglesZ(-speed);
+            _rotationAngle += speed * Time.deltaTime;
+            this.LocalEulerAnglesZ(-_rotationAngle);
 			
         }
     }

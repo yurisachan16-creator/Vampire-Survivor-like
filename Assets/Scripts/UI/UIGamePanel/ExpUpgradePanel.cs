@@ -17,6 +17,7 @@ namespace VampireSurvivorLike
 
 		private void Awake()
         {
+			LocalizationManager.PreloadTable("upgrade");
 			_mResLoader = ResLoader.Allocate();
 			var iconAtlas = _mResLoader.LoadSync<SpriteAtlas>("icon");
             var expUpgradeSystem = this.GetSystem<ExpUpgradeSystem>();
@@ -41,63 +42,85 @@ namespace VampireSurvivorLike
 						Time.timeScale = 1f;
 						itemCache.Upgrade();
 						this.Hide();
+						//恢复触控覆盖层
+						MobileTouchOverlay.SetOverlayActive(true);
 						//TODO:播放升级音效
 						AudioKit.PlaySound("Retro Event Acute 08");
 					});
 					var selfCache=self;
-					
+					var label = self.GetComponentInChildren<Text>();
+					if (label) FontManager.Register(label);
 
-                    itemCache.Visible.RegisterWithInitValue(visible =>
+					System.Action refreshTexts = () =>
 					{
-                        if(visible)
-                        {
-							var label = self.GetComponentInChildren<Text>();
-							if (label) label.text = itemCache.Description;
-                            selfCache.Show();
-							var pairedUpgradeName = selfCache.transform.Find("PairedUpgradeName");
-							if(pairedUpgradeName && expUpgradeSystem.Pairs.TryGetValue(itemCache.Key,out var pairedName))
+						if (label) label.text = itemCache.Description;
+						var pairedUpgradeName = selfCache.transform.Find("PairedUpgradeName");
+						if (pairedUpgradeName && expUpgradeSystem.Pairs.TryGetValue(itemCache.Key, out var pairedName))
+						{
+							if (expUpgradeSystem.Dictionary.TryGetValue(pairedName, out var pairedItem) && pairedItem != null)
 							{
-								if (expUpgradeSystem.Dictionary.TryGetValue(pairedName, out var pairedItem) && pairedItem != null)
+								if (pairedItem.CurrentLevel.Value > 0 && itemCache.CurrentLevel.Value == 0)
 								{
-									if(pairedItem.CurrentLevel.Value > 0 && itemCache.CurrentLevel.Value == 0)
+									var pairedLabel = pairedUpgradeName.GetComponent<Text>();
+									if (pairedLabel)
 									{
-										var pairedLabel = pairedUpgradeName.GetComponent<Text>();
-										if (pairedLabel) pairedLabel.text = "配对武器：" + pairedItem.Key;
-										pairedUpgradeName.Show();
-										var pairedIconTransform = pairedUpgradeName.Find("Icon");
-										var pairedIconImage = pairedIconTransform ? pairedIconTransform.GetComponent<Image>() : null;
-										if (pairedIconImage && iconAtlas)
-										{
-											pairedIconImage.sprite = iconAtlas.GetSprite(pairedItem.IconName);
-										}
+										FontManager.Register(pairedLabel);
+										pairedLabel.text = LocalizationManager.Format("exp_upgrade.ui.paired_weapon", pairedItem.Name);
 									}
-									else
+									pairedUpgradeName.Show();
+									var pairedIconTransform = pairedUpgradeName.Find("Icon");
+									var pairedIconImage = pairedIconTransform ? pairedIconTransform.GetComponent<Image>() : null;
+									if (pairedIconImage && iconAtlas)
 									{
-										pairedUpgradeName.Hide();
+										pairedIconImage.sprite = iconAtlas.GetSprite(pairedItem.IconName);
 									}
 								}
 								else
 								{
 									pairedUpgradeName.Hide();
 								}
-								
 							}
 							else
 							{
-								if (pairedUpgradeName) pairedUpgradeName.Hide();
+								pairedUpgradeName.Hide();
 							}
+						}
+						else
+						{
+							if (pairedUpgradeName) pairedUpgradeName.Hide();
+						}
+					};
+
+                    itemCache.Visible.RegisterWithInitValue(visible =>
+					{
+						if (!selfCache) return;
+                        if(visible)
+                        {
+							refreshTexts();
+                            selfCache.Show();
                         }
                         else
                         {
                             selfCache.Hide();
                         }
-                    }).UnRegisterWhenGameObjectDestroyed(selfCache);
+                    }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 					itemCache.CurrentLevel.Register((lv) =>
                     {
-						var label = selfCache.GetComponentInChildren<Text>();
-						if (label) label.text = itemCache.Description;
+						refreshTexts();
                     }).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+					LocalizationManager.CurrentLanguage.Register(_ =>
+					{
+						if (!selfCache) return;
+						if (selfCache.gameObject.activeInHierarchy) refreshTexts();
+					}).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+					LocalizationManager.ReadyChanged.Register(() =>
+					{
+						if (!selfCache) return;
+						if (selfCache.gameObject.activeInHierarchy) refreshTexts();
+					}).UnRegisterWhenGameObjectDestroyed(gameObject);
                 });
             }
 

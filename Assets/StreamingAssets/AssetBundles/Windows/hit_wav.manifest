@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 1361247326
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 64df7cf826a041913381f2e092db43b8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 64df7cf826a041913381f2e092db43b8
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Art/Sound/Sfx/Hit.wav
+Dependencies: []

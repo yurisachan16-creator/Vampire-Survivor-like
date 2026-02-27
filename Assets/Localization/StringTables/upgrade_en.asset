@@ -1,0 +1,483 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: upgrade_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 41c83fe97ca96ea4baf712c29b286391, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1112608768
+    m_Localized: 'Paired: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746112
+    m_Localized: '{0} (Price: {1} coins)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746612
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746113
+    m_Localized: Coin drop chance Up Lv1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746114
+    m_Localized: Coin drop chance Up Lv2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746115
+    m_Localized: Coin drop chance Up Lv3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746116
+    m_Localized: Coin drop chance Up Lv4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746117
+    m_Localized: Increase EXP drop chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746118
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746119
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746120
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746121
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746122
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746123
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746124
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746125
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746126
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746127
+    m_Localized: Max HP +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746128
+    m_Localized: Sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746129
+    m_Localized: Fused Sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746130
+    m_Localized: Double damage and double range
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746131
+    m_Localized: 'Sword Lv1: Attacks nearby enemies'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746132
+    m_Localized: Sword Lv2:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746133
+    m_Localized: Sword Lv3:\\nDamage +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746134
+    m_Localized: Sword Lv4:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746135
+    m_Localized: Sword Lv5:\\nDamage +4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746136
+    m_Localized: Sword Lv6:\\nRange +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746137
+    m_Localized: Sword Lv7:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746138
+    m_Localized: Sword Lv8:\\nDamage +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746139
+    m_Localized: Sword Lv9:\\nDamage +5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746140
+    m_Localized: Sword Lv10:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746141
+    m_Localized: Guardian Sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746142
+    m_Localized: Fused Guardian Sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746143
+    m_Localized: Double damage and double spin speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746144
+    m_Localized: Guardian Sword Lv1:\\nA sword orbiting the hero
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746145
+    m_Localized: Guardian Sword Lv2:\\nCount +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746146
+    m_Localized: Guardian Sword Lv3:\\nDamage +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746147
+    m_Localized: Guardian Sword Lv4:\\nSpeed +50%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746148
+    m_Localized: Guardian Sword Lv5:\\nCount +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746149
+    m_Localized: Guardian Sword Lv6:\\nDamage +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746150
+    m_Localized: Guardian Sword Lv7:\\nCount +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746151
+    m_Localized: Guardian Sword Lv8:\\nDamage +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746152
+    m_Localized: Guardian Sword Lv9:\\nCount +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746153
+    m_Localized: Guardian Sword Lv10:\\nDamage +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746154
+    m_Localized: Bomb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746155
+    m_Localized: Fused Bomb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746156
+    m_Localized: Explodes once every 15 seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746157
+    m_Localized: 'Bomb Lv1: Hits all enemies (monster drop)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746158
+    m_Localized: Bomb Lv2:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746159
+    m_Localized: Bomb Lv3:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746160
+    m_Localized: Bomb Lv4:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746161
+    m_Localized: Bomb Lv5:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746162
+    m_Localized: Bomb Lv6:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746163
+    m_Localized: Bomb Lv7:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746164
+    m_Localized: Bomb Lv8:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746165
+    m_Localized: Bomb Lv9:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746166
+    m_Localized: Bomb Lv10:\\nDrop chance +10%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746167
+    m_Localized: Knife
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746168
+    m_Localized: Fused Knife
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746169
+    m_Localized: Double damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746170
+    m_Localized: 'Knife Lv1: Fires one at the nearest enemy'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746171
+    m_Localized: Knife Lv2:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746172
+    m_Localized: Knife Lv3:\\nInterval -0.1s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746173
+    m_Localized: Knife Lv4:\\nInterval -0.1s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746174
+    m_Localized: Knife Lv5:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746175
+    m_Localized: Knife Lv6:\\nInterval -0.1s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746176
+    m_Localized: Knife Lv7:\\nInterval -0.1s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746177
+    m_Localized: Knife Lv8:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746178
+    m_Localized: Knife Lv9:\\nInterval -0.1s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746179
+    m_Localized: Knife Lv10:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746180
+    m_Localized: Basketball
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746181
+    m_Localized: Fused Basketball
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746182
+    m_Localized: Double damage and larger size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746183
+    m_Localized: Basketball Lv1:\\nA basketball bouncing on screen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746184
+    m_Localized: Basketball Lv2:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746185
+    m_Localized: Basketball Lv3:\\nCount +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746186
+    m_Localized: Basketball Lv4:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746187
+    m_Localized: Basketball Lv5:\\nCount +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746188
+    m_Localized: Basketball Lv6:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746189
+    m_Localized: Basketball Lv7:\\nSpeed +20%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746190
+    m_Localized: Basketball Lv8:\\nDamage +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746191
+    m_Localized: Basketball Lv9:\\nSpeed +20%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746192
+    m_Localized: Basketball Lv10:\\nCount +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746193
+    m_Localized: Crit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746194
+    m_Localized: Crit Lv1:\\n15% chance to crit per hit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746195
+    m_Localized: Crit Lv2:\\n28% chance to crit per hit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746196
+    m_Localized: Crit Lv3:\\n40% chance to crit per hit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746197
+    m_Localized: Crit Lv4:\\n52% chance to crit per hit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746198
+    m_Localized: Crit Lv5:\\n65% chance to crit per hit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746199
+    m_Localized: Damage Multiplier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746200
+    m_Localized: Damage Multiplier Lv1:\\nDamage +15%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746201
+    m_Localized: Damage Multiplier Lv2:\\nDamage +28%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746202
+    m_Localized: Damage Multiplier Lv3:\\nDamage +40%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746203
+    m_Localized: Damage Multiplier Lv4:\\nDamage +52%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746204
+    m_Localized: Damage Multiplier Lv5:\\nDamage +65%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746205
+    m_Localized: Projectiles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746206
+    m_Localized: Projectiles Lv1:\\n+1 extra projectile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746207
+    m_Localized: Projectiles Lv2:\\n+2 extra projectiles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746208
+    m_Localized: Projectiles Lv3:\\n+3 extra projectiles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746209
+    m_Localized: Move Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746210
+    m_Localized: Move Speed Lv1:\\nMove speed +25%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746211
+    m_Localized: Move Speed Lv2:\\nMove speed +50%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746212
+    m_Localized: Move Speed Lv3:\\nMove speed +75%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746213
+    m_Localized: Move Speed Lv4:\\nMove speed +100%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746214
+    m_Localized: Move Speed Lv5:\\nMove speed +125%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746215
+    m_Localized: EXP Drop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746216
+    m_Localized: EXP Drop Lv1:\\nDrop chance +5%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746217
+    m_Localized: EXP Drop Lv2:\\nDrop chance +10%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746218
+    m_Localized: EXP Drop Lv3:\\nDrop chance +15%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746219
+    m_Localized: EXP Drop Lv4:\\nDrop chance +20%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746220
+    m_Localized: EXP Drop Lv5:\\nDrop chance +25%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746221
+    m_Localized: Pickup Radius
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746222
+    m_Localized: Pickup Radius Lv1:\\nPickup radius +100%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746223
+    m_Localized: Pickup Radius Lv2:\\nPickup radius +200%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1158746224
+    m_Localized: Pickup Radius Lv3:\\nPickup radius +300%
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

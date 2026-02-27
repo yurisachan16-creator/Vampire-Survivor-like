@@ -6,57 +6,88 @@ namespace VampireSurvivorLike
 {
 	public partial class FloatingTextController : ViewController
 	{
+		private const int MaxCachedDamageText = 8192;
+		private const int MaxActiveTextsDesktop = 96;
+		private const int MaxActiveTextsMobile = 48;
+		private static readonly string[] DamageTextCache = BuildDamageTextCache();
+		private static int _activeTextCount;
+
 		void Start()
 		{
 			FloatingText.Hide();
 		}
 
+		public static void PlayDamage(Vector2 position, float damage, bool critical = false)
+		{
+			if (!_mDefault || !_mDefault.FloatingText) return;
+			if (!critical && _activeTextCount >= GetMaxActiveTextCount()) return;
+
+			Play(position, GetDamageText(damage), critical);
+		}
+
 		public static void Play(Vector2 position,string text,bool critical=false)
         {
-            _mDefault.FloatingText.InstantiateWithParent(_mDefault.transform)
-				.PositionX(position.x)
-				.PositionY(position.y)
-            .Self(f =>
+			if (!_mDefault || !_mDefault.FloatingText) return;
+
+			var go = ObjectPoolSystem.Spawn(_mDefault.FloatingText.gameObject, _mDefault.transform, true);
+			if (!go) return;
+			go.transform.position = position;
+
+			var item = go.GetComponent<FloatingTextItem>();
+			var addedItem = false;
+			if (!item)
 			{
-				var positionY = position.y;
-                var textTransform = f.transform.Find("Text");
-				var textComp = textTransform.GetComponent<Text>();
-				textComp.text = text;
-
-                if (critical)	//暴击文字颜色变红
-                {
-                    textComp.color = Color.red;
-                }
-
-				//动画效果
-				ActionKit.Sequence().Lerp(0,0.5f,0.5f)
-					.Lerp(0, 0.5f,0.5f, (p) =>
-					{
-						f.PositionY(positionY + p*0.25f);	//上浮0.25单位
-						textComp.LocalScaleX(Mathf.Clamp01(p * 4));
-						textComp.LocalScaleY(Mathf.Clamp01(p * 4));
-
-					})
-					.Delay(0.5f)
-					.Lerp(1.0f,0,0.3f,(p)=>
-					{
-						textComp.ColorAlpha(p);
-					},()=>{f.DestroyGameObjGracefully();})
-					.Start(textComp);
-
-            }).Show();
+				item = go.AddComponent<FloatingTextItem>();
+				ObjectPoolSystem.RefreshPoolableCache(go);
+				addedItem = true;
+			}
+			if (addedItem) item.OnSpawned();
+			item.Play(position, text, critical);
         }
 
 		private static FloatingTextController _mDefault;
 
+		internal static void NotifyItemSpawned()
+		{
+			_activeTextCount++;
+		}
+
+		internal static void NotifyItemDespawned()
+		{
+			if (_activeTextCount > 0) _activeTextCount--;
+		}
+
         void Awake()
         {
             _mDefault = this;
+			_activeTextCount = 0;
         }
 
         void OnDestroy()
         {
             _mDefault = null;
         }
+
+		private static int GetMaxActiveTextCount()
+		{
+			return Application.isMobilePlatform ? MaxActiveTextsMobile : MaxActiveTextsDesktop;
+		}
+
+		private static string GetDamageText(float damage)
+		{
+			var rounded = Mathf.Max(0, Mathf.RoundToInt(damage));
+			if (rounded < DamageTextCache.Length) return DamageTextCache[rounded];
+			return rounded.ToString();
+		}
+
+		private static string[] BuildDamageTextCache()
+		{
+			var cache = new string[MaxCachedDamageText];
+			for (var i = 0; i < cache.Length; i++)
+			{
+				cache[i] = i.ToString();
+			}
+			return cache;
+		}
     }
 }

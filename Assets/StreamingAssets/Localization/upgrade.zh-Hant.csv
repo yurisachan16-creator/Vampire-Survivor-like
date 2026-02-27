@@ -1,0 +1,211 @@
+key,value
+exp_upgrade.ui.paired_weapon,配對武器：{0}
+coin_upgrade.ui.item_price,{0} (價格:{1}金幣)
+coin_upgrade.ui.close,關閉
+coin_upgrade.coin_percent_Lv1.desc,金幣掉落概率提升 Lv1
+coin_upgrade.coin_percent_Lv2.desc,金幣掉落概率提升 Lv2
+coin_upgrade.coin_percent_Lv3.desc,金幣掉落概率提升 Lv3
+coin_upgrade.coin_percent_Lv4.desc,金幣掉落概率提升 Lv4
+coin_upgrade.exp_percent.desc,增加經驗掉落概率
+coin_upgrade.player_max_hp.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp1.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp2.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp3.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp4.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp5.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp6.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp7.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp8.desc,玩家最大生命值+1
+coin_upgrade.player_max_hp9.desc,玩家最大生命值+1
+exp_upgrade.simple_sword.name,劍
+exp_upgrade.simple_sword.paired_name,合成後的劍
+exp_upgrade.simple_sword.paired_desc,攻擊力翻倍 攻擊距離翻倍
+exp_upgrade.simple_sword.lv1,劍Lv1:攻擊身邊的敵人
+exp_upgrade.simple_sword.lv2,劍Lv2：\\n攻擊力+3 數量+2
+exp_upgrade.simple_sword.lv3,劍Lv3：\\n攻擊力+2 間隔-0.25s
+exp_upgrade.simple_sword.lv4,劍Lv4：\\n攻擊力+3 間隔-0.25s
+exp_upgrade.simple_sword.lv5,劍Lv5：\\n攻擊力+4 間隔-0.25s
+exp_upgrade.simple_sword.lv6,劍Lv6：\\n範圍+1 間隔-0.25s
+exp_upgrade.simple_sword.lv7,劍Lv7：\\n攻擊力+3 數量+2
+exp_upgrade.simple_sword.lv8,劍Lv8：\\n攻擊力+2 範圍+1
+exp_upgrade.simple_sword.lv9,劍Lv9：\\n攻擊力+5 間隔-0.25s
+exp_upgrade.simple_sword.lv10,劍Lv10：\\n攻擊力+3 數量+2
+exp_upgrade.rotate_sword.name,守衛劍
+exp_upgrade.rotate_sword.paired_name,合成後的守衛劍
+exp_upgrade.rotate_sword.paired_desc,攻擊力翻倍 旋轉速度翻倍
+exp_upgrade.rotate_sword.lv1,守衛劍Lv1:\\n環繞主角身邊的劍
+exp_upgrade.rotate_sword.lv2,守衛劍Lv2：\\n數量+1 攻擊力+2
+exp_upgrade.rotate_sword.lv3,守衛劍Lv3：\\n攻擊力+2 速度+25%
+exp_upgrade.rotate_sword.lv4,守衛劍Lv4：\\n速度+50%
+exp_upgrade.rotate_sword.lv5,守衛劍Lv5：\\n數量+1 攻擊力+1
+exp_upgrade.rotate_sword.lv6,守衛劍Lv6：\\n攻擊力+2 速度+25%
+exp_upgrade.rotate_sword.lv7,守衛劍Lv7：\\n數量+1 攻擊力+1
+exp_upgrade.rotate_sword.lv8,守衛劍Lv8：\\n攻擊力+2 速度+25%
+exp_upgrade.rotate_sword.lv9,守衛劍Lv9：\\n數量+1 攻擊力+1
+exp_upgrade.rotate_sword.lv10,守衛劍Lv10：\\n攻擊力+2 速度+25%
+exp_upgrade.simple_bomb.name,炸彈
+exp_upgrade.simple_bomb.paired_name,合成後的炸彈
+exp_upgrade.simple_bomb.paired_desc,每隔15秒爆炸一次
+exp_upgrade.simple_bomb.lv1,炸彈Lv1:攻擊全部敵人(怪物掉落)
+exp_upgrade.simple_bomb.lv2,炸彈Lv2：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv3,炸彈Lv3：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv4,炸彈Lv4：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv5,炸彈Lv5：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv6,炸彈Lv6：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv7,炸彈Lv7：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv8,炸彈Lv8：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv9,炸彈Lv9：\\n掉落概率+5% 攻擊力+5
+exp_upgrade.simple_bomb.lv10,炸彈Lv10：\\n掉落概率+10% 攻擊力+5
+exp_upgrade.simple_knife.name,飛刀
+exp_upgrade.simple_knife.paired_name,合成後的飛刀
+exp_upgrade.simple_knife.paired_desc,攻擊力翻倍
+exp_upgrade.simple_knife.lv1,飛刀Lv1:向最近的敵人發射一把（可穿透1名敵人）
+exp_upgrade.simple_knife.lv2,飛刀Lv2：\\n攻擊力+2 數量+2
+exp_upgrade.simple_knife.lv3,飛刀Lv3：\\n間隔-0.1s 攻擊力+2 數量+1
+exp_upgrade.simple_knife.lv4,飛刀Lv4：\\n間隔-0.1s 穿透+1 數量+1
+exp_upgrade.simple_knife.lv5,飛刀Lv5：\\n攻擊力+2 數量+1
+exp_upgrade.simple_knife.lv6,飛刀Lv6：\\n間隔-0.1s 數量+1
+exp_upgrade.simple_knife.lv7,飛刀Lv7：\\n間隔-0.1s 穿透+1 數量+1
+exp_upgrade.simple_knife.lv8,飛刀Lv8：\\n攻擊力+2 數量+1
+exp_upgrade.simple_knife.lv9,飛刀Lv9：\\n間隔-0.1s 數量+1
+exp_upgrade.simple_knife.lv10,飛刀Lv10：\\n攻擊力+2 數量+1
+exp_upgrade.basket_ball.name,籃球
+exp_upgrade.basket_ball.paired_name,合成後的籃球
+exp_upgrade.basket_ball.paired_desc,攻擊力翻倍 體型變大
+exp_upgrade.basket_ball.lv1,籃球Lv1:\\n在螢幕內反彈的籃球
+exp_upgrade.basket_ball.lv2,籃球Lv2：\\n攻擊力+3
+exp_upgrade.basket_ball.lv3,籃球Lv3：\\n數量+1
+exp_upgrade.basket_ball.lv4,籃球Lv4：\\n攻擊力+3
+exp_upgrade.basket_ball.lv5,籃球Lv5：\\n數量+1
+exp_upgrade.basket_ball.lv6,籃球Lv6：\\n攻擊力+3
+exp_upgrade.basket_ball.lv7,籃球Lv7：\\n速度+20%
+exp_upgrade.basket_ball.lv8,籃球Lv8：\\n攻擊力+3
+exp_upgrade.basket_ball.lv9,籃球Lv9：\\n速度+20%
+exp_upgrade.basket_ball.lv10,籃球Lv10：\\n數量+1
+exp_upgrade.simple_critical.name,暴擊
+exp_upgrade.simple_critical.lv1,暴擊Lv1:\\n每次傷害15%概率暴擊
+exp_upgrade.simple_critical.lv2,暴擊Lv2：\\n每次傷害28%概率暴擊
+exp_upgrade.simple_critical.lv3,暴擊Lv3：\\n每次傷害40%概率暴擊
+exp_upgrade.simple_critical.lv4,暴擊Lv4：\\n每次傷害52%概率暴擊
+exp_upgrade.simple_critical.lv5,暴擊Lv5：\\n每次傷害65%概率暴擊
+exp_upgrade.damage_rate.name,傷害倍率
+exp_upgrade.damage_rate.lv1,傷害倍率Lv1:\\n傷害提升15%
+exp_upgrade.damage_rate.lv2,傷害倍率Lv2:\\n傷害提升28%
+exp_upgrade.damage_rate.lv3,傷害倍率Lv3:\\n傷害提升40%
+exp_upgrade.damage_rate.lv4,傷害倍率Lv4:\\n傷害提升52%
+exp_upgrade.damage_rate.lv5,傷害倍率Lv5:\\n傷害提升65%
+exp_upgrade.simple_fly_count.name,飛射物
+exp_upgrade.simple_fly_count.lv1,飛射物Lv1:\\n額外增加1個飛行物
+exp_upgrade.simple_fly_count.lv2,飛射物Lv2:\\n額外增加2個飛行物
+exp_upgrade.simple_fly_count.lv3,飛射物Lv3:\\n額外增加3個飛行物
+exp_upgrade.movement_speed_rate.name,移動速度
+exp_upgrade.movement_speed_rate.lv1,移動速度Lv1:\\n增加25%移動速度
+exp_upgrade.movement_speed_rate.lv2,移動速度Lv2:\\n增加50%移動速度
+exp_upgrade.movement_speed_rate.lv3,移動速度Lv3:\\n增加75%移動速度
+exp_upgrade.movement_speed_rate.lv4,移動速度Lv4:\\n增加100%移動速度
+exp_upgrade.movement_speed_rate.lv5,移動速度Lv5:\\n增加125%移動速度
+exp_upgrade.simple_exp_percent.name,經驗值
+exp_upgrade.simple_exp_percent.lv1,經驗值Lv1:\\n額外增加5%概率掉落
+exp_upgrade.simple_exp_percent.lv2,經驗值Lv2:\\n額外增加10%概率掉落
+exp_upgrade.simple_exp_percent.lv3,經驗值Lv3:\\n額外增加15%概率掉落
+exp_upgrade.simple_exp_percent.lv4,經驗值Lv4:\\n額外增加20%概率掉落
+exp_upgrade.simple_exp_percent.lv5,經驗值Lv5:\\n額外增加25%概率掉落
+exp_upgrade.simple_collectable_area_radius.name,拾取範圍半徑
+exp_upgrade.simple_collectable_area_radius.lv1,拾取範圍半徑Lv1:\\n增加100%可收集物品範圍半徑
+exp_upgrade.simple_collectable_area_radius.lv2,拾取範圍半徑Lv2:\\n增加200%可收集物品範圍半徑
+exp_upgrade.simple_collectable_area_radius.lv3,拾取範圍半徑Lv3:\\n增加300%可收集物品範圍半徑
+exp_upgrade.magic_wand.name,魔杖
+exp_upgrade.magic_wand.paired_name,聖杖
+exp_upgrade.magic_wand.paired_desc,連射 + 穿透 + 擊退增強
+exp_upgrade.magic_wand.lv1,魔杖Lv1:\\n自動鎖定最近敵人發射魔彈
+exp_upgrade.magic_wand.lv2,魔杖Lv2：\\n攻擊力+2
+exp_upgrade.magic_wand.lv3,魔杖Lv3：\\n數量+1
+exp_upgrade.magic_wand.lv4,魔杖Lv4：\\n間隔-0.08s
+exp_upgrade.magic_wand.lv5,魔杖Lv5：\\n攻擊力+3
+exp_upgrade.magic_wand.lv6,魔杖Lv6：\\n數量+1
+exp_upgrade.magic_wand.lv7,魔杖Lv7：\\n間隔-0.08s
+exp_upgrade.magic_wand.lv8,魔杖Lv8：\\n攻擊力+3
+exp_upgrade.magic_wand.lv9,魔杖Lv9：\\n數量+1
+exp_upgrade.magic_wand.lv10,魔杖Lv10：\\n攻擊力+4 間隔-0.1s
+exp_upgrade.simple_bow.name,弓箭
+exp_upgrade.simple_bow.paired_name,精靈弓
+exp_upgrade.simple_bow.paired_desc,箭矢分裂 + 追蹤
+exp_upgrade.simple_bow.lv1,弓箭Lv1:\\n向最近敵人射出高速穿透箭矢
+exp_upgrade.simple_bow.lv2,弓箭Lv2：\\n攻擊力+2
+exp_upgrade.simple_bow.lv3,弓箭Lv3：\\n數量+1
+exp_upgrade.simple_bow.lv4,弓箭Lv4：\\n穿透+1
+exp_upgrade.simple_bow.lv5,弓箭Lv5：\\n間隔-0.1s
+exp_upgrade.simple_bow.lv6,弓箭Lv6：\\n攻擊力+3
+exp_upgrade.simple_bow.lv7,弓箭Lv7：\\n數量+1
+exp_upgrade.simple_bow.lv8,弓箭Lv8：\\n穿透+1
+exp_upgrade.simple_bow.lv9,弓箭Lv9：\\n間隔-0.1s
+exp_upgrade.simple_bow.lv10,弓箭Lv10：\\n攻擊力+4
+exp_upgrade.empty_tome.name,空日之書
+exp_upgrade.empty_tome.lv1,空日之書Lv1:\\n全局冷卻-8%
+exp_upgrade.empty_tome.lv2,空日之書Lv2:\\n全局冷卻-16%
+exp_upgrade.empty_tome.lv3,空日之書Lv3:\\n全局冷卻-24%
+exp_upgrade.empty_tome.lv4,空日之書Lv4:\\n全局冷卻-32%
+exp_upgrade.empty_tome.lv5,空日之書Lv5:\\n全局冷卻-40%
+exp_upgrade.luck.name,幸運
+exp_upgrade.luck.lv1,幸運Lv1:\\n幸運+5%（掉落品質與暴擊）
+exp_upgrade.luck.lv2,幸運Lv2:\\n幸運+10%（掉落品質與暴擊）
+exp_upgrade.luck.lv3,幸運Lv3:\\n幸運+15%（掉落品質與暴擊）
+exp_upgrade.luck.lv4,幸運Lv4:\\n幸運+20%（掉落品質與暴擊）
+exp_upgrade.luck.lv5,幸運Lv5:\\n幸運+25%（掉落品質與暴擊）
+exp_upgrade.boomerang.name,飛鏢
+exp_upgrade.boomerang.paired_name,回旋刃
+exp_upgrade.boomerang.paired_desc,多次往返 + 更高穿透
+exp_upgrade.boomerang.lv1,飛鏢Lv1:\\n投出後返回，往返都可造成傷害
+exp_upgrade.boomerang.lv2,飛鏢Lv2:\\n攻擊力+2
+exp_upgrade.boomerang.lv3,飛鏢Lv3:\\n數量+1
+exp_upgrade.boomerang.lv4,飛鏢Lv4:\\n往返次數+1
+exp_upgrade.boomerang.lv5,飛鏢Lv5:\\n間隔-0.12s
+exp_upgrade.boomerang.lv6,飛鏢Lv6:\\n攻擊力+3
+exp_upgrade.boomerang.lv7,飛鏢Lv7:\\n穿透+1
+exp_upgrade.boomerang.lv8,飛鏢Lv8:\\n數量+1
+exp_upgrade.boomerang.lv9,飛鏢Lv9:\\n間隔-0.12s
+exp_upgrade.boomerang.lv10,飛鏢Lv10:\\n攻擊力+4 往返次數+1
+exp_upgrade.holy_water.name,聖水
+exp_upgrade.holy_water.paired_name,短絨
+exp_upgrade.holy_water.paired_desc,水圈跟隨玩家 + 範圍增強
+exp_upgrade.holy_water.lv1,聖水Lv1:\\n生成持續傷害水圈並減速敵人
+exp_upgrade.holy_water.lv2,聖水Lv2:\\n每跳傷害+1
+exp_upgrade.holy_water.lv3,聖水Lv3:\\n傷害間隔-0.05s
+exp_upgrade.holy_water.lv4,聖水Lv4:\\n減速更強
+exp_upgrade.holy_water.lv5,聖水Lv5:\\n施放間隔-0.2s
+exp_upgrade.holy_water.lv6,聖水Lv6:\\n每跳傷害+1
+exp_upgrade.holy_water.lv7,聖水Lv7:\\n減速持續時間+0.1s
+exp_upgrade.holy_water.lv8,聖水Lv8:\\n傷害間隔-0.05s
+exp_upgrade.holy_water.lv9,聖水Lv9:\\n每跳傷害+2
+exp_upgrade.holy_water.lv10,聖水Lv10:\\n施放間隔-0.25s 減速更強
+exp_upgrade.attractorb.name,吸引器
+exp_upgrade.attractorb.lv1,吸引器Lv1:\\n拾取範圍半徑+0.8
+exp_upgrade.attractorb.lv2,吸引器Lv2:\\n拾取範圍半徑+1.6
+exp_upgrade.attractorb.lv3,吸引器Lv3:\\n拾取範圍半徑+2.4
+exp_upgrade.attractorb.lv4,吸引器Lv4:\\n拾取範圍半徑+3.2
+exp_upgrade.attractorb.lv5,吸引器Lv5:\\n拾取範圍半徑+4.0
+exp_upgrade.simple_axe.name,銅劍
+exp_upgrade.simple_axe.paired_name,死亡旋風
+exp_upgrade.simple_axe.paired_desc,360° 全屏穿透旋轉投射物
+exp_upgrade.simple_axe.lv1,銅劍Lv1:\\n向上拋出劍體，沿拋物線落下
+exp_upgrade.simple_axe.lv2,銅劍Lv2：\\n攻擊力+3
+exp_upgrade.simple_axe.lv3,銅劍Lv3：\\n數量+1
+exp_upgrade.simple_axe.lv4,銅劍Lv4：\\n攻擊力+3 間隔-0.1s
+exp_upgrade.simple_axe.lv5,銅劍Lv5：\\n穿透+1
+exp_upgrade.simple_axe.lv6,銅劍Lv6：\\n攻擊力+4 數量+1
+exp_upgrade.simple_axe.lv7,銅劍Lv7：\\n間隔-0.2s
+exp_upgrade.simple_axe.lv8,銅劍Lv8：\\n攻擊力+5
+exp_upgrade.simple_axe.lv9,銅劍Lv9：\\n數量+1 穿透+1
+exp_upgrade.simple_axe.lv10,銅劍Lv10：\\n攻擊力+5 間隔-0.2s
+exp_upgrade.armor.name,護甲
+exp_upgrade.armor.lv1,護甲Lv1:\\n受到傷害-1
+exp_upgrade.armor.lv2,護甲Lv2:\\n受到傷害-2
+exp_upgrade.armor.lv3,護甲Lv3:\\n受到傷害-3
+exp_upgrade.armor.lv4,護甲Lv4:\\n受到傷害-4
+exp_upgrade.armor.lv5,護甲Lv5:\\n受到傷害-5
+exp_upgrade.yellow_potion.name,黃藥水
+exp_upgrade.yellow_potion.lv1,黃藥水Lv1:\\n武器範圍+10%
+exp_upgrade.yellow_potion.lv2,黃藥水Lv2:\\n武器範圍+20%
+exp_upgrade.yellow_potion.lv3,黃藥水Lv3:\\n武器範圍+30%
+exp_upgrade.yellow_potion.lv4,黃藥水Lv4:\\n武器範圍+40%
+exp_upgrade.yellow_potion.lv5,黃藥水Lv5:\\n武器範圍+50%

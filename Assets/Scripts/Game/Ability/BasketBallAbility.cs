@@ -1,40 +1,63 @@
 using UnityEngine;
 using QFramework;
 using System.Collections.Generic;
-using System.Threading;
-using System;
 
 namespace VampireSurvivorLike
 {
 	public partial class BasketBallAbility : ViewController
 	{
-		private List<Ball> _mBasketBalls = new List<Ball>();
+		private readonly List<Ball> _mBasketBalls = new List<Ball>(8);
+		private const float EnsureIntervalSeconds = 0.5f;
+		private float _nextEnsureTime;
+
 		void Start()
 		{
-			void CreateBall()
-            {
-                _mBasketBalls.Add(Ball.Instantiate()
-						.SyncPosition2DFrom(this)
-						.Show());
-            }
-
-			void CreateBalls()
-            {
-                var ballCount2Create = Global.BasketBallCount.Value + Global.AdditionalFlyThingCount.Value - _mBasketBalls.Count;
-
-				for(int i = 0; i < ballCount2Create; i++)
-                {
-                    CreateBall();
-                }
-            }
-
             Global.BasketBallCount.Or(Global.AdditionalFlyThingCount).Register(() =>
             {
-				CreateBalls();
-                        
+				EnsureBallCount();
             }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-			CreateBalls();
+			EnsureBallCount();
+		}
+
+		private void Update()
+		{
+			if (Time.unscaledTime < _nextEnsureTime) return;
+
+			_nextEnsureTime = Time.unscaledTime + EnsureIntervalSeconds;
+			EnsureBallCount();
+		}
+
+		private void EnsureBallCount()
+		{
+			for (var i = _mBasketBalls.Count - 1; i >= 0; i--)
+			{
+				var ball = _mBasketBalls[i];
+				if (!ball || !ball.gameObject.activeInHierarchy)
+				{
+					_mBasketBalls.RemoveAt(i);
+				}
+			}
+
+			var targetCount = Mathf.Max(0, Global.BasketBallCount.Value + Global.AdditionalFlyThingCount.Value);
+			var needCreate = targetCount - _mBasketBalls.Count;
+
+			for (var i = 0; i < needCreate; i++)
+			{
+				CreateBall();
+			}
+		}
+
+		private void CreateBall()
+		{
+			var ball = Ball.Instantiate()
+				.SyncPosition2DFrom(this)
+				.Show();
+
+			if (ball)
+			{
+				_mBasketBalls.Add(ball);
+			}
 		}
 	}
 }

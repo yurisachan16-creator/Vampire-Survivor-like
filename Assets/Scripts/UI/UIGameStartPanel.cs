@@ -17,6 +17,27 @@ namespace VampireSurvivorLike
 			mData = uiData as UIGameStartPanelData ?? new UIGameStartPanelData();
 			// please add init code here
 			Time.timeScale = 1.0f;
+			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
+
+			var startLabel = BtnStartGame ? BtnStartGame.GetComponentInChildren<Text>(true) : null;
+			if (startLabel) FontManager.Register(startLabel);
+			var settingsLabel = BtnSettingsGame ? BtnSettingsGame.GetComponentInChildren<Text>(true) : null;
+			if (settingsLabel) FontManager.Register(settingsLabel);
+			var achievementLabel = BtnAchievement ? BtnAchievement.GetComponentInChildren<Text>(true) : null;
+			if (achievementLabel) FontManager.Register(achievementLabel);
+			var coinUpgradeLabel = BtnCoinUpgrade ? BtnCoinUpgrade.GetComponentInChildren<Text>(true) : null;
+			if (coinUpgradeLabel) FontManager.Register(coinUpgradeLabel);
+
+			System.Action refreshUiText = () =>
+			{
+				if (!LocalizationManager.IsReady) return;
+				if (startLabel) startLabel.text = LocalizationManager.T("ui.start.start_game");
+				if (settingsLabel) settingsLabel.text = LocalizationManager.T("ui.start.settings");
+				if (achievementLabel) achievementLabel.text = LocalizationManager.T("ui.start.achievement");
+				if (coinUpgradeLabel) coinUpgradeLabel.text = LocalizationManager.T("ui.start.coin_upgrade");
+			};
+			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
+			refreshUiText();
 
 			BtnStartGame.onClick.AddListener(() =>
 			{
@@ -24,6 +45,7 @@ namespace VampireSurvivorLike
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				//开始游戏
 				Global.ResetData();
+				GameSettings.CaptureRunDifficulty();
 				this.CloseSelf();
 				SceneManager.LoadScene("Game");
 
@@ -58,8 +80,7 @@ namespace VampireSurvivorLike
 	
 		private void Update()
 		{
-			// ESC 键打开设置面板
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (PlatformInput.GetBackDown())
 			{
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
 				UIKit.OpenPanel<UIGameSettingsPanel>(new UIGameSettingsPanelData { IsFromGame = false });

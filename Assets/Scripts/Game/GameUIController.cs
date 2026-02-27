@@ -16,6 +16,9 @@ namespace VampireSurvivorLike
 				yield return WebGLPreloader.PreloadAllAssets();
 			}
 			#endif
+
+			yield return GameSettings.LoadDifficultyConfigAsync();
+			GameSettings.CaptureRunDifficultyIfNeeded();
 			
 			UIKit.OpenPanel<UIGamePanel>();
 			yield break;
@@ -23,32 +26,10 @@ namespace VampireSurvivorLike
 
 		private void Update()
 		{
-			// ESC 键打开/关闭设置面板（游戏中需要暂停）
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (PlatformInput.GetBackDown())
 			{
-				ToggleSettingsPanel();
+				GameStartController.ToggleSettingsPanel(true);
 			}
 		}
-
-		/// <summary>
-		/// 切换设置面板显示状态（游戏中打开会暂停游戏）
-		/// </summary>
-		private void ToggleSettingsPanel()
-		{
-			var settingsPanel = UIKit.GetPanel<UIGameSettingsPanel>();
-			if (settingsPanel != null && settingsPanel.State == PanelState.Opening)
-			{
-				UIKit.ClosePanel<UIGameSettingsPanel>();
-			}
-			else
-			{
-				UIKit.OpenPanel<UIGameSettingsPanel>(new UIGameSettingsPanelData { IsFromGame = true });
-			}
-		}
-
-        void OnDestroy()
-        {
-			UIKit.ClosePanel<UIGamePanel>();
-        }
     }
 }

@@ -1,0 +1,17 @@
+key,value
+ability.simple_sword.name,剣
+ability.simple_sword.desc,最も近い敵を斬る
+ability.simple_knife.name,ナイフ
+ability.simple_knife.desc,最も近い敵にナイフを投げる
+ability.rotate_sword.name,ガード剣
+ability.rotate_sword.desc,キャラクターの周りを回転する剣
+ability.basket_ball.name,バスケットボール
+ability.basket_ball.desc,跳ね返って敵を攻撃するボール
+ability.bomb.name,爆弾
+ability.bomb.desc,爆発して周囲の敵にダメージ
+ability.simple_axe.name,銅の剣
+ability.simple_axe.desc,上に投げて放物線で落下する剣
+ability.magic_wand.name,魔法の杖
+ability.magic_wand.desc,最も近い敵へ自動で魔弾を発射
+ability.simple_bow.name,弓
+ability.simple_bow.desc,高速で貫通する矢を放つ

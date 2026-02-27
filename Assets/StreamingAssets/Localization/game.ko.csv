@@ -1,0 +1,11 @@
+key,value
+game.ui.enemy_count,적 수:{0}
+game.ui.wave,웨이브: {0}/{1}
+game.ui.wait_next_wave,다음 웨이브 대기 중...
+game.ui.wave_remaining,{0} 남은 시간: {1}s
+game.ui.time,시간:{0}
+game.ui.level,레벨:{0}
+game.ui.coin,코인:{0}
+game.treasure.heal_1,HP 1 회복
+game.treasure.add_coin_50,코인 50 획득
+game.treasure.paired_content,<b>{0}</b>\n{1}

@@ -1,0 +1,44 @@
+fileFormatVersion: 2
+guid: 8a0f4ec0fa814ad4aa21ab3f97f8a6c9
+SpriteAtlasImporter:
+  externalObjects: {}
+  textureSettings:
+    serializedVersion: 2
+    anisoLevel: 1
+    compressionQuality: 50
+    maxTextureSize: 2048
+    textureCompression: 1
+    filterMode: 0
+    generateMipMaps: 0
+    readable: 0
+    crunchedCompression: 0
+    sRGB: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  packingSettings:
+    serializedVersion: 2
+    padding: 2
+    blockOffset: 1
+    allowAlphaSplitting: 0
+    enableRotation: 1
+    enableTightPacking: 1
+    enableAlphaDilation: 0
+  secondaryTextureSettings: {}
+  variantMultiplier: 1
+  bindAsDefault: 0
+  userData: 
+  assetBundleName: enemy_spriteatlasv2
+  assetBundleVariant: 
+

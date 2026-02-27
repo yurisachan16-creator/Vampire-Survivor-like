@@ -1,63 +1,56 @@
 using UnityEngine;
 using QFramework;
+using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
 	public partial class SimpleAxe : ViewController
 	{
+		private float _mCurrentSecond = 0f;
+		private const float DespawnAbovePlayerDistance = 15f;
+
 		void Start()
 		{
-			// Code Here
+			if (Axe)
+			{
+				Axe.Hide();
+			}
 		}
-
-		private float _mCurrentSecond=0;
 
         void Update()
         {
-            _mCurrentSecond+=Time.deltaTime;
+            _mCurrentSecond += Time.deltaTime;
+            var cooldownReduction = Mathf.Clamp(Global.CooldownReduction.Value, 0f, 0.75f);
+            var attackInterval = Mathf.Max(0.08f, Global.SimpleAxeDuration.Value * (1f - cooldownReduction));
 
-            if (_mCurrentSecond >= 1.0f)
+            if (_mCurrentSecond >= attackInterval)
             {
-                Axe.Instantiate()
-				.Show()
-				.Position(this.Position())
-				.Self(self =>
-                {
-                    var rigidbody2D = self.GetComponent<Rigidbody2D>();
+				var projectileCount = Mathf.Max(1, Global.SimpleAxeCount.Value + Global.AdditionalFlyThingCount.Value);
+				var superAxe = Global.SuperAxe.Value;
+				var damage = Global.SimpleAxeDamage.Value * (superAxe ? 2f : 1f);
+				var maxPierce = superAxe ? int.MaxValue : Mathf.Max(1, Global.SimpleAxePierce.Value);
 
-					var randomX = RandomUtility.Choose(-8,-5,-3,3,5,8);
-					var randomY = RandomUtility.Choose(3,5,8);
-					rigidbody2D.velocity = new Vector2(randomX, randomY);
+				if (SfxThrottle.CanPlay(Sfx.KNIFE))
+				{
+					AudioKit.PlaySound(Sfx.KNIFE);
+				}
 
-                    self.OnTriggerEnter2DEvent(collider=>
-                    {
-						var hitHurtBox = collider.GetComponent<HitHurtBox>();		
+				for (var i = 0; i < projectileCount; i++)
+				{
+					var go = ObjectPoolSystem.Spawn(Axe.gameObject, null, true);
+					if (!go) continue;
 
-						if (hitHurtBox)
-                		{
-							if(hitHurtBox.Owner.CompareTag("Enemy"))
-							{
-								hitHurtBox.Owner.GetComponent<Enemy>().Hurt(2);
-							}
-                		}
+					go.transform.position = this.Position();
+					go.transform.localScale = Vector3.one * (superAxe ? 1.35f : 1.2f);
+					var randomX = RandomUtility.Choose(-6, -4, -2, 2, 4, 6);
+					var randomY = RandomUtility.Choose(8, 10, 12);
+					var projectile = go.GetComponent<PooledAxeProjectile>();
+					if (!projectile) projectile = go.AddComponent<PooledAxeProjectile>();
 
-                    }).UnRegisterWhenGameObjectDestroyed(gameObject);
+					projectile.Configure(new Vector2(randomX, randomY), damage, DespawnAbovePlayerDistance, maxPierce, superAxe);
+				}
 
-					//定时检测是否超出屏幕上方，超出则销毁
-                    ActionKit.OnUpdate.Register(() =>
-                    {
-                        if (Player.Default)
-                        {
-                            if(Player.Default.Position().y - self.Position().y > 15)
-							{
-								self.DestroyGameObjGracefully();
-							}
-                        }
-                        
-                    }).UnRegisterWhenGameObjectDestroyed(self);
-                });
-
-				_mCurrentSecond=0;
+				_mCurrentSecond = 0f;
             }
         }
     }

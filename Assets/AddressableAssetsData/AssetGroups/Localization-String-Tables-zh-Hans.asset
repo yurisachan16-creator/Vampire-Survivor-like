@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-zh-Hans
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-String-Tables-zh-Hans
+  m_Data:
+    m_SerializedData: []
+  m_GUID: a305680216aa83c41bd2c581390c5fea
+  m_SerializeEntries:
+  - m_GUID: 5894aaa1f0e45da469a185b5439c8e65
+    m_Address: game_zh-Hans
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-Hans
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 89c275b1b843628469d064628a81a1fe
+    m_Address: core_zh-Hans
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-Hans
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2ef08e2cd6b2fa4b9f1316797c90cd6
+    m_Address: ability_zh-Hans
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-Hans
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bfc47c08915e9e445894a905b72aa429
+    m_Address: upgrade_zh-Hans
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-Hans
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: d3eda64d84e086a46bc6b7c5d0ae18e5, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c7bb7d176d8c85b478ae280fc1f87ca3, type: 2}
+    - {fileID: 11400000, guid: ae30732f687eeb544a8af568e196296d, type: 2}

@@ -1,11 +1,17 @@
 using UnityEngine;
 using QFramework;
+using UnityEngine.U2D;
 
 namespace VampireSurvivorLike
 {
 	public partial class PowerUpManager : ViewController
 	{
 		public static PowerUpManager Default { get; private set; }
+        private CircleCollider2D _wineTemplate;
+        private CircleCollider2D _lemonBuffTemplate;
+        private CircleCollider2D _cherryTemplate;
+        private ResLoader _resLoader;
+        private SpriteAtlas _iconAtlas;
 
         private static void PrepareSceneTemplate(Object template)
         {
@@ -37,6 +43,8 @@ namespace VampireSurvivorLike
         void Awake()
         {
             Default = this;
+            _resLoader = ResLoader.Allocate();
+            _iconAtlas = _resLoader.LoadSync<SpriteAtlas>("icon");
 
             // 确保道具模板不会在运行时被误吃掉/销毁
             PrepareSceneTemplate(Exp);
@@ -46,12 +54,79 @@ namespace VampireSurvivorLike
             PrepareSceneTemplate(GetAllExp);
             PrepareSceneTemplate(TreasureChest);
             PrepareSceneTemplate(SuperBomb);
+
+            PrepareSceneTemplate(EnsureTemplate<Wine>(ref _wineTemplate, "WineTemplate", "rpgItems_32"));
+            PrepareSceneTemplate(EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", "rpgItems_19"));
+            PrepareSceneTemplate(EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", "rpgItems_11"));
+        }
+
+        private CircleCollider2D EnsureTemplate<T>(ref CircleCollider2D cache, string templateName, string spriteName) where T : PowerUp
+        {
+            if (cache) return cache;
+            if (!RecoverHP) return null;
+
+            var templateGo = Object.Instantiate(RecoverHP.gameObject, transform);
+            templateGo.name = templateName;
+
+            var recoverHp = templateGo.GetComponent<RecoverHP>();
+            if (recoverHp) recoverHp.enabled = false;
+
+            if (!templateGo.GetComponent<T>())
+            {
+                templateGo.AddComponent<T>();
+            }
+
+            var sr = templateGo.GetComponent<SpriteRenderer>();
+            if (sr && _iconAtlas)
+            {
+                var sprite = _iconAtlas.GetSprite(spriteName);
+                if (sprite) sr.sprite = sprite;
+            }
+
+            cache = templateGo.GetComponent<CircleCollider2D>();
+            return cache;
+        }
+
+        public void SpawnWine(Vector3 worldPosition)
+        {
+            var template = EnsureTemplate<Wine>(ref _wineTemplate, "WineTemplate", "rpgItems_32");
+            if (!template) return;
+
+            template.Instantiate()
+                .Position(worldPosition)
+                .Show();
+        }
+
+        public void SpawnLemonBuff(Vector3 worldPosition)
+        {
+            var template = EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", "rpgItems_19");
+            if (!template) return;
+
+            template.Instantiate()
+                .Position(worldPosition)
+                .Show();
+        }
+
+        public void SpawnCherry(Vector3 worldPosition)
+        {
+            var template = EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", "rpgItems_11");
+            if (!template) return;
+
+            template.Instantiate()
+                .Position(worldPosition)
+                .Show();
         }
 
         void OnDestroy()
         {
             if (Default == this)
 				Default = null;
+
+            if (_resLoader != null)
+            {
+                _resLoader.Recycle2Cache();
+                _resLoader = null;
+            }
         }
     }
 }

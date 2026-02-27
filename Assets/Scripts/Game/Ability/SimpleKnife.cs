@@ -1,12 +1,15 @@
 using UnityEngine;
 using QFramework;
-using System.Linq;
 using QAssetBundle;
 
 namespace VampireSurvivorLike
 {
 	public partial class SimpleKnife : ViewController
 	{
+		private static readonly System.Collections.Generic.List<Transform> TargetsBuffer = new System.Collections.Generic.List<Transform>(512);
+		private const float TargetSearchRadius = 25f;
+		private const float KnifeSpeed = 10f;
+		private const float KnifeMaxDistanceFromPlayer = 20f;
 		
 
 		private float _mCurrentSeconds = 0;
@@ -16,19 +19,23 @@ namespace VampireSurvivorLike
         void Update()
         {
             _mCurrentSeconds += Time.deltaTime;
+			var cooldownReduction = Mathf.Clamp(Global.CooldownReduction.Value, 0f, 0.75f);
+			var attackInterval = Mathf.Max(0.08f, Global.SimpleKnifeDuration.Value * (1f - cooldownReduction));
 
 			//每隔一段时间发射一把飞刀
-            if (_mCurrentSeconds >= Global.SimpleKnifeDuration.Value)
+            if (_mCurrentSeconds >= attackInterval)
             {
                 _mCurrentSeconds = 0;
 
-				var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude,FindObjectsSortMode.None)
-								.OrderBy(enemy=>Player.Default.Distance2D(enemy))
-									.Take(Global.SimpleKnifeCount.Value + Global.AdditionalFlyThingCount.Value);
+				if (!Player.Default) return;
+
+				var targetCount = Global.SimpleKnifeCount.Value + Global.AdditionalFlyThingCount.Value;
+				var searchRadius = TargetSearchRadius * Mathf.Max(1f, Global.AreaMultiplier.Value);
+				EnemySpatialIndex.GetNearestTargets(Player.Default.transform.position, searchRadius, targetCount, TargetsBuffer);
 
 				
 				var i = 0;
-				foreach(var enemy in enemies)
+				foreach(var targetTransform in TargetsBuffer)
                 {
 					//计时器，游戏中最多同时有4个小刀的声音
                     if (i < 4)
@@ -39,60 +46,16 @@ namespace VampireSurvivorLike
                         
                     }		
 
-                    if (enemy)
+                    if (targetTransform)
 					{
-						Knife.Instantiate()
-						.Position(this.Position())
-						.Show()
-						.Self(self =>
-						{
-							
-							var selfCache = self;
-							var direction = enemy.NormalizedDirection2DFrom(Player.Default);
-							self.transform.up = direction;
+						var go = ObjectPoolSystem.Spawn(Knife.gameObject, null, true);
+						if (!go) continue;
+						go.transform.position = this.Position();
 
-							var rigidbody2D = self.GetComponent<Rigidbody2D>();
-
-							rigidbody2D.velocity = enemy.NormalizedDirection2DFrom(Player.Default) * 10;
-							var attackCount = 0;
-
-							self.OnTriggerEnter2DEvent(collider=>
-							{
-								
-								var hitHurtBox = collider.GetComponent<HitHurtBox>();		
-
-								if (hitHurtBox)
-								{
-									if(hitHurtBox.Owner.CompareTag("Enemy"))
-									{
-										//hurtBox.Owner.GetComponent<Enemy>().Hurt(Global.SimpleKnifeDamage.Value);
-										var damageTimes=Global.SuperKnife.Value ? Random.Range(2,3+1) : 1;
-										DamageSystem.CalculateDamage(Global.SimpleKnifeDamage.Value * damageTimes,
-											hitHurtBox.Owner.GetComponent<Enemy>());
-										attackCount++;
-
-										if(attackCount>=Global.SimpleKnifeAttackCount.Value)
-                                        {
-                                            selfCache.DestroyGameObjGracefully();
-                                        }
-										
-									}
-								}
-
-							}).UnRegisterWhenGameObjectDestroyed(self);
-
-							ActionKit.OnUpdate.Register(() =>
-							{
-								if (Player.Default)
-								{
-									if(Player.Default.Distance2D(selfCache) > 20)
-									{
-										self.DestroyGameObjGracefully();
-									}
-								}
-							}).UnRegisterWhenGameObjectDestroyed(self);
-
-							});
+						var direction = ((Vector2)targetTransform.position - (Vector2)Player.Default.transform.position).normalized;
+						var projectile = go.GetComponent<PooledKnifeProjectile>();
+						if (!projectile) projectile = go.AddComponent<PooledKnifeProjectile>();
+						projectile.Configure(direction, KnifeSpeed, Global.SimpleKnifeDamage.Value, Global.SuperKnife.Value, Global.SimpleKnifeAttackCount.Value, KnifeMaxDistanceFromPlayer);
 					}
                 } 
             }

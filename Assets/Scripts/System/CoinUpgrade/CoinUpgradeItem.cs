@@ -16,10 +16,12 @@ namespace VampireSurvivorLike
         }
         public bool UpgradeFinish{get;set;}=false;
         public string Key { get; private set; } //新增Key属性
-        public string Description { get; private set; } //新增描述属性
+        public string Description => Resolve(_descriptionKey, _descriptionLiteral);
         public int Price { get; private set; }  //新增价格属性
         private Action<CoinUpgradeItem> _mOnUpgrade; //升级时的回调
         private Func<CoinUpgradeItem,bool> _mCondition; //升级条件
+        private string _descriptionLiteral;
+        private string _descriptionKey;
 
         public void Upgrade()
         {
@@ -39,7 +41,7 @@ namespace VampireSurvivorLike
         {
             if(_mCondition!=null)
             {
-                return UpgradeFinish && _mCondition.Invoke(this);
+                return !UpgradeFinish && _mCondition.Invoke(this);
             }
             return !UpgradeFinish;
         }
@@ -52,7 +54,14 @@ namespace VampireSurvivorLike
 
         public CoinUpgradeItem WithDescription(string description)
         {
-            Description = description;
+            _descriptionLiteral = description;
+            _descriptionKey = null;
+            return this;
+        }
+
+        public CoinUpgradeItem WithDescriptionKey(string descriptionKey)
+        {
+            _descriptionKey = descriptionKey;
             return this;
         }
 
@@ -74,6 +83,16 @@ namespace VampireSurvivorLike
             return this;
         }
 
-        
+        private static string Resolve(string key, string fallbackLiteral)
+        {
+            if (!string.IsNullOrWhiteSpace(key))
+            {
+                if (LocalizationManager.TryGet(key, out var value)) return value;
+                if (!string.IsNullOrWhiteSpace(fallbackLiteral)) return fallbackLiteral;
+                return key;
+            }
+
+            return fallbackLiteral ?? string.Empty;
+        }
     }
 }

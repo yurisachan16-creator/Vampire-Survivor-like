@@ -6,7 +6,7 @@ SpriteAtlasAsset:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 
+  m_Name: Icon
   serializedVersion: 2
   m_MasterAtlas: {fileID: 0}
   m_ImporterData:
@@ -30,4 +30,5 @@ SpriteAtlasAsset:
     - {fileID: 2800000, guid: 3b7c87c3a78c5914abd703dc14abad95, type: 3}
     - {fileID: 2800000, guid: 500c77c5a0329494bb5a9d556ef10a81, type: 3}
     - {fileID: 2800000, guid: 9508dee22ad0319468a34358ac0185bc, type: 3}
+    - {fileID: 2800000, guid: 99a889dbb3ebeb44d991f9fb6ad5f0a0, type: 3}
   m_IsVariant: 0

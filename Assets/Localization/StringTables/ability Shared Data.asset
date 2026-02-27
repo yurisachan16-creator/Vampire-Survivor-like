@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ability Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: ability
+  m_TableCollectionNameGuidString: 57a7bddfff4d5bc4d8435f6d6d064e75
+  m_Entries:
+  - m_Id: 676401152
+    m_Key: ability.simple_sword.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 709955584
+    m_Key: ability.simple_sword.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344192
+    m_Key: ability.simple_knife.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344193
+    m_Key: ability.simple_knife.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344194
+    m_Key: ability.rotate_sword.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344195
+    m_Key: ability.rotate_sword.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344196
+    m_Key: ability.basket_ball.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344197
+    m_Key: ability.basket_ball.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344198
+    m_Key: ability.bomb.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 718344199
+    m_Key: ability.bomb.desc
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 731117132829949955
+  references:
+    version: 2
+    RefIds:
+    - rid: 731117132829949955
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1770483171734
