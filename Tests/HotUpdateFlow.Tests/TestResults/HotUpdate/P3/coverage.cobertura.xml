@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.9636" branch-rate="0.8946999999999999" version="1.9" timestamp="1772300341" lines-covered="106" lines-valid="110" branches-covered="34" branches-valid="38">
+  <sources>
+    <source>D:\unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P3\</source>
+  </sources>
+  <packages>
+    <package name="HotUpdateFlow.Core" line-rate="0.9636" branch-rate="0.8946999999999999" complexity="53">
+      <classes>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitPolicy" filename="AssemblySplitPolicy.cs" line-rate="1" branch-rate="1" complexity="6">
+          <methods>
+            <method name="get_RequiredAsmdefPaths" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="20" branch="False" />
+              </lines>
+            </method>
+            <method name="get_RequiredAsmdefReferences" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="24" branch="False" />
+              </lines>
+            </method>
+            <method name="get_LegacyScriptDirectories" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="20" branch="False" />
+              </lines>
+            </method>
+            <method name="get_HotUpdateRootDirectory" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="13" branch="False" />
+              </lines>
+            </method>
+            <method name="CreateDefault" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="7" branch="False" />
+                <line number="21" hits="7" branch="False" />
+                <line number="22" hits="7" branch="False" />
+                <line number="23" hits="7" branch="False" />
+                <line number="24" hits="7" branch="False" />
+                <line number="25" hits="7" branch="False" />
+                <line number="26" hits="7" branch="False" />
+                <line number="28" hits="7" branch="False" />
+                <line number="29" hits="7" branch="False" />
+                <line number="30" hits="7" branch="False" />
+                <line number="31" hits="7" branch="False" />
+                <line number="32" hits="7" branch="False" />
+                <line number="33" hits="7" branch="False" />
+                <line number="34" hits="7" branch="False" />
+                <line number="35" hits="7" branch="False" />
+                <line number="36" hits="7" branch="False" />
+                <line number="37" hits="7" branch="False" />
+                <line number="38" hits="7" branch="False" />
+                <line number="39" hits="7" branch="False" />
+                <line number="40" hits="7" branch="False" />
+                <line number="42" hits="7" branch="False" />
+                <line number="43" hits="7" branch="False" />
+                <line number="44" hits="7" branch="False" />
+                <line number="45" hits="7" branch="False" />
+                <line number="46" hits="7" branch="False" />
+                <line number="48" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="7" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="8" hits="20" branch="False" />
+            <line number="10" hits="24" branch="False" />
+            <line number="13" hits="20" branch="False" />
+            <line number="15" hits="13" branch="False" />
+            <line number="19" hits="7" branch="False" />
+            <line number="21" hits="7" branch="False" />
+            <line number="22" hits="7" branch="False" />
+            <line number="23" hits="7" branch="False" />
+            <line number="24" hits="7" branch="False" />
+            <line number="25" hits="7" branch="False" />
+            <line number="26" hits="7" branch="False" />
+            <line number="28" hits="7" branch="False" />
+            <line number="29" hits="7" branch="False" />
+            <line number="30" hits="7" branch="False" />
+            <line number="31" hits="7" branch="False" />
+            <line number="32" hits="7" branch="False" />
+            <line number="33" hits="7" branch="False" />
+            <line number="34" hits="7" branch="False" />
+            <line number="35" hits="7" branch="False" />
+            <line number="36" hits="7" branch="False" />
+            <line number="37" hits="7" branch="False" />
+            <line number="38" hits="7" branch="False" />
+            <line number="39" hits="7" branch="False" />
+            <line number="40" hits="7" branch="False" />
+            <line number="42" hits="7" branch="False" />
+            <line number="43" hits="7" branch="False" />
+            <line number="44" hits="7" branch="False" />
+            <line number="45" hits="7" branch="False" />
+            <line number="46" hits="7" branch="False" />
+            <line number="48" hits="7" branch="False" />
+            <line number="11" hits="7" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitViolation" filename="AssemblySplitPolicy.cs" line-rate="0.8" branch-rate="0.5" complexity="6">
+          <methods>
+            <method name="get_Code" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="60" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Message" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="61" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,System.String)" line-rate="1" branch-rate="0.5" complexity="4">
+              <lines>
+                <line number="56" hits="11" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="3" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="57" hits="11" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="19" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="58" hits="11" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="60" hits="5" branch="False" />
+            <line number="61" hits="0" branch="False" />
+            <line number="56" hits="11" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="3" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="57" hits="11" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="19" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="58" hits="11" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitValidationResult" filename="AssemblySplitPolicy.cs" line-rate="1" branch-rate="1" complexity="4">
+          <methods>
+            <method name="get_IsValid" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="68" hits="6" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Violations" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="70" hits="6" branch="False" />
+              </lines>
+            </method>
+            <method name="AddViolation" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="74" hits="11" branch="False" />
+                <line number="75" hits="11" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="66" hits="6" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="68" hits="6" branch="False" />
+            <line number="70" hits="6" branch="False" />
+            <line number="74" hits="11" branch="False" />
+            <line number="75" hits="11" branch="False" />
+            <line number="66" hits="6" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitValidator" filename="AssemblySplitValidator.cs" line-rate="0.9565" branch-rate="0.9411" complexity="37">
+          <methods>
+            <method name="Validate" signature="(System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name="Validate" signature="(System.String,VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitPolicy)" line-rate="1" branch-rate="1" complexity="4">
+              <lines>
+                <line number="18" hits="8" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="6" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="20" hits="1" branch="False" />
+                <line number="23" hits="7" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="25" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="25" hits="1" branch="False" />
+                <line number="28" hits="6" branch="False" />
+                <line number="30" hits="6" branch="False" />
+                <line number="31" hits="6" branch="False" />
+                <line number="32" hits="6" branch="False" />
+                <line number="34" hits="6" branch="False" />
+              </lines>
+            </method>
+            <method name="ValidateAsmdefs" signature="(System.String,VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitPolicy,VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitValidationResult)" line-rate="1" branch-rate="1" complexity="10">
+              <lines>
+                <line number="39" hits="48" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="282" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="41" hits="18" branch="False" />
+                <line number="42" hits="18" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="39" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="44" hits="1" branch="False" />
+                <line number="45" hits="1" branch="False" />
+                <line number="48" hits="17" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="82" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="56" hits="5" branch="False" />
+                <line number="57" hits="4" branch="False" />
+                <line number="58" hits="1" branch="False" />
+                <line number="60" hits="1" branch="False" />
+                <line number="61" hits="1" branch="False" />
+                <line number="62" hits="1" branch="False" />
+                <line number="63" hits="1" branch="False" />
+                <line number="66" hits="72" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="257" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="68" hits="32" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="167" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="70" hits="7" branch="False" />
+                <line number="71" hits="7" branch="False" />
+                <line number="72" hits="7" branch="False" />
+                <line number="76" hits="6" branch="False" />
+              </lines>
+            </method>
+            <method name="ValidateLegacyDirectories" signature="(System.String,VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitPolicy,VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitValidationResult)" line-rate="1" branch-rate="1" complexity="6">
+              <lines>
+                <line number="80" hits="36" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="179" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="82" hits="12" branch="False" />
+                <line number="83" hits="12" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="39" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="88" hits="12" branch="False" />
+                <line number="89" hits="1" branch="False" />
+                <line number="90" hits="12" branch="False" />
+                <line number="92" hits="26" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="154" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="94" hits="1" branch="False" />
+                <line number="95" hits="1" branch="False" />
+                <line number="96" hits="1" branch="False" />
+                <line number="97" hits="1" branch="False" />
+                <line number="100" hits="6" branch="False" />
+              </lines>
+            </method>
+            <method name="ValidateDesignerPairs" signature="(System.String,VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitPolicy,VampireSurvivorLike.HotUpdateFlow.P3.AssemblySplitValidationResult)" line-rate="0.8332999999999999" branch-rate="0.8332999999999999" complexity="6">
+              <lines>
+                <line number="104" hits="6" branch="False" />
+                <line number="105" hits="6" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="19" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="107" hits="0" branch="False" />
+                <line number="108" hits="0" branch="False" />
+                <line number="111" hits="6" branch="False" />
+                <line number="112" hits="24" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="134" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="114" hits="6" branch="False" />
+                <line number="115" hits="6" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="98" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="120" hits="1" branch="False" />
+                <line number="121" hits="1" branch="False" />
+                <line number="122" hits="1" branch="False" />
+                <line number="124" hits="6" branch="False" />
+              </lines>
+            </method>
+            <method name="ReadAsmdefReferences" signature="(System.String)" line-rate="0.9166" branch-rate="0.875" complexity="8">
+              <lines>
+                <line number="128" hits="5" branch="False" />
+                <line number="129" hits="5" branch="False" />
+                <line number="131" hits="4" branch="False" />
+                <line number="132" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="57" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="134" hits="0" branch="False" />
+                <line number="137" hits="58" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="142" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="139" hits="25" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="101" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="144" hits="25" branch="False" />
+                <line number="145" hits="25" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="119" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="147" hits="25" branch="False" />
+                <line number="151" hits="4" branch="False" />
+                <line number="152" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="CombinePath" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="156" hits="36" branch="False" />
+                <line number="157" hits="36" branch="False" />
+              </lines>
+            </method>
+            <method name="ToRelativePath" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="162" hits="2" branch="False" />
+                <line number="163" hits="2" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="13" hits="7" branch="False" />
+            <line number="18" hits="8" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="6" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="20" hits="1" branch="False" />
+            <line number="23" hits="7" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="25" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="25" hits="1" branch="False" />
+            <line number="28" hits="6" branch="False" />
+            <line number="30" hits="6" branch="False" />
+            <line number="31" hits="6" branch="False" />
+            <line number="32" hits="6" branch="False" />
+            <line number="34" hits="6" branch="False" />
+            <line number="39" hits="48" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="282" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="41" hits="18" branch="False" />
+            <line number="42" hits="18" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="39" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="44" hits="1" branch="False" />
+            <line number="45" hits="1" branch="False" />
+            <line number="48" hits="17" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="82" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="56" hits="5" branch="False" />
+            <line number="57" hits="4" branch="False" />
+            <line number="58" hits="1" branch="False" />
+            <line number="60" hits="1" branch="False" />
+            <line number="61" hits="1" branch="False" />
+            <line number="62" hits="1" branch="False" />
+            <line number="63" hits="1" branch="False" />
+            <line number="66" hits="72" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="257" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="68" hits="32" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="167" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="70" hits="7" branch="False" />
+            <line number="71" hits="7" branch="False" />
+            <line number="72" hits="7" branch="False" />
+            <line number="76" hits="6" branch="False" />
+            <line number="80" hits="36" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="179" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="82" hits="12" branch="False" />
+            <line number="83" hits="12" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="39" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="88" hits="12" branch="False" />
+            <line number="89" hits="1" branch="False" />
+            <line number="90" hits="12" branch="False" />
+            <line number="92" hits="26" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="154" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="94" hits="1" branch="False" />
+            <line number="95" hits="1" branch="False" />
+            <line number="96" hits="1" branch="False" />
+            <line number="97" hits="1" branch="False" />
+            <line number="100" hits="6" branch="False" />
+            <line number="104" hits="6" branch="False" />
+            <line number="105" hits="6" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="19" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="107" hits="0" branch="False" />
+            <line number="108" hits="0" branch="False" />
+            <line number="111" hits="6" branch="False" />
+            <line number="112" hits="24" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="134" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="114" hits="6" branch="False" />
+            <line number="115" hits="6" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="98" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="120" hits="1" branch="False" />
+            <line number="121" hits="1" branch="False" />
+            <line number="122" hits="1" branch="False" />
+            <line number="124" hits="6" branch="False" />
+            <line number="128" hits="5" branch="False" />
+            <line number="129" hits="5" branch="False" />
+            <line number="131" hits="4" branch="False" />
+            <line number="132" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="57" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="134" hits="0" branch="False" />
+            <line number="137" hits="58" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="142" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="139" hits="25" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="101" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="144" hits="25" branch="False" />
+            <line number="145" hits="25" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="119" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="147" hits="25" branch="False" />
+            <line number="151" hits="4" branch="False" />
+            <line number="152" hits="4" branch="False" />
+            <line number="156" hits="36" branch="False" />
+            <line number="157" hits="36" branch="False" />
+            <line number="162" hits="2" branch="False" />
+            <line number="163" hits="2" branch="False" />
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

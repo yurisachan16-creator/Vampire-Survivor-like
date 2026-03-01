@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2073483071
+CRC: 2851570324
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -7,25 +7,25 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
     Info_1:
+      Name: "gamebg\u6F14\u827A\u4EBA_mp3"
+      Dependencies: {}
+    Info_2:
+      Name: fusion-pixel-12px-proportional-zh_hans_ttf
+      Dependencies: {}
+    Info_3:
       Name: uigamepasspanel_prefab
       Dependencies:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
-    Info_2:
-      Name: uigamepanel_prefab
-      Dependencies:
-        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
-    Info_3:
+    Info_4:
       Name: uigamestartpanel_prefab
       Dependencies:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
-    Info_4:
-      Name: "gamebg\u6F14\u827A\u4EBA_mp3"
-      Dependencies: {}
     Info_5:
-      Name: coin_wav
-      Dependencies: {}
+      Name: uigamepanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
     Info_6:
-      Name: hit_wav
+      Name: rpgitems_png
       Dependencies: {}
     Info_7:
       Name: sfx
@@ -35,15 +35,15 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: rpgitems_png
     Info_9:
-      Name: fusion-pixel-12px-proportional-zh_hans_ttf
+      Name: hit_wav
       Dependencies: {}
     Info_10:
       Name: uigamesettingspanel_prefab
       Dependencies:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
     Info_11:
-      Name: enemy_spriteatlasv2
+      Name: coin_wav
       Dependencies: {}
     Info_12:
-      Name: rpgitems_png
+      Name: enemy_spriteatlasv2
       Dependencies: {}

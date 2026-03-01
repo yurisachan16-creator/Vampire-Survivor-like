@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.9704999999999999" branch-rate="1" version="1.9" timestamp="1772300458" lines-covered="66" lines-valid="68" branches-covered="18" branches-valid="18">
+  <sources>
+    <source>D:\</source>
+  </sources>
+  <packages>
+    <package name="HotUpdateFlow.Core" line-rate="0.9704999999999999" branch-rate="1" complexity="32">
+      <classes>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P4.YooAssetBootstrapOptions" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P4\YooAssetIntegrationPlanner.cs" line-rate="1" branch-rate="1" complexity="5">
+          <methods>
+            <method name="get_PackageName" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="27" hits="23" branch="False" />
+              </lines>
+            </method>
+            <method name="get_TargetPlatform" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="28" hits="12" branch="False" />
+              </lines>
+            </method>
+            <method name="get_IsEditor" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="29" hits="8" branch="False" />
+              </lines>
+            </method>
+            <method name="get_HostServerUrl" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="30" hits="12" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FallbackHostServerUrl" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="31" hits="8" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="27" hits="23" branch="False" />
+            <line number="28" hits="12" branch="False" />
+            <line number="29" hits="8" branch="False" />
+            <line number="30" hits="12" branch="False" />
+            <line number="31" hits="8" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P4.BootstrapStep" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P4\YooAssetIntegrationPlanner.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="34" hits="18" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="34" hits="18" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P4.PreloadAssetItem" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P4\YooAssetIntegrationPlanner.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_BundleName" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="36" hits="20" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="36" hits="20" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P4.YooAssetBootstrapPlan" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P4\YooAssetIntegrationPlanner.cs" line-rate="0.9285" branch-rate="1" complexity="5">
+          <methods>
+            <method name="get_PlayMode" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="52" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_PackageName" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="53" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Steps" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="54" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Warnings" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="55" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(VampireSurvivorLike.HotUpdateFlow.P4.YooAssetPlayMode,System.String,System.Collections.Generic.IReadOnlyList`1&lt;VampireSurvivorLike.HotUpdateFlow.P4.BootstrapStep&gt;,System.Collections.Generic.IReadOnlyList`1&lt;System.String&gt;)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="40" hits="4" branch="False" />
+                <line number="41" hits="4" branch="False" />
+                <line number="42" hits="4" branch="False" />
+                <line number="43" hits="4" branch="False" />
+                <line number="44" hits="4" branch="False" />
+                <line number="46" hits="4" branch="False" />
+                <line number="47" hits="4" branch="False" />
+                <line number="48" hits="4" branch="False" />
+                <line number="49" hits="4" branch="False" />
+                <line number="50" hits="4" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="52" hits="4" branch="False" />
+            <line number="53" hits="0" branch="False" />
+            <line number="54" hits="4" branch="False" />
+            <line number="55" hits="3" branch="False" />
+            <line number="40" hits="4" branch="False" />
+            <line number="41" hits="4" branch="False" />
+            <line number="42" hits="4" branch="False" />
+            <line number="43" hits="4" branch="False" />
+            <line number="44" hits="4" branch="False" />
+            <line number="46" hits="4" branch="False" />
+            <line number="47" hits="4" branch="False" />
+            <line number="48" hits="4" branch="False" />
+            <line number="49" hits="4" branch="False" />
+            <line number="50" hits="4" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P4.YooAssetIntegrationPlanner" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P4\YooAssetIntegrationPlanner.cs" line-rate="0.9787" branch-rate="1" complexity="20">
+          <methods>
+            <method name="BuildBootstrapPlan" signature="(VampireSurvivorLike.HotUpdateFlow.P4.YooAssetBootstrapOptions)" line-rate="1" branch-rate="1" complexity="10">
+              <lines>
+                <line number="74" hits="6" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="1" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="76" hits="1" branch="False" />
+                <line number="79" hits="5" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="25" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="81" hits="1" branch="False" />
+                <line number="84" hits="4" branch="False" />
+                <line number="85" hits="4" branch="False" />
+                <line number="86" hits="4" branch="False" />
+                <line number="87" hits="4" branch="False" />
+                <line number="88" hits="4" branch="False" />
+                <line number="89" hits="4" branch="False" />
+                <line number="90" hits="4" branch="False" />
+                <line number="92" hits="4" branch="True" condition-coverage="100% (4/4)">
+                  <conditions>
+                    <condition number="143" type="switch" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="96" hits="1" branch="False" />
+                <line number="97" hits="1" branch="False" />
+                <line number="99" hits="2" branch="False" />
+                <line number="100" hits="2" branch="False" />
+                <line number="102" hits="1" branch="False" />
+                <line number="103" hits="1" branch="False" />
+                <line number="104" hits="1" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="275" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="106" hits="1" branch="False" />
+                <line number="111" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="BuildDefaultPreloadCatalog" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="116" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="ResolvePlayMode" signature="(VampireSurvivorLike.HotUpdateFlow.P4.YooAssetBootstrapOptions,System.Collections.Generic.ICollection`1&lt;System.String&gt;)" line-rate="1" branch-rate="1" complexity="6">
+              <lines>
+                <line number="121" hits="4" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="6" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="123" hits="1" branch="False" />
+                <line number="126" hits="3" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="16" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="128" hits="1" branch="False" />
+                <line number="131" hits="2" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="31" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="133" hits="1" branch="False" />
+                <line number="134" hits="1" branch="False" />
+                <line number="137" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="ValidateCatalogHasNoDuplicates" signature="(System.String&amp;)" line-rate="0.8332999999999999" branch-rate="1" complexity="2">
+              <lines>
+                <line number="142" hits="1" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="125" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="143" hits="7" branch="False" />
+                <line number="144" hits="7" branch="False" />
+                <line number="145" hits="0" branch="False" />
+                <line number="146" hits="1" branch="False" />
+                <line number="148" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name=".cctor" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="60" hits="1" branch="False" />
+                <line number="61" hits="1" branch="False" />
+                <line number="62" hits="1" branch="False" />
+                <line number="63" hits="1" branch="False" />
+                <line number="64" hits="1" branch="False" />
+                <line number="65" hits="1" branch="False" />
+                <line number="66" hits="1" branch="False" />
+                <line number="67" hits="1" branch="False" />
+                <line number="68" hits="1" branch="False" />
+                <line number="69" hits="1" branch="False" />
+                <line number="70" hits="1" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="74" hits="6" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="1" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="76" hits="1" branch="False" />
+            <line number="79" hits="5" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="25" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="81" hits="1" branch="False" />
+            <line number="84" hits="4" branch="False" />
+            <line number="85" hits="4" branch="False" />
+            <line number="86" hits="4" branch="False" />
+            <line number="87" hits="4" branch="False" />
+            <line number="88" hits="4" branch="False" />
+            <line number="89" hits="4" branch="False" />
+            <line number="90" hits="4" branch="False" />
+            <line number="92" hits="4" branch="True" condition-coverage="100% (4/4)">
+              <conditions>
+                <condition number="143" type="switch" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="96" hits="1" branch="False" />
+            <line number="97" hits="1" branch="False" />
+            <line number="99" hits="2" branch="False" />
+            <line number="100" hits="2" branch="False" />
+            <line number="102" hits="1" branch="False" />
+            <line number="103" hits="1" branch="False" />
+            <line number="104" hits="1" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="275" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="106" hits="1" branch="False" />
+            <line number="111" hits="4" branch="False" />
+            <line number="116" hits="1" branch="False" />
+            <line number="121" hits="4" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="6" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="123" hits="1" branch="False" />
+            <line number="126" hits="3" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="16" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="128" hits="1" branch="False" />
+            <line number="131" hits="2" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="31" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="133" hits="1" branch="False" />
+            <line number="134" hits="1" branch="False" />
+            <line number="137" hits="1" branch="False" />
+            <line number="142" hits="1" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="125" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="143" hits="7" branch="False" />
+            <line number="144" hits="7" branch="False" />
+            <line number="145" hits="0" branch="False" />
+            <line number="146" hits="1" branch="False" />
+            <line number="148" hits="1" branch="False" />
+            <line number="60" hits="1" branch="False" />
+            <line number="61" hits="1" branch="False" />
+            <line number="62" hits="1" branch="False" />
+            <line number="63" hits="1" branch="False" />
+            <line number="64" hits="1" branch="False" />
+            <line number="65" hits="1" branch="False" />
+            <line number="66" hits="1" branch="False" />
+            <line number="67" hits="1" branch="False" />
+            <line number="68" hits="1" branch="False" />
+            <line number="69" hits="1" branch="False" />
+            <line number="70" hits="1" branch="False" />
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

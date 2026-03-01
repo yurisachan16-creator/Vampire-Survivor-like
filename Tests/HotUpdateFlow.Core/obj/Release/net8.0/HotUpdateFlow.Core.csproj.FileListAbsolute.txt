@@ -1,0 +1,12 @@
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\bin\Release\net8.0\HotUpdateFlow.Core.deps.json
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\bin\Release\net8.0\HotUpdateFlow.Core.dll
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\bin\Release\net8.0\HotUpdateFlow.Core.pdb
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\HotUpdateFlow.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\HotUpdateFlow.Core.AssemblyInfoInputs.cache
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\HotUpdateFlow.Core.AssemblyInfo.cs
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\HotUpdateFlow.Core.csproj.CoreCompileInputs.cache
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\HotUpdateFlow.Core.sourcelink.json
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\HotUpdateFlow.Core.dll
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\refint\HotUpdateFlow.Core.dll
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\HotUpdateFlow.Core.pdb
+D:\unity\Vampire Survivor-like\Tests\HotUpdateFlow.Core\obj\Release\net8.0\ref\HotUpdateFlow.Core.dll

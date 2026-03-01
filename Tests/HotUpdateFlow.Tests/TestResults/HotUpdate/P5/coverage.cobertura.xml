@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.9115000000000001" branch-rate="0.7173" version="1.9" timestamp="1772300610" lines-covered="103" lines-valid="113" branches-covered="33" branches-valid="46">
+  <sources>
+    <source>D:\</source>
+  </sources>
+  <packages>
+    <package name="HotUpdateFlow.Core" line-rate="0.9115000000000001" branch-rate="0.7173" complexity="59">
+      <classes>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.HotUpdateVersionManifest" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="1" branch-rate="1" complexity="9">
+          <methods>
+            <method name="get_Version" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="33" hits="20" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FileHashByPath" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="34" hits="14" branch="False" />
+              </lines>
+            </method>
+            <method name="get_HotUpdateAssemblies" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="35" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,System.Collections.Generic.IDictionary`2&lt;System.String,System.String&gt;,System.Collections.Generic.IEnumerable`1&lt;System.String&gt;)" line-rate="1" branch-rate="1" complexity="6">
+              <lines>
+                <line number="13" hits="14" branch="False" />
+                <line number="14" hits="14" branch="False" />
+                <line number="15" hits="14" branch="False" />
+                <line number="16" hits="14" branch="False" />
+                <line number="18" hits="14" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="12" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="20" hits="1" branch="False" />
+                <line number="23" hits="13" branch="False" />
+                <line number="24" hits="13" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="45" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="25" hits="13" branch="False" />
+                <line number="26" hits="12" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="82" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="27" hits="2" branch="False" />
+                <line number="28" hits="2" branch="False" />
+                <line number="29" hits="12" branch="False" />
+                <line number="30" hits="12" branch="False" />
+                <line number="31" hits="11" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="33" hits="20" branch="False" />
+            <line number="34" hits="14" branch="False" />
+            <line number="35" hits="2" branch="False" />
+            <line number="13" hits="14" branch="False" />
+            <line number="14" hits="14" branch="False" />
+            <line number="15" hits="14" branch="False" />
+            <line number="16" hits="14" branch="False" />
+            <line number="18" hits="14" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="12" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="20" hits="1" branch="False" />
+            <line number="23" hits="13" branch="False" />
+            <line number="24" hits="13" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="45" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="25" hits="13" branch="False" />
+            <line number="26" hits="12" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="82" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="27" hits="2" branch="False" />
+            <line number="28" hits="2" branch="False" />
+            <line number="29" hits="12" branch="False" />
+            <line number="30" hits="12" branch="False" />
+            <line number="31" hits="11" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.PatchDownloadItem" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_RelativePath" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="38" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="38" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.HotUpdatePatchPlan" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="1" branch-rate="1" complexity="4">
+          <methods>
+            <method name="get_RequiresUpdate" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="52" hits="6" branch="False" />
+              </lines>
+            </method>
+            <method name="get_DownloadItems" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="53" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Reason" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="54" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Boolean,System.Collections.Generic.IReadOnlyList`1&lt;VampireSurvivorLike.HotUpdateFlow.P5.PatchDownloadItem&gt;,System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="42" hits="6" branch="False" />
+                <line number="43" hits="6" branch="False" />
+                <line number="44" hits="6" branch="False" />
+                <line number="45" hits="6" branch="False" />
+                <line number="47" hits="6" branch="False" />
+                <line number="48" hits="6" branch="False" />
+                <line number="49" hits="6" branch="False" />
+                <line number="50" hits="6" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="52" hits="6" branch="False" />
+            <line number="53" hits="7" branch="False" />
+            <line number="54" hits="4" branch="False" />
+            <line number="42" hits="6" branch="False" />
+            <line number="43" hits="6" branch="False" />
+            <line number="44" hits="6" branch="False" />
+            <line number="45" hits="6" branch="False" />
+            <line number="47" hits="6" branch="False" />
+            <line number="48" hits="6" branch="False" />
+            <line number="49" hits="6" branch="False" />
+            <line number="50" hits="6" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.HotUpdatePatchPlanner" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="0.7368000000000001" branch-rate="0.8125" complexity="16">
+          <methods>
+            <method name="BuildPlan" signature="(VampireSurvivorLike.HotUpdateFlow.P5.HotUpdateVersionManifest,VampireSurvivorLike.HotUpdateFlow.P5.HotUpdateVersionManifest)" line-rate="0.7368000000000001" branch-rate="0.8125" complexity="16">
+              <lines>
+                <line number="61" hits="6" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="1" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="63" hits="0" branch="False" />
+                <line number="66" hits="6" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="15" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="68" hits="0" branch="False" />
+                <line number="69" hits="0" branch="False" />
+                <line number="70" hits="0" branch="False" />
+                <line number="71" hits="0" branch="False" />
+                <line number="74" hits="6" branch="False" />
+                <line number="75" hits="28" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="179" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="77" hits="8" branch="True" condition-coverage="100% (4/4)">
+                  <conditions>
+                    <condition number="128" type="jump" coverage="100%" />
+                    <condition number="145" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="78" hits="8" branch="False" />
+                <line number="80" hits="6" branch="False" />
+                <line number="84" hits="6" branch="False" />
+                <line number="85" hits="6" branch="True" condition-coverage="100% (4/4)">
+                  <conditions>
+                    <condition number="218" type="jump" coverage="100%" />
+                    <condition number="226" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="87" hits="2" branch="False" />
+                <line number="90" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="246" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="91" hits="4" branch="False" />
+                <line number="92" hits="4" branch="False" />
+                <line number="94" hits="4" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="61" hits="6" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="1" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="63" hits="0" branch="False" />
+            <line number="66" hits="6" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="15" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="68" hits="0" branch="False" />
+            <line number="69" hits="0" branch="False" />
+            <line number="70" hits="0" branch="False" />
+            <line number="71" hits="0" branch="False" />
+            <line number="74" hits="6" branch="False" />
+            <line number="75" hits="28" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="179" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="77" hits="8" branch="True" condition-coverage="100% (4/4)">
+              <conditions>
+                <condition number="128" type="jump" coverage="100%" />
+                <condition number="145" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="78" hits="8" branch="False" />
+            <line number="80" hits="6" branch="False" />
+            <line number="84" hits="6" branch="False" />
+            <line number="85" hits="6" branch="True" condition-coverage="100% (4/4)">
+              <conditions>
+                <condition number="218" type="jump" coverage="100%" />
+                <condition number="226" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="87" hits="2" branch="False" />
+            <line number="90" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="246" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="91" hits="4" branch="False" />
+            <line number="92" hits="4" branch="False" />
+            <line number="94" hits="4" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.HotUpdateExecutionResult" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="1" branch-rate="1" complexity="5">
+          <methods>
+            <method name="get_Status" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="139" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Message" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="140" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name="get_DownloadedFileCount" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="141" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="get_LoadedAssemblyCount" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="142" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(VampireSurvivorLike.HotUpdateFlow.P5.HotUpdateExecutionStatus,System.String,System.Int32,System.Int32)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="127" hits="4" branch="False" />
+                <line number="128" hits="4" branch="False" />
+                <line number="129" hits="4" branch="False" />
+                <line number="130" hits="4" branch="False" />
+                <line number="131" hits="4" branch="False" />
+                <line number="133" hits="4" branch="False" />
+                <line number="134" hits="4" branch="False" />
+                <line number="135" hits="4" branch="False" />
+                <line number="136" hits="4" branch="False" />
+                <line number="137" hits="4" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="139" hits="4" branch="False" />
+            <line number="140" hits="2" branch="False" />
+            <line number="141" hits="1" branch="False" />
+            <line number="142" hits="1" branch="False" />
+            <line number="127" hits="4" branch="False" />
+            <line number="128" hits="4" branch="False" />
+            <line number="129" hits="4" branch="False" />
+            <line number="130" hits="4" branch="False" />
+            <line number="131" hits="4" branch="False" />
+            <line number="133" hits="4" branch="False" />
+            <line number="134" hits="4" branch="False" />
+            <line number="135" hits="4" branch="False" />
+            <line number="136" hits="4" branch="False" />
+            <line number="137" hits="4" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.DefaultAssemblyLoader" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="0" branch-rate="0" complexity="4">
+          <methods>
+            <method name="Load" signature="(System.Byte[])" line-rate="0" branch-rate="0" complexity="4">
+              <lines>
+                <line number="149" hits="0" branch="True" condition-coverage="0% (0/4)">
+                  <conditions>
+                    <condition number="1" type="jump" coverage="0%" />
+                    <condition number="5" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="151" hits="0" branch="False" />
+                <line number="154" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="149" hits="0" branch="True" condition-coverage="0% (0/4)">
+              <conditions>
+                <condition number="1" type="jump" coverage="0%" />
+                <condition number="5" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="151" hits="0" branch="False" />
+            <line number="154" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.HotUpdatePipelineOrchestrator" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="1" branch-rate="0.5" complexity="10">
+          <methods>
+            <method name=".ctor" signature="(VampireSurvivorLike.HotUpdateFlow.P5.HotUpdatePatchPlanner,VampireSurvivorLike.HotUpdateFlow.P5.IHotUpdateDownloader,VampireSurvivorLike.HotUpdateFlow.P5.IHotUpdateAssemblyProvider,VampireSurvivorLike.HotUpdateFlow.P5.IHotUpdateAssemblyLoader,VampireSurvivorLike.HotUpdateFlow.P5.IHotUpdateEntryInvoker)" line-rate="1" branch-rate="0.5" complexity="10">
+              <lines>
+                <line number="166" hits="4" branch="False" />
+                <line number="167" hits="4" branch="False" />
+                <line number="168" hits="4" branch="False" />
+                <line number="169" hits="4" branch="False" />
+                <line number="170" hits="4" branch="False" />
+                <line number="171" hits="4" branch="False" />
+                <line number="173" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="9" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="174" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="31" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="175" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="53" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="176" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="76" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="177" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="99" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="178" hits="4" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="166" hits="4" branch="False" />
+            <line number="167" hits="4" branch="False" />
+            <line number="168" hits="4" branch="False" />
+            <line number="169" hits="4" branch="False" />
+            <line number="170" hits="4" branch="False" />
+            <line number="171" hits="4" branch="False" />
+            <line number="173" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="9" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="174" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="31" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="175" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="53" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="176" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="76" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="177" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="99" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="178" hits="4" branch="False" />
+          </lines>
+        </class>
+        <class name="VampireSurvivorLike.HotUpdateFlow.P5.HotUpdatePipelineOrchestrator/&lt;ExecuteAsync&gt;d__6" filename="unity\Vampire Survivor-like\Assets\Scripts\HotUpdateFlow\P5\HotUpdatePipeline.cs" line-rate="0.9714" branch-rate="0.9" complexity="10">
+          <methods>
+            <method name="MoveNext" signature="()" line-rate="0.9714" branch-rate="0.9" complexity="10">
+              <lines>
+                <line number="185" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="24" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="187" hits="0" branch="False" />
+                <line number="192" hits="4" branch="False" />
+                <line number="193" hits="4" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="91" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="195" hits="1" branch="False" />
+                <line number="196" hits="1" branch="False" />
+                <line number="197" hits="1" branch="False" />
+                <line number="198" hits="1" branch="False" />
+                <line number="199" hits="1" branch="False" />
+                <line number="202" hits="3" branch="False" />
+                <line number="204" hits="2" branch="False" />
+                <line number="205" hits="7" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="548" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="207" hits="2" branch="False" />
+                <line number="208" hits="2" branch="True" condition-coverage="100% (4/4)">
+                  <conditions>
+                    <condition number="422" type="jump" coverage="100%" />
+                    <condition number="427" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="210" hits="1" branch="False" />
+                <line number="211" hits="1" branch="False" />
+                <line number="212" hits="1" branch="False" />
+                <line number="213" hits="1" branch="False" />
+                <line number="214" hits="1" branch="False" />
+                <line number="217" hits="1" branch="False" />
+                <line number="218" hits="1" branch="False" />
+                <line number="219" hits="1" branch="False" />
+                <line number="220" hits="1" branch="False" />
+                <line number="222" hits="1" branch="False" />
+                <line number="223" hits="1" branch="False" />
+                <line number="224" hits="1" branch="False" />
+                <line number="225" hits="1" branch="False" />
+                <line number="226" hits="1" branch="False" />
+                <line number="228" hits="1" branch="False" />
+                <line number="230" hits="1" branch="False" />
+                <line number="231" hits="1" branch="False" />
+                <line number="232" hits="1" branch="False" />
+                <line number="233" hits="1" branch="False" />
+                <line number="234" hits="1" branch="False" />
+                <line number="236" hits="4" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="185" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="24" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="187" hits="0" branch="False" />
+            <line number="192" hits="4" branch="False" />
+            <line number="193" hits="4" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="91" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="195" hits="1" branch="False" />
+            <line number="196" hits="1" branch="False" />
+            <line number="197" hits="1" branch="False" />
+            <line number="198" hits="1" branch="False" />
+            <line number="199" hits="1" branch="False" />
+            <line number="202" hits="3" branch="False" />
+            <line number="204" hits="2" branch="False" />
+            <line number="205" hits="7" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="548" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="207" hits="2" branch="False" />
+            <line number="208" hits="2" branch="True" condition-coverage="100% (4/4)">
+              <conditions>
+                <condition number="422" type="jump" coverage="100%" />
+                <condition number="427" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="210" hits="1" branch="False" />
+            <line number="211" hits="1" branch="False" />
+            <line number="212" hits="1" branch="False" />
+            <line number="213" hits="1" branch="False" />
+            <line number="214" hits="1" branch="False" />
+            <line number="217" hits="1" branch="False" />
+            <line number="218" hits="1" branch="False" />
+            <line number="219" hits="1" branch="False" />
+            <line number="220" hits="1" branch="False" />
+            <line number="222" hits="1" branch="False" />
+            <line number="223" hits="1" branch="False" />
+            <line number="224" hits="1" branch="False" />
+            <line number="225" hits="1" branch="False" />
+            <line number="226" hits="1" branch="False" />
+            <line number="228" hits="1" branch="False" />
+            <line number="230" hits="1" branch="False" />
+            <line number="231" hits="1" branch="False" />
+            <line number="232" hits="1" branch="False" />
+            <line number="233" hits="1" branch="False" />
+            <line number="234" hits="1" branch="False" />
+            <line number="236" hits="4" branch="False" />
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

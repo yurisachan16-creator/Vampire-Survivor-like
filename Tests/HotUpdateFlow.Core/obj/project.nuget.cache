@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "/sA83M1D318=",
+  "success": true,
+  "projectFilePath": "D:\\unity\\Vampire Survivor-like\\Tests\\HotUpdateFlow.Core\\HotUpdateFlow.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\yurisa\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.24\\microsoft.netcore.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\yurisa\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.24\\microsoft.windowsdesktop.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\yurisa\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.24\\microsoft.aspnetcore.app.ref.8.0.24.nupkg.sha512"
+  ],
+  "logs": []
+}
