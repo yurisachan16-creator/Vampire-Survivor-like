@@ -60,6 +60,20 @@ namespace VampireSurvivorLike
 				SceneManager.LoadScene("GameStart");
             });
 
+			if (UIKit.GetPanel<UIGameLocalLeaderboardPanel>() == null)
+			{
+				try
+				{
+					UIKit.OpenPanel<UIGameLocalLeaderboardPanel>(
+						UILevel.PopUI,
+						prefabName: UIGameLocalLeaderboardPanel.ResourcesPrefabPath);
+				}
+				catch (System.Exception e)
+				{
+					Debug.LogError($"[UIGamePassPanel] Open leaderboard failed: {e}");
+				}
+			}
+
 			//通关音效
 			AudioKit.PlaySound("Retro Event Acute 11");
 		}

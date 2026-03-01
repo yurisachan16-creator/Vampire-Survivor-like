@@ -13,6 +13,8 @@ namespace VampireSurvivorLike
 
 	public partial class UIGameLocalLeaderboardPanel : UIPanel
 	{
+		public const string ResourcesPrefabPath = "Resources/uigamelocalleaderboardpanel";
+
 		private readonly List<GameObject> _spawnedRows = new List<GameObject>(32);
 		private RectTransform _contentRoot;
 		private Text _titleText;

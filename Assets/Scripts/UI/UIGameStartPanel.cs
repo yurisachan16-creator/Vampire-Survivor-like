@@ -94,7 +94,16 @@ namespace VampireSurvivorLike
 				btnRanking.onClick.AddListener(() =>
 				{
 					AudioKit.PlaySound(Sfx.BUTTONCLICK);
-					UIKit.OpenPanel<UIGameLocalLeaderboardPanel>();
+					try
+					{
+						UIKit.OpenPanel<UIGameLocalLeaderboardPanel>(
+							UILevel.PopUI,
+							prefabName: UIGameLocalLeaderboardPanel.ResourcesPrefabPath);
+					}
+					catch (System.Exception e)
+					{
+						Debug.LogError($"[UIGameStartPanel] Open leaderboard failed: {e}");
+					}
 				});
 			}
 

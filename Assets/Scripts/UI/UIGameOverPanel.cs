@@ -60,6 +60,20 @@ namespace VampireSurvivorLike
 				this.CloseSelf();
 				SceneManager.LoadScene("GameStart");
 			});
+
+			if (UIKit.GetPanel<UIGameLocalLeaderboardPanel>() == null)
+			{
+				try
+				{
+					UIKit.OpenPanel<UIGameLocalLeaderboardPanel>(
+						UILevel.PopUI,
+						prefabName: UIGameLocalLeaderboardPanel.ResourcesPrefabPath);
+				}
+				catch (System.Exception e)
+				{
+					Debug.LogError($"[UIGameOverPanel] Open leaderboard failed: {e}");
+				}
+			}
 		}
 
 		private Text EnsureDifficultySummaryText()
