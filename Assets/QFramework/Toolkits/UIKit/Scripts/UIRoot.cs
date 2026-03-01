@@ -25,14 +25,11 @@ namespace QFramework
         public RectTransform CanvasPanel;
         
         private static UIRoot mInstance;
-        private static bool mIsQuitting;
 
         public static UIRoot Instance
         {
             get
             {
-                if (mIsQuitting) return mInstance;
-
                 if (!mInstance)
                 {
                     mInstance = FindObjectOfType<UIRoot>();
@@ -40,7 +37,6 @@ namespace QFramework
 
                 if (!mInstance)
                 {
-                    if (!Application.isPlaying) return null;
                     Instantiate(Resources.Load<GameObject>("UIRoot"));
                     mInstance = MonoSingletonProperty<UIRoot>.Instance;
                     mInstance.name = "UIRoot";
@@ -118,16 +114,6 @@ namespace QFramework
         public void OnSingletonInit()
         {
             
-        }
-
-        private void OnApplicationQuit()
-        {
-            mIsQuitting = true;
-        }
-
-        private void OnDestroy()
-        {
-            if (mInstance == this) mInstance = null;
         }
     }
 }

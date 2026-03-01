@@ -19,29 +19,20 @@ MonoBehaviour:
     From: 0
     NameToFullName: []
     BindInfos:
+    - TypeName: UnityEngine.UI.Image
+      PathToRoot: LocalLeaderboardPanel/Scroll View/Viewport/RankingTemplate
+      MemberName: RankingTemplate
     - TypeName: UnityEngine.UI.Button
-      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/DisplaySettings
-      MemberName: DisplaySettings
-    - TypeName: UnityEngine.UI.Toggle
-      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/DisplaySettings/FullscreenToggle
-      MemberName: FullscreenToggle
-    - TypeName: UnityEngine.UI.Button
-      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/AudioSettings
-      MemberName: AudioSettings
-    - TypeName: UnityEngine.UI.Slider
-      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/AudioSettings/MusicVolumeSlider
-      MemberName: MusicVolumeSlider
-    - TypeName: UnityEngine.UI.Slider
-      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/AudioSettings/SoundVolumeSlider
-      MemberName: SoundVolumeSlider
-    - TypeName: UnityEngine.UI.Button
-      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/BtnClose
+      PathToRoot: LocalLeaderboardPanel/Scroll View/Viewport/BtnClose
       MemberName: BtnClose
     - TypeName: UnityEngine.UI.Button
-      PathToRoot: SettingsPanel/Scroll View/Viewport/Content/BtnQuit
+      PathToRoot: LocalLeaderboardPanel/Scroll View/Viewport/BtnReturnToMainMenu
+      MemberName: BtnReturnToMainMenu
+    - TypeName: UnityEngine.UI.Button
+      PathToRoot: LocalLeaderboardPanel/Scroll View/Viewport/BtnQuit
       MemberName: BtnQuit
-    ScriptsFolder: Assets\Scripts\UI\UIGameSettingsPanel
-    ClassName: UIGameSettingsPanel
+    ScriptsFolder: Assets/Scripts/Game
+    ClassName: UIGameLocalLeaderboardPanel
     Namespace: VampireSurvivorLike
     MainCode: 
     DesignerCode: 

@@ -14,6 +14,7 @@ namespace VampireSurvivorLike
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGamePassPanelData ?? new UIGamePassPanelData();
+			LeaderboardSystem.RecordCurrentRun(true, "通关");
 			//暂停游戏
 			Time.timeScale = 0f;
 			// please add init code here

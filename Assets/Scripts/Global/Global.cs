@@ -122,6 +122,9 @@ namespace VampireSurvivorLike
         }
 
         public static PlayerDeathReport LastPlayerDeathReport;
+        public static int RunKillCount;
+        public static int RunCoinCollected;
+        public static int RunSessionId;
 
         #endregion
 
@@ -187,6 +190,9 @@ namespace VampireSurvivorLike
         }
         public static void ResetData()
         {
+            RunSessionId++;
+            RunKillCount = 0;
+            RunCoinCollected = 0;
             IsGameOver.Value = false;
             MaxHP.Value = Mathf.Clamp(MaxHP.Value, Config.PlayerBaseMaxHP, Config.PlayerMaxHPCap);
             HP.Value = MaxHP.Value;

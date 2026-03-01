@@ -7,9 +7,7 @@
  * https://gitee.com/liangxiegame/QFramework
  ****************************************************************************/
 
-using System;
 using System.Collections;
-using System.IO;
 using System.Linq;
 
 namespace QFramework
@@ -97,8 +95,26 @@ namespace QFramework
             {
                 AssetBundleSettings.AssetBundleConfigFile.Reset();
 
-                var configPaths = CollectAssetConfigPaths(true);
-                foreach (var outRes in configPaths)
+                var outResult = new List<string>();
+
+                var pathPrefix = AssetBundlePathHelper.PathPrefix;
+
+                // 未进行过热更
+                if (AssetBundleSettings.LoadAssetResFromStreamingAssetsPath)
+                {
+                    var streamingPath = Application.streamingAssetsPath + "/AssetBundles/" +
+                                        AssetBundlePathHelper.GetPlatformName() + "/" + ResDatas.FileName;
+                    outResult.Add(pathPrefix + streamingPath);
+                }
+                // 进行过热更
+                else
+                {
+                    var persistentPath = Application.persistentDataPath + "/AssetBundles/" +
+                                         AssetBundlePathHelper.GetPlatformName() + "/" + ResDatas.FileName;
+                    outResult.Add(pathPrefix + persistentPath);
+                }
+
+                foreach (var outRes in outResult)
                 {
                     Debug.Log(outRes);
                     yield return AssetBundleSettings.AssetBundleConfigFile.LoadFromFileAsync(outRes);
@@ -121,71 +137,27 @@ namespace QFramework
 #endif
                 AssetBundleSettings.AssetBundleConfigFile.Reset();
 
-                var configPaths = CollectAssetConfigPaths(false);
-                foreach (var outRes in configPaths)
+                var outResult = new List<string>();
+
+                // 未进行过热更
+                if (AssetBundleSettings.LoadAssetResFromStreamingAssetsPath)
                 {
+                    Architecture.ZipFileHelper.GetFileInInner(ResDatas.FileName, outResult);
+                }
+                // 进行过热更
+                else
+                {
+                    AssetBundlePathHelper.GetFileInFolder(AssetBundlePathHelper.PersistentDataPath, ResDatas.FileName,
+                        outResult);
+                }
+
+                foreach (var outRes in outResult)
+                {
+                 
                     AssetBundleSettings.AssetBundleConfigFile.LoadFromFile(outRes);
                 }
             }
         }
-
-        private static List<string> CollectAssetConfigPaths(bool includePathPrefix)
-        {
-            var configCandidates = new List<string>();
-            var platformName = AssetBundlePathHelper.GetPlatformName();
-
-            if (AssetBundleSettings.LoadAssetResFromStreamingAssetsPath)
-            {
-                configCandidates.Add(
-                    $"{Application.streamingAssetsPath}/AssetBundles/{platformName}/{ResDatas.FileName}");
-#if UNITY_EDITOR
-                TryAddEditorPlatformFallback(configCandidates, Application.streamingAssetsPath, platformName);
-#endif
-            }
-            else
-            {
-                configCandidates.Add(
-                    $"{Application.persistentDataPath}/AssetBundles/{platformName}/{ResDatas.FileName}");
-#if UNITY_EDITOR
-                TryAddEditorPlatformFallback(configCandidates, Application.persistentDataPath, platformName);
-#endif
-            }
-
-            var availablePaths = new List<string>();
-            foreach (var path in configCandidates)
-            {
-                if (File.Exists(path))
-                {
-                    availablePaths.Add(includePathPrefix ? AssetBundlePathHelper.PathPrefix + path : path);
-                }
-            }
-
-            if (availablePaths.Count > 0)
-            {
-                return availablePaths;
-            }
-
-            var fallbackPath = configCandidates[0];
-            LogKit.E($"Res config not found on disk, fallback to expected path: {fallbackPath}");
-            availablePaths.Add(includePathPrefix ? AssetBundlePathHelper.PathPrefix + fallbackPath : fallbackPath);
-            return availablePaths;
-        }
-
-#if UNITY_EDITOR
-        private static void TryAddEditorPlatformFallback(
-            List<string> configCandidates,
-            string rootPath,
-            string activePlatformName)
-        {
-            var editorPlatformName = AssetBundlePathHelper.GetPlatformForAssetBundles(Application.platform);
-            if (string.Equals(editorPlatformName, activePlatformName, StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
-            configCandidates.Add($"{rootPath}/AssetBundles/{editorPlatformName}/{ResDatas.FileName}");
-        }
-#endif
 
         #region 属性
 

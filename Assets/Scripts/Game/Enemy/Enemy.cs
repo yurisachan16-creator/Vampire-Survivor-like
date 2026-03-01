@@ -228,6 +228,7 @@ namespace VampireSurvivorLike
 			if (_isDead) return;
 
 			_isDead = true;
+			Global.RunKillCount++;
 			_isIgnoreHurt = true;
 			_hurtPending = false;
 

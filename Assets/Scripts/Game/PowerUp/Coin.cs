@@ -59,7 +59,9 @@ namespace VampireSurvivorLike
         protected override void Execute()
         {
             AudioKit.PlaySound("Coin");
-            Global.Coin.Value += Mathf.Max(1, CoinValue);
+            var value = Mathf.Max(1, CoinValue);
+            Global.Coin.Value += value;
+            Global.RunCoinCollected += value;
 			ObjectPoolSystem.Despawn(gameObject);
         }
 

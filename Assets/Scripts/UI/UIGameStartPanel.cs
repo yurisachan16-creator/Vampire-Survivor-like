@@ -27,6 +27,9 @@ namespace VampireSurvivorLike
 			if (achievementLabel) FontManager.Register(achievementLabel);
 			var coinUpgradeLabel = BtnCoinUpgrade ? BtnCoinUpgrade.GetComponentInChildren<Text>(true) : null;
 			if (coinUpgradeLabel) FontManager.Register(coinUpgradeLabel);
+			var btnRanking = transform.Find("BtnRanking")?.GetComponent<Button>();
+			var rankingLabel = btnRanking ? btnRanking.GetComponentInChildren<Text>(true) : null;
+			if (rankingLabel) FontManager.Register(rankingLabel);
 
 			System.Action refreshUiText = () =>
 			{
@@ -35,6 +38,17 @@ namespace VampireSurvivorLike
 				if (settingsLabel) settingsLabel.text = LocalizationManager.T("ui.start.settings");
 				if (achievementLabel) achievementLabel.text = LocalizationManager.T("ui.start.achievement");
 				if (coinUpgradeLabel) coinUpgradeLabel.text = LocalizationManager.T("ui.start.coin_upgrade");
+				if (rankingLabel)
+				{
+					if (LocalizationManager.TryGet("ui.start.leaderboard", out var leaderboardText))
+					{
+						rankingLabel.text = leaderboardText;
+					}
+					else
+					{
+						rankingLabel.text = "排行榜";
+					}
+				}
 			};
 			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
 			refreshUiText();
@@ -74,6 +88,15 @@ namespace VampireSurvivorLike
 				//打开设置面板
 				UIKit.OpenPanel<UIGameSettingsPanel>(new UIGameSettingsPanelData { IsFromGame = false });
 			});
+
+			if (btnRanking)
+			{
+				btnRanking.onClick.AddListener(() =>
+				{
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					UIKit.OpenPanel<UIGameLocalLeaderboardPanel>();
+				});
+			}
 
 			this.GetSystem<CoinUpgradeSystem>().Say();
 		}

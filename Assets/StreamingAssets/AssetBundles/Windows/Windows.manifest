@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2851570324
+CRC: 98476673
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -47,3 +47,7 @@ AssetBundleManifest:
     Info_12:
       Name: enemy_spriteatlasv2
       Dependencies: {}
+    Info_13:
+      Name: uigamelocalleaderboardpanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf

@@ -126,6 +126,8 @@ namespace VampireSurvivorLike
 
 			Global.IsGameOver.Value = true;
 			Global.ReportPlayerDeath(bossId, damageSource);
+			var deathReason = string.IsNullOrEmpty(bossId) ? damageSource : $"{bossId}:{damageSource}";
+			LeaderboardSystem.RecordCurrentRun(false, LeaderboardSystem.BuildDeathReason(false, deathReason));
 
 			AudioKit.PlaySound(Sfx.DEATH);
 			Time.timeScale = 0;
