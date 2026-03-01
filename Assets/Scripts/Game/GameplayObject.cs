@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using QFramework;
 using QAssetBundle;
@@ -60,6 +61,7 @@ namespace VampireSurvivorLike
 		public static LootGuideSystem Current { get; private set; }
 
 		private const int MaxArrowCount = 16;
+		private const int Max3DSounds = 8;
 		private const float MinGuideDistance = 8f;
 		private const float BlinkPeriodSeconds = 0.8f;
 		private const float PulseDurationSeconds = 1.2f;
@@ -68,6 +70,7 @@ namespace VampireSurvivorLike
 		private readonly List<TargetInfo> _visibleTargets = new List<TargetInfo>(64);
 		private readonly List<ArrowEntry> _arrowPool = new List<ArrowEntry>(MaxArrowCount);
 		private readonly Dictionary<string, AudioClip> _cached3DSfx = new Dictionary<string, AudioClip>(8);
+		private readonly List<Pooled3DSoundEntry> _sound3DPool = new List<Pooled3DSoundEntry>(Max3DSounds);
 
 		private RectTransform _overlayRoot;
 		private Canvas _overlayCanvas;
@@ -82,6 +85,8 @@ namespace VampireSurvivorLike
 		{
 			Current = this;
 			_sfxLoader = ResLoader.Allocate();
+			_active3DSoundCount = 0;
+			Ensure3DSoundPool();
 		}
 
 		private void OnDestroy()
@@ -103,6 +108,7 @@ namespace VampireSurvivorLike
 			_visibleTargets.Clear();
 			_arrowPool.Clear();
 			_cached3DSfx.Clear();
+			Clear3DSoundPool();
 
 			if (_sfxLoader != null)
 			{
@@ -372,7 +378,6 @@ namespace VampireSurvivorLike
 		}
 
 		private static int _active3DSoundCount;
-		private const int Max3DSounds = 8;
 
 		private static void Spawn3DSound(Vector3 worldPosition, string audioKey, float volume)
 		{
@@ -384,27 +389,16 @@ namespace VampireSurvivorLike
 			var clip = Current.GetCached3DSfx(audioKey);
 			if (!clip) return;
 
-			_active3DSoundCount++;
+			var entry = Current.Acquire3DSoundEntry();
+			if (entry == null) return;
 
-			var go = new GameObject("LootGuide3DAudio");
-			go.transform.position = worldPosition;
-
-			var source = go.AddComponent<AudioSource>();
-			source.playOnAwake = false;
-			source.spatialBlend = 1f;
-			source.rolloffMode = AudioRolloffMode.Linear;
-			source.minDistance = 2f;
-			source.maxDistance = 25f;
-			source.volume = Mathf.Clamp01(volume);
-			source.clip = clip;
-			source.Play();
+			entry.Root.transform.position = worldPosition;
+			entry.Source.volume = Mathf.Clamp01(volume);
+			entry.Source.clip = clip;
+			entry.Source.Play();
 
 			var lifetime = Mathf.Min(clip.length + 0.2f, 3f);
-			Destroy(go, lifetime);
-
-			// 延迟递减并发计数
-			if (Current != null)
-				Current.StartCoroutine(DecrementAfter(lifetime));
+			entry.ReleaseRoutine = Current.StartCoroutine(Current.Release3DSoundEntryAfter(entry, lifetime));
 		}
 
 		private AudioClip GetCached3DSfx(string audioKey)
@@ -430,10 +424,105 @@ namespace VampireSurvivorLike
 			return clip;
 		}
 
-		private static System.Collections.IEnumerator DecrementAfter(float delay)
+		private void Ensure3DSoundPool()
+		{
+			while (_sound3DPool.Count < Max3DSounds)
+			{
+				var index = _sound3DPool.Count;
+				var go = new GameObject("LootGuide3DAudio_" + index);
+				go.transform.SetParent(transform, false);
+				go.SetActive(false);
+
+				var source = go.AddComponent<AudioSource>();
+				source.playOnAwake = false;
+				source.spatialBlend = 1f;
+				source.rolloffMode = AudioRolloffMode.Linear;
+				source.minDistance = 2f;
+				source.maxDistance = 25f;
+
+				_sound3DPool.Add(new Pooled3DSoundEntry(go, source));
+			}
+		}
+
+		private Pooled3DSoundEntry Acquire3DSoundEntry()
+		{
+			Ensure3DSoundPool();
+
+			for (var i = 0; i < _sound3DPool.Count; i++)
+			{
+				var entry = _sound3DPool[i];
+				if (entry.InUse) continue;
+
+				entry.InUse = true;
+				entry.Root.SetActive(true);
+				_active3DSoundCount++;
+				return entry;
+			}
+
+			return null;
+		}
+
+		private IEnumerator Release3DSoundEntryAfter(Pooled3DSoundEntry entry, float delay)
 		{
 			yield return new WaitForSeconds(delay);
+			entry.ReleaseRoutine = null;
+			Release3DSoundEntry(entry);
+		}
+
+		private void Release3DSoundEntry(Pooled3DSoundEntry entry)
+		{
+			if (entry == null || !entry.InUse) return;
+
+			if (entry.ReleaseRoutine != null)
+			{
+				StopCoroutine(entry.ReleaseRoutine);
+				entry.ReleaseRoutine = null;
+			}
+
+			entry.Source.Stop();
+			entry.Source.clip = null;
+			entry.Root.SetActive(false);
+			entry.InUse = false;
 			_active3DSoundCount = Mathf.Max(0, _active3DSoundCount - 1);
+		}
+
+		private void Clear3DSoundPool()
+		{
+			for (var i = 0; i < _sound3DPool.Count; i++)
+			{
+				var entry = _sound3DPool[i];
+				if (entry == null) continue;
+
+				if (entry.ReleaseRoutine != null)
+				{
+					StopCoroutine(entry.ReleaseRoutine);
+					entry.ReleaseRoutine = null;
+				}
+
+				if (entry.Root)
+				{
+					Destroy(entry.Root);
+				}
+			}
+
+			_sound3DPool.Clear();
+			_active3DSoundCount = 0;
+		}
+
+		private sealed class Pooled3DSoundEntry
+		{
+			public readonly GameObject Root;
+			public readonly AudioSource Source;
+			public bool InUse;
+			public Coroutine ReleaseRoutine;
+
+			public Pooled3DSoundEntry(GameObject root, AudioSource source)
+			{
+				Root = root;
+				Source = source;
+				InUse = false;
+				ReleaseRoutine = null;
+			}
 		}
 
 		private sealed class LootPulseRingRunner : MonoBehaviour

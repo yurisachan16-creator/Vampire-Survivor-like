@@ -6,16 +6,18 @@ namespace VampireSurvivorLike
     [DisallowMultipleComponent]
     public sealed class PowerUpMergeSystem : MonoBehaviour
     {
-        private const int MinMergeBatchCount = 50;
+        private const int ExpMinMergeBatchCount = 50;
 
         private static PowerUpMergeSystem _instance;
+        public static int CoinMergeTriggerCount { get; private set; }
 
         private static readonly List<Exp> ExpCandidates = new List<Exp>(1024);
         private static readonly List<Exp> ExpMergeBatch = new List<Exp>(1024);
         private static readonly List<Coin> CoinCandidates = new List<Coin>(1024);
         private static readonly List<Coin> CoinMergeBatch = new List<Coin>(1024);
 
-        private float _nextCheckTime;
+        private float _nextExpCheckTime;
+        private float _nextCoinCheckTime;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -24,6 +26,12 @@ namespace VampireSurvivorLike
             var go = new GameObject("PowerUpMergeSystem");
             DontDestroyOnLoad(go);
             _instance = go.AddComponent<PowerUpMergeSystem>();
+            CoinMergeTriggerCount = 0;
+        }
+
+        public static void ResetStats()
+        {
+            CoinMergeTriggerCount = 0;
         }
 
         private void OnDestroy()
@@ -33,15 +41,22 @@ namespace VampireSurvivorLike
 
         private void Update()
         {
-            if (Time.unscaledTime < _nextCheckTime) return;
-            _nextCheckTime = Time.unscaledTime + Config.ExpMergeCheckInterval;
-
             if (Global.IsGameOver.Value) return;
             if (!Player.Default) return;
 
+            var now = Time.unscaledTime;
             var playerPos = Player.Default.transform.position;
-            TryMergeExpNow(playerPos);
-            TryMergeCoinNow(playerPos);
+            if (now >= _nextExpCheckTime)
+            {
+                _nextExpCheckTime = now + Config.ExpMergeCheckInterval;
+                TryMergeExpNow(playerPos);
+            }
+
+            if (now >= _nextCoinCheckTime)
+            {
+                _nextCoinCheckTime = now + Config.CoinMergeCheckInterval;
+                TryMergeCoinNow(playerPos);
+            }
         }
 
         public static bool TryMergeExpNow(Vector3 playerPos)
@@ -53,7 +68,7 @@ namespace VampireSurvivorLike
             if (!manager || !manager.Exp) return false;
 
             var exceedCount = activeCount - Config.MaxActiveExpCount;
-            var desiredCount = Mathf.Min(activeCount, Mathf.Max(exceedCount, MinMergeBatchCount));
+            var desiredCount = Mathf.Min(activeCount, Mathf.Max(exceedCount, ExpMinMergeBatchCount));
             var mergedCount = BuildExpMergeBatch(playerPos, desiredCount);
             if (mergedCount < 2) return false;
 
@@ -92,13 +107,14 @@ namespace VampireSurvivorLike
         public static bool TryMergeCoinNow(Vector3 playerPos)
         {
             var activeCount = PowerUpRegistry.CoinCount;
-            if (activeCount <= Config.MaxActiveCoinCount) return false;
+            if (activeCount <= Config.MaxActiveCoinCountSoft) return false;
 
             var manager = PowerUpManager.Default;
             if (!manager || !manager.Coin) return false;
 
-            var exceedCount = activeCount - Config.MaxActiveCoinCount;
-            var desiredCount = Mathf.Min(activeCount, Mathf.Max(exceedCount, MinMergeBatchCount));
+            var exceedCount = activeCount - Config.MaxActiveCoinCountSoft;
+            var desiredCountRaw = Mathf.Max(exceedCount * Config.CoinMergePressureFactor, Config.CoinMergeMinBatchCount);
+            var desiredCount = Mathf.Clamp(desiredCountRaw, 0, activeCount);
             var mergedCount = BuildCoinMergeBatch(playerPos, desiredCount);
             if (mergedCount < 2) return false;
 
@@ -131,6 +147,7 @@ namespace VampireSurvivorLike
             var mergedCoin = mergedGo.GetComponent<Coin>();
             if (mergedCoin) mergedCoin.SetCoinValue(totalValue);
 
+            CoinMergeTriggerCount++;
             return true;
         }
 
@@ -175,7 +192,7 @@ namespace VampireSurvivorLike
             PowerUpRegistry.GetFarthestCoins(playerPos, desiredCount, CoinCandidates);
             if (CoinCandidates.Count == 0) return 0;
 
-            var radiusSqr = Config.ExpMergeRadius * Config.ExpMergeRadius;
+            var radiusSqr = Config.CoinMergeRadius * Config.CoinMergeRadius;
             var anchor = CoinCandidates[0];
             if (!anchor) return 0;
 

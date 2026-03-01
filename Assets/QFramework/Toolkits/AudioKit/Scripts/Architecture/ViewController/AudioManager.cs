@@ -14,13 +14,16 @@ namespace QFramework
     [MonoSingletonPath("QFramework/AudioKit/AudioManager")]
     internal class AudioManager : MonoBehaviour, ISingleton, IController
     {
+        private const int SoundPlayerPoolMaxCount = 64;
+        private const int SoundPlayerPoolPrewarmCount = 8;
+
         internal MusicPlayer MusicPlayer { get; private set; }
 
         internal MusicPlayer VoicePlayer { get; private set; }
 
         public void OnSingletonInit()
         {
-            SafeObjectPool<AudioPlayer>.Instance.Init(10, 1);
+            SafeObjectPool<AudioPlayer>.Instance.Init(SoundPlayerPoolMaxCount, SoundPlayerPoolPrewarmCount);
             MusicPlayer = new MusicPlayer(AudioKit.Settings.MusicVolume);
             VoicePlayer = new MusicPlayer(AudioKit.Settings.VoiceVolume, false);
 

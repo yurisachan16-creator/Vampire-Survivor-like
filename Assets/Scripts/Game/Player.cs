@@ -41,30 +41,22 @@ namespace VampireSurvivorLike
 			{
 				if (IsGameOver) return;
 
-				var hitHurtBox = Collider2D.GetComponent<HitHurtBox>();
-				if(hitHurtBox)
+				if (!Collider2D.TryGetComponent<HitHurtBox>(out var hitHurtBox)) return;
+				if (!hitHurtBox.IsEnemyOwner) return;
+
+				var boss = hitHurtBox.CachedMiniBoss;
+				var contactDamage = 1;
+				if (boss)
 				{
-					if(hitHurtBox.Owner.CompareTag("Enemy"))
-					{
-						var boss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
-						var contactDamage = 1;
-						if (boss)
-						{
-							contactDamage = Mathf.Max(1, Mathf.CeilToInt(boss.DamageMultiplier));
-						}
-						else
-						{
-							var enemy = hitHurtBox.Owner.GetComponent<Enemy>();
-							if (enemy)
-							{
-								contactDamage = Mathf.Max(1, Mathf.CeilToInt(enemy.DamageMultiplier));
-							}
-						}
-						var bossId = boss ? boss.BossType.ToString() : string.Empty;
-						ApplyDamage(contactDamage, bossId, boss ? "BossMelee" : "EnemyMelee");
-						
-					}
+					contactDamage = Mathf.Max(1, Mathf.CeilToInt(boss.DamageMultiplier));
 				}
+				else if (hitHurtBox.TryGetEnemy(out var enemy) && enemy is Enemy normalEnemy)
+				{
+					contactDamage = Mathf.Max(1, Mathf.CeilToInt(normalEnemy.DamageMultiplier));
+				}
+
+				var bossId = boss ? boss.BossType.ToString() : string.Empty;
+				ApplyDamage(contactDamage, bossId, boss ? "BossMelee" : "EnemyMelee");
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 
 			void UPdateHP()

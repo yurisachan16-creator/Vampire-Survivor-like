@@ -40,12 +40,9 @@ namespace VampireSurvivorLike
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            var hitHurtBox = collider.GetComponent<HitHurtBox>();
-            if (!hitHurtBox) return;
-            if (!hitHurtBox.Owner || !hitHurtBox.Owner.CompareTag("Enemy")) return;
-
-            var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
-            if (enemy == null) return;
+            if (!collider.TryGetComponent<HitHurtBox>(out var hitHurtBox)) return;
+            if (!hitHurtBox.IsEnemyOwner) return;
+            if (!hitHurtBox.TryGetEnemy(out var enemy)) return;
 
             var enemyId = hitHurtBox.Owner.GetInstanceID();
             if (_hitEnemyIds.Contains(enemyId)) return;
@@ -53,12 +50,13 @@ namespace VampireSurvivorLike
 
             DamageSystem.CalculateDamage(_damage, enemy, maxNormalDamage: 2, criticalDamageTimes: _superMode ? 6f : 5f);
 
-            if (_knockbackForce > 0f && collider.attachedRigidbody)
+            var ownerRigidbody = hitHurtBox.CachedOwnerRigidbody;
+            if (_knockbackForce > 0f && ownerRigidbody)
             {
                 var dir = ((Vector2)collider.transform.position - (Vector2)transform.position).normalized;
                 if (dir.sqrMagnitude > 0.001f)
                 {
-                    collider.attachedRigidbody.velocity = dir * _knockbackForce;
+                    ownerRigidbody.velocity = dir * _knockbackForce;
                 }
             }
 

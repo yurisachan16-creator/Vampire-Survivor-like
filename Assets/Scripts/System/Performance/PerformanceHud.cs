@@ -22,6 +22,8 @@ namespace VampireSurvivorLike
         private float _nextSampleTime;
         private float _smoothedDeltaTime = 0.016f;
         private bool _visible = true;
+        private int _audioSourceCount;
+        private int _audioManagerChildCount;
 
         private ProfilerRecorder _gcAllocInFrame;
         private ProfilerRecorder _monoUsedSize;
@@ -137,6 +139,9 @@ namespace VampireSurvivorLike
                 MainThreadMs = ReadRecorderMs(_mainThreadTime),
                 RenderThreadMs = ReadRecorderMs(_renderThreadTime)
             });
+
+            _audioSourceCount = CountAudioSources();
+            _audioManagerChildCount = CountAudioManagerChildren();
         }
 
         private void OnGUI()
@@ -190,7 +195,8 @@ namespace VampireSurvivorLike
                 .Append(" small + ").Append(EnemyGenerator.BossEnemyCount.Value)
                 .Append(" boss (total ").Append(EnemyGenerator.EnemyCount.Value).Append(")\n");
             _sb.Append("Drops: ").Append(PowerUpRegistry.ExpCount).Append(" exp / ")
-                .Append(PowerUpRegistry.CoinCount).Append(" coin\n");
+                .Append(PowerUpRegistry.CoinCount).Append(" coin")
+                .Append("  CoinMerge: ").Append(PowerUpMergeSystem.CoinMergeTriggerCount).Append('\n');
             _sb.Append("Minute: ").Append(EnemyGenerator.CurrentMinute.Value)
                 .Append("/30  Remaining: ").Append(EnemyGenerator.GameRemainingTime.Value.ToString("0")).Append("s\n");
             _sb.Append("Channels: ").Append(EnemyGenerator.ActiveChannelCount.Value).Append(" active\n");
@@ -199,6 +205,9 @@ namespace VampireSurvivorLike
                 _sb.Append("  ").Append(chNames).Append('\n');
             _sb.Append("GameTime: ").Append(Global.CurrentSeconds.Value.ToString("0.0")).Append("s\n");
             _sb.Append("MaxEnemy: ").Append(GameSettings.GetMaxSmallEnemyCountForCurrentPlatform()).Append('\n');
+            _sb.Append("AudioSources: ").Append(_audioSourceCount)
+                .Append("  AudioManagerChildren: ").Append(_audioManagerChildCount)
+                .Append("  SfxDropped: ").Append(SfxThrottle.DroppedCount).Append('\n');
 
             _sb.Append("Samples: ").Append(_samples.Count).Append('\n');
 
@@ -341,6 +350,17 @@ namespace VampireSurvivorLike
             if (value < 1000_000) return (value / 1000.0).ToString("0.0", CultureInfo.InvariantCulture) + "k";
             if (value < 1000_000_000) return (value / 1000_000.0).ToString("0.0", CultureInfo.InvariantCulture) + "m";
             return (value / 1000_000_000.0).ToString("0.0", CultureInfo.InvariantCulture) + "b";
+        }
+
+        private static int CountAudioSources()
+        {
+            return FindObjectsOfType<AudioSource>(true).Length;
+        }
+
+        private static int CountAudioManagerChildren()
+        {
+            var audioManager = GameObject.Find("QFramework/AudioKit/AudioManager");
+            return audioManager ? audioManager.transform.childCount : 0;
         }
 
         private struct PerformanceSample

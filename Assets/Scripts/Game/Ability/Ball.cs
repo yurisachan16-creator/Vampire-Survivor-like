@@ -1,11 +1,14 @@
 using UnityEngine;
 using QFramework;
 using QAssetBundle;
+using System.Collections.Generic;
 
 namespace VampireSurvivorLike
 {
 	public partial class Ball : ViewController
 	{
+		private const int SameTargetHitCooldownFrames = 6;
+		private readonly Dictionary<int, int> _lastHitFrameByEnemy = new Dictionary<int, int>(64);
 		
 		void Start()
 		{
@@ -26,39 +29,44 @@ namespace VampireSurvivorLike
 
 			HurtBox.OnTriggerEnter2DEvent(collider=>
 			{
-				var hitHurtBox = collider.GetComponent<HitHurtBox>();
-				if(hitHurtBox)
+				if (!collider.TryGetComponent<HitHurtBox>(out var hitHurtBox)) return;
+				if (!hitHurtBox.IsEnemyOwner) return;
+				if (!hitHurtBox.TryGetEnemy(out var enemy)) return;
+				if (!hitHurtBox.Owner) return;
+
+				var enemyId = hitHurtBox.Owner.GetInstanceID();
+				if (_lastHitFrameByEnemy.TryGetValue(enemyId, out var lastFrame) &&
+				    Time.frameCount - lastFrame < SameTargetHitCooldownFrames)
 				{
-					if(hitHurtBox.Owner.CompareTag("Enemy"))
+					return;
+				}
+
+				_lastHitFrameByEnemy[enemyId] = Time.frameCount;
+
+				var damageTimes = Global.SuperBasketBall.Value ? Random.Range(2, 4) : 1;
+				DamageSystem.CalculateDamage(Global.BasketBallDamage.Value * damageTimes, enemy);
+
+				//有50%的概率对敌人进行击退
+				if (Random.Range(0, 1.0f) < 0.5f && Player.Default)
+				{
+					var knockbackDirection = collider.NormalizedDirection2DFrom(this);
+					var playerDirection = collider.NormalizedDirection2DFrom(Player.Default);
+					var combinedDirection = (knockbackDirection + playerDirection).normalized;
+					if (combinedDirection.sqrMagnitude <= 0.0001f)
 					{
-						var enemy=hitHurtBox.Owner.GetComponent<IEnemy>();
-						var damageTimes=Global.SuperBasketBall.Value ? Random.Range(2,3+1) : 1;
-						DamageSystem.CalculateDamage(Global.BasketBallDamage.Value * damageTimes,enemy);
-						
+						combinedDirection = knockbackDirection.sqrMagnitude > 0.0001f
+							? knockbackDirection
+							: playerDirection;
+					}
 
-						//有50%的概率对敌人进行击退
-						if (Random.Range(0, 1.0f) < 0.5f && Player.Default)
-						{
-							var knockbackDirection = collider.NormalizedDirection2DFrom(this);
-							var playerDirection = collider.NormalizedDirection2DFrom(Player.Default);
-							var combinedDirection = (knockbackDirection + playerDirection).normalized;
-							if (combinedDirection.sqrMagnitude <= 0.0001f)
-							{
-								combinedDirection = knockbackDirection.sqrMagnitude > 0.0001f
-									? knockbackDirection
-									: playerDirection;
-							}
-
-							var miniBoss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
-							if (miniBoss != null)
-							{
-								miniBoss.ApplyExternalKnockback(combinedDirection);
-							}
-							else if (collider && collider.attachedRigidbody)
-							{
-								collider.attachedRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
-							}
-						}
+					var miniBoss = hitHurtBox.CachedMiniBoss;
+					if (miniBoss != null)
+					{
+						miniBoss.ApplyExternalKnockback(combinedDirection);
+					}
+					else if (hitHurtBox.CachedOwnerRigidbody)
+					{
+						hitHurtBox.CachedOwnerRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
 					}
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);

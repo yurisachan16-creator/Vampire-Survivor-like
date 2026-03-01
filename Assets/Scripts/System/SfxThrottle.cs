@@ -13,14 +13,18 @@ namespace VampireSurvivorLike
     public static class SfxThrottle
     {
         /// <summary>同一音效两次播放之间的最短间隔（秒）</summary>
-        private const float DefaultCooldown = 0.05f;
+        private const float DefaultCooldown = 0.08f;
 
         /// <summary>每帧允许播放的最大音效总数</summary>
-        public const int MaxSoundsPerFrame = 4;
+        public const int MaxSoundsPerFrame = 3;
 
         private static readonly Dictionary<string, float> _lastPlayTime = new Dictionary<string, float>(32);
         private static int _frameSoundCount;
         private static int _lastCountedFrame;
+        private static int _droppedCount;
+
+        /// <summary>累计被节流丢弃的音效次数（用于调试观测）。</summary>
+        public static int DroppedCount => _droppedCount;
 
         /// <summary>
         /// 检查是否可以播放指定音效。通过返回 true 并记录时间。
@@ -35,12 +39,19 @@ namespace VampireSurvivorLike
                 _frameSoundCount = 0;
             }
 
-            if (_frameSoundCount >= MaxSoundsPerFrame) return false;
+            if (_frameSoundCount >= MaxSoundsPerFrame)
+            {
+                _droppedCount++;
+                return false;
+            }
 
             // 单音效冷却
             var now = Time.unscaledTime;
             if (_lastPlayTime.TryGetValue(key, out var last) && now - last < cooldown)
+            {
+                _droppedCount++;
                 return false;
+            }
 
             _lastPlayTime[key] = now;
             _frameSoundCount++;
@@ -54,6 +65,7 @@ namespace VampireSurvivorLike
         {
             _lastPlayTime.Clear();
             _frameSoundCount = 0;
+            _droppedCount = 0;
         }
     }
 }

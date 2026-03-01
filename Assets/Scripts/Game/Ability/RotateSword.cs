@@ -7,7 +7,9 @@ namespace VampireSurvivorLike
 {
 	public partial class RotateSword : ViewController
 	{
+        private const int SameTargetHitCooldownFrames = 6;
         private List<Collider2D> _mSwords = new List<Collider2D>();
+        private readonly Dictionary<int, int> _lastHitFrameByEnemy = new Dictionary<int, int>(64);
 
         
         void Start()
@@ -22,41 +24,44 @@ namespace VampireSurvivorLike
                     {
                         self.OnTriggerEnter2DEvent(collider=>
                         {
-                            var hitHurtBox = collider.GetComponent<HitHurtBox>();
-                            if (hitHurtBox)
+                            if (!collider.TryGetComponent<HitHurtBox>(out var hitHurtBox)) return;
+                            if (!hitHurtBox.IsEnemyOwner) return;
+                            if (!hitHurtBox.TryGetEnemy(out var enemy)) return;
+                            if (!hitHurtBox.Owner) return;
+
+                            var enemyId = hitHurtBox.Owner.GetInstanceID();
+                            if (_lastHitFrameByEnemy.TryGetValue(enemyId, out var lastFrame) &&
+                                Time.frameCount - lastFrame < SameTargetHitCooldownFrames)
                             {
-                                if(hitHurtBox.Owner.CompareTag("Enemy"))
+                                return;
+                            }
+
+                            _lastHitFrameByEnemy[enemyId] = Time.frameCount;
+
+                            var damageTimes = Global.SuperRotateSword.Value ? Random.Range(2, 4) : 1;
+                            DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value * damageTimes, enemy);
+
+                            //有50%的概率对敌人进行击退
+                            if (Random.Range(0, 1.0f) < 0.5f && Player.Default)
+                            {
+                                var knockbackDirection = collider.NormalizedDirection2DFrom(self);
+                                var playerDirection = collider.NormalizedDirection2DFrom(Player.Default);
+                                var combinedDirection = (knockbackDirection + playerDirection).normalized;
+                                if (combinedDirection.sqrMagnitude <= 0.0001f)
                                 {
-                                    var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
-                                    if (enemy == null) return;
-                                    var damageTimes=Global.SuperRotateSword.Value ? Random.Range(2,3+1) : 1;
+                                    combinedDirection = knockbackDirection.sqrMagnitude > 0.0001f
+                                        ? knockbackDirection
+                                        : playerDirection;
+                                }
 
-                                    DamageSystem.CalculateDamage(Global.RotateSwordDamage.Value * damageTimes,
-                                            enemy);
-
-                                    //有50%的概率对敌人进行击退
-                                    if (Random.Range(0, 1.0f) < 0.5f && Player.Default)
-                                    {
-                                        var knockbackDirection = collider.NormalizedDirection2DFrom(self);
-                                        var playerDirection = collider.NormalizedDirection2DFrom(Player.Default);
-                                        var combinedDirection = (knockbackDirection + playerDirection).normalized;
-                                        if (combinedDirection.sqrMagnitude <= 0.0001f)
-                                        {
-                                            combinedDirection = knockbackDirection.sqrMagnitude > 0.0001f
-                                                ? knockbackDirection
-                                                : playerDirection;
-                                        }
-
-                                        var miniBoss = hitHurtBox.Owner.GetComponent<EnemyMiniBoss>();
-                                        if (miniBoss != null)
-                                        {
-                                            miniBoss.ApplyExternalKnockback(combinedDirection);
-                                        }
-                                        else if (collider && collider.attachedRigidbody)
-                                        {
-                                            collider.attachedRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
-                                        }
-                                    }
+                                var miniBoss = hitHurtBox.CachedMiniBoss;
+                                if (miniBoss != null)
+                                {
+                                    miniBoss.ApplyExternalKnockback(combinedDirection);
+                                }
+                                else if (hitHurtBox.CachedOwnerRigidbody)
+                                {
+                                    hitHurtBox.CachedOwnerRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
                                 }
                             }
 

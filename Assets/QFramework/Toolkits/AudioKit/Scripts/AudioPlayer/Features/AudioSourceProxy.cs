@@ -37,6 +37,15 @@ namespace QFramework
 
         private IActionController mAction = null;
 
+        private void ClearPlayFinishAction()
+        {
+            mOnSoundPlayFinish = null;
+            if (mAction != null)
+            {
+                mAction.Deinit();
+                mAction = null;
+            }
+        }
 
         internal void CreateOrUpdateAudioSource(GameObject root, string name)
         {
@@ -54,6 +63,7 @@ namespace QFramework
 
         internal void OnParentRecycled()
         {
+            ClearPlayFinishAction();
             if (!AudioSourceIsNull())
             {
                 AudioSource
@@ -62,10 +72,30 @@ namespace QFramework
             }
         }
 
+        internal void DestroyAudioSource()
+        {
+            ClearPlayFinishAction();
+            Paused = false;
+            Loop = false;
+            AudioClip = null;
+
+            if (!AudioSourceIsNull())
+            {
+                AudioSource.Stop();
+                AudioSource.clip = null;
+                var audioSourceGameObject = AudioSource.gameObject;
+                AudioSource = null;
+                UnityEngine.Object.Destroy(audioSourceGameObject);
+            }
+        }
+
         internal void Pause()
         {
-            AudioSource.Pause();
-            Paused = true;
+            if (!AudioSourceIsNull())
+            {
+                AudioSource.Pause();
+                Paused = true;
+            }
         }
 
         void RegisterOnSoundPlayFinish()
@@ -76,7 +106,7 @@ namespace QFramework
                 mAction = null;
             }
 
-            mAction = ActionKit.Condition(() => !Paused && !AudioSource.isPlaying, () =>
+            mAction = ActionKit.Condition(() => !Paused && AudioSource && !AudioSource.isPlaying, () =>
                 {
                     mOnSoundPlayFinish?.Invoke();
                     mOnSoundPlayFinish = null;
@@ -96,6 +126,11 @@ namespace QFramework
 
         internal void Play(Action onSoundPlayFinish)
         {
+            if (AudioSourceIsNull())
+            {
+                return;
+            }
+
             ApplyParameters();
 
             Paused = false;
@@ -171,6 +206,7 @@ namespace QFramework
 
         internal void StopAndClearClip()
         {
+            ClearPlayFinishAction();
             Paused = false;
             if (!AudioSourceIsNull())
             {

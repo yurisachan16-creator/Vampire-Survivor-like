@@ -45,7 +45,7 @@ namespace QFramework
         {
             if (!SafeObjectPool<AudioPlayer>.Instance.Recycle(this))
             {
-                AudioSourceProxy.OnParentRecycled();
+                AudioSourceProxy.DestroyAudioSource();
             }
         }
 

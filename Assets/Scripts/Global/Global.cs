@@ -129,8 +129,10 @@ namespace VampireSurvivorLike
         public static void AutoInit()
         {
             //设置音频播放模式，避免同一音效在短时间内重复播放
-            //相同的音效在10帧内只播放一次
+            //移动端在12帧窗口内忽略重复音效，桌面端保持10帧
             AudioKit.PlaySoundMode = AudioKit.PlaySoundModes.IgnoreSameSoundInGlobalFrames;
+            AudioKit.GlobalFrameCountForIgnoreSameSound = Application.isMobilePlatform ? 12 : 10;
+            SfxThrottle.Reset();
             
             // WebGL 实际运行时需要异步初始化，在场景启动时完成
             // 编辑器中即使目标是 WebGL，也使用同步初始化（模拟模式）
@@ -286,6 +288,7 @@ namespace VampireSurvivorLike
             EnemyRegistry.Clear();
             ObjectPoolSystem.ClearAll();
             PowerUpRegistry.Clear();
+            PowerUpMergeSystem.ResetStats();
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
 
             // 从配置文件加载技能属性（如果已加载）
@@ -475,7 +478,7 @@ namespace VampireSurvivorLike
             if (percent < effectiveCoinDropRate)
             {
                 var dropPos = gameObject.Position();
-                if (PowerUpRegistry.CoinCount >= Config.MaxActiveCoinCount)
+                if (PowerUpRegistry.CoinCount >= Config.MaxActiveCoinCountSoft)
                 {
                     var mergePos = Player.Default ? Player.Default.transform.position : (Vector3)dropPos;
                     PowerUpMergeSystem.TryMergeCoinNow(mergePos);

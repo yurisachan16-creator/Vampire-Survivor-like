@@ -88,13 +88,10 @@ namespace VampireSurvivorLike
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            var hitHurtBox = collider.GetComponent<HitHurtBox>();
-            if (!hitHurtBox) return;
-            if (!hitHurtBox.Owner || !hitHurtBox.Owner.CompareTag("Enemy")) return;
+            if (!collider.TryGetComponent<HitHurtBox>(out var hitHurtBox)) return;
+            if (!hitHurtBox.IsEnemyOwner) return;
             if (_segmentHitCount >= _maxHitsPerSegment) return;
-
-            var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
-            if (enemy == null) return;
+            if (!hitHurtBox.TryGetEnemy(out var enemy)) return;
 
             var enemyId = hitHurtBox.Owner.GetInstanceID();
             if (_segmentHitEnemyIds.Contains(enemyId)) return;

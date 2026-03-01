@@ -1,5 +1,6 @@
 using UnityEngine;
 using QFramework;
+using System.Collections.Generic;
 
 namespace VampireSurvivorLike
 {
@@ -12,6 +13,7 @@ namespace VampireSurvivorLike
         private float _baseDamage;
         private bool _superKnife;
         private float _maxDistanceFromPlayer;
+        private readonly HashSet<int> _hitEnemyIds = new HashSet<int>(16);
 
         public void Configure(Vector2 direction, float speed, float baseDamage, bool superKnife, int maxHits, float maxDistanceFromPlayer)
         {
@@ -24,6 +26,7 @@ namespace VampireSurvivorLike
             _maxHits = Mathf.Max(2, maxHits);
             _maxDistanceFromPlayer = Mathf.Max(0.1f, maxDistanceFromPlayer);
             _hitCount = 0;
+            _hitEnemyIds.Clear();
         }
 
         private void Update()
@@ -37,12 +40,13 @@ namespace VampireSurvivorLike
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            var hitHurtBox = collider.GetComponent<HitHurtBox>();
-            if (!hitHurtBox) return;
-            if (!hitHurtBox.Owner || !hitHurtBox.Owner.CompareTag("Enemy")) return;
+            if (!collider.TryGetComponent<HitHurtBox>(out var hitHurtBox)) return;
+            if (!hitHurtBox.IsEnemyOwner) return;
+            if (!hitHurtBox.TryGetEnemy(out var enemy)) return;
 
-            var enemy = hitHurtBox.Owner.GetComponent<IEnemy>();
-            if (enemy == null) return;
+            var enemyId = hitHurtBox.Owner.GetInstanceID();
+            if (_hitEnemyIds.Contains(enemyId)) return;
+            _hitEnemyIds.Add(enemyId);
 
             var damageTimes = _superKnife ? Random.Range(2, 4) : 1;
             DamageSystem.CalculateDamage(_baseDamage * damageTimes, enemy);
@@ -68,11 +72,13 @@ namespace VampireSurvivorLike
             _baseDamage = 0f;
             _superKnife = false;
             _maxDistanceFromPlayer = 20f;
+            _hitEnemyIds.Clear();
         }
 
         public void OnDespawned()
         {
             if (_rb) _rb.velocity = Vector2.zero;
+            _hitEnemyIds.Clear();
         }
     }
 }

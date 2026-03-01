@@ -122,10 +122,20 @@ namespace VampireSurvivorLike
         public const int MaxActiveExpCount = 300;
         /// <summary>场上最多同时存在的金币数量</summary>
         public const int MaxActiveCoinCount = 200;
+        /// <summary>场上金币软上限（超过后会更积极触发合并）</summary>
+        public const int MaxActiveCoinCountSoft = 140;
         /// <summary>经验球/金币合并时的搜索半径（世界单位）</summary>
         public const float ExpMergeRadius = 1.5f;
         /// <summary>经验球/金币合并检查间隔（秒）</summary>
         public const float ExpMergeCheckInterval = 2f;
+        /// <summary>金币合并时的搜索半径（世界单位）</summary>
+        public const float CoinMergeRadius = 2.2f;
+        /// <summary>金币合并检查间隔（秒）</summary>
+        public const float CoinMergeCheckInterval = 0.6f;
+        /// <summary>金币单次合并最小批次</summary>
+        public const int CoinMergeMinBatchCount = 30;
+        /// <summary>金币超量时合并加速系数</summary>
+        public const int CoinMergePressureFactor = 2;
         /// <summary>柠檬 Buff 伤害加成（+40%）</summary>
         public const float LemonBuffDamageBonus = 0.4f;
         /// <summary>柠檬 Buff 持续时间（秒）</summary>
