@@ -88,6 +88,7 @@ Unity 2D（URP 2D）练习项目：做一个“类 Vampire Survivors”的可游
 - `Assets/Scenes`：主场景与测试场景
 - `Assets/Art`：美术资源、动画、音效、Prefab、图集等
 - `Assets/QFramework`：QFramework 源码与工具集
+- `Docs/Project-Structure.md`：项目结构整理规范与巡检方式
 
 ## 说明
 

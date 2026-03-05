@@ -25,3 +25,5 @@
 - 优先保持现有 QFramework 代码风格和 partial + Designer 结构
 - 变更前评估是否影响 WebGL/Android（有平台分支逻辑）
 - 非必要不要动 Build、Library、Temp、AssetBundles 产物目录
+- 新增/移动脚本优先遵守 `Docs/Project-Structure.md` 的目录边界规则
+- `UI*` 脚本放 `Assets/Scripts/UI`，`*System` 脚本放 `Assets/Scripts/System`
