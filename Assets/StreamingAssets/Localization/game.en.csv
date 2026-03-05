@@ -9,3 +9,4 @@ game.ui.coin,Coins: {0}
 game.treasure.heal_1,Restore 1 HP
 game.treasure.add_coin_50,Gain 50 coins
 game.treasure.paired_content,<b>{0}</b>\n{1}
+game.buff.lemon_damage_boost,Damage +{0}%

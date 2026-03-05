@@ -9,3 +9,4 @@ game.ui.coin,コイン:{0}
 game.treasure.heal_1,HP1回復
 game.treasure.add_coin_50,コイン50獲得
 game.treasure.paired_content,<b>{0}</b>\n{1}
+game.buff.lemon_damage_boost,ダメージ+{0}%

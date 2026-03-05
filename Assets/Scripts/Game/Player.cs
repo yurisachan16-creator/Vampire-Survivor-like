@@ -19,6 +19,10 @@ namespace VampireSurvivorLike
 		private Color[] _rendererBaseColors = System.Array.Empty<Color>();
 		private bool _invincibleVisualActive;
 
+		/// <summary>柠檬 Buff 染色开关，由 LemonBuffVisualController 控制</summary>
+		internal bool LemonTintActive;
+		private bool _prevLemonTintActive;
+
 		public static Player Default { get; private set; }
 		public bool IsGameOver => Global.IsGameOver.Value;
 
@@ -35,6 +39,11 @@ namespace VampireSurvivorLike
 			if (!GetComponent<AttackRangeVisualizer>())
 			{
 				gameObject.AddComponent<AttackRangeVisualizer>();
+			}
+
+			if (!GetComponent<LemonBuffVisualController>())
+			{
+				gameObject.AddComponent<LemonBuffVisualController>();
 			}
 
             HurtBox.OnTriggerEnter2DEvent(Collider2D =>
@@ -125,6 +134,7 @@ namespace VampireSurvivorLike
 			if (IsGameOver) return;
 
 			Global.IsGameOver.Value = true;
+			Global.LemonDamageBuffBonus.Value = 0f;
 			Global.ReportPlayerDeath(bossId, damageSource);
 			var deathReason = string.IsNullOrEmpty(bossId) ? damageSource : $"{bossId}:{damageSource}";
 			LeaderboardSystem.RecordCurrentRun(false, LeaderboardSystem.BuildDeathReason(false, deathReason));
@@ -140,6 +150,7 @@ namespace VampireSurvivorLike
 
 			SetPlayerAlpha(1f);
 			_invincibleVisualActive = false;
+			LemonTintActive = false;
 							
 			UIKit.ClosePanel<UIGamePanel>();
 			UIKit.OpenPanel<UIGameOverPanel>();
@@ -152,6 +163,7 @@ namespace VampireSurvivorLike
         void Update()
         {
 			UpdateInvincibleVisual();
+			UpdateLemonTintVisual();
 
             var move = PlatformInput.GetMoveAxisRaw();
             var horizontal = move.x;
@@ -211,6 +223,7 @@ namespace VampireSurvivorLike
 
         void OnDestroy()
         {
+			LemonTintActive = false;
 			SetPlayerAlpha(1f);
             if (Default == this)
 				Default = null;
@@ -258,6 +271,19 @@ namespace VampireSurvivorLike
 			SetPlayerAlpha(alpha);
 		}
 
+		/// <summary>
+		/// 柠檬染色状态变化时刷新角色颜色（非无敌状态下也要体现染色变化）
+		/// </summary>
+		private void UpdateLemonTintVisual()
+		{
+			if (LemonTintActive == _prevLemonTintActive) return;
+			_prevLemonTintActive = LemonTintActive;
+
+			// 仅在无敌闪烁未激活时手动刷新，避免与闪烁逻辑冲突
+			if (!_invincibleVisualActive)
+				SetPlayerAlpha(1f);
+		}
+
 		private void SetPlayerAlpha(float alpha)
 		{
 			if (_playerRenderers == null || _playerRenderers.Length == 0) return;
@@ -269,6 +295,11 @@ namespace VampireSurvivorLike
 				if (!renderer) continue;
 
 				var baseColor = i < _rendererBaseColors.Length ? _rendererBaseColors[i] : renderer.color;
+
+				// 柠檬 Buff 染色叠加
+				if (LemonTintActive)
+					baseColor = LemonBuffVisualController.ApplyLemonTint(baseColor);
+
 				renderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * alpha);
 			}
 		}

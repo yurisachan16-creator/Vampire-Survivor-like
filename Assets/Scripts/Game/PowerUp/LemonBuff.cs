@@ -41,6 +41,7 @@ namespace VampireSurvivorLike
             }
 
             ApplyOrRefreshBuff();
+            ShowBuffFloatingText();
             AudioKit.PlaySound("Retro Event Acute 08");
             this.DestroyGameObjGracefully();
         }
@@ -67,6 +68,16 @@ namespace VampireSurvivorLike
             Global.LemonDamageBuffBonus.Value = 0f;
             _activeRoutine = null;
             _routineHost = null;
+        }
+
+        private static void ShowBuffFloatingText()
+        {
+            if (!Player.Default) return;
+
+            var percent = Mathf.RoundToInt(Config.LemonBuffDamageBonus * 100f);
+            var text = LocalizationManager.Format("game.buff.lemon_damage_boost", percent);
+            var pos = Player.Default.transform.position + Vector3.up * 1.1f;
+            FloatingTextController.Play(pos, text);
         }
 
         protected override Collider2D Collider2D => _collider ? _collider : (_collider = GetComponent<CircleCollider2D>());

@@ -136,8 +136,8 @@ namespace VampireSurvivorLike
         public const int CoinMergeMinBatchCount = 30;
         /// <summary>金币超量时合并加速系数</summary>
         public const int CoinMergePressureFactor = 2;
-        /// <summary>柠檬 Buff 伤害加成（+40%）</summary>
-        public const float LemonBuffDamageBonus = 0.4f;
+        /// <summary>柠檬 Buff 伤害加成（+60%）</summary>
+        public const float LemonBuffDamageBonus = 0.6f;
         /// <summary>柠檬 Buff 持续时间（秒）</summary>
         public const float LemonBuffDurationSeconds = 6f;
         /// <summary>死神出现的游戏时间（秒）</summary>

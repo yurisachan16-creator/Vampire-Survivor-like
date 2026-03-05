@@ -9,3 +9,4 @@ game.ui.coin,金幣:{0}
 game.treasure.heal_1,恢復1點生命值
 game.treasure.add_coin_50,增加50點金幣
 game.treasure.paired_content,<b>{0}</b>\n{1}
+game.buff.lemon_damage_boost,傷害提升{0}%

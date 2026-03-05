@@ -9,3 +9,4 @@ game.ui.coin,코인:{0}
 game.treasure.heal_1,HP 1 회복
 game.treasure.add_coin_50,코인 50 획득
 game.treasure.paired_content,<b>{0}</b>\n{1}
+game.buff.lemon_damage_boost,피해 +{0}%

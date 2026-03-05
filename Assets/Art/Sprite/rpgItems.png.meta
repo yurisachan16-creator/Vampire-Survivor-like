@@ -535,7 +535,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rpgItems_19
+      name: lemon
       rect:
         serializedVersion: 2
         x: 48
@@ -640,7 +640,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Exp
+      name: Exp_1
       rect:
         serializedVersion: 2
         x: 0
@@ -661,7 +661,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rpgItems_25
+      name: Exp_2
       rect:
         serializedVersion: 2
         x: 16
@@ -1490,8 +1490,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Exp: -1385216426
+      Exp_1: -1385216426
+      Exp_2: 203129322
       copper_helmet: 1189292030
+      lemon: 2029990257
       rpgItems_0: 999823366
       rpgItems_1: 226087324
       rpgItems_10: -1130129159
@@ -1503,13 +1505,11 @@ TextureImporter:
       rpgItems_16: 1325295562
       rpgItems_17: -156279914
       rpgItems_18: 511217329
-      rpgItems_19: 2029990257
       rpgItems_2: -1294607307
       rpgItems_20: 76591479
       rpgItems_21: 342274562
       rpgItems_22: 1979503865
       rpgItems_23: -1631574622
-      rpgItems_25: 203129322
       rpgItems_26: 1925313590
       rpgItems_27: 324139074
       rpgItems_28: -599750780
