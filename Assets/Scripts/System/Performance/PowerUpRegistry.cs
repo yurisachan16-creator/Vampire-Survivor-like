@@ -58,12 +58,10 @@ namespace VampireSurvivorLike
             {
                 if (!exp || !exp.gameObject.activeInHierarchy || exp.FlyingToPalyer) continue;
                 var sqrDistance = ((Vector2)exp.transform.position - (Vector2)playerPos).sqrMagnitude;
-                ExpCandidates.Add(new ExpDistanceCandidate(exp, sqrDistance));
+                InsertExpCandidateDescending(new ExpDistanceCandidate(exp, sqrDistance), count);
             }
 
             if (ExpCandidates.Count == 0) return;
-
-            ExpCandidates.Sort(ExpDistanceCandidateComparer.Instance);
 
             var take = Mathf.Min(count, ExpCandidates.Count);
             for (var i = 0; i < take; i++)
@@ -83,12 +81,10 @@ namespace VampireSurvivorLike
             {
                 if (!coin || !coin.gameObject.activeInHierarchy || coin.FlyingToPalyer) continue;
                 var sqrDistance = ((Vector2)coin.transform.position - (Vector2)playerPos).sqrMagnitude;
-                CoinCandidates.Add(new CoinDistanceCandidate(coin, sqrDistance));
+                InsertCoinCandidateDescending(new CoinDistanceCandidate(coin, sqrDistance), count);
             }
 
             if (CoinCandidates.Count == 0) return;
-
-            CoinCandidates.Sort(CoinDistanceCandidateComparer.Instance);
 
             var take = Mathf.Min(count, CoinCandidates.Count);
             for (var i = 0; i < take; i++)
@@ -112,6 +108,62 @@ namespace VampireSurvivorLike
             CoinCandidates.Clear();
         }
 
+        private static void InsertExpCandidateDescending(ExpDistanceCandidate candidate, int maxCount)
+        {
+            if (maxCount <= 0) return;
+            if (ExpCandidates.Count >= maxCount && candidate.SqrDistance <= ExpCandidates[ExpCandidates.Count - 1].SqrDistance) return;
+
+            var insertIndex = ExpCandidates.Count;
+            while (insertIndex > 0 && candidate.SqrDistance > ExpCandidates[insertIndex - 1].SqrDistance)
+            {
+                insertIndex--;
+            }
+
+            if (ExpCandidates.Count < maxCount)
+            {
+                ExpCandidates.Add(default);
+            }
+            else
+            {
+                ExpCandidates[ExpCandidates.Count - 1] = default;
+            }
+
+            for (var i = ExpCandidates.Count - 1; i > insertIndex; i--)
+            {
+                ExpCandidates[i] = ExpCandidates[i - 1];
+            }
+
+            ExpCandidates[insertIndex] = candidate;
+        }
+
+        private static void InsertCoinCandidateDescending(CoinDistanceCandidate candidate, int maxCount)
+        {
+            if (maxCount <= 0) return;
+            if (CoinCandidates.Count >= maxCount && candidate.SqrDistance <= CoinCandidates[CoinCandidates.Count - 1].SqrDistance) return;
+
+            var insertIndex = CoinCandidates.Count;
+            while (insertIndex > 0 && candidate.SqrDistance > CoinCandidates[insertIndex - 1].SqrDistance)
+            {
+                insertIndex--;
+            }
+
+            if (CoinCandidates.Count < maxCount)
+            {
+                CoinCandidates.Add(default);
+            }
+            else
+            {
+                CoinCandidates[CoinCandidates.Count - 1] = default;
+            }
+
+            for (var i = CoinCandidates.Count - 1; i > insertIndex; i--)
+            {
+                CoinCandidates[i] = CoinCandidates[i - 1];
+            }
+
+            CoinCandidates[insertIndex] = candidate;
+        }
+
         private readonly struct ExpDistanceCandidate
         {
             public readonly Exp Exp;
@@ -121,16 +173,6 @@ namespace VampireSurvivorLike
             {
                 Exp = exp;
                 SqrDistance = sqrDistance;
-            }
-        }
-
-        private sealed class ExpDistanceCandidateComparer : IComparer<ExpDistanceCandidate>
-        {
-            public static readonly ExpDistanceCandidateComparer Instance = new ExpDistanceCandidateComparer();
-
-            public int Compare(ExpDistanceCandidate x, ExpDistanceCandidate y)
-            {
-                return y.SqrDistance.CompareTo(x.SqrDistance);
             }
         }
 
@@ -146,14 +188,5 @@ namespace VampireSurvivorLike
             }
         }
 
-        private sealed class CoinDistanceCandidateComparer : IComparer<CoinDistanceCandidate>
-        {
-            public static readonly CoinDistanceCandidateComparer Instance = new CoinDistanceCandidateComparer();
-
-            public int Compare(CoinDistanceCandidate x, CoinDistanceCandidate y)
-            {
-                return y.SqrDistance.CompareTo(x.SqrDistance);
-            }
-        }
     }
 }

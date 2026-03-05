@@ -189,6 +189,7 @@ namespace VampireSurvivorLike
 
             _sb.Append("SRP Batcher: ").Append(UnityEngine.Rendering.GraphicsSettings.useScriptableRenderPipelineBatching ? "On" : "Off").Append('\n');
             _sb.Append("PC Instanced Enemy: ").Append(PcInstancedEnemyRenderer.Enabled ? "On" : "Off").Append('\n');
+            _sb.Append("Adaptive Perf: ").Append(MobileAdaptivePerformanceController.CurrentModeLabel).Append('\n');
 
             _sb.Append("── Game State ──\n");
             _sb.Append("Enemies: ").Append(EnemyGenerator.SmallEnemyCount.Value)

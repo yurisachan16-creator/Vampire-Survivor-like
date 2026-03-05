@@ -21,7 +21,7 @@ namespace VampireSurvivorLike
 
 		void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.GetComponent<CollectableAera>()) return;
+            if (!other.TryGetComponent<CollectableAera>(out _)) return;
             if (Global.IsGameOver.Value) return;
             if (Global.HP.Value >= Global.MaxHP.Value) return;
 

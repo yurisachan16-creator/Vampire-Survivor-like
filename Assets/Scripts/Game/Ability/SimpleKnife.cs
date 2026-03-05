@@ -33,19 +33,13 @@ namespace VampireSurvivorLike
 				var searchRadius = TargetSearchRadius * Mathf.Max(1f, Global.AreaMultiplier.Value);
 				EnemySpatialIndex.GetNearestTargets(Player.Default.transform.position, searchRadius, targetCount, TargetsBuffer);
 
-				
-				var i = 0;
+				if (TargetsBuffer.Count > 0 && SfxThrottle.CanPlay(Sfx.KNIFE))
+				{
+					AudioKit.PlaySound(Sfx.KNIFE);
+				}
+
 				foreach(var targetTransform in TargetsBuffer)
                 {
-					//计时器，游戏中最多同时有4个小刀的声音
-                    if (i < 4)
-                    {
-						ActionKit.DelayFrame(11*i,()=>AudioKit.PlaySound(Sfx.KNIFE))
-									.StartGlobal();
-						i++;
-                        
-                    }		
-
                     if (targetTransform)
 					{
 						var go = ObjectPoolSystem.Spawn(Knife.gameObject, null, true);

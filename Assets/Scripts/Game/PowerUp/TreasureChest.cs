@@ -18,17 +18,12 @@ namespace VampireSurvivorLike
 
 		void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.GetComponent<CollectableAera>())
-            {
-                if (other.GetComponent<CollectableAera>())
-                {
-					UIGamePanel.OpenTreasureChestPanel.Trigger();
-                    //TODO：播放音效
-					AudioKit.PlaySound("Retro Event Acute 08");
-					
-					this.DestroyGameObjGracefully();
-				}
-			}
+			if (!other.TryGetComponent<CollectableAera>(out _)) return;
+
+			UIGamePanel.OpenTreasureChestPanel.Trigger();
+            //TODO：播放音效
+			AudioKit.PlaySound("Retro Event Acute 08");
+			this.DestroyGameObjGracefully();
 				
     	}
 

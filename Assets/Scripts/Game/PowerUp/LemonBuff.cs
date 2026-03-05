@@ -26,7 +26,7 @@ namespace VampireSurvivorLike
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.GetComponent<CollectableAera>()) return;
+            if (!other.TryGetComponent<CollectableAera>(out _)) return;
             if (Global.IsGameOver.Value) return;
 
             FlyingToPalyer = true;

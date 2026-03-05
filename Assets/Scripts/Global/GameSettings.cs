@@ -126,6 +126,7 @@ namespace VampireSurvivorLike
         private static List<ResolutionOption> _cachedResolutions;
         private static bool _difficultyStateInitialized;
         private static bool _difficultyConfigLoaded;
+        private static bool _enableAdaptiveMobilePerformance = true;
         private static GameDifficulty _selectedDifficulty = GameDifficulty.Normal;
         private static GameDifficulty _activeRunDifficulty = GameDifficulty.Normal;
         private static bool _activeRunCaptured;
@@ -269,6 +270,12 @@ namespace VampireSurvivorLike
                 PlayerPrefs.Save();
                 PcInstancedEnemyRenderer.ApplyStartup();
             }
+        }
+
+        public static bool EnableAdaptiveMobilePerformance
+        {
+            get => _enableAdaptiveMobilePerformance;
+            set => _enableAdaptiveMobilePerformance = value;
         }
 
         public static int MaxSmallEnemyCountWebGL
@@ -722,6 +729,8 @@ namespace VampireSurvivorLike
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void ApplySettingsOnStartup()
         {
+            EnableAdaptiveMobilePerformance = true;
+
             if (Application.isMobilePlatform)
             {
                 Screen.autorotateToPortrait = false;

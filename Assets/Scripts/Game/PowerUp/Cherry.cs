@@ -6,6 +6,8 @@ namespace VampireSurvivorLike
     public class Cherry : PowerUp
     {
         private CircleCollider2D _collider;
+        private static readonly System.Collections.Generic.List<Enemy> SmallEnemyBuffer = new System.Collections.Generic.List<Enemy>(2048);
+        private static readonly System.Collections.Generic.List<EnemyMiniBoss> BossEnemyBuffer = new System.Collections.Generic.List<EnemyMiniBoss>(256);
 
         private void OnEnable()
         {
@@ -23,7 +25,7 @@ namespace VampireSurvivorLike
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.GetComponent<CollectableAera>()) return;
+            if (!other.TryGetComponent<CollectableAera>(out _)) return;
             if (Global.IsGameOver.Value) return;
 
             FlyingToPalyer = true;
@@ -38,13 +40,23 @@ namespace VampireSurvivorLike
             }
 
             var damage = CalculateCherryDamage();
-            foreach (var enemyObj in GameObject.FindGameObjectsWithTag("Enemy"))
+            EnemyRegistry.AddAllSmallEnemiesTo(SmallEnemyBuffer);
+            for (var i = 0; i < SmallEnemyBuffer.Count; i++)
             {
-                if (!enemyObj || !enemyObj.activeSelf) continue;
-                var enemy = enemyObj.GetComponent<IEnemy>();
-                if (enemy == null) continue;
+                var enemy = SmallEnemyBuffer[i];
+                if (!enemy || !enemy.gameObject.activeInHierarchy) continue;
                 DamageSystem.CalculateDamage(damage, enemy, maxNormalDamage: 1, criticalDamageTimes: 2.5f);
             }
+            SmallEnemyBuffer.Clear();
+
+            EnemyRegistry.AddAllBossEnemiesTo(BossEnemyBuffer);
+            for (var i = 0; i < BossEnemyBuffer.Count; i++)
+            {
+                var enemy = BossEnemyBuffer[i];
+                if (!enemy || !enemy.gameObject.activeInHierarchy) continue;
+                DamageSystem.CalculateDamage(damage, enemy, maxNormalDamage: 1, criticalDamageTimes: 2.5f);
+            }
+            BossEnemyBuffer.Clear();
 
             AudioKit.PlaySound("BombExplosion");
             CameraController.ShakeCamera();

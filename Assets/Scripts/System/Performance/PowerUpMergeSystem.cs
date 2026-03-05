@@ -13,8 +13,10 @@ namespace VampireSurvivorLike
 
         private static readonly List<Exp> ExpCandidates = new List<Exp>(1024);
         private static readonly List<Exp> ExpMergeBatch = new List<Exp>(1024);
+        private static readonly HashSet<Exp> ExpMergeSet = new HashSet<Exp>();
         private static readonly List<Coin> CoinCandidates = new List<Coin>(1024);
         private static readonly List<Coin> CoinMergeBatch = new List<Coin>(1024);
+        private static readonly HashSet<Coin> CoinMergeSet = new HashSet<Coin>();
 
         private float _nextExpCheckTime;
         private float _nextCoinCheckTime;
@@ -154,6 +156,7 @@ namespace VampireSurvivorLike
         private static int BuildExpMergeBatch(Vector3 playerPos, int desiredCount)
         {
             ExpMergeBatch.Clear();
+            ExpMergeSet.Clear();
             PowerUpRegistry.GetFarthestExps(playerPos, desiredCount, ExpCandidates);
             if (ExpCandidates.Count == 0) return 0;
 
@@ -162,7 +165,7 @@ namespace VampireSurvivorLike
             if (!anchor) return 0;
 
             var anchorPos = anchor.transform.position;
-            ExpMergeBatch.Add(anchor);
+            AddExpToMergeBatch(anchor);
 
             for (var i = 1; i < ExpCandidates.Count; i++)
             {
@@ -171,7 +174,7 @@ namespace VampireSurvivorLike
                 if (!exp) continue;
                 if ((exp.transform.position - anchorPos).sqrMagnitude <= radiusSqr)
                 {
-                    ExpMergeBatch.Add(exp);
+                    AddExpToMergeBatch(exp);
                 }
             }
 
@@ -179,8 +182,8 @@ namespace VampireSurvivorLike
             {
                 if (ExpMergeBatch.Count >= desiredCount) break;
                 var exp = ExpCandidates[i];
-                if (!exp || ExpMergeBatch.Contains(exp)) continue;
-                ExpMergeBatch.Add(exp);
+                if (!exp) continue;
+                AddExpToMergeBatch(exp);
             }
 
             return ExpMergeBatch.Count;
@@ -189,6 +192,7 @@ namespace VampireSurvivorLike
         private static int BuildCoinMergeBatch(Vector3 playerPos, int desiredCount)
         {
             CoinMergeBatch.Clear();
+            CoinMergeSet.Clear();
             PowerUpRegistry.GetFarthestCoins(playerPos, desiredCount, CoinCandidates);
             if (CoinCandidates.Count == 0) return 0;
 
@@ -197,7 +201,7 @@ namespace VampireSurvivorLike
             if (!anchor) return 0;
 
             var anchorPos = anchor.transform.position;
-            CoinMergeBatch.Add(anchor);
+            AddCoinToMergeBatch(anchor);
 
             for (var i = 1; i < CoinCandidates.Count; i++)
             {
@@ -206,7 +210,7 @@ namespace VampireSurvivorLike
                 if (!coin) continue;
                 if ((coin.transform.position - anchorPos).sqrMagnitude <= radiusSqr)
                 {
-                    CoinMergeBatch.Add(coin);
+                    AddCoinToMergeBatch(coin);
                 }
             }
 
@@ -214,11 +218,25 @@ namespace VampireSurvivorLike
             {
                 if (CoinMergeBatch.Count >= desiredCount) break;
                 var coin = CoinCandidates[i];
-                if (!coin || CoinMergeBatch.Contains(coin)) continue;
-                CoinMergeBatch.Add(coin);
+                if (!coin) continue;
+                AddCoinToMergeBatch(coin);
             }
 
             return CoinMergeBatch.Count;
+        }
+
+        private static void AddExpToMergeBatch(Exp exp)
+        {
+            if (!exp) return;
+            if (!ExpMergeSet.Add(exp)) return;
+            ExpMergeBatch.Add(exp);
+        }
+
+        private static void AddCoinToMergeBatch(Coin coin)
+        {
+            if (!coin) return;
+            if (!CoinMergeSet.Add(coin)) return;
+            CoinMergeBatch.Add(coin);
         }
     }
 }

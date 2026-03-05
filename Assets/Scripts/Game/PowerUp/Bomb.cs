@@ -40,12 +40,10 @@ namespace VampireSurvivorLike
         }
 		void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.GetComponent<CollectableAera>())
-            {
-				Execute();
-				
-				this.DestroyGameObjGracefully();
-            }
+			if (!other.TryGetComponent<CollectableAera>(out _)) return;
+
+			Execute();
+			this.DestroyGameObjGracefully();
         }
 
 		protected override Collider2D Collider2D => SelfCircleCollider2D;

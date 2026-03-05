@@ -12,8 +12,6 @@ namespace VampireSurvivorLike
             Returning
         }
 
-        private static readonly List<Transform> TargetBuffer = new List<Transform>(8);
-
         private Rigidbody2D _rb;
         private Vector2 _originPosition;
         private Vector2 _outboundDirection;
@@ -122,10 +120,9 @@ namespace VampireSurvivorLike
         {
             if (Player.Default)
             {
-                EnemySpatialIndex.GetNearestTargets(Player.Default.transform.position, 20f, 1, TargetBuffer);
-                if (TargetBuffer.Count > 0 && TargetBuffer[0])
+                if (EnemySpatialIndex.TryGetNearestTarget(Player.Default.transform.position, 20f, out var nearest) && nearest)
                 {
-                    var targetDir = ((Vector2)TargetBuffer[0].position - (Vector2)Player.Default.transform.position).normalized;
+                    var targetDir = ((Vector2)nearest.position - (Vector2)Player.Default.transform.position).normalized;
                     if (targetDir.sqrMagnitude > 0.001f)
                     {
                         return targetDir;

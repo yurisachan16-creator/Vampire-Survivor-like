@@ -22,8 +22,11 @@ namespace VampireSurvivorLike
         private readonly HashSet<Enemy> _enemies = new HashSet<Enemy>();
         private readonly List<Enemy> _iteration = new List<Enemy>(8192);
         private readonly Dictionary<Enemy, float> _nextMoveTime = new Dictionary<Enemy, float>(8192);
+        private readonly List<Enemy> _nextMoveTimeCleanup = new List<Enemy>(256);
         private Camera _cachedMainCamera;
         private float _nextCameraRefreshTime;
+        private float _nextCompactionTime;
+        private bool _iterationDirty = true;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -49,14 +52,23 @@ namespace VampireSurvivorLike
         {
             if (!Enabled) return;
             if (!_instance || !enemy) return;
-            _instance._enemies.Add(enemy);
+            if (_instance._enemies.Add(enemy))
+            {
+                _instance._iterationDirty = true;
+            }
         }
 
         public static void Unregister(Enemy enemy)
         {
             if (!_instance || !enemy) return;
-            _instance._enemies.Remove(enemy);
-            _instance._nextMoveTime.Remove(enemy);
+            if (_instance._enemies.Remove(enemy))
+            {
+                _instance._iterationDirty = true;
+            }
+            if (_instance._nextMoveTime.Remove(enemy))
+            {
+                _instance._iterationDirty = true;
+            }
         }
 
         private void FixedUpdate()
@@ -64,11 +76,9 @@ namespace VampireSurvivorLike
             if (!Enabled) return;
             if (!Player.Default) return;
 
-            _iteration.Clear();
-            foreach (var e in _enemies)
+            if (_iterationDirty || Time.unscaledTime >= _nextCompactionTime)
             {
-                if (!e) continue;
-                _iteration.Add(e);
+                RebuildIterationCache();
             }
 
             var playerPos = (Vector2)Player.Default.transform.position;
@@ -126,6 +136,35 @@ namespace VampireSurvivorLike
                     e.ApplyLod(enableAnimation, enableShadow, enableSprite);
                 }
             }
+        }
+
+        private void RebuildIterationCache()
+        {
+            _iteration.Clear();
+
+            foreach (var e in _enemies)
+            {
+                if (!e) continue;
+                _iteration.Add(e);
+            }
+
+            _nextMoveTimeCleanup.Clear();
+            foreach (var kv in _nextMoveTime)
+            {
+                if (!kv.Key || !_enemies.Contains(kv.Key))
+                {
+                    _nextMoveTimeCleanup.Add(kv.Key);
+                }
+            }
+
+            for (var i = 0; i < _nextMoveTimeCleanup.Count; i++)
+            {
+                _nextMoveTime.Remove(_nextMoveTimeCleanup[i]);
+            }
+            _nextMoveTimeCleanup.Clear();
+
+            _iterationDirty = false;
+            _nextCompactionTime = Time.unscaledTime + 0.5f;
         }
 
         private Camera GetMainCamera()

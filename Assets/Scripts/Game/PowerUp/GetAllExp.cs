@@ -76,7 +76,7 @@ namespace VampireSurvivorLike
 
 		void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.GetComponent<CollectableAera>())
+            if (other.TryGetComponent<CollectableAera>(out _))
             {
 				PowerUpManager.Default.StartCoroutine(FlyToPlayerStart());
 

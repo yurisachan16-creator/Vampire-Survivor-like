@@ -6,7 +6,7 @@ namespace VampireSurvivorLike
     [DisallowMultipleComponent]
     public sealed class PooledArrowProjectile : MonoBehaviour, ObjectPoolSystem.IPoolable
     {
-        private static readonly List<Transform> HomingTargetBuffer = new List<Transform>(4);
+        private const float HomingSearchRadius = 8f;
 
         private Rigidbody2D _rb;
         private float _damage;
@@ -17,6 +17,8 @@ namespace VampireSurvivorLike
         private Vector2 _spawnPosition;
         private int _hitCount;
         private int _maxHits;
+        private Transform _homingTarget;
+        private int _nextHomingQueryFrame;
         private readonly HashSet<int> _hitEnemyIds = new HashSet<int>(16);
 
         public void Configure(
@@ -36,6 +38,8 @@ namespace VampireSurvivorLike
             _homingStrength = Mathf.Clamp01(homingStrength);
             _spawnPosition = transform.position;
             _hitCount = 0;
+            _homingTarget = null;
+            _nextHomingQueryFrame = Time.frameCount;
             _hitEnemyIds.Clear();
             _rb.velocity = _direction * _speed;
             transform.up = _direction;
@@ -45,11 +49,18 @@ namespace VampireSurvivorLike
         {
             if (_homingStrength > 0f)
             {
-                EnemySpatialIndex.GetNearestTargets(transform.position, 8f, 1, HomingTargetBuffer);
-                if (HomingTargetBuffer.Count > 0 && HomingTargetBuffer[0])
+                if (Time.frameCount >= _nextHomingQueryFrame)
                 {
-                    var toTarget = ((Vector2)HomingTargetBuffer[0].position - (Vector2)transform.position).normalized;
-                    _direction = Vector2.Lerp(_direction, toTarget, _homingStrength * 10f * Time.deltaTime).normalized;
+                    RefreshHomingTarget();
+                }
+
+                if (_homingTarget)
+                {
+                    var toTarget = ((Vector2)_homingTarget.position - (Vector2)transform.position).normalized;
+                    if (toTarget.sqrMagnitude > 0.0001f)
+                    {
+                        _direction = Vector2.Lerp(_direction, toTarget, _homingStrength * 10f * Time.deltaTime).normalized;
+                    }
                 }
             }
 
@@ -59,6 +70,19 @@ namespace VampireSurvivorLike
             if (((Vector2)transform.position - _spawnPosition).sqrMagnitude > _maxDistanceFromSpawn * _maxDistanceFromSpawn)
             {
                 ObjectPoolSystem.Despawn(gameObject);
+            }
+        }
+
+        private void RefreshHomingTarget()
+        {
+            _nextHomingQueryFrame = Time.frameCount + (Application.isMobilePlatform ? 2 : 1);
+            if (EnemySpatialIndex.TryGetNearestTarget(transform.position, HomingSearchRadius, out var nearest) && nearest)
+            {
+                _homingTarget = nearest;
+            }
+            else
+            {
+                _homingTarget = null;
             }
         }
 
@@ -98,12 +122,15 @@ namespace VampireSurvivorLike
             _homingStrength = 0f;
             _direction = Vector2.up;
             _spawnPosition = transform.position;
+            _homingTarget = null;
+            _nextHomingQueryFrame = 0;
             _hitEnemyIds.Clear();
         }
 
         public void OnDespawned()
         {
             if (_rb) _rb.velocity = Vector2.zero;
+            _homingTarget = null;
             _hitEnemyIds.Clear();
         }
     }

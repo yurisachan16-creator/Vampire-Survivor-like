@@ -65,27 +65,44 @@ namespace VampireSurvivorLike
 		private const float MinGuideDistance = 8f;
 		private const float BlinkPeriodSeconds = 0.8f;
 		private const float PulseDurationSeconds = 1.2f;
+		private const float ExpDropFeedbackIntervalSeconds = 0.18f;
+		private const int MaxPulseRingsMobile = 4;
+		private const int MaxPulseRingsDesktop = 8;
 
 		private readonly Dictionary<int, TargetInfo> _targets = new Dictionary<int, TargetInfo>(64);
 		private readonly List<TargetInfo> _visibleTargets = new List<TargetInfo>(64);
 		private readonly List<ArrowEntry> _arrowPool = new List<ArrowEntry>(MaxArrowCount);
 		private readonly Dictionary<string, AudioClip> _cached3DSfx = new Dictionary<string, AudioClip>(8);
 		private readonly List<Pooled3DSoundEntry> _sound3DPool = new List<Pooled3DSoundEntry>(Max3DSounds);
+		private readonly List<LootPulseRingRunner> _pulseRingPool = new List<LootPulseRingRunner>(MaxPulseRingsDesktop);
+		private readonly Stack<LootPulseRingRunner> _availablePulseRings = new Stack<LootPulseRingRunner>(MaxPulseRingsDesktop);
 
 		private RectTransform _overlayRoot;
 		private Canvas _overlayCanvas;
 		private Camera _worldCamera;
 		private Transform _playerTransform;
 		private ResLoader _sfxLoader;
+		private int _activePulseRingCount;
 
 		private static readonly int ShaderColorId = Shader.PropertyToID("_Color");
 		private static readonly int ShaderProgressId = Shader.PropertyToID("_Progress");
+		private static float _nextExpDropFeedbackTime;
+		private static bool _expDropPulseFeedbackEnabled = true;
+
+		public static bool ExpDropPulseFeedbackEnabled => _expDropPulseFeedbackEnabled;
+
+		public static void SetExpDropPulseFeedbackEnabled(bool enabled)
+		{
+			_expDropPulseFeedbackEnabled = enabled;
+		}
 
 		private void Awake()
 		{
 			Current = this;
 			_sfxLoader = ResLoader.Allocate();
 			_active3DSoundCount = 0;
+			_activePulseRingCount = 0;
+			_nextExpDropFeedbackTime = 0f;
 			Ensure3DSoundPool();
 		}
 
@@ -109,6 +126,7 @@ namespace VampireSurvivorLike
 			_arrowPool.Clear();
 			_cached3DSfx.Clear();
 			Clear3DSoundPool();
+			ClearPulseRingPool();
 
 			if (_sfxLoader != null)
 			{
@@ -140,6 +158,12 @@ namespace VampireSurvivorLike
 		public void TryPlayDropFeedback(Vector3 worldPosition, LootGuideKind kind)
 		{
 			if (!GameSettings.EnableLootGuide) return;
+			if (kind == LootGuideKind.Exp)
+			{
+				if (!_expDropPulseFeedbackEnabled) return;
+				if (Time.unscaledTime < _nextExpDropFeedbackTime) return;
+				_nextExpDropFeedbackTime = Time.unscaledTime + ExpDropFeedbackIntervalSeconds;
+			}
 
 			var color = GetRarityColor(kind);
 			SpawnPulseRing(worldPosition, color);
@@ -357,24 +381,10 @@ namespace VampireSurvivorLike
 
 		private static void SpawnPulseRing(Vector3 worldPosition, Color color)
 		{
-			var shader = Shader.Find("VSL/LootPulseRing");
-			if (!shader) return;
-
-			var go = new GameObject("LootPulseRing");
-			go.transform.position = worldPosition;
-
-			var sr = go.AddComponent<SpriteRenderer>();
-			sr.sortingOrder = 50;
-			sr.sprite = LootPulseRingSprite.Shared;
-
-			var block = new MaterialPropertyBlock();
-			block.SetColor(ShaderColorId, color);
-			block.SetFloat(ShaderProgressId, 0f);
-			sr.SetPropertyBlock(block);
-			sr.sharedMaterial = LootPulseRingMaterial.Get(shader);
-
-			var runner = go.AddComponent<LootPulseRingRunner>();
-			runner.Initialize(sr, block, PulseDurationSeconds, ShaderProgressId);
+			if (Current == null) return;
+			var runner = Current.AcquirePulseRing();
+			if (runner == null) return;
+			runner.Play(worldPosition, color, PulseDurationSeconds);
 		}
 
 		private static int _active3DSoundCount;
@@ -509,6 +519,69 @@ namespace VampireSurvivorLike
 			_active3DSoundCount = 0;
 		}
 
+		private LootPulseRingRunner AcquirePulseRing()
+		{
+			var maxActive = Application.isMobilePlatform ? MaxPulseRingsMobile : MaxPulseRingsDesktop;
+			if (_activePulseRingCount >= maxActive) return null;
+
+			LootPulseRingRunner runner = null;
+			if (_availablePulseRings.Count > 0)
+			{
+				runner = _availablePulseRings.Pop();
+			}
+			else if (_pulseRingPool.Count < maxActive)
+			{
+				runner = CreatePulseRingRunner();
+			}
+
+			if (runner == null) return null;
+			_activePulseRingCount++;
+			return runner;
+		}
+
+		private LootPulseRingRunner CreatePulseRingRunner()
+		{
+			var shader = Shader.Find("VSL/LootPulseRing");
+			if (!shader) return null;
+
+			var go = new GameObject("LootPulseRing");
+			go.transform.SetParent(transform, false);
+			go.SetActive(false);
+
+			var sr = go.AddComponent<SpriteRenderer>();
+			sr.sortingOrder = 50;
+			sr.sprite = LootPulseRingSprite.Shared;
+			sr.sharedMaterial = LootPulseRingMaterial.Get(shader);
+
+			var block = new MaterialPropertyBlock();
+			var runner = go.AddComponent<LootPulseRingRunner>();
+			runner.Initialize(this, sr, block, ShaderColorId, ShaderProgressId);
+
+			_pulseRingPool.Add(runner);
+			return runner;
+		}
+
+		private void ReleasePulseRing(LootPulseRingRunner runner)
+		{
+			if (runner == null) return;
+			runner.StopAndHide();
+			_activePulseRingCount = Mathf.Max(0, _activePulseRingCount - 1);
+			_availablePulseRings.Push(runner);
+		}
+
+		private void ClearPulseRingPool()
+		{
+			for (var i = 0; i < _pulseRingPool.Count; i++)
+			{
+				var runner = _pulseRingPool[i];
+				if (runner) Destroy(runner.gameObject);
+			}
+
+			_pulseRingPool.Clear();
+			_availablePulseRings.Clear();
+			_activePulseRingCount = 0;
+		}
+
 		private sealed class Pooled3DSoundEntry
 		{
 			public readonly GameObject Root;
@@ -527,26 +600,57 @@ namespace VampireSurvivorLike
 
 		private sealed class LootPulseRingRunner : MonoBehaviour
 		{
+			private LootGuideSystem _owner;
 			private SpriteRenderer _renderer;
 			private MaterialPropertyBlock _block;
 			private float _duration;
 			private float _startTime;
+			private int _colorId;
 			private int _progressId;
+			private bool _inUse;
 
-			public void Initialize(SpriteRenderer renderer, MaterialPropertyBlock block, float duration, int progressId)
+			public void Initialize(LootGuideSystem owner, SpriteRenderer renderer, MaterialPropertyBlock block, int colorId, int progressId)
 			{
+				_owner = owner;
 				_renderer = renderer;
 				_block = block;
+				_colorId = colorId;
+				_progressId = progressId;
+				_duration = 1f;
+				_startTime = 0f;
+				_inUse = false;
+			}
+
+			public void Play(Vector3 worldPosition, Color color, float duration)
+			{
+				if (!_renderer) return;
+				transform.position = worldPosition;
+				transform.localScale = new Vector3(0.75f, 0.75f, 1f);
+
 				_duration = Mathf.Max(0.01f, duration);
 				_startTime = Time.unscaledTime;
-				_progressId = progressId;
+				_inUse = true;
+
+				_block.SetColor(_colorId, color);
+				_block.SetFloat(_progressId, 0f);
+				_renderer.SetPropertyBlock(_block);
+				if (!gameObject.activeSelf) gameObject.SetActive(true);
+			}
+
+			public void StopAndHide()
+			{
+				_inUse = false;
+				if (gameObject.activeSelf) gameObject.SetActive(false);
 			}
 
 			private void Update()
 			{
+				if (!_inUse) return;
+
 				if (!_renderer)
 				{
-					Destroy(gameObject);
+					_inUse = false;
+					_owner?.ReleasePulseRing(this);
 					return;
 				}
 
@@ -559,7 +663,8 @@ namespace VampireSurvivorLike
 
 				if (t >= 1f)
 				{
-					Destroy(gameObject);
+					_inUse = false;
+					_owner?.ReleasePulseRing(this);
 				}
 			}
 		}
