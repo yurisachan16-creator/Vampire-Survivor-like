@@ -1,0 +1,17 @@
+key,value
+ability.simple_sword.name,검
+ability.simple_sword.desc,가장 가까운 적을 베기
+ability.simple_knife.name,단검
+ability.simple_knife.desc,가장 가까운 적에게 단검 투척
+ability.rotate_sword.name,수호검
+ability.rotate_sword.desc,캐릭터 주위를 회전하는 검
+ability.basket_ball.name,농구공
+ability.basket_ball.desc,튕기면서 적을 공격하는 공
+ability.bomb.name,폭탄
+ability.bomb.desc,폭발하여 주변 적에게 피해
+ability.simple_axe.name,동검
+ability.simple_axe.desc,위로 던져 포물선으로 떨어지는 검
+ability.magic_wand.name,마법 지팡이
+ability.magic_wand.desc,가장 가까운 적에게 자동 마탄 발사
+ability.simple_bow.name,활
+ability.simple_bow.desc,고속 관통 화살 발사

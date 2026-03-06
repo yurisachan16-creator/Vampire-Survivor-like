@@ -1,0 +1,63 @@
+key,value
+ui.settings.language,언어
+ui.settings.difficulty,난이도
+ui.settings.difficulty_easy,쉬움
+ui.settings.difficulty_normal,보통
+ui.settings.difficulty_hard,어려움
+ui.settings.difficulty_next_run_notice,다음 판부터 적용됩니다
+ui.settings.fullscreen,전체 화면
+ui.settings.windowed,창 모드
+ui.settings.screen_mode,창 모드/전체 화면
+ui.settings.resolution,해상도
+ui.settings.auto_detect,자동 감지
+ui.settings.loot_guide,아이템 가이드
+ui.settings.title,설정
+ui.settings.back,돌아가기
+ui.settings.music,음악
+ui.settings.sfx,효과음
+ui.settings.music_volume,음악 음량
+ui.settings.sound_volume,효과음 음량
+ui.settings.return_main_menu,메인 메뉴
+ui.settings.quit,종료
+ui.settings.lang_en,English
+ui.settings.lang_zh,중국어
+ui.settings.lang_zh_hans,간체 중국어
+ui.settings.lang_zh_hant,번체 중국어
+ui.settings.lang_ja,일본어
+ui.settings.lang_ko,한국어
+ui.start.start_game,게임 시작
+ui.start.settings,설정
+ui.start.achievement,업적
+ui.start.coin_upgrade,코인 업그레이드
+ui.achievement.completed,【완료】
+ui.achievement.unlocked_title,<b>업적{0} 달성!</b>
+ui.gameover.title,게임 오버
+ui.gamepass.title,스테이지 클리어
+ui.result.difficulty_label,난이도: {0}
+ui.result.enemy_strength_modifier,적 강도 {0}
+ui.result.reward_modifier,보상 {0}
+ui.result.difficulty_summary,{0} | {1} | {2}
+achievement.3_minutes.name,3분 생존
+achievement.3_minutes.desc,3분 생존\\n보상: 코인 1000개
+achievement.5_minutes.name,5분 생존
+achievement.5_minutes.desc,5분 생존\\n보상: 코인 1000개
+achievement.10_minutes.name,10분 생존
+achievement.10_minutes.desc,10분 생존\\n보상: 코인 1000개
+achievement.20_minutes.name,20분 생존
+achievement.20_minutes.desc,20분 생존\\n보상: 코인 1000개
+achievement.lv30.name,레벨 30
+achievement.lv30.desc,처음으로 레벨 30 도달\\n보상: 코인 1000개
+achievement.lv50.name,레벨 50
+achievement.lv50.desc,처음으로 레벨 50 도달\\n보상: 코인 1000개
+achievement.first_time_paired_ball.name,합성 농구공
+achievement.first_time_paired_ball.desc,처음으로 합성 농구공 해제\\n보상: 코인 1000개
+achievement.first_time_paired_bomb.name,합성 폭탄
+achievement.first_time_paired_bomb.desc,처음으로 합성 폭탄 해제\\n보상: 코인 1000개
+achievement.first_time_paired_sword.name,합성 검
+achievement.first_time_paired_sword.desc,처음으로 합성 검 해제\\n보상: 코인 1000개
+achievement.first_time_paired_knife.name,합성 단검
+achievement.first_time_paired_knife.desc,처음으로 합성 단검 해제\\n보상: 코인 1000개
+achievement.first_time_paired_circle.name,합성 수호검
+achievement.first_time_paired_circle.desc,처음으로 합성 수호검 해제\\n보상: 코인 1000개
+achievement.all_ability_upgrade.name,전체 능력 업그레이드
+achievement.all_ability_upgrade.desc,전체 능력 업그레이드 완료\\n보상: 코인 1000개

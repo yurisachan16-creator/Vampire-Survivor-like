@@ -14,10 +14,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appLocationPath: ./Build
   profiles:
-  - productName: Vampire Survivor-like
+  - profileLabel: TapTap Windows Release
+    productName: Vampire Survivor-like
     isBuild: 1
     platform: 5
-    saveLocation: D:\unity\Vampire Survivor-like\Build\Windows
+    saveLocation: TapTap\Windows\Raw
+    productVersion: 0.12.0
+    buildOptions: 0
+    scenes:
+    - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
+      enabled: 1
+    - scene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
+      enabled: 1
+    customTask:
+    - enabled: 0
+      task: {fileID: 0}
+  - profileLabel: TapTap Android Release
+    productName: Vampire Survivor-like
+    isBuild: 1
+    platform: 13
+    saveLocation: TapTap\Android\Unsigned
+    productVersion: 0.12.0
+    buildOptions: 0
+    scenes:
+    - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
+      enabled: 1
+    - scene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
+      enabled: 1
+    customTask: []
+  - productName: Vampire Survivor-like
+    profileLabel: Legacy Windows Build
+    isBuild: 0
+    platform: 5
+    saveLocation: Windows
     productVersion: 0.11.12
     buildOptions: 0
     scenes:
@@ -29,9 +58,10 @@ MonoBehaviour:
     - enabled: 0
       task: {fileID: 0}
   - productName: Vampire Survivor-like
-    isBuild: 1
+    profileLabel: Legacy Android Development
+    isBuild: 0
     platform: 13
-    saveLocation: D:\unity\Vampire Survivor-like\Build\Android\Development
+    saveLocation: Android\Development
     productVersion: 0.11.12
     buildOptions: 0
     scenes:
@@ -41,9 +71,10 @@ MonoBehaviour:
       enabled: 1
     customTask: []
   - productName: Vampire Survivor-like
-    isBuild: 1
+    profileLabel: Legacy WebGL Build
+    isBuild: 0
     platform: 20
-    saveLocation: D:\unity\Vampire Survivor-like\Build\WebGL
+    saveLocation: WebGL
     productVersion: 0.11.12
     buildOptions: 0
     scenes:

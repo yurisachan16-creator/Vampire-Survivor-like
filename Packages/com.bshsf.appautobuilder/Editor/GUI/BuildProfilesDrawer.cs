@@ -22,7 +22,9 @@ namespace zFramework.AppBuilder
             //  将 platform 绘制成 label 后缀 ，例如：OneApp(Windows64)
             var platform = property.FindPropertyRelative("platform");
             var appname = property.FindPropertyRelative("productName").stringValue;
-            var label_platform = $"{appname}({platform.enumDisplayNames[platform.enumValueIndex]})";
+            var profileLabel = property.FindPropertyRelative("profileLabel").stringValue;
+            var displayName = string.IsNullOrWhiteSpace(profileLabel) ? appname : profileLabel;
+            var label_platform = $"{displayName}({platform.enumDisplayNames[platform.enumValueIndex]})";
             label_p.text = label_platform;
 
             // 将 isbuild 绘制在 foldout 右侧，靠右对齐
@@ -53,6 +55,7 @@ namespace zFramework.AppBuilder
             }
             Rect rect = position;
             rect.height = EditorGUIUtility.singleLineHeight;     // skip foldout
+            DrawProperty(ref rect, "profileLabel");                // draw profileLabel
             DrawProperty(ref rect, "productName");                  // draw productName
             DrawProperty(ref rect, "isBuild");                               // draw isBuild
             DrawProperty(ref rect, "platform");                           // draw platform

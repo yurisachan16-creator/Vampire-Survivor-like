@@ -1,0 +1,17 @@
+key,value
+ability.simple_sword.name,劍
+ability.simple_sword.desc,向最近的敵人揮劍
+ability.simple_knife.name,飛刀
+ability.simple_knife.desc,向最近的敵人發射飛刀
+ability.rotate_sword.name,守衛劍
+ability.rotate_sword.desc,環繞角色旋轉的劍
+ability.basket_ball.name,籃球
+ability.basket_ball.desc,彈射攻擊敵人的籃球
+ability.bomb.name,炸彈
+ability.bomb.desc,爆炸傷害周圍敵人
+ability.simple_axe.name,銅劍
+ability.simple_axe.desc,向上拋出劍體並沿拋物線落下
+ability.magic_wand.name,魔杖
+ability.magic_wand.desc,自動朝最近敵人發射魔彈
+ability.simple_bow.name,弓箭
+ability.simple_bow.desc,向最近敵人射出高速穿透箭矢

@@ -1,0 +1,211 @@
+key,value
+exp_upgrade.ui.paired_weapon,ペア武器：{0}
+coin_upgrade.ui.item_price,{0} (価格:{1}コイン)
+coin_upgrade.ui.close,閉じる
+coin_upgrade.coin_percent_Lv1.desc,コインドロップ率アップ Lv1
+coin_upgrade.coin_percent_Lv2.desc,コインドロップ率アップ Lv2
+coin_upgrade.coin_percent_Lv3.desc,コインドロップ率アップ Lv3
+coin_upgrade.coin_percent_Lv4.desc,コインドロップ率アップ Lv4
+coin_upgrade.exp_percent.desc,経験値ドロップ率アップ
+coin_upgrade.player_max_hp.desc,最大HP+1
+coin_upgrade.player_max_hp1.desc,最大HP+1
+coin_upgrade.player_max_hp2.desc,最大HP+1
+coin_upgrade.player_max_hp3.desc,最大HP+1
+coin_upgrade.player_max_hp4.desc,最大HP+1
+coin_upgrade.player_max_hp5.desc,最大HP+1
+coin_upgrade.player_max_hp6.desc,最大HP+1
+coin_upgrade.player_max_hp7.desc,最大HP+1
+coin_upgrade.player_max_hp8.desc,最大HP+1
+coin_upgrade.player_max_hp9.desc,最大HP+1
+exp_upgrade.simple_sword.name,剣
+exp_upgrade.simple_sword.paired_name,合成剣
+exp_upgrade.simple_sword.paired_desc,攻撃力2倍 攻撃距離2倍
+exp_upgrade.simple_sword.lv1,剣Lv1:身近の敵を攻撃
+exp_upgrade.simple_sword.lv2,剣Lv2：\\n攻撃力+3 数量+2
+exp_upgrade.simple_sword.lv3,剣Lv3：\\n攻撃力+2 間隔-0.25s
+exp_upgrade.simple_sword.lv4,剣Lv4：\\n攻撃力+3 間隔-0.25s
+exp_upgrade.simple_sword.lv5,剣Lv5：\\n攻撃力+4 間隔-0.25s
+exp_upgrade.simple_sword.lv6,剣Lv6：\\n範囲+1 間隔-0.25s
+exp_upgrade.simple_sword.lv7,剣Lv7：\\n攻撃力+3 数量+2
+exp_upgrade.simple_sword.lv8,剣Lv8：\\n攻撃力+2 範囲+1
+exp_upgrade.simple_sword.lv9,剣Lv9：\\n攻撃力+5 間隔-0.25s
+exp_upgrade.simple_sword.lv10,剣Lv10：\\n攻撃力+3 数量+2
+exp_upgrade.rotate_sword.name,ガード剣
+exp_upgrade.rotate_sword.paired_name,合成ガード剣
+exp_upgrade.rotate_sword.paired_desc,攻撃力2倍 回転速度2倍
+exp_upgrade.rotate_sword.lv1,ガード剣Lv1:\\n主人公の周りを回る剣
+exp_upgrade.rotate_sword.lv2,ガード剣Lv2：\\n数量+1 攻撃力+2
+exp_upgrade.rotate_sword.lv3,ガード剣Lv3：\\n攻撃力+2 速度+25%
+exp_upgrade.rotate_sword.lv4,ガード剣Lv4：\\n速度+50%
+exp_upgrade.rotate_sword.lv5,ガード剣Lv5：\\n数量+1 攻撃力+1
+exp_upgrade.rotate_sword.lv6,ガード剣Lv6：\\n攻撃力+2 速度+25%
+exp_upgrade.rotate_sword.lv7,ガード剣Lv7：\\n数量+1 攻撃力+1
+exp_upgrade.rotate_sword.lv8,ガード剣Lv8：\\n攻撃力+2 速度+25%
+exp_upgrade.rotate_sword.lv9,ガード剣Lv9：\\n数量+1 攻撃力+1
+exp_upgrade.rotate_sword.lv10,ガード剣Lv10：\\n攻撃力+2 速度+25%
+exp_upgrade.simple_bomb.name,爆弾
+exp_upgrade.simple_bomb.paired_name,合成爆弾
+exp_upgrade.simple_bomb.paired_desc,15秒ごとに爆発
+exp_upgrade.simple_bomb.lv1,爆弾Lv1:全敵を攻撃(モンスタードロップ)
+exp_upgrade.simple_bomb.lv2,爆弾Lv2：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv3,爆弾Lv3：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv4,爆弾Lv4：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv5,爆弾Lv5：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv6,爆弾Lv6：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv7,爆弾Lv7：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv8,爆弾Lv8：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv9,爆弾Lv9：\\nドロップ率+5% 攻撃力+5
+exp_upgrade.simple_bomb.lv10,爆弾Lv10：\\nドロップ率+10% 攻撃力+5
+exp_upgrade.simple_knife.name,ナイフ
+exp_upgrade.simple_knife.paired_name,合成ナイフ
+exp_upgrade.simple_knife.paired_desc,攻撃力2倍
+exp_upgrade.simple_knife.lv1,ナイフLv1:最も近い敵に一本発射
+exp_upgrade.simple_knife.lv2,ナイフLv2：\\n攻撃力+3 数量+2
+exp_upgrade.simple_knife.lv3,ナイフLv3：\\n間隔-0.1s 攻撃力+1 数量+1
+exp_upgrade.simple_knife.lv4,ナイフLv4：\\n間隔-0.1s 貫通+1 数量+1
+exp_upgrade.simple_knife.lv5,ナイフLv5：\\n攻撃力+3 数量+1
+exp_upgrade.simple_knife.lv6,ナイフLv6：\\n間隔-0.1s 数量+1
+exp_upgrade.simple_knife.lv7,ナイフLv7：\\n間隔-0.1s 貫通+1 数量+1
+exp_upgrade.simple_knife.lv8,ナイフLv8：\\n攻撃力+3 数量+1
+exp_upgrade.simple_knife.lv9,ナイフLv9：\\n間隔-0.1s 数量+1
+exp_upgrade.simple_knife.lv10,ナイフLv10：\\n攻撃力+3 数量+1
+exp_upgrade.basket_ball.name,バスケットボール
+exp_upgrade.basket_ball.paired_name,合成バスケットボール
+exp_upgrade.basket_ball.paired_desc,攻撃力2倍 サイズ拡大
+exp_upgrade.basket_ball.lv1,バスケットボールLv1:\\n画面内で反射するボール
+exp_upgrade.basket_ball.lv2,バスケットボールLv2：\\n攻撃力+3
+exp_upgrade.basket_ball.lv3,バスケットボールLv3：\\n数量+1
+exp_upgrade.basket_ball.lv4,バスケットボールLv4：\\n攻撃力+3
+exp_upgrade.basket_ball.lv5,バスケットボールLv5：\\n数量+1
+exp_upgrade.basket_ball.lv6,バスケットボールLv6：\\n攻撃力+3
+exp_upgrade.basket_ball.lv7,バスケットボールLv7：\\n速度+20%
+exp_upgrade.basket_ball.lv8,バスケットボールLv8：\\n攻撃力+3
+exp_upgrade.basket_ball.lv9,バスケットボールLv9：\\n速度+20%
+exp_upgrade.basket_ball.lv10,バスケットボールLv10：\\n数量+1
+exp_upgrade.simple_critical.name,クリティカル
+exp_upgrade.simple_critical.lv1,クリティカルLv1:\\n15%の確率でクリティカル
+exp_upgrade.simple_critical.lv2,クリティカルLv2：\\n28%の確率でクリティカル
+exp_upgrade.simple_critical.lv3,クリティカルLv3：\\n40%の確率でクリティカル
+exp_upgrade.simple_critical.lv4,クリティカルLv4：\\n52%の確率でクリティカル
+exp_upgrade.simple_critical.lv5,クリティカルLv5：\\n65%の確率でクリティカル
+exp_upgrade.damage_rate.name,ダメージ倍率
+exp_upgrade.damage_rate.lv1,ダメージ倍率Lv1:\\nダメージ+15%
+exp_upgrade.damage_rate.lv2,ダメージ倍率Lv2:\\nダメージ+28%
+exp_upgrade.damage_rate.lv3,ダメージ倍率Lv3:\\nダメージ+40%
+exp_upgrade.damage_rate.lv4,ダメージ倍率Lv4:\\nダメージ+52%
+exp_upgrade.damage_rate.lv5,ダメージ倍率Lv5:\\nダメージ+65%
+exp_upgrade.simple_fly_count.name,飛射物
+exp_upgrade.simple_fly_count.lv1,飛射物Lv1:\\n飛行物+1
+exp_upgrade.simple_fly_count.lv2,飛射物Lv2:\\n飛行物+2
+exp_upgrade.simple_fly_count.lv3,飛射物Lv3:\\n飛行物+3
+exp_upgrade.movement_speed_rate.name,移動速度
+exp_upgrade.movement_speed_rate.lv1,移動速度Lv1:\\n移動速度+25%
+exp_upgrade.movement_speed_rate.lv2,移動速度Lv2:\\n移動速度+50%
+exp_upgrade.movement_speed_rate.lv3,移動速度Lv3:\\n移動速度+75%
+exp_upgrade.movement_speed_rate.lv4,移動速度Lv4:\\n移動速度+100%
+exp_upgrade.movement_speed_rate.lv5,移動速度Lv5:\\n移動速度+125%
+exp_upgrade.simple_exp_percent.name,経験値
+exp_upgrade.simple_exp_percent.lv1,経験値Lv1:\\nドロップ率+5%
+exp_upgrade.simple_exp_percent.lv2,経験値Lv2:\\nドロップ率+10%
+exp_upgrade.simple_exp_percent.lv3,経験値Lv3:\\nドロップ率+15%
+exp_upgrade.simple_exp_percent.lv4,経験値Lv4:\\nドロップ率+20%
+exp_upgrade.simple_exp_percent.lv5,経験値Lv5:\\nドロップ率+25%
+exp_upgrade.simple_collectable_area_radius.name,拾得範囲
+exp_upgrade.simple_collectable_area_radius.lv1,拾得範囲Lv1:\\n収集範囲+100%
+exp_upgrade.simple_collectable_area_radius.lv2,拾得範囲Lv2:\\n収集範囲+200%
+exp_upgrade.simple_collectable_area_radius.lv3,拾得範囲Lv3:\\n収集範囲+300%
+exp_upgrade.magic_wand.name,魔法の杖
+exp_upgrade.magic_wand.paired_name,聖杖
+exp_upgrade.magic_wand.paired_desc,連射 + 貫通 + ノックバック強化
+exp_upgrade.magic_wand.lv1,魔法の杖Lv1:\\n最も近い敵へ自動で魔弾を発射
+exp_upgrade.magic_wand.lv2,魔法の杖Lv2：\\n攻撃力+2
+exp_upgrade.magic_wand.lv3,魔法の杖Lv3：\\n数量+1
+exp_upgrade.magic_wand.lv4,魔法の杖Lv4：\\n間隔-0.08s
+exp_upgrade.magic_wand.lv5,魔法の杖Lv5：\\n攻撃力+3
+exp_upgrade.magic_wand.lv6,魔法の杖Lv6：\\n数量+1
+exp_upgrade.magic_wand.lv7,魔法の杖Lv7：\\n間隔-0.08s
+exp_upgrade.magic_wand.lv8,魔法の杖Lv8：\\n攻撃力+3
+exp_upgrade.magic_wand.lv9,魔法の杖Lv9：\\n数量+1
+exp_upgrade.magic_wand.lv10,魔法の杖Lv10：\\n攻撃力+4 間隔-0.1s
+exp_upgrade.simple_bow.name,弓
+exp_upgrade.simple_bow.paired_name,エルフの弓
+exp_upgrade.simple_bow.paired_desc,矢分裂 + 追尾
+exp_upgrade.simple_bow.lv1,弓Lv1:\\n高速で貫通する矢を放つ
+exp_upgrade.simple_bow.lv2,弓Lv2：\\n攻撃力+2
+exp_upgrade.simple_bow.lv3,弓Lv3：\\n数量+1
+exp_upgrade.simple_bow.lv4,弓Lv4：\\n貫通+1
+exp_upgrade.simple_bow.lv5,弓Lv5：\\n間隔-0.1s
+exp_upgrade.simple_bow.lv6,弓Lv6：\\n攻撃力+3
+exp_upgrade.simple_bow.lv7,弓Lv7：\\n数量+1
+exp_upgrade.simple_bow.lv8,弓Lv8：\\n貫通+1
+exp_upgrade.simple_bow.lv9,弓Lv9：\\n間隔-0.1s
+exp_upgrade.simple_bow.lv10,弓Lv10：\\n攻撃力+4
+exp_upgrade.empty_tome.name,空白の書
+exp_upgrade.empty_tome.lv1,空白の書Lv1:\\n全体クールダウン-8%
+exp_upgrade.empty_tome.lv2,空白の書Lv2:\\n全体クールダウン-16%
+exp_upgrade.empty_tome.lv3,空白の書Lv3:\\n全体クールダウン-24%
+exp_upgrade.empty_tome.lv4,空白の書Lv4:\\n全体クールダウン-32%
+exp_upgrade.empty_tome.lv5,空白の書Lv5:\\n全体クールダウン-40%
+exp_upgrade.luck.name,幸運
+exp_upgrade.luck.lv1,幸運Lv1:\\n幸運+5%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv2,幸運Lv2:\\n幸運+10%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv3,幸運Lv3:\\n幸運+15%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv4,幸運Lv4:\\n幸運+20%（ドロップ品質とクリ率）
+exp_upgrade.luck.lv5,幸運Lv5:\\n幸運+25%（ドロップ品質とクリ率）
+exp_upgrade.boomerang.name,ブーメラン
+exp_upgrade.boomerang.paired_name,レイザーブーメラン
+exp_upgrade.boomerang.paired_desc,往復回数増加 + 貫通強化
+exp_upgrade.boomerang.lv1,ブーメランLv1:\\n投げて戻り、往復でダメージ
+exp_upgrade.boomerang.lv2,ブーメランLv2:\\nダメージ+2
+exp_upgrade.boomerang.lv3,ブーメランLv3:\\n数量+1
+exp_upgrade.boomerang.lv4,ブーメランLv4:\\n往復回数+1
+exp_upgrade.boomerang.lv5,ブーメランLv5:\\n間隔-0.12s
+exp_upgrade.boomerang.lv6,ブーメランLv6:\\nダメージ+3
+exp_upgrade.boomerang.lv7,ブーメランLv7:\\n貫通+1
+exp_upgrade.boomerang.lv8,ブーメランLv8:\\n数量+1
+exp_upgrade.boomerang.lv9,ブーメランLv9:\\n間隔-0.12s
+exp_upgrade.boomerang.lv10,ブーメランLv10:\\nダメージ+4 往復回数+1
+exp_upgrade.holy_water.name,聖水
+exp_upgrade.holy_water.paired_name,ラ・ボラ
+exp_upgrade.holy_water.paired_desc,水場が追従 + 範囲拡大
+exp_upgrade.holy_water.lv1,聖水Lv1:\\n持続ダメージ水場を生成し敵を減速
+exp_upgrade.holy_water.lv2,聖水Lv2:\\nTickダメージ+1
+exp_upgrade.holy_water.lv3,聖水Lv3:\\nTick間隔-0.05s
+exp_upgrade.holy_water.lv4,聖水Lv4:\\n減速強化
+exp_upgrade.holy_water.lv5,聖水Lv5:\\n発動間隔-0.2s
+exp_upgrade.holy_water.lv6,聖水Lv6:\\nTickダメージ+1
+exp_upgrade.holy_water.lv7,聖水Lv7:\\n減速時間+0.1s
+exp_upgrade.holy_water.lv8,聖水Lv8:\\nTick間隔-0.05s
+exp_upgrade.holy_water.lv9,聖水Lv9:\\nTickダメージ+2
+exp_upgrade.holy_water.lv10,聖水Lv10:\\n発動間隔-0.25s 減速強化
+exp_upgrade.attractorb.name,アトラクトオーブ
+exp_upgrade.attractorb.lv1,アトラクトオーブLv1:\\n回収半径+0.8
+exp_upgrade.attractorb.lv2,アトラクトオーブLv2:\\n回収半径+1.6
+exp_upgrade.attractorb.lv3,アトラクトオーブLv3:\\n回収半径+2.4
+exp_upgrade.attractorb.lv4,アトラクトオーブLv4:\\n回収半径+3.2
+exp_upgrade.attractorb.lv5,アトラクトオーブLv5:\\n回収半径+4.0
+exp_upgrade.simple_axe.name,銅の剣
+exp_upgrade.simple_axe.paired_name,デススパイラル
+exp_upgrade.simple_axe.paired_desc,360°全画面貫通の回転投射
+exp_upgrade.simple_axe.lv1,銅の剣Lv1:\\n上方向へ投げ、放物線で落下
+exp_upgrade.simple_axe.lv2,銅の剣Lv2：\\nダメージ+3
+exp_upgrade.simple_axe.lv3,銅の剣Lv3：\\n数量+1
+exp_upgrade.simple_axe.lv4,銅の剣Lv4：\\nダメージ+3 間隔-0.1s
+exp_upgrade.simple_axe.lv5,銅の剣Lv5：\\n貫通+1
+exp_upgrade.simple_axe.lv6,銅の剣Lv6：\\nダメージ+4 数量+1
+exp_upgrade.simple_axe.lv7,銅の剣Lv7：\\n間隔-0.2s
+exp_upgrade.simple_axe.lv8,銅の剣Lv8：\\nダメージ+5
+exp_upgrade.simple_axe.lv9,銅の剣Lv9：\\n数量+1 貫通+1
+exp_upgrade.simple_axe.lv10,銅の剣Lv10：\\nダメージ+5 間隔-0.2s
+exp_upgrade.armor.name,アーマー
+exp_upgrade.armor.lv1,アーマーLv1:\\n被ダメージ-1
+exp_upgrade.armor.lv2,アーマーLv2:\\n被ダメージ-2
+exp_upgrade.armor.lv3,アーマーLv3:\\n被ダメージ-3
+exp_upgrade.armor.lv4,アーマーLv4:\\n被ダメージ-4
+exp_upgrade.armor.lv5,アーマーLv5:\\n被ダメージ-5
+exp_upgrade.yellow_potion.name,黄色のポーション
+exp_upgrade.yellow_potion.lv1,黄色のポーションLv1:\\n武器範囲+10%
+exp_upgrade.yellow_potion.lv2,黄色のポーションLv2:\\n武器範囲+20%
+exp_upgrade.yellow_potion.lv3,黄色のポーションLv3:\\n武器範囲+30%
+exp_upgrade.yellow_potion.lv4,黄色のポーションLv4:\\n武器範囲+40%
+exp_upgrade.yellow_potion.lv5,黄色のポーションLv5:\\n武器範囲+50%

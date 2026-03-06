@@ -6,6 +6,8 @@ namespace zFramework.AppBuilder
     [Serializable]
     public class BuildProfiles : ISerializationCallbackReceiver
     {
+        [Header("配置名称（仅编辑器显示）")]
+        public string profileLabel;
         [Header("应用名称：")]
         public string productName;
         [Header("是否出包：")]
@@ -30,6 +32,7 @@ namespace zFramework.AppBuilder
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
             // 序列化之前，休整那些首尾一定不可以存在空格的数据
+            profileLabel = profileLabel?.Trim();
             productName = productName?.Trim();
             saveLocation = saveLocation?.Trim();
             productVersion = productVersion?.Trim();
