@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -7,13 +8,23 @@ namespace VampireSurvivorLike.Editor
 {
     internal static class TapTapReleaseUtility
     {
-        private const string ReleaseBundleVersion = "0.12.0";
-        private const int AndroidReleaseVersionCode = 12;
+        private const string ReleaseCompanyName = "Yurisa Project";
+        private const string ReleaseProductName = "Nightfall Survivors";
+        private const string ReleaseStoreDisplayName = "夜幕幸存者";
+        private const string ReleaseBundleVersion = "1.0.0";
+        private const int AndroidReleaseVersionCode = 100;
         private const int AndroidMinSdkVersion = 23;
         private const int AndroidTargetSdkVersion = 35;
-        private const string AndroidApplicationId = "com.obsidian.vampiresurvivorlike";
-        private const string StandaloneApplicationId = "com.obsidian.vampiresurvivorlike";
-        private const string WindowsEntryRelativePath = "Vampire Survivor-like.exe";
+        private const string AndroidApplicationId = "com.yurisa.nightfallsurvivors";
+        private const string StandaloneApplicationId = "com.yurisa.nightfallsurvivors";
+        private const string WindowsEntryRelativePath = "Nightfall Survivors.exe";
+        private const string AndroidKeyAlias = "nightfallsurvivors-release";
+
+        private static readonly string AndroidKeystorePath = NormalizePath(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            ".keystores",
+            "NightfallSurvivors",
+            "nightfallsurvivors-release.keystore"));
 
         private static readonly string[] RequiredScenes =
         {
@@ -31,11 +42,14 @@ namespace VampireSurvivorLike.Editor
             PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)AndroidTargetSdkVersion;
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = AndroidKeystorePath;
+            PlayerSettings.Android.keyaliasName = AndroidKeyAlias;
             SaveProjectConfiguration();
 
             EditorUtility.DisplayDialog(
                 "TapTap Android Release",
-                "已应用 Android 发布默认值。\n请在提交前手动配置正式 keystore 并重新构建 Android AssetBundle。",
+                $"已应用 Android 发布默认值。\n商店展示名继续使用：{ReleaseStoreDisplayName}\n请在 Unity Publishing Settings 中填入 keystore 密码后再出正式包。",
                 "确定");
         }
 
@@ -49,7 +63,7 @@ namespace VampireSurvivorLike.Editor
 
             EditorUtility.DisplayDialog(
                 "TapTap Windows Release",
-                "已应用 Windows 发布默认值。\n请在打包后使用 Tools/Release/Prepare-TapTapWindowsPackage.ps1 生成纯净压缩包。",
+                $"已应用 Windows 发布默认值。\n最终启动路径统一为：{WindowsEntryRelativePath}\n请在打包后使用 Tools/Release/Prepare-TapTapWindowsPackage.ps1 生成纯净压缩包。",
                 "确定");
         }
 
@@ -59,9 +73,11 @@ namespace VampireSurvivorLike.Editor
             var issues = new List<string>();
 
             ValidateScenes(issues);
+            ValidateBranding(issues);
             ValidateBundleVersion(issues);
             ValidateApplicationIds(issues);
             ValidateAndroidSettings(issues);
+            ValidateAndroidSigning(issues);
 
             if (issues.Count == 0)
             {
@@ -90,6 +106,8 @@ namespace VampireSurvivorLike.Editor
         private static void ApplySharedReleaseSettings()
         {
             EnsureBuildScenes();
+            PlayerSettings.companyName = ReleaseCompanyName;
+            PlayerSettings.productName = ReleaseProductName;
             PlayerSettings.bundleVersion = ReleaseBundleVersion;
             EditorUserBuildSettings.development = false;
             EditorUserBuildSettings.connectProfiler = false;
@@ -156,6 +174,19 @@ namespace VampireSurvivorLike.Editor
             }
         }
 
+        private static void ValidateBranding(List<string> issues)
+        {
+            if (PlayerSettings.companyName != ReleaseCompanyName)
+            {
+                issues.Add($"companyName 应为 {ReleaseCompanyName}，当前是 {PlayerSettings.companyName}");
+            }
+
+            if (PlayerSettings.productName != ReleaseProductName)
+            {
+                issues.Add($"productName 应为 {ReleaseProductName}，当前是 {PlayerSettings.productName}");
+            }
+        }
+
         private static void ValidateApplicationIds(List<string> issues)
         {
             var androidId = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
@@ -192,6 +223,32 @@ namespace VampireSurvivorLike.Editor
             {
                 issues.Add("Android Target Architectures 应仅启用 ARM64");
             }
+        }
+
+        private static void ValidateAndroidSigning(List<string> issues)
+        {
+            if (!PlayerSettings.Android.useCustomKeystore)
+            {
+                issues.Add("Android 发布包必须启用自定义 keystore");
+            }
+
+            var keystoreName = NormalizePath(PlayerSettings.Android.keystoreName);
+            if (keystoreName != AndroidKeystorePath)
+            {
+                issues.Add($"Android keystore 路径应为 {AndroidKeystorePath}，当前是 {keystoreName}");
+            }
+
+            if (PlayerSettings.Android.keyaliasName != AndroidKeyAlias)
+            {
+                issues.Add($"Android key alias 应为 {AndroidKeyAlias}，当前是 {PlayerSettings.Android.keyaliasName}");
+            }
+        }
+
+        private static string NormalizePath(string path)
+        {
+            return string.IsNullOrWhiteSpace(path)
+                ? string.Empty
+                : path.Replace("\\", "/");
         }
 
         private static void SaveProjectConfiguration()

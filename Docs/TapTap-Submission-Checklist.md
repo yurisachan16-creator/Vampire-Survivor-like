@@ -16,9 +16,9 @@
 
 ## Android 包
 
-- [ ] `applicationId` 不再是 `com.DefaultCompany.*`
-- [ ] `bundleVersion` 已更新到本次提审版本
-- [ ] `versionCode` 高于上一次提交
+- [ ] `applicationId` 已固定为 `com.yurisa.nightfallsurvivors`
+- [ ] `bundleVersion` 已更新为 `1.0.0`
+- [ ] `versionCode` 已更新为 `100` 或更高
 - [ ] `Target SDK` 已固定，不是 Auto
 - [ ] `IL2CPP + ARM64` 配置已确认
 - [ ] 已重新构建 Android AssetBundle
@@ -29,7 +29,7 @@
 
 ## Windows 包
 
-- [ ] 解压目录根部可直接看到 `Vampire Survivor-like.exe`
+- [ ] 解压目录根部可直接看到 `Nightfall Survivors.exe`
 - [ ] `_Data` 目录与主程序同级
 - [ ] 不包含 `DoNotShip` 调试目录
 - [ ] 解压即玩，无额外安装步骤
@@ -47,13 +47,21 @@
 - [ ] 中国区页面可直接用简中资料录入
 - [ ] International 页面可直接用英文主文案及繁中、日文、韩文补充录入
 - [ ] 若后台需要挑选重点国家/地区，可直接使用既定语言矩阵
+- [ ] 试玩说明已定稿，可直接粘贴后台
+- [ ] 隐私政策已部署到公网，`privacy-policy-url.txt` 已填写
 
 ## 本地命令
 
 发布前建议至少执行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File Tools/Release/Test-TapTapReleaseConfig.ps1
+powershell -ExecutionPolicy Bypass -File Tools/Release/Test-TapTapReleaseConfig.ps1 -RequireKeystore
+```
+
+商店准备度汇总检查：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Tools/Release/Test-TapTapStoreReadiness.ps1
 ```
 
 Windows 包整理：

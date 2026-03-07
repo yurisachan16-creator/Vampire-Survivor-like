@@ -15,11 +15,11 @@ MonoBehaviour:
   appLocationPath: ./Build
   profiles:
   - profileLabel: TapTap Windows Release
-    productName: Vampire Survivor-like
+    productName: Nightfall Survivors
     isBuild: 1
     platform: 5
     saveLocation: TapTap\Windows\Raw
-    productVersion: 0.12.0
+    productVersion: 1.0.0
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
@@ -30,11 +30,11 @@ MonoBehaviour:
     - enabled: 0
       task: {fileID: 0}
   - profileLabel: TapTap Android Release
-    productName: Vampire Survivor-like
+    productName: Nightfall Survivors
     isBuild: 1
     platform: 13
     saveLocation: TapTap\Android\Unsigned
-    productVersion: 0.12.0
+    productVersion: 1.0.0
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
@@ -42,12 +42,12 @@ MonoBehaviour:
     - scene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
       enabled: 1
     customTask: []
-  - productName: Vampire Survivor-like
+  - productName: Nightfall Survivors
     profileLabel: Legacy Windows Build
     isBuild: 0
     platform: 5
     saveLocation: Windows
-    productVersion: 0.11.12
+    productVersion: 1.0.0
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
@@ -57,12 +57,12 @@ MonoBehaviour:
     customTask:
     - enabled: 0
       task: {fileID: 0}
-  - productName: Vampire Survivor-like
+  - productName: Nightfall Survivors
     profileLabel: Legacy Android Development
     isBuild: 0
     platform: 13
     saveLocation: Android\Development
-    productVersion: 0.11.12
+    productVersion: 1.0.0
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}
@@ -70,12 +70,12 @@ MonoBehaviour:
     - scene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
       enabled: 1
     customTask: []
-  - productName: Vampire Survivor-like
+  - productName: Nightfall Survivors
     profileLabel: Legacy WebGL Build
     isBuild: 0
     platform: 20
     saveLocation: WebGL
-    productVersion: 0.11.12
+    productVersion: 1.0.0
     buildOptions: 0
     scenes:
     - scene: {fileID: 102900000, guid: aeb83327b8579064dbacb74890c53ac0, type: 3}

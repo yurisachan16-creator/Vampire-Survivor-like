@@ -9,16 +9,17 @@
 ### 2. 项目基本信息
 
 在 `Edit → Project Settings → Player` 中确认以下信息：
-- **Company Name / Product Name**：用于生成包名与应用显示名
-- **Package Name（Application Identifier）**：Android 必须是唯一包名（当前工程已写入一个占位值：`com.DefaultCompany.VampireSurvivorLike`，发布前请替换）
-- **Version / Bundle Version Code**：对外版本号 + 递增的内部版本号
+- **Company Name**：`Yurisa Project`
+- **Product Name**：`Nightfall Survivors`
+- **Package Name（Application Identifier）**：固定为 `com.yurisa.nightfallsurvivors`
+- **Version / Bundle Version Code**：首次 TapTap 发布基线固定为 `1.0.0 / 100`
 
 ### 3. 推荐的 Android Player Settings（无支付/单机版）
 
 #### Other Settings
 - **Scripting Backend**：IL2CPP
 - **Target Architectures**：ARM64（可按渠道要求补 ARMv7）
-- **Minimum API Level**：Android 5.1（API 22）或更高（按你的目标用户调整）
+- **Minimum API Level**：Android 6.0（API 23）或更高
 - **Target API Level**：建议在发布分支固定到平台要求的版本（避免“自动”导致可重复性不足）
 
 #### Resolution and Presentation
@@ -27,6 +28,16 @@
 
 #### Publishing Settings
 - **Custom Keystore**：发布包必须使用固定 keystore（测试/发布分离；不要提交到仓库）
+- **Keystore 路径**：`%USERPROFILE%\.keystores\NightfallSurvivors\nightfallsurvivors-release.keystore`
+- **Alias**：`nightfallsurvivors-release`
+
+推荐先运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Tools/Release/New-AndroidReleaseKeystore.ps1
+```
+
+然后在 Unity 中仅填写密码，不把密码写进仓库。
 
 ---
 
@@ -66,7 +77,14 @@ File → Build Settings → Android → Build
 ```
 
 建议输出目录：
-- `Build/Android/`（Debug/Development）\n+- `Release/Android/`（Release）
+- `Build/Android/Development/`（Development）
+- `Build/Android/Release/`（Release）
+
+TapTap 发布前建议执行校验：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Tools/Release/Test-TapTapReleaseConfig.ps1 -RequireKeystore
+```
 
 ---
 

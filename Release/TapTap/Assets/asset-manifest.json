@@ -1,0 +1,53 @@
+{
+  "storeScope": "CN+International",
+  "pageType": "pre-registration-or-trial",
+  "gameNames": {
+    "zh-Hans": "夜幕幸存者",
+    "zh-Hant": "夜幕倖存者",
+    "en": "Nightfall Survivors",
+    "ja": "宵闇サバイバーズ",
+    "ko": "암야의 생존자들"
+  },
+  "requiredAssets": [
+    {
+      "path": "Icon/icon-main.png",
+      "description": "Main store icon"
+    },
+    {
+      "path": "Hero/hero-horizontal.png",
+      "description": "Horizontal hero image"
+    },
+    {
+      "path": "Capsule/cover-vertical.png",
+      "description": "Vertical capsule or cover image"
+    },
+    {
+      "path": "Screenshots/screenshot-01-start.png",
+      "description": "Start screen screenshot"
+    },
+    {
+      "path": "Screenshots/screenshot-02-battle.png",
+      "description": "Battle screenshot"
+    },
+    {
+      "path": "Screenshots/screenshot-03-upgrade.png",
+      "description": "Upgrade selection screenshot"
+    },
+    {
+      "path": "Screenshots/screenshot-04-evolution.png",
+      "description": "Treasure chest or evolution screenshot"
+    },
+    {
+      "path": "Screenshots/screenshot-05-meta.png",
+      "description": "Meta progression or achievement screenshot"
+    },
+    {
+      "path": "Screenshots/screenshot-06-mobile-ui.png",
+      "description": "Mobile controls screenshot"
+    },
+    {
+      "path": "Policies/privacy-policy-url.txt",
+      "description": "Published privacy policy URL"
+    }
+  ]
+}

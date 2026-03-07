@@ -23,7 +23,7 @@
 ## 素材原则
 
 - 所有截图必须来自真实游戏画面
-- 不使用工程代号 `Vampire Survivor-like` 作为公开标题
+- 不使用历史工程代号作为公开标题
 - 同一批素材中的游戏名称、Logo、色板与口号必须一致
 - Android 与 Windows 素材文案保持统一，只在平台说明上区分
 - 有触屏截图时，保留真实移动端操作 UI
@@ -45,6 +45,7 @@
 - `Release/TapTap/Assets/Capsule/`
 - `Release/TapTap/Assets/Screenshots/`
 - `Release/TapTap/Assets/Video/`
+- `Release/TapTap/Assets/Policies/`
 
 建议命名：
 
@@ -57,6 +58,7 @@
 - `screenshot-04-evolution.png`
 - `screenshot-05-meta.png`
 - `screenshot-06-mobile-ui.png`
+- `privacy-policy-url.txt`
 
 ## 多语言素材处理
 
@@ -82,3 +84,11 @@
 - International 第二优先：日本、韩国
 - International 第三优先：美国、加拿大、英国、澳大利亚、新西兰
 - International 第四优先：新加坡、菲律宾、马来西亚、印度
+
+## 当前缺失状态
+
+当前仓库已经有素材目录规范，但还没有最终可提交的图标、封面、截图和视频封面文件。提交前建议跑一次：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Tools/Release/Test-TapTapStoreReadiness.ps1
+```

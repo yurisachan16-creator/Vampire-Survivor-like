@@ -2,6 +2,7 @@ param(
     [string]$SourceDir = "Build/Windows",
     [string]$StageDir = "Release/TapTap/Windows/Stage",
     [string]$OutputDir = "Release/TapTap/Windows",
+    [string]$NormalizedExeName = "Nightfall Survivors.exe",
     [ValidateSet("zip", "7z")]
     [string]$ArchiveFormat = "zip",
     [string]$ArchiveName = "",
@@ -45,19 +46,25 @@ if (-not (Test-Path $dataDir)) {
     throw "Missing data directory: $dataDir"
 }
 
+$normalizedBaseName = [System.IO.Path]::GetFileNameWithoutExtension($NormalizedExeName)
+
 Remove-IfExists $stagePath
 New-Item -ItemType Directory -Force -Path $stagePath | Out-Null
 New-Item -ItemType Directory -Force -Path $outputPath | Out-Null
 
-$allowedTopLevelItems = @(
-    $exe.Name,
-    ($exe.BaseName + "_Data"),
+$stageExePath = Join-Path $stagePath $NormalizedExeName
+$stageDataDir = Join-Path $stagePath ($normalizedBaseName + "_Data")
+
+Copy-Item -Path $exe.FullName -Destination $stageExePath -Force
+Copy-Item -Path $dataDir -Destination $stageDataDir -Recurse -Force
+
+$runtimeItems = @(
     "UnityPlayer.dll",
     "GameAssembly.dll",
     "baselib.dll"
 )
 
-foreach ($itemName in $allowedTopLevelItems) {
+foreach ($itemName in $runtimeItems) {
     $itemPath = Join-Path $sourcePath $itemName
     if (Test-Path $itemPath) {
         Copy-Item -Path $itemPath -Destination $stagePath -Recurse -Force
@@ -81,7 +88,7 @@ if ($SkipArchive) {
 }
 
 if ([string]::IsNullOrWhiteSpace($ArchiveName)) {
-    $ArchiveName = "{0}-taptap-windows" -f $exe.BaseName
+    $ArchiveName = "{0}-taptap-windows" -f $normalizedBaseName
 }
 
 switch ($ArchiveFormat) {

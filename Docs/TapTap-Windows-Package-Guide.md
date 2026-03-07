@@ -16,6 +16,7 @@ powershell -ExecutionPolicy Bypass -File Tools/Release/Prepare-TapTapWindowsPack
 ## 脚本行为
 
 - 自动识别主游戏 `.exe`
+- 将最终入口统一整理为 `Nightfall Survivors.exe`
 - 复制主程序与对应 `_Data` 目录
 - 保留运行所需的 `UnityPlayer.dll`、`GameAssembly.dll`、`baselib.dll`
 - 自动剔除 `*_BurstDebugInformation_DoNotShip*`
@@ -43,6 +44,6 @@ powershell -ExecutionPolicy Bypass -File Tools/Release/Prepare-TapTapWindowsPack
 
 ## 后台填写建议
 
-- 启动相对路径：`Vampire Survivor-like.exe`
+- 启动相对路径：`Nightfall Survivors.exe`
 - 包体根目录：解压后应直接看到 `.exe` 与 `_Data`
 - 不要上传带安装器外壳的二次封装包

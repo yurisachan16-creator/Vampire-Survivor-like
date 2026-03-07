@@ -137,7 +137,7 @@ python -m http.server 8080
 
 | 字段 | 推荐值 |
 |------|--------|
-| Title | Vampire Survivor-like |
+| Title | Nightfall Survivors |
 | Kind of project | HTML |
 | Pricing | Free / Name your own price |
 | Uploads | 见下方 |
