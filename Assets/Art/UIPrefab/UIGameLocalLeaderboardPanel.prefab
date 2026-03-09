@@ -639,7 +639,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8212046652058421780}
   - component: {fileID: 31094117148398932}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: UIGameLocalLeaderboardPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,13 +678,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3716fcc949dc64dafd36fc3dd13da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Namespace: VampireSurvivorLike
-  ScriptName: UIGameLocalLeaderboardPanel
-  ScriptsFolder: Assets/Scripts/Game
-  GeneratePrefab: 0
-  PrefabFolder: Assets/Art/Prefab
-  ArchitectureFullTypeName: 
-  ViewControllerFullTypeName: 
   RankingTemplate: {fileID: 1111789761236900749}
   BtnClose: {fileID: 2295838420398850165}
   BtnReturnToMainMenu: {fileID: 451770323715141689}

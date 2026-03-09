@@ -31,7 +31,7 @@ MonoBehaviour:
     - TypeName: UnityEngine.UI.Button
       PathToRoot: LocalLeaderboardPanel/Scroll View/Viewport/BtnQuit
       MemberName: BtnQuit
-    ScriptsFolder: Assets/Scripts/Game
+    ScriptsFolder: Assets/Scripts/UI/UIGamePanel
     ClassName: UIGameLocalLeaderboardPanel
     Namespace: VampireSurvivorLike
     MainCode: 

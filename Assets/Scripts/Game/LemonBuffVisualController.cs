@@ -29,7 +29,6 @@ namespace VampireSurvivorLike
         void Start()
         {
             BuildParticleSystem();
-            _ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
             Global.LemonDamageBuffBonus.RegisterWithInitValue(bonus =>
             {
@@ -87,6 +86,7 @@ namespace VampireSurvivorLike
             _vfxGo.transform.localPosition = Vector3.zero;
 
             _ps = _vfxGo.AddComponent<ParticleSystem>();
+            _ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
             // 关闭默认自动播放
             var main = _ps.main;
