@@ -1,0 +1,19 @@
+{
+    "Id": "",
+    "Version": "v0.0.9",
+    "Type": 0,
+    "AccessRight": 0,
+    "DownloadUrl": "",
+    "InstallPath": "Assets/QFramework/Extensions/",
+    "IncludeFileOrFolders": [
+        "Assets/QFramework/Extensions"
+    ],
+    "DocUrl": "https://lianxiegame.com",
+    "Readme": {
+        "version": "v0.0.9",
+        "content": "兼容最新的 QFrameowrk",
+        "author": "liangxie",
+        "date": "2021 年 12 月 23 日 13:52",
+        "PackageId": ""
+    }
+}
