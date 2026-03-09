@@ -5,7 +5,8 @@
     package="com.unity3d.player"
     xmlns:tools="http://schemas.android.com/tools">
 	<application>
-		<activity android:name="com.unity3d.player.PrivacyActivity" >
+		<activity android:name="com.unity3d.player.PrivacyActivity"
+                  android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
