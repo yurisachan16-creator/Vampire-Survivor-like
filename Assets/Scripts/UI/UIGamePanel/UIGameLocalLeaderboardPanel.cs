@@ -26,10 +26,12 @@ namespace VampireSurvivorLike
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGameLocalLeaderboardPanelData ?? new UIGameLocalLeaderboardPanelData();
+			NormalizeFullscreenRoot();
 			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>())
 			{
 				gameObject.AddComponent<SafeAreaFitter>();
 			}
+			ApplySafeAreaNow();
 
 			_contentRoot = FindChildRecursive(transform, "Content") as RectTransform;
 			_titleText = FindChildRecursive(transform, "Title")?.GetComponent<Text>();
@@ -103,8 +105,16 @@ namespace VampireSurvivorLike
 
 		protected override void OnOpen(IUIData uiData = null)
 		{
+			NormalizeFullscreenRoot();
+			ApplySafeAreaNow();
 			RefreshTexts();
 			RefreshRows();
+		}
+
+		protected override void OnShow()
+		{
+			NormalizeFullscreenRoot();
+			ApplySafeAreaNow();
 		}
 
 		protected override void OnClose()
@@ -232,6 +242,27 @@ namespace VampireSurvivorLike
 			}
 
 			return fallback;
+		}
+
+		private void NormalizeFullscreenRoot()
+		{
+			var root = transform as RectTransform;
+			if (!root) return;
+
+			root.anchorMin = Vector2.zero;
+			root.anchorMax = Vector2.one;
+			root.offsetMin = Vector2.zero;
+			root.offsetMax = Vector2.zero;
+			root.anchoredPosition3D = Vector3.zero;
+			root.localScale = Vector3.one;
+		}
+
+		private void ApplySafeAreaNow()
+		{
+			if (!Application.isMobilePlatform) return;
+			var fitter = GetComponent<SafeAreaFitter>();
+			if (!fitter) fitter = gameObject.AddComponent<SafeAreaFitter>();
+			fitter.ForceApply();
 		}
 
 		private static void RegisterFont(Text text)

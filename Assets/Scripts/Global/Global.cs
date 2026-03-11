@@ -145,7 +145,7 @@ namespace VampireSurvivorLike
             ResKit.Init();
 #endif
             ApplyMaxHpBalanceMigration();
-            UIKit.Root.SetResolution(1920, 1080, 0);
+            UIKit.Root.SetResolution(1920, 1080, 0.5f);
             Global.Coin.Value=PlayerPrefs.GetInt(nameof(Global.Coin),0);
 
             MaxHP.Value = Mathf.Clamp(

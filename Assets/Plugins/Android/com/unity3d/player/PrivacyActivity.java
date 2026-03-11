@@ -1,11 +1,13 @@
 package com.unity3d.player;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -13,12 +15,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
  
 public class PrivacyActivity extends Activity implements DialogInterface.OnClickListener {
-    boolean useLocalHtml = true;
-    String privacyUrl = "https://blog.csdn.net/qq_61885864?spm=1011.2415.3001.5343";
-    final String htmlStr = "欢迎使用本游戏，在使用本游戏前，请您充分阅读并理解<a href=\"https://blog.csdn.net/qq_61885864?spm=1011.2415.3001.5343\">《用户协议》</a>和<a href=\"https://blog.csdn.net/qq_61885864?spm=1011.2415.3001.5343\">《隐私政策》</a>各条\n" +
-            "款，了解我们对于个人信息的处理规则和权限申请的目的，特别提醒您注意前述协议中关于\n" +
-            "我们免除自身责任，限制您的权力的相关条款及争议解决方式，司法管辖等内容。我们将严\n" +
-            "格遵守相关法律法规和隐私政策以保护您的个人隐私。为确保您的游戏体验，我们会向您申请以下必要权限，您可选择同意或者拒绝，拒绝可能会导致无法进入本游戏。同时，我们会根据本游戏中相关功能的具体需要向您申请非必要的权限，您可选择同意或者拒绝，拒绝可能会导致部分游戏体验异常。其中必要权限包括：设备权限(必要)：读取唯一设备标识 (AndroidID、mac)，生成帐号、保存和恢复游戏数据，识别异常状态以及保障网络及运营安全。存储权限(必要)：访问您的存储空间，以便使您可以下载并保存内容、图片存储及上传、个人设置信息缓存读写、系统及日志文件创建。\n";
+    private boolean useLocalHtml = true;
+    private String privacyUrl = "";
+    private AlertDialog currentDialog;
  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +27,10 @@ public class PrivacyActivity extends Activity implements DialogInterface.OnClick
         try {
             //获取AndroidManifest.xml配置的元数据
             actInfo = this.getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
-            useLocalHtml = actInfo.metaData.getBoolean("useLocalHtml");
-            privacyUrl = actInfo.metaData.getString("privacyUrl");
+            if (actInfo.metaData != null) {
+                useLocalHtml = actInfo.metaData.getBoolean("useLocalHtml", true);
+                privacyUrl = actInfo.metaData.getString("privacyUrl", "");
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -55,43 +56,56 @@ public class PrivacyActivity extends Activity implements DialogInterface.OnClick
         }
     }
     private void ShowPrivacyDialog(){
-        WebView webView = new WebView(this);
-        if (useLocalHtml){
-            webView.loadDataWithBaseURL(null, htmlStr, "text/html", "UTF-8", null);
+        final WebView webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(false);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (request == null || request.getUrl() == null) {
+                    return false;
+                }
+                return HandleExternalLink(request.getUrl().toString());
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return HandleExternalLink(url);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                if (useLocalHtml) {
+                    return;
+                }
+                if (request == null || request.isForMainFrame()) {
+                    view.stopLoading();
+                    ShowLoadFailureDialog();
+                }
+            }
+        });
+
+        if (useLocalHtml || privacyUrl == null || privacyUrl.trim().isEmpty()){
+            webView.loadDataWithBaseURL("https://localhost/", BuildLocalHtml(), "text/html", "UTF-8", null);
         }else{
             webView.loadUrl(privacyUrl);
-            webView.setWebViewClient(new WebViewClient(){
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
-                    return true;
-                }
- 
-                @Override
-                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                    view.reload();
-                }
- 
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
-                }
-            });
         }
  
         AlertDialog.Builder privacyDialog = new AlertDialog.Builder(this);
         privacyDialog.setCancelable(false);
         privacyDialog.setView(webView);
-        privacyDialog.setTitle("用户条款与隐私");
+        privacyDialog.setTitle("夜幕幸存者 用户协议与隐私政策");
         privacyDialog.setNegativeButton("取消",this);
         privacyDialog.setPositiveButton("确认",this);
-        privacyDialog.create().show();
+        currentDialog = privacyDialog.create();
+        currentDialog.show();
     }
 //启动Unity Activity
     private void EnterUnityActivity(){
         Intent unityAct = new Intent();
         unityAct.setClassName(this, "com.unity3d.player.UnityPlayerActivity");
         this.startActivity(unityAct);
+        finish();
     }
 //保存同意隐私协议状态
     private void SetPrivacyAccept(boolean accepted){
@@ -102,5 +116,95 @@ public class PrivacyActivity extends Activity implements DialogInterface.OnClick
     private boolean GetPrivacyAccept(){
         SharedPreferences prefs = this.getSharedPreferences("PlayerPrefs", MODE_PRIVATE);
         return prefs.getBoolean("PrivacyAccepted", false);
+    }
+
+    private String BuildLocalHtml() {
+        String resolvedUrl = privacyUrl == null || privacyUrl.trim().isEmpty() ? "#" : privacyUrl;
+        return "<html><body style=\"padding:24px;font-size:16px;line-height:1.7;color:#222;\">"
+                + "<h2>欢迎使用《夜幕幸存者》</h2>"
+                + "<p>首次启动前，请阅读并同意《用户协议》与《隐私政策》。</p>"
+                + "<p>点击下方链接将通过系统浏览器打开隐私页面。</p>"
+                + "<p><a href=\"" + resolvedUrl + "\">查看《用户协议》与《隐私政策》</a></p>"
+                + "</body></html>";
+    }
+
+    private boolean HandleExternalLink(String url) {
+        if (url == null) {
+            return false;
+        }
+        String normalized = url.trim();
+        if (!(normalized.startsWith("http://") || normalized.startsWith("https://"))) {
+            return false;
+        }
+
+        if (!OpenUrlInBrowser(normalized)) {
+            ShowBrowserUnavailableDialog(normalized);
+        }
+        return true;
+    }
+
+    private boolean OpenUrlInBrowser(String url) {
+        if (url == null || url.trim().isEmpty()) {
+            return false;
+        }
+
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            startActivity(intent);
+            return true;
+        } catch (ActivityNotFoundException ex) {
+            return false;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    private void ShowBrowserUnavailableDialog(final String url) {
+        if (isFinishing()) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle("无法打开浏览器");
+        builder.setMessage("未检测到可用浏览器，请安装浏览器后重试。");
+        builder.setNegativeButton("知道了", null);
+        builder.setPositiveButton("重试", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                OpenUrlInBrowser(url);
+            }
+        });
+        builder.create().show();
+    }
+
+    private void ShowLoadFailureDialog() {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (currentDialog != null && currentDialog.isShowing()) {
+            currentDialog.dismiss();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle("隐私政策加载失败");
+        builder.setMessage("无法打开《夜幕幸存者》隐私政策页面，请检查网络后重试。当前 Android 安装包仅声明网络权限（INTERNET），用于首启时加载线上隐私政策页面。");
+        builder.setNegativeButton("退出", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                finish();
+            }
+        });
+        builder.setPositiveButton("重试", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                ShowPrivacyDialog();
+            }
+        });
+        currentDialog = builder.create();
+        currentDialog.show();
     }
 }

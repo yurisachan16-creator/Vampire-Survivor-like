@@ -17,6 +17,7 @@ namespace VampireSurvivorLike
 			mData = uiData as UIGameStartPanelData ?? new UIGameStartPanelData();
 			// please add init code here
 			Time.timeScale = 1.0f;
+			NormalizeFullscreenRoot();
 			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
 
 			var startLabel = BtnStartGame ? BtnStartGame.GetComponentInChildren<Text>(true) : null;
@@ -109,6 +110,12 @@ namespace VampireSurvivorLike
 
 			this.GetSystem<CoinUpgradeSystem>().Say();
 		}
+
+		protected override void OnShow()
+		{
+			NormalizeFullscreenRoot();
+			ApplySafeAreaNow();
+		}
 	
 		private void Update()
 		{
@@ -125,6 +132,27 @@ namespace VampireSurvivorLike
 		
 		protected override void OnClose()
 		{
+		}
+
+		private void NormalizeFullscreenRoot()
+		{
+			var root = transform as RectTransform;
+			if (!root) return;
+
+			root.anchorMin = Vector2.zero;
+			root.anchorMax = Vector2.one;
+			root.offsetMin = Vector2.zero;
+			root.offsetMax = Vector2.zero;
+			root.anchoredPosition3D = Vector3.zero;
+			root.localScale = Vector3.one;
+		}
+
+		private void ApplySafeAreaNow()
+		{
+			if (!Application.isMobilePlatform) return;
+			var fitter = GetComponent<SafeAreaFitter>();
+			if (!fitter) fitter = gameObject.AddComponent<SafeAreaFitter>();
+			fitter.ForceApply();
 		}
 
 		public IArchitecture GetArchitecture()

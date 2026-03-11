@@ -1,49 +1,53 @@
 ManifestFileVersion: 0
-CRC: 2428977511
+CRC: 430940267
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: uigameoverpanel_prefab
-      Dependencies:
-        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+      Name: coin_wav
+      Dependencies: {}
     Info_1:
-      Name: uigamepasspanel_prefab
+      Name: icon_spriteatlasv2
       Dependencies:
-        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+        Dependency_0: rpgitems_png
     Info_2:
       Name: uigamepanel_prefab
       Dependencies:
         Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
     Info_3:
-      Name: uigamestartpanel_prefab
-      Dependencies:
-        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
-    Info_4:
       Name: "gamebg\u6F14\u827A\u4EBA_mp3"
       Dependencies: {}
+    Info_4:
+      Name: uigamesettingspanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
     Info_5:
-      Name: coin_wav
+      Name: sfx
       Dependencies: {}
     Info_6:
       Name: hit_wav
       Dependencies: {}
     Info_7:
-      Name: sfx
-      Dependencies: {}
-    Info_8:
-      Name: icon_spriteatlasv2
-      Dependencies:
-        Dependency_0: rpgitems_png
-    Info_9:
-      Name: fusion-pixel-12px-proportional-zh_hans_ttf
-      Dependencies: {}
-    Info_10:
-      Name: uigamesettingspanel_prefab
-      Dependencies:
-        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
-    Info_11:
-      Name: enemy_spriteatlasv2
-      Dependencies: {}
-    Info_12:
       Name: rpgitems_png
       Dependencies: {}
+    Info_8:
+      Name: uigameoverpanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_9:
+      Name: uigamepasspanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_10:
+      Name: enemy_spriteatlasv2
+      Dependencies: {}
+    Info_11:
+      Name: uigamelocalleaderboardpanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf
+    Info_12:
+      Name: fusion-pixel-12px-proportional-zh_hans_ttf
+      Dependencies: {}
+    Info_13:
+      Name: uigamestartpanel_prefab
+      Dependencies:
+        Dependency_0: fusion-pixel-12px-proportional-zh_hans_ttf

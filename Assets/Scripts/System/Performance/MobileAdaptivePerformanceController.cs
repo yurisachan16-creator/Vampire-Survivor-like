@@ -111,7 +111,36 @@ namespace VampireSurvivorLike
         {
             if (!Application.isMobilePlatform) return false;
             if (Application.platform != RuntimePlatform.Android) return false;
+            if (IsLikelyEmulator()) return false;
             return GameSettings.EnableAdaptiveMobilePerformance;
+        }
+
+        private static bool IsLikelyEmulator()
+        {
+            var deviceModel = (SystemInfo.deviceModel ?? string.Empty).ToLowerInvariant();
+            var deviceName = (SystemInfo.deviceName ?? string.Empty).ToLowerInvariant();
+            var graphicsDevice = (SystemInfo.graphicsDeviceName ?? string.Empty).ToLowerInvariant();
+            var os = (SystemInfo.operatingSystem ?? string.Empty).ToLowerInvariant();
+
+            return ContainsEmulatorKeyword(deviceModel) ||
+                   ContainsEmulatorKeyword(deviceName) ||
+                   ContainsEmulatorKeyword(graphicsDevice) ||
+                   ContainsEmulatorKeyword(os);
+        }
+
+        private static bool ContainsEmulatorKeyword(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return false;
+
+            return value.Contains("emulator") ||
+                   value.Contains("generic") ||
+                   value.Contains("mumu") ||
+                   value.Contains("bluestacks") ||
+                   value.Contains("nox") ||
+                   value.Contains("ldplayer") ||
+                   value.Contains("vbox") ||
+                   value.Contains("virtualbox") ||
+                   value.Contains("simulator");
         }
 
         private void EnsureNormalMode()

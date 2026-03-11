@@ -221,10 +221,21 @@ namespace VampireSurvivorLike
         /// </summary>
         public static int ResolutionIndex
         {
-            get => PlayerPrefs.GetInt(KEY_RESOLUTION_INDEX, 0);
+            get
+            {
+                #if UNITY_ANDROID && !UNITY_EDITOR
+                return 0;
+                #else
+                return PlayerPrefs.GetInt(KEY_RESOLUTION_INDEX, 0);
+                #endif
+            }
             set
             {
+                #if UNITY_ANDROID && !UNITY_EDITOR
+                PlayerPrefs.SetInt(KEY_RESOLUTION_INDEX, 0);
+                #else
                 PlayerPrefs.SetInt(KEY_RESOLUTION_INDEX, value);
+                #endif
                 PlayerPrefs.Save();
             }
         }
@@ -637,6 +648,9 @@ namespace VampireSurvivorLike
         public static void ApplyResolution(int index)
         {
             var resolutions = GetAvailableResolutions();
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            index = 0;
+            #endif
             if (index < 0 || index >= resolutions.Count) index = 0;
 
             ResolutionIndex = index;
@@ -645,6 +659,10 @@ namespace VampireSurvivorLike
 
             if (index == 0) // 自动检测
             {
+                #if UNITY_ANDROID && !UNITY_EDITOR
+                targetW = Screen.currentResolution.width > 0 ? Screen.currentResolution.width : Screen.width;
+                targetH = Screen.currentResolution.height > 0 ? Screen.currentResolution.height : Screen.height;
+                #else
                 var autoIndex = AutoDetectResolutionIndex();
                 if (autoIndex > 0 && autoIndex < resolutions.Count)
                 {
@@ -656,6 +674,7 @@ namespace VampireSurvivorLike
                     targetW = Screen.currentResolution.width;
                     targetH = Screen.currentResolution.height;
                 }
+                #endif
             }
             else
             {
@@ -680,8 +699,10 @@ namespace VampireSurvivorLike
             // WebGL：设置画布渲染分辨率
             Screen.SetResolution(width, height, FullScreenMode.MaximizedWindow);
             #elif UNITY_ANDROID && !UNITY_EDITOR
-            // Android：始终全屏，分辨率影响渲染缩放
-            Screen.SetResolution(width, height, FullScreenMode.FullScreenWindow);
+            // Android：始终锁定设备原生分辨率，全屏显示
+            var nativeWidth = Screen.currentResolution.width > 0 ? Screen.currentResolution.width : Screen.width;
+            var nativeHeight = Screen.currentResolution.height > 0 ? Screen.currentResolution.height : Screen.height;
+            Screen.SetResolution(nativeWidth, nativeHeight, FullScreenMode.FullScreenWindow);
             #else
             // Windows/macOS/Editor
             if (width >= Screen.currentResolution.width && height >= Screen.currentResolution.height)
@@ -743,6 +764,10 @@ namespace VampireSurvivorLike
             }
 
             // 应用保存的分辨率设置
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            ResolutionIndex = 0;
+            ApplyResolution(0);
+            #else
             var savedIndex = ResolutionIndex;
             if (savedIndex >= 0)
             {
@@ -753,6 +778,7 @@ namespace VampireSurvivorLike
                 // 向后兼容：使用旧的全屏设置
                 ApplyFullscreen(IsFullscreen);
             }
+            #endif
             
             // 音频设置会由 AudioKit 自动从 PlayerPrefs 加载
             MobileDebugHud.ApplyStartup();

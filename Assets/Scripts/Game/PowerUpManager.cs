@@ -6,6 +6,10 @@ namespace VampireSurvivorLike
 {
 	public partial class PowerUpManager : ViewController
 	{
+        private const string WineSpriteName = "wine";
+        private const string LemonBuffSpriteName = "lemon";
+        private const string CherrySpriteName = "cherry";
+
 		public static PowerUpManager Default { get; private set; }
         private CircleCollider2D _wineTemplate;
         private CircleCollider2D _lemonBuffTemplate;
@@ -55,9 +59,9 @@ namespace VampireSurvivorLike
             PrepareSceneTemplate(TreasureChest);
             PrepareSceneTemplate(SuperBomb);
 
-            PrepareSceneTemplate(EnsureTemplate<Wine>(ref _wineTemplate, "WineTemplate", "rpgItems_32"));
-            PrepareSceneTemplate(EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", "rpgItems_19"));
-            PrepareSceneTemplate(EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", "rpgItems_11"));
+            PrepareSceneTemplate(EnsureTemplate<Wine>(ref _wineTemplate, "WineTemplate", WineSpriteName));
+            PrepareSceneTemplate(EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", LemonBuffSpriteName));
+            PrepareSceneTemplate(EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", CherrySpriteName));
         }
 
         private CircleCollider2D EnsureTemplate<T>(ref CircleCollider2D cache, string templateName, string spriteName) where T : PowerUp
@@ -80,7 +84,14 @@ namespace VampireSurvivorLike
             if (sr && _iconAtlas)
             {
                 var sprite = _iconAtlas.GetSprite(spriteName);
-                if (sprite) sr.sprite = sprite;
+                if (sprite)
+                {
+                    sr.sprite = sprite;
+                }
+                else
+                {
+                    Debug.LogWarning($"[PowerUpManager] Sprite '{spriteName}' not found in icon atlas. Keeping fallback sprite on template '{templateName}'.");
+                }
             }
 
             cache = templateGo.GetComponent<CircleCollider2D>();
@@ -89,7 +100,7 @@ namespace VampireSurvivorLike
 
         public void SpawnWine(Vector3 worldPosition)
         {
-            var template = EnsureTemplate<Wine>(ref _wineTemplate, "WineTemplate", "rpgItems_32");
+            var template = EnsureTemplate<Wine>(ref _wineTemplate, "WineTemplate", WineSpriteName);
             if (!template) return;
 
             template.Instantiate()
@@ -99,7 +110,7 @@ namespace VampireSurvivorLike
 
         public void SpawnLemonBuff(Vector3 worldPosition)
         {
-            var template = EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", "rpgItems_19");
+            var template = EnsureTemplate<LemonBuff>(ref _lemonBuffTemplate, "LemonBuffTemplate", LemonBuffSpriteName);
             if (!template) return;
 
             template.Instantiate()
@@ -109,7 +120,7 @@ namespace VampireSurvivorLike
 
         public void SpawnCherry(Vector3 worldPosition)
         {
-            var template = EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", "rpgItems_11");
+            var template = EnsureTemplate<Cherry>(ref _cherryTemplate, "CherryTemplate", CherrySpriteName);
             if (!template) return;
 
             template.Instantiate()

@@ -367,7 +367,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rpgItems_11
+      name: cherry
       rect:
         serializedVersion: 2
         x: 48
@@ -808,7 +808,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rpgItems_32
+      name: wine
       rect:
         serializedVersion: 2
         x: 0
@@ -1492,12 +1492,12 @@ TextureImporter:
     nameFileIdTable:
       Exp_1: -1385216426
       Exp_2: 203129322
+      cherry: 642436179
       copper_helmet: 1189292030
       lemon: 2029990257
       rpgItems_0: 999823366
       rpgItems_1: 226087324
       rpgItems_10: -1130129159
-      rpgItems_11: 642436179
       rpgItems_12: -1835733904
       rpgItems_13: 448031191
       rpgItems_14: 1557339114
@@ -1517,7 +1517,6 @@ TextureImporter:
       rpgItems_3: -785992810
       rpgItems_30: -1100535311
       rpgItems_31: 902945522
-      rpgItems_32: 24486349
       rpgItems_33: -504114780
       rpgItems_34: 1744838294
       rpgItems_35: -701152216
@@ -1554,6 +1553,7 @@ TextureImporter:
       rpgItems_7: 962044166
       rpgItems_8: 1110939077
       rpgItems_9: 1421054201
+      wine: 24486349
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

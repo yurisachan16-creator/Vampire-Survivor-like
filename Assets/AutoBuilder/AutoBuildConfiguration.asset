@@ -16,7 +16,7 @@ MonoBehaviour:
   profiles:
   - profileLabel: TapTap Windows Release
     productName: Nightfall Survivors
-    isBuild: 1
+    isBuild: 0
     platform: 5
     saveLocation: TapTap\Windows\Raw
     productVersion: 1.0.0
@@ -42,8 +42,8 @@ MonoBehaviour:
     - scene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
       enabled: 1
     customTask: []
-  - productName: Nightfall Survivors
-    profileLabel: Legacy Windows Build
+  - profileLabel: Legacy Windows Build
+    productName: Nightfall Survivors
     isBuild: 0
     platform: 5
     saveLocation: Windows
@@ -57,8 +57,8 @@ MonoBehaviour:
     customTask:
     - enabled: 0
       task: {fileID: 0}
-  - productName: Nightfall Survivors
-    profileLabel: Legacy Android Development
+  - profileLabel: Legacy Android Development
+    productName: Nightfall Survivors
     isBuild: 0
     platform: 13
     saveLocation: Android\Development
@@ -70,8 +70,8 @@ MonoBehaviour:
     - scene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
       enabled: 1
     customTask: []
-  - productName: Nightfall Survivors
-    profileLabel: Legacy WebGL Build
+  - profileLabel: Legacy WebGL Build
+    productName: Nightfall Survivors
     isBuild: 0
     platform: 20
     saveLocation: WebGL

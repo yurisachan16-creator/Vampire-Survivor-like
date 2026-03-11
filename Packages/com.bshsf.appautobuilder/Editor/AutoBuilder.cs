@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Presets;
@@ -251,11 +252,91 @@ namespace zFramework.AppBuilder
                     };
                     PlayerSettings.productName = profile.productName;
                     PlayerSettings.bundleVersion = profile.productVersion;
+
+                    if (!ValidateAndroidReleaseReadiness(buildTarget, options_unity, out var readinessError))
+                    {
+                        EditorUtility.DisplayDialog("Android Release 配置错误", readinessError, "确定");
+                        isBuilding = false;
+                        return;
+                    }
+
                     // 记录一个是否打包的标记
                     EditorPrefs.SetBool("BuildByAutoBuilder", true);
                     var report = BuildPipeline.BuildPlayer(scenes.ToArray(), file, buildTarget, options_unity);
                     Debug.Log($"{profile.productName} 打包结果：{report.summary.result}");
                 }
+            }
+        }
+
+        private static bool ValidateAndroidReleaseReadiness(BuildTarget target, BuildOptions options, out string error)
+        {
+            error = string.Empty;
+            if (target != BuildTarget.Android) return true;
+            if ((options & BuildOptions.Development) != 0) return true;
+
+            if (!PlayerSettings.Android.useCustomKeystore)
+            {
+                error = "当前为 Android Release 构建，但未启用 Custom Keystore。";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(PlayerSettings.Android.keystoreName) || !File.Exists(PlayerSettings.Android.keystoreName))
+            {
+                error = $"Android keystore 文件不存在：{PlayerSettings.Android.keystoreName}";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(PlayerSettings.Android.keyaliasName))
+            {
+                error = "Android key alias 为空。";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(PlayerSettings.Android.keystorePass) || string.IsNullOrWhiteSpace(PlayerSettings.Android.keyaliasPass))
+            {
+                error = "Android keystore/password 未填写，请在 Publishing Settings 重新填写 keystore password 与 key alias password。";
+                return false;
+            }
+
+            if (!TryInvokeTapTapAndroidValidation(out var validationError))
+            {
+                error = validationError;
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool TryInvokeTapTapAndroidValidation(out string error)
+        {
+            error = string.Empty;
+            try
+            {
+                var type = AppDomain.CurrentDomain.GetAssemblies()
+                    .Select(a => a.GetType("VampireSurvivorLike.Editor.TapTapReleaseUtility", false))
+                    .FirstOrDefault(t => t != null);
+
+                if (type == null) return true;
+
+                var method = type.GetMethod("TryValidateAndroidReleaseReadiness",
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
+                if (method == null) return true;
+
+                var args = new object[] { null };
+                var ok = (bool)method.Invoke(null, args);
+                if (ok) return true;
+
+                var details = args[0] as string;
+                error = string.IsNullOrWhiteSpace(details)
+                    ? "TapTap Android 发布配置校验失败。"
+                    : $"TapTap Android 发布配置校验失败：\n- {details}";
+                return false;
+            }
+            catch (Exception ex)
+            {
+                error = $"调用 TapTap 发布校验失败：{ex.Message}";
+                return false;
             }
         }
 

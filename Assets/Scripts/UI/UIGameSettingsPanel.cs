@@ -22,16 +22,23 @@ namespace VampireSurvivorLike
 	{
 		private float _previousTimeScale = 1f;
 		private RectTransform _settingsPanelRect;
+		private Vector2 _settingsPanelDesignSize = new Vector2(1000f, 1080f);
+		private Text _androidResolutionReadonlyText;
 		private System.Action _refreshUiText;
 		private ResLoader _iconResLoader;
 		
 		protected override void OnInit(IUIData uiData = null)
 		{
 			mData = uiData as UIGameSettingsPanelData ?? new UIGameSettingsPanelData();
+			NormalizeFullscreenRoot();
 			if (Application.isMobilePlatform && !GetComponent<SafeAreaFitter>()) gameObject.AddComponent<SafeAreaFitter>();
 			
 			// 获取 SettingsPanel 子对象的 RectTransform
 			_settingsPanelRect = transform.Find("SettingsPanel")?.GetComponent<RectTransform>();
+			if (_settingsPanelRect)
+			{
+				_settingsPanelDesignSize = _settingsPanelRect.sizeDelta;
+			}
 			if (Application.isMobilePlatform) ApplyMobileTouchTuning();
 
 			// ===== 预加载图标资源并修复丢失 sprite =====
@@ -46,6 +53,7 @@ namespace VampireSurvivorLike
 			}
 
 			// 查找分辨率 Dropdown（复用 DisplaySettings 容器中的 TMP_Dropdown）
+			var isAndroidRuntime = Application.platform == RuntimePlatform.Android;
 			TMP_Dropdown resolutionDropdown = null;
 			if (DisplaySettings)
 			{
@@ -55,6 +63,14 @@ namespace VampireSurvivorLike
 					if (resolutionDropdown.captionText) FontManager.Register(resolutionDropdown.captionText);
 					if (resolutionDropdown.itemText) FontManager.Register(resolutionDropdown.itemText);
 				}
+			}
+			if (isAndroidRuntime && DisplaySettings)
+			{
+				_androidResolutionReadonlyText = EnsureAndroidResolutionReadonlyLabel(
+					DisplaySettings.transform as RectTransform,
+					resolutionDropdown ? resolutionDropdown.transform as RectTransform : null);
+				if (_androidResolutionReadonlyText) FontManager.Register(_androidResolutionReadonlyText);
+				if (resolutionDropdown) resolutionDropdown.gameObject.SetActive(false);
 			}
 
 			var difficultySettings = transform.Find("SettingsPanel/Scroll View/Viewport/Content/DifficultySettings");
@@ -263,9 +279,20 @@ namespace VampireSurvivorLike
 				if (screenText) screenText.text = TL("ui.settings.resolution", "分辨率", "Resolution");
 
 				// 分辨率 Dropdown 选项
-				if (resolutionDropdown)
+				if (resolutionDropdown && !isAndroidRuntime)
 				{
 					PopulateResolutionDropdown(resolutionDropdown);
+				}
+				if (_androidResolutionReadonlyText)
+				{
+					if (LocalizationManager.TryGet("ui.settings.resolution_native_auto", out var nativeAutoText))
+					{
+						_androidResolutionReadonlyText.text = nativeAutoText;
+					}
+					else
+					{
+						_androidResolutionReadonlyText.text = isEn ? "Auto Detect (Native)" : "自动检测（设备原生）";
+					}
 				}
 
 				if (difficultyText) difficultyText.text = TL("ui.settings.difficulty", "难度", "Difficulty");
@@ -345,7 +372,7 @@ namespace VampireSurvivorLike
 			StartCoroutine(DeferredApplyDropdownFont());
 
 			// ===== 分辨率 Dropdown 事件 =====
-			if (resolutionDropdown)
+			if (resolutionDropdown && !isAndroidRuntime)
 			{
 				resolutionDropdown.onValueChanged.RemoveAllListeners();
 				resolutionDropdown.onValueChanged.AddListener(index =>
@@ -593,6 +620,7 @@ namespace VampireSurvivorLike
 			Canvas.ForceUpdateCanvases();
 			if (_settingsPanelRect)
 			{
+				ApplyAdaptivePanelBounds();
 				LayoutRebuilder.ForceRebuildLayoutImmediate(_settingsPanelRect);
 			}
 			// 移动端重新应用触控优化
@@ -662,6 +690,47 @@ namespace VampireSurvivorLike
 			return _fallbackSprite;
 		}
 
+		private Text EnsureAndroidResolutionReadonlyLabel(RectTransform displaySettingsRect, RectTransform dropdownRect)
+		{
+			if (!displaySettingsRect) return null;
+
+			var existing = displaySettingsRect.Find("AndroidResolutionReadonlyText");
+			var text = existing ? existing.GetComponent<Text>() : null;
+			if (text) return text;
+
+			var go = new GameObject("AndroidResolutionReadonlyText", typeof(RectTransform), typeof(Text));
+			var rt = (RectTransform)go.transform;
+			rt.SetParent(displaySettingsRect, false);
+
+			if (dropdownRect)
+			{
+				rt.anchorMin = dropdownRect.anchorMin;
+				rt.anchorMax = dropdownRect.anchorMax;
+				rt.pivot = dropdownRect.pivot;
+				rt.anchoredPosition = dropdownRect.anchoredPosition;
+				rt.sizeDelta = dropdownRect.sizeDelta;
+			}
+			else
+			{
+				rt.anchorMin = new Vector2(0.5f, 0.5f);
+				rt.anchorMax = new Vector2(0.5f, 0.5f);
+				rt.pivot = new Vector2(0.5f, 0.5f);
+				rt.sizeDelta = new Vector2(320f, 70f);
+				rt.anchoredPosition = new Vector2(240f, 0f);
+			}
+
+			text = go.GetComponent<Text>();
+			var fallbackFont = GetBuiltinFallbackFont();
+			if (fallbackFont) text.font = fallbackFont;
+			text.fontSize = 28;
+			text.alignment = TextAnchor.MiddleLeft;
+			text.horizontalOverflow = HorizontalWrapMode.Wrap;
+			text.verticalOverflow = VerticalWrapMode.Truncate;
+			text.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+			text.raycastTarget = false;
+			return text;
+		}
+
 		private void ApplyMobileTouchTuning()
 		{
 			var settingsPanel = _settingsPanelRect ? _settingsPanelRect : (transform as RectTransform);
@@ -704,63 +773,101 @@ namespace VampireSurvivorLike
 		
 		protected override void OnOpen(IUIData uiData = null)
 		{
-		// 立即重置位置
-		ResetPanelPosition();
-		
-		// 延迟一帧再次重置（确保 WebGL 布局完成后位置正确）
-		StartCoroutine(ResetPositionEndOfFrame());
-		
-		// 如果是从游戏中打开，暂停游戏
-		if (mData.IsFromGame)
+			ResetPanelPosition();
+			StartCoroutine(ResetPositionEndOfFrame());
+
+			if (mData.IsFromGame)
+			{
+				_previousTimeScale = Time.timeScale;
+				Time.timeScale = 0f;
+			}
+		}
+
+		private IEnumerator ResetPositionEndOfFrame()
 		{
-			_previousTimeScale = Time.timeScale;
-			Time.timeScale = 0f;
+			yield return new WaitForEndOfFrame();
+			ResetPanelPosition();
+		}
+
+		private void ResetPanelPosition()
+		{
+			Canvas.ForceUpdateCanvases();
+			NormalizeFullscreenRoot();
+			ApplySafeAreaNow();
+			ApplyAdaptivePanelBounds();
+
+			if (_settingsPanelRect != null)
+			{
+				_settingsPanelRect.anchoredPosition = Vector2.zero;
+				LayoutRebuilder.ForceRebuildLayoutImmediate(_settingsPanelRect);
+			}
+		}
+
+		protected override void OnShow()
+		{
+			ResetPanelPosition();
+		}
+
+		protected override void OnHide()
+		{
+		}
+		
+		protected override void OnClose()
+		{
+			// 如果是从游戏中打开，恢复游戏
+			if (mData.IsFromGame)
+			{
+				Time.timeScale = _previousTimeScale;
+			}
+			// 释放图标资源加载器
+			if (_iconResLoader != null)
+			{
+				_iconResLoader.Recycle2Cache();
+				_iconResLoader = null;
+			}
+		}
+
+		private void NormalizeFullscreenRoot()
+		{
+			var root = transform as RectTransform;
+			if (!root) return;
+
+			root.anchorMin = Vector2.zero;
+			root.anchorMax = Vector2.one;
+			root.offsetMin = Vector2.zero;
+			root.offsetMax = Vector2.zero;
+			root.anchoredPosition3D = Vector3.zero;
+			root.localScale = Vector3.one;
+		}
+
+		private void ApplySafeAreaNow()
+		{
+			if (!Application.isMobilePlatform) return;
+			var fitter = GetComponent<SafeAreaFitter>();
+			if (!fitter) fitter = gameObject.AddComponent<SafeAreaFitter>();
+			fitter.ForceApply();
+		}
+
+		private void ApplyAdaptivePanelBounds()
+		{
+			if (_settingsPanelRect == null)
+			{
+				return;
+			}
+
+			var root = transform as RectTransform;
+			if (!root)
+			{
+				return;
+			}
+
+			var availableWidth = Mathf.Max(640f, root.rect.width - 80f);
+			var availableHeight = Mathf.Max(720f, root.rect.height - 40f);
+			var targetWidth = Mathf.Min(_settingsPanelDesignSize.x, availableWidth);
+			var targetHeight = Mathf.Min(_settingsPanelDesignSize.y, availableHeight);
+
+			_settingsPanelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, targetWidth);
+			_settingsPanelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, targetHeight);
 		}
 	}
-	
-	private IEnumerator ResetPositionEndOfFrame()
-	{
-		yield return new WaitForEndOfFrame();
-		ResetPanelPosition();
-	}
-	
-	private void ResetPanelPosition()
-	{
-		// 强制更新 Canvas 布局
-		Canvas.ForceUpdateCanvases();
-		
-		// 强制重置 SettingsPanel 位置到屏幕中央
-		if (_settingsPanelRect != null)
-		{
-			_settingsPanelRect.anchoredPosition = Vector2.zero;
-			// 强制刷新布局
-			LayoutRebuilder.ForceRebuildLayoutImmediate(_settingsPanelRect);
-		}
-	}
-	
-	protected override void OnShow()
-	{
-		// OnShow 时再次确保位置正确
-		ResetPanelPosition();
-	}
-	
-	protected override void OnHide()
-	{
-	}
-		
-	protected override void OnClose()
-	{
-		// 如果是从游戏中打开，恢复游戏
-		if (mData.IsFromGame)
-		{
-			Time.timeScale = _previousTimeScale;
-		}
-		// 释放图标资源加载器
-		if (_iconResLoader != null)
-		{
-			_iconResLoader.Recycle2Cache();
-			_iconResLoader = null;
-		}
-	}
-}
 }
