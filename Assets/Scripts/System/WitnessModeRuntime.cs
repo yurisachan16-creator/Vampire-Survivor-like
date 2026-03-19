@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using QAssetBundle;
 using QFramework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -52,6 +53,8 @@ namespace VampireSurvivorLike
         private static WitnessModeRuntime _instance;
         private static readonly List<Transform> EnemyBuffer = new List<Transform>(1024);
         private static readonly List<Button> UpgradeButtonBuffer = new List<Button>(8);
+        private static Texture2D s_hudBorderTexture;
+        private static Sprite s_hudBorderSprite;
 
         private bool _isLoadingWitnessScene;
         private bool _cancelWitnessOnReady;
@@ -226,6 +229,10 @@ namespace VampireSurvivorLike
                     ClearWitnessRunState();
                 }
             }
+            else if (scene.name == "Game" && _isLoadingWitnessScene)
+            {
+                CleanupPersistentTitleUi();
+            }
 
             if (scene.name != "Game")
             {
@@ -337,6 +344,8 @@ namespace VampireSurvivorLike
             var deadline = Time.unscaledTime + 10f;
             while (Time.unscaledTime < deadline)
             {
+                CleanupPersistentTitleUi();
+
                 if (_cancelWitnessOnReady)
                 {
                     ReturnToTitleImmediately();
@@ -937,11 +946,45 @@ namespace VampireSurvivorLike
             rect.offsetMax = offsetMax;
 
             var image = go.GetComponent<Image>();
-            image.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
-            image.type = Image.Type.Sliced;
+            image.sprite = GetHudBorderSprite();
+            image.type = Image.Type.Simple;
             image.color = color;
             image.raycastTarget = false;
             return image;
+        }
+
+        private static Sprite GetHudBorderSprite()
+        {
+            if (s_hudBorderSprite) return s_hudBorderSprite;
+
+            if (!s_hudBorderTexture)
+            {
+                s_hudBorderTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false)
+                {
+                    name = "WitnessHudBorderTexture",
+                    hideFlags = HideFlags.HideAndDontSave
+                };
+                s_hudBorderTexture.SetPixel(0, 0, Color.white);
+                s_hudBorderTexture.Apply(false, true);
+            }
+
+            s_hudBorderSprite = Sprite.Create(
+                s_hudBorderTexture,
+                new Rect(0f, 0f, 1f, 1f),
+                new Vector2(0.5f, 0.5f),
+                1f,
+                0u,
+                SpriteMeshType.FullRect,
+                new Vector4(0f, 0f, 0f, 0f));
+            s_hudBorderSprite.name = "WitnessHudBorderSprite";
+            return s_hudBorderSprite;
+        }
+
+        private static void CleanupPersistentTitleUi()
+        {
+            UIKit.ClosePanel<UIGameSettingsPanel>();
+            UIKit.ClosePanel<UIGameLocalLeaderboardPanel>();
+            UIKit.ClosePanel<UIGameStartPanel>();
         }
 
         private static Text CreateLabel(RectTransform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 anchoredPosition, TextAnchor alignment, int fontSize)
