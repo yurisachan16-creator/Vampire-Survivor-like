@@ -103,6 +103,22 @@ namespace VampireSurvivorLike
                 _summonedCount = _summonCount;
                 return;
             }
+
+            // 召唤型 Boss 也必须服从小怪上限，否则会绕过 EnemyGenerator 的平台限流。
+            var remainingSmallEnemyCapacity = GetRemainingSmallEnemyCapacity();
+            if (remainingSmallEnemyCapacity <= 0)
+            {
+                _summonedCount = _summonCount;
+                return;
+            }
+
+            // 明确拦截 Boss 递归召唤，避免配置错误时出现指数级刷怪。
+            if (_minionPrefab.GetComponent<EnemyMiniBoss>())
+            {
+                Debug.LogWarning($"[SummonSkill] Boss '{Boss.name}' 的召唤物预制体 '{_minionPrefab.name}' 含有 EnemyMiniBoss，已阻止生成。");
+                _summonedCount = _summonCount;
+                return;
+            }
             
             // 在Boss周围随机位置召唤
             float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
@@ -123,7 +139,13 @@ namespace VampireSurvivorLike
             else
             {
                 var spawnedBoss = minion.GetComponent<EnemyMiniBoss>();
-                if (spawnedBoss) spawnedBoss.InitializeBoss();
+                if (spawnedBoss)
+                {
+                    Debug.LogWarning($"[SummonSkill] 召唤物 '{minion.name}' 意外带有 EnemyMiniBoss，已回收以避免无限扩张。");
+                    ObjectPoolSystem.Despawn(minion);
+                    _summonedCount = _summonCount;
+                    return;
+                }
             }
             
             // 播放召唤特效
@@ -132,6 +154,13 @@ namespace VampireSurvivorLike
             _summonedCount++;
             
             AudioKit.PlaySound(Sfx.EXP);
+        }
+
+        private static int GetRemainingSmallEnemyCapacity()
+        {
+            var limit = GameSettings.GetMaxSmallEnemyCountForCurrentPlatform();
+            if (limit <= 0) return int.MaxValue;
+            return Mathf.Max(0, limit - EnemyGenerator.SmallEnemyCount.Value);
         }
         
         private void SpawnSummonEffect(Vector3 position)
