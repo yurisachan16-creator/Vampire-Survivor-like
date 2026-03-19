@@ -159,6 +159,7 @@ namespace VampireSurvivorLike
 
 			Global.Coin.Register((coin) =>
 			{
+				if (!WitnessModeRuntime.AllowCoinAutoPersistence) return;
 				PlayerPrefs.SetInt(nameof(Global.Coin), coin);
 
 			});

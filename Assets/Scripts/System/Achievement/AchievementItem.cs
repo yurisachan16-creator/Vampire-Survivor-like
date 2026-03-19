@@ -12,6 +12,7 @@ namespace VampireSurvivorLike
         public string DescriptionKey { get; private set; }
         public bool Unlocked { get; private set; }
         public string IconName { get; private set; }
+        public bool WitnessOnly { get; private set; }
 
         private Func<bool> _mCondition;
         private Action<AchievementItem> _mOnUnlocked;
@@ -49,6 +50,12 @@ namespace VampireSurvivorLike
         public AchievementItem WithIconName(string iconName)
         {
             IconName = iconName;
+            return this;
+        }
+
+        public AchievementItem AsWitnessOnly()
+        {
+            WitnessOnly = true;
             return this;
         }
 

@@ -14,6 +14,8 @@ namespace VampireSurvivorLike
 	public partial class ExpUpgradePanel : UIElement,IController
 	{
 		private ResLoader _mResLoader;
+		private Button _highlightedButton;
+		private Color _highlightedButtonColor;
 
 		private void Awake()
         {
@@ -144,6 +146,63 @@ namespace VampireSurvivorLike
 		{
 			_mResLoader.Recycle2Cache();
 			_mResLoader = null;
+		}
+
+		/// <summary>
+		/// 收集当前可见的升级按钮，供见证模式自动选择使用。
+		/// </summary>
+		public void GetVisibleUpgradeButtons(List<Button> results)
+		{
+			if (results == null) return;
+			results.Clear();
+			if (!UpgradeRoot) return;
+
+			var buttons = UpgradeRoot.GetComponentsInChildren<Button>(true);
+			for (var i = 0; i < buttons.Length; i++)
+			{
+				var button = buttons[i];
+				if (!button || button == BtnExpUpgradeItemPrefab) continue;
+				if (!button.gameObject.activeInHierarchy) continue;
+				results.Add(button);
+			}
+		}
+
+		/// <summary>
+		/// 设置自动选择时的高亮表现。
+		/// </summary>
+		public void SetAutoPickHighlight(Button button, bool highlighted)
+		{
+			if (!button) return;
+			var image = button.GetComponent<Image>();
+			if (!image) return;
+
+			if (highlighted)
+			{
+				if (_highlightedButton && _highlightedButton != button)
+				{
+					ClearAutoPickHighlight();
+				}
+
+				_highlightedButton = button;
+				_highlightedButtonColor = image.color;
+				image.color = new Color(1f, 0.88f, 0.48f, 1f);
+				button.transform.localScale = Vector3.one * 1.04f;
+				return;
+			}
+
+			if (_highlightedButton != button) return;
+			image.color = _highlightedButtonColor;
+			button.transform.localScale = Vector3.one;
+			_highlightedButton = null;
+		}
+
+		public void ClearAutoPickHighlight()
+		{
+			if (!_highlightedButton) return;
+			var image = _highlightedButton.GetComponent<Image>();
+			if (image) image.color = _highlightedButtonColor;
+			_highlightedButton.transform.localScale = Vector3.one;
+			_highlightedButton = null;
 		}
 
         public IArchitecture GetArchitecture()

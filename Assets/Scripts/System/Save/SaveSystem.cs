@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using QFramework;
 using UnityEngine;
+using VampireSurvivorLike;
 
 public class SaveSystem: AbstractSystem
 {
@@ -19,6 +20,7 @@ public class SaveSystem: AbstractSystem
 
     public void SaveBool(string key, bool value)
     {
+        if (!WitnessModeRuntime.CanWritePlayerPrefsKey(key)) return;
         mSavedKeys.Add(key);
         PlayerPrefs.SetInt(key, value ? 1 : 0);
     }   
@@ -31,6 +33,7 @@ public class SaveSystem: AbstractSystem
 
     public void SaveInt(string key, int value)
     {
+        if (!WitnessModeRuntime.CanWritePlayerPrefsKey(key)) return;
         mSavedKeys.Add(key);
         PlayerPrefs.SetInt(key, value);
     }   
@@ -43,6 +46,7 @@ public class SaveSystem: AbstractSystem
 
     public void SaveString(string key, string value)
     {
+        if (!WitnessModeRuntime.CanWritePlayerPrefsKey(key)) return;
         mSavedKeys.Add(key);
         PlayerPrefs.SetString(key, value);
     }   

@@ -29,9 +29,11 @@ namespace VampireSurvivorLike
 			System.Action refreshUiText = () =>
 			{
 				if (!LocalizationManager.IsReady) return;
-				if (titleText) titleText.text = LocalizationManager.T("ui.gamepass.title");
+				var defaultTitle = LocalizationManager.T("ui.gamepass.title");
+				if (titleText) titleText.text = WitnessModeRuntime.GetResultTitle(true, defaultTitle);
 				if (backLabel) backLabel.text = LocalizationManager.T("ui.settings.return_main_menu");
 				if (difficultySummaryText) difficultySummaryText.text = BuildDifficultySummaryText();
+				if (BtnBackToStart) BtnBackToStart.gameObject.SetActive(!WitnessModeRuntime.ShouldAutoReturnFromResult());
 			};
 			LocalizationManager.ReadyChanged.Register(() => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
 			LocalizationManager.CurrentLanguage.Register(_ => refreshUiText()).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -55,6 +57,10 @@ namespace VampireSurvivorLike
             {
 				//播放音效
 				AudioKit.PlaySound(Sfx.BUTTONCLICK);
+				if (WitnessModeRuntime.IsWitnessRunActive)
+				{
+					Global.ResetData();
+				}
 				GameSettings.ClearActiveRunDifficulty();
                 this.CloseSelf();
 				SceneManager.LoadScene("GameStart");
@@ -135,7 +141,9 @@ namespace VampireSurvivorLike
 			var rewardModifier = LocalizationManager.Format(
 				"ui.result.reward_modifier",
 				FormatSignedPercent(GameSettings.GetRewardDeltaPercent(profile)));
-			return LocalizationManager.Format("ui.result.difficulty_summary", label, enemyModifier, rewardModifier);
+			var summary = LocalizationManager.Format("ui.result.difficulty_summary", label, enemyModifier, rewardModifier);
+			var witnessPrefix = WitnessModeRuntime.GetResultSummaryPrefix();
+			return string.IsNullOrEmpty(witnessPrefix) ? summary : $"{witnessPrefix}\n{summary}";
 		}
 
 		private static string FormatSignedPercent(float percent)

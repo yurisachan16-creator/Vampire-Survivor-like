@@ -43,6 +43,7 @@ namespace VampireSurvivorLike
         public static bool RecordCurrentRun(bool isClear, string deathReason)
         {
             EnsureLoaded();
+            if (!WitnessModeRuntime.ShouldRecordLeaderboard) return false;
 
             var runSessionId = Global.RunSessionId;
             if (s_lastRecordedRunSessionId == runSessionId)

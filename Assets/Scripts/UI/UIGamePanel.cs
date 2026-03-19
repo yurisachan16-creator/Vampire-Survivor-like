@@ -288,20 +288,46 @@ namespace VampireSurvivorLike
 
 	public static class PlatformInput
 	{
-		private static Vector2 _moveOverride;
-		private static bool _hasMoveOverride;
+		private static Vector2 _playerMoveOverride;
+		private static bool _hasPlayerMoveOverride;
+		private static Vector2 _witnessMoveOverride;
+		private static bool _hasWitnessMoveOverride;
 		private static int _backRequestedFrame = -1;
 
 		public static void SetMoveOverride(Vector2 move)
 		{
-			_moveOverride = move;
-			_hasMoveOverride = move.sqrMagnitude > 0.0001f;
+			_playerMoveOverride = move;
+			_hasPlayerMoveOverride = move.sqrMagnitude > 0.0001f;
+		}
+
+		/// <summary>
+		/// 供见证模式 AI 注入移动输入。
+		/// </summary>
+		public static void SetWitnessMoveOverride(Vector2 move)
+		{
+			_witnessMoveOverride = move;
+			_hasWitnessMoveOverride = move.sqrMagnitude > 0.0001f;
+		}
+
+		public static void ClearWitnessMoveOverride()
+		{
+			_witnessMoveOverride = Vector2.zero;
+			_hasWitnessMoveOverride = false;
+		}
+
+		/// <summary>
+		/// 读取玩家的真实输入，不受见证模式 AI 接管影响。
+		/// </summary>
+		public static Vector2 GetPlayerMoveAxisRaw()
+		{
+			if (_hasPlayerMoveOverride) return _playerMoveOverride;
+			return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 		}
 
 		public static Vector2 GetMoveAxisRaw()
 		{
-			if (_hasMoveOverride) return _moveOverride;
-			return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+			if (_hasWitnessMoveOverride) return _witnessMoveOverride;
+			return GetPlayerMoveAxisRaw();
 		}
 
 		public static void RequestBack()

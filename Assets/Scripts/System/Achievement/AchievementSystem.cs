@@ -16,6 +16,10 @@ namespace VampireSurvivorLike
         protected override void OnInit()
         {
             var saveSystem = this.GetSystem<SaveSystem>();
+            AchievementItem witnessWatchAchievement = null;
+            AchievementItem witnessTakeoverSurviveAchievement = null;
+            AchievementItem witnessTakeoverClearAchievement = null;
+            AchievementItem witnessObserveBossAchievement = null;
 
             Add(new AchievementItem()
                 .WithKey("3_minutes")
@@ -149,6 +153,59 @@ namespace VampireSurvivorLike
                 .OnUnlocked(_=>{Global.Coin.Value += 1000;})
             .Load(saveSystem));
 
+            witnessWatchAchievement = new AchievementItem()
+                .WithKey("witness_watch")
+                .WithName("轮回旁观者")
+                .WithDescription("累计旁观 AI 游玩达到 10 分钟")
+                .WithIconName("achievement_time_icon")
+                .AsWitnessOnly()
+                .Condition(() => WitnessModeRuntime.TotalWatchSeconds >= 600f)
+                .Load(saveSystem);
+            Add(witnessWatchAchievement);
+
+            witnessTakeoverSurviveAchievement = new AchievementItem()
+                .WithKey("witness_takeover_survive")
+                .WithName("最后的守护")
+                .WithDescription("在 AI 残血时接管，并在接管后存活 60 秒")
+                .WithIconName("achievement_time_icon")
+                .AsWitnessOnly()
+                .Condition(WitnessModeRuntime.IsWitnessTakeoverSurviveQualified)
+                .Load(saveSystem);
+            Add(witnessTakeoverSurviveAchievement);
+
+            witnessTakeoverClearAchievement = new AchievementItem()
+                .WithKey("witness_takeover_clear")
+                .WithName("见证者的意志")
+                .WithDescription("在见证局接管后完成通关")
+                .WithIconName("achievement_all_icon")
+                .AsWitnessOnly()
+                .Condition(WitnessModeRuntime.IsWitnessTakeoverClearQualified)
+                .Load(saveSystem);
+            Add(witnessTakeoverClearAchievement);
+
+            witnessObserveBossAchievement = new AchievementItem()
+                .WithKey("witness_observe_boss")
+                .WithName("旁观神迹")
+                .WithDescription("不接管，旁观 AI 击败 Boss")
+                .WithIconName("achievement_time_icon")
+                .AsWitnessOnly()
+                .Condition(WitnessModeRuntime.IsWitnessObserveBossQualified)
+                .Load(saveSystem);
+            Add(witnessObserveBossAchievement);
+
+            Add(new AchievementItem()
+                .WithKey("witness_all")
+                .WithName("轮回见证者")
+                .WithDescription("解锁全部见证专属成就")
+                .WithIconName("achievement_all_icon")
+                .AsWitnessOnly()
+                .Condition(() =>
+                    witnessWatchAchievement != null && witnessWatchAchievement.Unlocked &&
+                    witnessTakeoverSurviveAchievement != null && witnessTakeoverSurviveAchievement.Unlocked &&
+                    witnessTakeoverClearAchievement != null && witnessTakeoverClearAchievement.Unlocked &&
+                    witnessObserveBossAchievement != null && witnessObserveBossAchievement.Unlocked)
+                .Load(saveSystem));
+
 
             // 每10帧检查一次成就解锁条件
             ActionKit.OnUpdate.Register(() =>
@@ -175,6 +232,16 @@ namespace VampireSurvivorLike
             foreach (var achievementItem in Items.Where(item => 
                 !item.Unlocked && item.ConditionCheck()))
             {
+                if (WitnessModeRuntime.IsWitnessRunActive && !achievementItem.WitnessOnly)
+                {
+                    continue;
+                }
+
+                if (!WitnessModeRuntime.IsWitnessRunActive && achievementItem.WitnessOnly)
+                {
+                    continue;
+                }
+
                 achievementItem.UnLock(saveSystem);
             }
         }

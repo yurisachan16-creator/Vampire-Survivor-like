@@ -539,6 +539,7 @@ namespace VampireSurvivorLike
             if (_isDead) return;
             _isDead = true;
             Global.RunKillCount++;
+            WitnessModeRuntime.NotifyBossDefeatedByPlayerSide();
             _isIgnoreHurt = true;
             _hurtPending = false;
             ResetExternalKnockback();
