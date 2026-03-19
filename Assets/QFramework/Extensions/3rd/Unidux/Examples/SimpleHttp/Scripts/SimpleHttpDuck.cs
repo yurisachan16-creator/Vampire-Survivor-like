@@ -74,7 +74,7 @@ namespace Unidux.Example.SimpleHttp
 
                 yield return getRequest.SendWebRequest();
 
-                if (getRequest.isNetworkError)
+                if (getRequest.result == UnityWebRequest.Result.ConnectionError)
                 {
                     error.Invoke(getRequest.error);
                 }

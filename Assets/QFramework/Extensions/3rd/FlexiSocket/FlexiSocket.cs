@@ -331,7 +331,7 @@ namespace QFramework
             }
             else
             {
-                if (!Socket.SupportsIPv4)
+                if (!Socket.OSSupportsIPv4)
                     throw new NotSupportedException("IPv6 is not supported on this OS");
             }
             Port = port;

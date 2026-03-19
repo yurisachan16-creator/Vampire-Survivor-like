@@ -50,24 +50,24 @@ namespace QFramework
                     {
                         UIKit.ClosePanel(FromPanel.name);
 
-                        InCompleted.InvokeGracefully();
+                        InCompleted?.Invoke();
                     }))
                     .Append(panel.Image.DOFade(0.0f, FadeOutDuration))
                     .OnComplete(() =>
                     {
-                        OutCompleted.InvokeGracefully();
+                        OutCompleted?.Invoke();
                         Finish();
                     });
             }
             else
             {
-                InCompleted.InvokeGracefully();
+                InCompleted?.Invoke();
                 panel.Image.color = PanelColor;
                 panel.Image.ColorAlpha(1.0f);
                 panel.Image.DOFade(0.0f, FadeOutDuration)
                     .OnComplete(() =>
                     {
-                        OutCompleted.InvokeGracefully();
+                        OutCompleted?.Invoke();
                         Finish();
                     });
             }

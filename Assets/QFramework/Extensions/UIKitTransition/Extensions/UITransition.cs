@@ -43,7 +43,7 @@ namespace QFramework
             };
             
 
-            UIKit.OpenPanel<UITransitionPanel>(UILevel.Forward, new UITransitionPanelData()
+            UIKit.OpenPanel<UITransitionPanel>(UILevel.PopUI, new UITransitionPanelData()
             {
                 Transition = transition
             }, prefabName: "Resources/UITransitionPanel");
