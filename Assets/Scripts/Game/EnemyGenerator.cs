@@ -75,19 +75,35 @@ namespace VampireSurvivorLike
 		public float SpawnTimer;
 		public int SpawnedCount;
 
-		public bool IsActive(float gameTime)
+		public bool IsActive(float gameTime, float bossTimeOffsetSeconds)
 		{
-			if (gameTime < Definition.StartTimeSec) return false;
-			if (Definition.EndTimeSec >= 0 && gameTime >= Definition.EndTimeSec) return false;
+			var startTime = GetEffectiveStartTime(bossTimeOffsetSeconds);
+			var endTime = GetEffectiveEndTime(bossTimeOffsetSeconds);
+			if (gameTime < startTime) return false;
+			if (endTime >= 0 && gameTime >= endTime) return false;
 			if (Definition.SpawnCount > 0 && SpawnedCount >= Definition.SpawnCount) return false;
 			return true;
 		}
 
-		public bool IsExhausted(float gameTime)
+		public bool IsExhausted(float gameTime, float bossTimeOffsetSeconds)
 		{
+			var endTime = GetEffectiveEndTime(bossTimeOffsetSeconds);
 			if (Definition.SpawnCount > 0 && SpawnedCount >= Definition.SpawnCount) return true;
-			if (Definition.EndTimeSec >= 0 && gameTime >= Definition.EndTimeSec) return true;
+			if (endTime >= 0 && gameTime >= endTime) return true;
 			return false;
+		}
+
+		private float GetEffectiveStartTime(float bossTimeOffsetSeconds)
+		{
+			if (Definition.Phase != WaveSpawnPhase.Boss) return Definition.StartTimeSec;
+			return Mathf.Max(0f, Definition.StartTimeSec + bossTimeOffsetSeconds);
+		}
+
+		private float GetEffectiveEndTime(float bossTimeOffsetSeconds)
+		{
+			if (Definition.EndTimeSec < 0f) return Definition.EndTimeSec;
+			if (Definition.Phase != WaveSpawnPhase.Boss) return Definition.EndTimeSec;
+			return Mathf.Max(0f, Definition.EndTimeSec + bossTimeOffsetSeconds);
 		}
 	}
 
@@ -156,12 +172,12 @@ namespace VampireSurvivorLike
 		public int CurrentMinute { get; private set; }
 
 		/// <summary>所有频道是否都已耗尽且游戏时间到</summary>
-		public bool IsTimelineComplete(float gameTime)
+		public bool IsTimelineComplete(float gameTime, float bossTimeOffsetSeconds)
 		{
 			if (gameTime < Config.MaxGameSeconds) return false;
 			for (var i = 0; i < _channels.Count; i++)
 			{
-				if (!_channels[i].IsExhausted(gameTime)) return false;
+				if (!_channels[i].IsExhausted(gameTime, bossTimeOffsetSeconds)) return false;
 			}
 			return true;
 		}
@@ -186,7 +202,14 @@ namespace VampireSurvivorLike
 			Debug.Log($"[TimelineController] 加载 {_channels.Count} 个刷怪频道");
 		}
 
-		public void Tick(float gameTime, float deltaTime, IWaveWorld world)
+		public void Tick(
+			float gameTime,
+			float deltaTime,
+			IWaveWorld world,
+			float runtimeSpawnIntervalMultiplier,
+			float runtimeEnemyHpMultiplier,
+			float runtimeEnemySpeedMultiplier,
+			float runtimeBossTimeOffsetSeconds)
 		{
 			if (world == null || _channels.Count == 0) return;
 
@@ -207,7 +230,7 @@ namespace VampireSurvivorLike
 
 			foreach (var ch in _channels)
 			{
-				if (!ch.IsActive(gameTime)) continue;
+				if (!ch.IsActive(gameTime, runtimeBossTimeOffsetSeconds)) continue;
 
 				activeCount++;
 				if (shouldRefreshActiveNames)
@@ -233,6 +256,12 @@ namespace VampireSurvivorLike
 				speedMul *= difficultyProfile.EnemySpeedMultiplier;
 				damageMul *= difficultyProfile.EnemyDamageMultiplier;
 				spawnRateMul *= difficultyProfile.SpawnRateMultiplier;
+				if (!isBossPhase)
+				{
+					hpMul *= runtimeEnemyHpMultiplier;
+					speedMul *= runtimeEnemySpeedMultiplier;
+					spawnRateMul *= 1f / Mathf.Max(0.05f, runtimeSpawnIntervalMultiplier);
+				}
 
 				// 计算经过难度缩放后的刷新间隔
 				var effectiveInterval = ch.Definition.SpawnIntervalSec / spawnRateMul;
@@ -327,11 +356,20 @@ namespace VampireSurvivorLike
 		/// <summary>游戏时间是否已到达上限（30分钟）</summary>
 		public bool IsGameTimeUp => _isInitialized && Global.CurrentSeconds.Value >= Config.MaxGameSeconds;
 		/// <summary>[兼容] 所有波次是否完成 → 游戏时间到且所有频道耗尽</summary>
-		public bool IsAllWavesFinished => _isInitialized && _timeline != null && _timeline.IsTimelineComplete(Global.CurrentSeconds.Value);
+		public bool IsAllWavesFinished => _isInitialized && _timeline != null &&
+			_timeline.IsTimelineComplete(Global.CurrentSeconds.Value, RuntimeBossTimeOffsetSeconds);
+
+		public float RuntimeSpawnIntervalMultiplier { get; private set; } = 1f;
+		public float RuntimeEnemyHpMultiplier { get; private set; } = 1f;
+		public float RuntimeEnemySpeedMultiplier { get; private set; } = 1f;
+		public float RuntimeBossTimeOffsetSeconds { get; private set; }
+		public int ActiveEnemyCountInCamera { get; private set; }
 
 		private bool _isInitialized = false;
 		private TimelineController _timeline;
 		private bool _reaperSpawned = false;
+		private readonly List<Transform> _enemyCountBuffer = new List<Transform>(512);
+		private float _nextEnemyCountRefreshTime;
 
 		IEnumerator Start()
 		{
@@ -427,7 +465,15 @@ namespace VampireSurvivorLike
 
 			var gameTime = Global.CurrentSeconds.Value;
 
-			_timeline.Tick(gameTime, Time.deltaTime, this);
+			_timeline.Tick(
+				gameTime,
+				Time.deltaTime,
+				this,
+				RuntimeSpawnIntervalMultiplier,
+				RuntimeEnemyHpMultiplier,
+				RuntimeEnemySpeedMultiplier,
+				RuntimeBossTimeOffsetSeconds);
+			RefreshActiveEnemyCountInCamera(gameTime);
 
 			if (CurrentMinute.Value != _timeline.CurrentMinute)
 			{
@@ -451,6 +497,54 @@ namespace VampireSurvivorLike
 			{
 				SpawnReaper();
 			}
+
+			Global.Interface.GetSystem<DDASystem>().Tick(this);
+		}
+
+		public void ApplyDdaRuntimeModifiers(
+			float runtimeSpawnIntervalMultiplier,
+			float runtimeEnemyHpMultiplier,
+			float runtimeEnemySpeedMultiplier,
+			float runtimeBossTimeOffsetSeconds)
+		{
+			RuntimeSpawnIntervalMultiplier = Mathf.Max(0.05f, runtimeSpawnIntervalMultiplier);
+			RuntimeEnemyHpMultiplier = Mathf.Max(0.05f, runtimeEnemyHpMultiplier);
+			RuntimeEnemySpeedMultiplier = Mathf.Max(0.05f, runtimeEnemySpeedMultiplier);
+			RuntimeBossTimeOffsetSeconds = runtimeBossTimeOffsetSeconds;
+		}
+
+		private void RefreshActiveEnemyCountInCamera(float gameTime)
+		{
+			if (gameTime < _nextEnemyCountRefreshTime) return;
+			_nextEnemyCountRefreshTime = gameTime + 0.25f;
+
+			if (!CameraController.LBTransform || !CameraController.RTTransform)
+			{
+				ActiveEnemyCountInCamera = EnemyCount.Value;
+				return;
+			}
+
+			var padding = DDAConfig.Instance.NearScreenPadding;
+			var lb = (Vector2)CameraController.LBTransform.position;
+			var rt = (Vector2)CameraController.RTTransform.position;
+			var minX = Mathf.Min(lb.x, rt.x) - padding;
+			var maxX = Mathf.Max(lb.x, rt.x) + padding;
+			var minY = Mathf.Min(lb.y, rt.y) - padding;
+			var maxY = Mathf.Max(lb.y, rt.y) + padding;
+			var count = 0;
+
+			EnemyRegistry.AddAllEnemyTransformsTo(_enemyCountBuffer);
+			for (var i = 0; i < _enemyCountBuffer.Count; i++)
+			{
+				var target = _enemyCountBuffer[i];
+				if (!target) continue;
+
+				var pos = (Vector2)target.position;
+				if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY) continue;
+				count++;
+			}
+
+			ActiveEnemyCountInCamera = count;
 		}
 
 		private void SpawnReaper()

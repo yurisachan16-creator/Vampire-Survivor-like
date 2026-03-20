@@ -108,6 +108,7 @@ namespace VampireSurvivorLike
         private const string KEY_MAX_SMALL_ENEMY_MOBILE = "GameSettings_MaxSmallEnemy_Mobile";
         private const string KEY_PC_INSTANCED_ENEMY_RENDERER = "GameSettings_PcInstancedEnemyRenderer";
         private const string KEY_SELECTED_DIFFICULTY = "GameSettings_SelectedDifficulty";
+        private const string KEY_DDA_ENABLED = "DDAEnabled";
 
         /// <summary>
         /// 预设分辨率列表（覆盖主流屏幕比例）
@@ -287,6 +288,16 @@ namespace VampireSurvivorLike
         {
             get => _enableAdaptiveMobilePerformance;
             set => _enableAdaptiveMobilePerformance = value;
+        }
+
+        public static bool EnableDDA
+        {
+            get => PlayerPrefs.GetInt(KEY_DDA_ENABLED, 1) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(KEY_DDA_ENABLED, value ? 1 : 0);
+                PlayerPrefs.Save();
+            }
         }
 
         public static int MaxSmallEnemyCountWebGL

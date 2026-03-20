@@ -299,6 +299,7 @@ namespace VampireSurvivorLike
             PowerUpRegistry.Clear();
             PowerUpMergeSystem.ResetStats();
             Interface.GetSystem<ExpUpgradeSystem>().ResetData();
+            Interface.GetSystem<DDASystem>().ResetRun();
 
             // 从配置文件加载技能属性（如果已加载）
             ApplyAbilityConfig();
@@ -452,7 +453,8 @@ namespace VampireSurvivorLike
             var qualityDropMultiplier = 1f + luck * 1.2f;
             var effectiveExpDropRate = Mathf.Clamp01((expDropRate + AdditionalExpPercent.Value) * difficultyProfile.ExpDropRateMultiplier);
             var effectiveCoinDropRate = Mathf.Clamp01(coinDropRate * difficultyProfile.CoinDropRateMultiplier);
-            var effectiveHpDropRate = Mathf.Clamp01(hpDropRate * difficultyProfile.HpDropRateMultiplier);
+            var effectiveHpDropRate = Mathf.Clamp01(
+                hpDropRate * difficultyProfile.HpDropRateMultiplier + DDASystem.GetActiveHealDropBonusRate());
             var effectiveBombDropRate = Mathf.Clamp01(bombDropRate * difficultyProfile.BombDropRateMultiplier);
 
             //根据概率生成经验值和金币
@@ -577,6 +579,7 @@ namespace VampireSurvivorLike
             this.RegisterSystem(new CoinUpgradeSystem());
             this.RegisterSystem(new ExpUpgradeSystem());
             this.RegisterSystem(new AchievementSystem());
+            this.RegisterSystem(new DDASystem());
         }
 
         private static void ApplyMaxHpBalanceMigration()

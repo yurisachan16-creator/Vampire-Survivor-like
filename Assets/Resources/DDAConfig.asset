@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6be89a6abb1f4ac591aeb81e0a4b55e0, type: 3}
+  m_Name: DDAConfig
+  m_EditorClassIdentifier: 
+  Description: Dynamic difficulty adjustment runtime tuning.
+  EvaluationWindowSeconds: 15
+  CooldownSeconds: 20
+  OpeningProtectionSeconds: 60
+  FlowLowerThreshold: 0.3
+  FlowUpperThreshold: 0.65
+  SpawnIntervalMultiplierMin: 0.6
+  SpawnIntervalMultiplierMax: 1.5
+  EnemyHpMultiplierMin: 0.7
+  EnemyHpMultiplierMax: 1.4
+  EnemySpeedMultiplierMin: 0.8
+  EnemySpeedMultiplierMax: 1.25
+  BossMaxAdvanceMinutes: 3
+  BossMaxDelayMinutes: 5
+  HealDropBonusRate: 0.15
+  CriticalHpThreshold: 0.35
+  DamageTakenPressureCapPerMinute: 20
+  KillReliefCapPerMinute: 60
+  ActiveEnemyPressureCap: 150
+  EasySpawnIntervalStep: -0.05
+  StressedSpawnIntervalStep: 0.1
+  EasyEnemyHpStep: 0.05
+  StressedEnemyHpStep: -0.08
+  EasyEnemySpeedStep: 0.03
+  StressedEnemySpeedStep: -0.05
+  BossTimeOffsetStepSeconds: 60
+  NearScreenPadding: 2
