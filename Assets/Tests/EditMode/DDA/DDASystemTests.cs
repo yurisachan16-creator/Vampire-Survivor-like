@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Reflection;
 using UnityEngine;
+using global::VampireSurvivorLike;
 
 namespace VampireSurvivorLike.Tests
 {

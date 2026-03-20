@@ -1,0 +1,22 @@
+{
+    "name": "VampireSurvivorLike",
+    "references": [
+        "QFramework",
+        "QFramework.CoreKit",
+        "AudioKit",
+        "ResKit",
+        "UIKit",
+        "UniRx",
+        "QF.Redux"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
