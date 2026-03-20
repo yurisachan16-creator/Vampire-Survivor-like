@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Reflection;
 using UnityEngine;
 
 namespace VampireSurvivorLike.Tests
@@ -122,6 +123,46 @@ namespace VampireSurvivorLike.Tests
                 Is.EqualTo(DDAConfig.Instance.BossMaxDelayMinutes * 60f).Within(0.0001f));
         }
 
+        [Test]
+        public void ZeroVisibleEnemies_DoesNotFallbackToGlobalEnemyCount()
+        {
+            PrimeMetrics(gameTime: 0f, hp: 100, maxHp: 100, hits: 0, kills: 0, activeEnemies: 0);
+            SetActiveEnemyCountInCamera(0);
+            PrimeMetrics(gameTime: 61f, hp: 100, maxHp: 100, hits: 0, kills: 0, activeEnemies: 150);
+
+            Assert.That(_system.CurrentStressState, Is.EqualTo(StressState.Easy));
+            Assert.That(_enemyGenerator.RuntimeSpawnIntervalMultiplier, Is.EqualTo(0.95f).Within(0.0001f));
+        }
+
+        [Test]
+        public void DelayedBossChannels_AreStillExhaustedAtGameTimeLimit()
+        {
+            var controller = new TimelineController();
+            var bossPrefab = new GameObject("BossPrefab");
+
+            try
+            {
+                controller.Load(new[]
+                {
+                    new SpawnChannel
+                    {
+                        ChannelName = "LateBoss",
+                        Prefab = bossPrefab,
+                        Phase = WaveSpawnPhase.Boss,
+                        StartTimeSec = 1680f,
+                        EndTimeSec = 1750f,
+                        SpawnCount = 0
+                    }
+                });
+
+                Assert.That(controller.IsTimelineComplete(Config.MaxGameSeconds, 300f), Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(bossPrefab);
+            }
+        }
+
         private void PrimeMetrics(float gameTime, int hp, int maxHp, int hits, int kills, int activeEnemies)
         {
             Global.CurrentSeconds.Value = gameTime;
@@ -133,5 +174,13 @@ namespace VampireSurvivorLike.Tests
 
             _system.Tick(_enemyGenerator);
         }
+
+        private void SetActiveEnemyCountInCamera(int count)
+        {
+            typeof(EnemyGenerator)
+                .GetField("<ActiveEnemyCountInCamera>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(_enemyGenerator, count);
+        }
     }
 }
+

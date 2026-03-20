@@ -193,7 +193,7 @@ namespace VampireSurvivorLike
             var hpRatio = Global.MaxHP.Value <= 0 ? 1f : Global.HP.Value / (float)Mathf.Max(1, Global.MaxHP.Value);
             var hitsPerMinute = GetHitsPerMinute(gameTime);
             var killsPerMinute = GetKillsPerMinute(gameTime);
-            var activeEnemyCount = generator.ActiveEnemyCountInCamera > 0
+            var activeEnemyCount = generator.ActiveEnemyCountInCamera >= 0
                 ? generator.ActiveEnemyCountInCamera
                 : EnemyGenerator.EnemyCount.Value;
 

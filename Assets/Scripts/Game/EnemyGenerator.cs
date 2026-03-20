@@ -96,14 +96,16 @@ namespace VampireSurvivorLike
 		private float GetEffectiveStartTime(float bossTimeOffsetSeconds)
 		{
 			if (Definition.Phase != WaveSpawnPhase.Boss) return Definition.StartTimeSec;
-			return Mathf.Max(0f, Definition.StartTimeSec + bossTimeOffsetSeconds);
+			var startTime = Mathf.Max(0f, Definition.StartTimeSec + bossTimeOffsetSeconds);
+			return Mathf.Min(Config.MaxGameSeconds, startTime);
 		}
 
 		private float GetEffectiveEndTime(float bossTimeOffsetSeconds)
 		{
-			if (Definition.EndTimeSec < 0f) return Definition.EndTimeSec;
 			if (Definition.Phase != WaveSpawnPhase.Boss) return Definition.EndTimeSec;
-			return Mathf.Max(0f, Definition.EndTimeSec + bossTimeOffsetSeconds);
+			if (Definition.EndTimeSec < 0f) return Config.MaxGameSeconds;
+			var endTime = Mathf.Max(0f, Definition.EndTimeSec + bossTimeOffsetSeconds);
+			return Mathf.Min(Config.MaxGameSeconds, endTime);
 		}
 	}
 
@@ -363,7 +365,7 @@ namespace VampireSurvivorLike
 		public float RuntimeEnemyHpMultiplier { get; private set; } = 1f;
 		public float RuntimeEnemySpeedMultiplier { get; private set; } = 1f;
 		public float RuntimeBossTimeOffsetSeconds { get; private set; }
-		public int ActiveEnemyCountInCamera { get; private set; }
+		public int ActiveEnemyCountInCamera { get; private set; } = -1;
 
 		private bool _isInitialized = false;
 		private TimelineController _timeline;
