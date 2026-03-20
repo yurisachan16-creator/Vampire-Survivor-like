@@ -100,6 +100,7 @@ namespace VampireSurvivorLike
 			_invincibleUntilTime = Time.time + Mathf.Max(0f, InvincibleSeconds);
 
 			Global.HP.Value -= amount;
+			Global.RunDamageTakenCount++;
 
 			if (Global.HP.Value <= 0)
 			{

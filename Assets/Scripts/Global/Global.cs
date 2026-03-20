@@ -123,6 +123,7 @@ namespace VampireSurvivorLike
 
         public static PlayerDeathReport LastPlayerDeathReport;
         public static int RunKillCount;
+        public static int RunDamageTakenCount; // DDA: 本局受伤次数（每次受到伤害+1）
         public static int RunCoinCollected;
         public static int RunSessionId;
 
@@ -193,6 +194,7 @@ namespace VampireSurvivorLike
         {
             RunSessionId++;
             RunKillCount = 0;
+            RunDamageTakenCount = 0;
             RunCoinCollected = 0;
             IsGameOver.Value = false;
             MaxHP.Value = Mathf.Clamp(MaxHP.Value, Config.PlayerBaseMaxHP, Config.PlayerMaxHPCap);
