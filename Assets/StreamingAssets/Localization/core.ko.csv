@@ -1,6 +1,7 @@
 key,value
 ui.settings.language,언어
 ui.settings.difficulty,난이도
+ui.settings.dda,적응형 난이도
 ui.settings.difficulty_easy,쉬움
 ui.settings.difficulty_normal,보통
 ui.settings.difficulty_hard,어려움

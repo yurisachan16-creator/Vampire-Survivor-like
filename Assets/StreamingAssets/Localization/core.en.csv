@@ -1,6 +1,7 @@
 key,value
 ui.settings.language,Language
 ui.settings.difficulty,Difficulty
+ui.settings.dda,Adaptive Difficulty
 ui.settings.difficulty_easy,Easy
 ui.settings.difficulty_normal,Normal
 ui.settings.difficulty_hard,Hard

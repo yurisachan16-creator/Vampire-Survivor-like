@@ -1,6 +1,7 @@
 key,value
 ui.settings.language,語言
 ui.settings.difficulty,難度
+ui.settings.dda,自適應難度
 ui.settings.difficulty_easy,簡單
 ui.settings.difficulty_normal,普通
 ui.settings.difficulty_hard,高難

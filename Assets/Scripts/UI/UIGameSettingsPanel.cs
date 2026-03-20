@@ -96,6 +96,12 @@ namespace VampireSurvivorLike
 					if (difficultyDropdown.itemText) FontManager.Register(difficultyDropdown.itemText);
 				}
 			}
+			var ddaToggleTransform = difficultySettings ? difficultySettings.Find("DifficultyDropdown/DDAToggle") : null;
+			var ddaToggle = ddaToggleTransform ? ddaToggleTransform.GetComponent<Toggle>() : null;
+			var ddaLabelText = ddaToggleTransform ? ddaToggleTransform.Find("Label")?.GetComponent<Text>() : null;
+			var ddaLabelTmpText = ddaToggleTransform ? ddaToggleTransform.Find("Label")?.GetComponent<TMP_Text>() : null;
+			if (ddaLabelText) FontManager.Register(ddaLabelText);
+			if (ddaLabelTmpText) FontManager.Register(ddaLabelTmpText);
 
 			Toggle debugHudToggle = null;
 			Text debugHudLabel = null;
@@ -301,6 +307,12 @@ namespace VampireSurvivorLike
 				{
 					PopulateDifficultyDropdown(difficultyDropdown);
 				}
+				if (ddaToggle)
+				{
+					ddaToggle.SetIsOnWithoutNotify(GameSettings.EnableDDA);
+				}
+				if (ddaLabelText) ddaLabelText.text = TL("ui.settings.dda", "自适应难度", "Adaptive Difficulty");
+				if (ddaLabelTmpText) ddaLabelTmpText.text = TL("ui.settings.dda", "自适应难度", "Adaptive Difficulty");
 				if (difficultyNoticeText)
 				{
 					var showNotice = mData.IsFromGame && GameSettings.HasPendingDifficultyChange;
@@ -424,6 +436,17 @@ namespace VampireSurvivorLike
 				{
 					AudioKit.PlaySound(Sfx.BUTTONCLICK);
 					GameSettings.EnableMobileDebugHud = isOn;
+				});
+			}
+
+			if (ddaToggle)
+			{
+				ddaToggle.onValueChanged.RemoveAllListeners();
+				ddaToggle.SetIsOnWithoutNotify(GameSettings.EnableDDA);
+				ddaToggle.onValueChanged.AddListener(isOn =>
+				{
+					AudioKit.PlaySound(Sfx.BUTTONCLICK);
+					GameSettings.EnableDDA = isOn;
 				});
 			}
 			
