@@ -3,6 +3,87 @@ using UnityEngine;
 
 namespace VampireSurvivorLike
 {
+    public static class CombatLayerSettings
+    {
+        public const string EnemyBodyLayerName = "EnemyBody";
+        public const string PlayerAttackLayerName = "PlayerAttack";
+
+        private static bool sWarnedAboutMissingLayers;
+
+        public static int EnemyBodyLayer => LayerMask.NameToLayer(EnemyBodyLayerName);
+        public static int PlayerAttackLayer => LayerMask.NameToLayer(PlayerAttackLayerName);
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Bootstrap()
+        {
+            ApplyPhysicsCollisionRules();
+        }
+
+        public static void ApplyPhysicsCollisionRules()
+        {
+            if (!TryGetCombatLayers(out var enemyBodyLayer, out var playerAttackLayer))
+            {
+                return;
+            }
+
+            Physics2D.IgnoreLayerCollision(enemyBodyLayer, enemyBodyLayer, true);
+            Physics2D.IgnoreLayerCollision(enemyBodyLayer, 0, true);
+            Physics2D.IgnoreLayerCollision(enemyBodyLayer, playerAttackLayer, false);
+        }
+
+        public static void ApplyEnemyBodyLayer(GameObject gameObject)
+        {
+            ApplyLayerRecursively(gameObject, EnemyBodyLayer);
+        }
+
+        public static void ApplyPlayerAttackLayer(GameObject gameObject)
+        {
+            ApplyLayerRecursively(gameObject, PlayerAttackLayer);
+        }
+
+        private static void ApplyLayerRecursively(GameObject gameObject, int layer)
+        {
+            if (!gameObject || layer < 0)
+            {
+                return;
+            }
+
+            SetLayerRecursively(gameObject.transform, layer);
+        }
+
+        private static void SetLayerRecursively(Transform root, int layer)
+        {
+            if (!root) return;
+
+            root.gameObject.layer = layer;
+            for (var i = 0; i < root.childCount; i++)
+            {
+                SetLayerRecursively(root.GetChild(i), layer);
+            }
+        }
+
+        private static bool TryGetCombatLayers(out int enemyBodyLayer, out int playerAttackLayer)
+        {
+            enemyBodyLayer = EnemyBodyLayer;
+            playerAttackLayer = PlayerAttackLayer;
+            var valid = enemyBodyLayer >= 0 && playerAttackLayer >= 0;
+            if (valid)
+            {
+                return true;
+            }
+
+            if (!sWarnedAboutMissingLayers)
+            {
+                sWarnedAboutMissingLayers = true;
+                Debug.LogWarning(
+                    $"[CombatLayerSettings] Missing combat layers. EnemyBody={enemyBodyLayer}, PlayerAttack={playerAttackLayer}. " +
+                    "TagManager may need to be refreshed in the editor.");
+            }
+
+            return false;
+        }
+    }
+
     [DisallowMultipleComponent]
     public sealed class EnemySimulationManager : MonoBehaviour
     {
@@ -18,6 +99,10 @@ namespace VampireSurvivorLike
 
         public static bool DisablePhysicsForFarEnemies = true;
         public static float PhysicsDisableDistance = 28f;
+        public static int LastManagedNearEnemyCount { get; private set; }
+        public static int LastPhysicsActiveEnemyCount { get; private set; }
+        public static int LastManualMeleeHitCount { get; private set; }
+        public static int TotalManualMeleeHitCount { get; private set; }
 
         private readonly HashSet<Enemy> _enemies = new HashSet<Enemy>();
         private readonly List<Enemy> _iteration = new List<Enemy>(8192);
@@ -87,11 +172,15 @@ namespace VampireSurvivorLike
             var camPos = cam ? (Vector2)cam.transform.position : Vector2.zero;
             var halfH = cam && cam.orthographic ? cam.orthographicSize : 0f;
             var halfW = cam && cam.orthographic ? cam.orthographicSize * cam.aspect : 0f;
+            var nearEnemyCount = 0;
+            var physicsActiveEnemyCount = 0;
+            var manualMeleeHitCount = 0;
+            var canAttemptMelee = Player.Default.CanReceiveEnemyMeleeDamage;
 
             for (var i = 0; i < _iteration.Count; i++)
             {
                 var e = _iteration[i];
-                if (!e || e.IsDeadOrIgnoringHurt) continue;
+                if (!e || e.IsDead) continue;
                 if (!e.SelfRigidbody2D) continue;
 
                 var pos = (Vector2)e.transform.position;
@@ -99,32 +188,63 @@ namespace VampireSurvivorLike
                 var distSqr = delta.sqrMagnitude;
                 var dist = distSqr > 0.0001f ? Mathf.Sqrt(distSqr) : 0f;
                 var dir = distSqr > 0.0001f ? (delta / dist) : Vector2.zero;
+                var knockbackActive = e.HasExternalKnockback;
+
+                if (dist <= NearDistance)
+                {
+                    nearEnemyCount++;
+                }
 
                 if (DisablePhysicsForFarEnemies && dist > PhysicsDisableDistance)
                 {
                     if (e.SelfRigidbody2D.simulated) e.SelfRigidbody2D.simulated = false;
                     if (e.HitBox && e.HitBox.enabled) e.HitBox.enabled = false;
-                    e.transform.position = (Vector3)(pos + dir * (e.MovementSpeed * Time.fixedDeltaTime));
+                    var farVelocity = knockbackActive ? e.ExternalKnockbackVelocity : dir * e.GetEffectiveMovementSpeed();
+                    e.transform.position = (Vector3)(pos + farVelocity * Time.fixedDeltaTime);
                     continue;
                 }
 
                 if (!e.SelfRigidbody2D.simulated) e.SelfRigidbody2D.simulated = true;
                 if (e.HitBox && !e.HitBox.enabled) e.HitBox.enabled = true;
+                physicsActiveEnemyCount++;
 
+                if (e.IsIgnoringHurt && !knockbackActive)
+                {
+                    continue;
+                }
+
+                var shouldMoveThisStep = true;
+                var stepSeconds = Time.fixedDeltaTime;
                 if (EnableDistanceTiering)
                 {
-                    if (_nextMoveTime.TryGetValue(e, out var nextAt) && now < nextAt) continue;
                     var interval = 0f;
                     if (dist > MidDistance) interval = FarIntervalSeconds;
                     else if (dist > NearDistance) interval = MidIntervalSeconds;
-                    if (interval > 0f) _nextMoveTime[e] = now + interval;
+                    if (interval > 0f && !knockbackActive)
+                    {
+                        if (_nextMoveTime.TryGetValue(e, out var nextAt) && now < nextAt)
+                        {
+                            shouldMoveThisStep = false;
+                        }
+                        else
+                        {
+                            _nextMoveTime[e] = now + interval;
+                            stepSeconds = interval;
+                        }
+                    }
                 }
 
-                e.SelfRigidbody2D.velocity = dir * e.MovementSpeed;
-
-                if (dist < 3f)
+                if (shouldMoveThisStep)
                 {
-                    TryApplyMeleeDamageFallback(e, pos, playerPos);
+                    var velocity = knockbackActive ? e.ExternalKnockbackVelocity : dir * e.GetEffectiveMovementSpeed();
+                    e.MoveByVelocity(velocity, stepSeconds);
+                }
+
+                if (canAttemptMelee && dist < 3f && TryApplyMeleeDamageFallback(e, pos, playerPos))
+                {
+                    manualMeleeHitCount++;
+                    TotalManualMeleeHitCount++;
+                    canAttemptMelee = false;
                 }
 
                 if (cam && cam.orthographic)
@@ -136,6 +256,10 @@ namespace VampireSurvivorLike
                     e.ApplyLod(enableAnimation, enableShadow, enableSprite);
                 }
             }
+
+            LastManagedNearEnemyCount = nearEnemyCount;
+            LastPhysicsActiveEnemyCount = physicsActiveEnemyCount;
+            LastManualMeleeHitCount = manualMeleeHitCount;
         }
 
         private void RebuildIterationCache()
@@ -177,22 +301,25 @@ namespace VampireSurvivorLike
             return _cachedMainCamera;
         }
 
-        private static void TryApplyMeleeDamageFallback(Enemy enemy, Vector2 enemyPos, Vector2 playerPos)
+        private static bool TryApplyMeleeDamageFallback(Enemy enemy, Vector2 enemyPos, Vector2 playerPos)
         {
-            if (!Player.Default) return;
-            if (Player.Default.IsGameOver) return;
+            if (!Player.Default) return false;
+            if (!Player.Default.CanReceiveEnemyMeleeDamage) return false;
 
             var playerCollider = Player.Default.HurtBox;
             var enemyCollider = enemy.HitBox;
-            if (!playerCollider || !enemyCollider) return;
+            if (!playerCollider || !enemyCollider) return false;
 
             var pr = playerCollider.radius * Mathf.Max(Player.Default.transform.lossyScale.x, Player.Default.transform.lossyScale.y);
             var er = enemyCollider.radius * Mathf.Max(enemy.transform.lossyScale.x, enemy.transform.lossyScale.y);
             var r = pr + er;
             if (((playerPos - enemyPos).sqrMagnitude) <= r * r)
             {
-                Player.Default.ApplyDamage(1, string.Empty, "EnemyMelee");
+                var contactDamage = Mathf.Max(1, Mathf.CeilToInt(enemy.DamageMultiplier));
+                return Player.Default.ApplyDamage(contactDamage, string.Empty, "EnemyMelee");
             }
+
+            return false;
         }
     }
 }

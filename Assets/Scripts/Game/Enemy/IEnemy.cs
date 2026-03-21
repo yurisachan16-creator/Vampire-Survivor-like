@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace VampireSurvivorLike
 {
     public interface IEnemy
@@ -10,5 +12,6 @@ namespace VampireSurvivorLike
         void SetDropRates(float expRate, float coinRate, float hpRate, float bombRate);
         void SetTreasureChest(bool isTreasureChest);
         void ApplySlow(float multiplier, float durationSeconds);
+        void ApplyExternalKnockback(Vector2 direction, float speed = 5.5f, float durationSeconds = 0.14f);
     }
 }

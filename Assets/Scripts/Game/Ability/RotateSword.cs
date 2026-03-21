@@ -22,6 +22,7 @@ namespace VampireSurvivorLike
                 _mSwords.Add(Sword.InstantiateWithParent(this)
                     .Self(self =>
                     {
+                        CombatLayerSettings.ApplyPlayerAttackLayer(self.gameObject);
                         self.OnTriggerEnter2DEvent(collider=>
                         {
                             if (!collider.TryGetComponent<HitHurtBox>(out var hitHurtBox)) return;
@@ -54,15 +55,7 @@ namespace VampireSurvivorLike
                                         : playerDirection;
                                 }
 
-                                var miniBoss = hitHurtBox.CachedMiniBoss;
-                                if (miniBoss != null)
-                                {
-                                    miniBoss.ApplyExternalKnockback(combinedDirection);
-                                }
-                                else if (hitHurtBox.CachedOwnerRigidbody)
-                                {
-                                    hitHurtBox.CachedOwnerRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
-                                }
+                                enemy.ApplyExternalKnockback(combinedDirection, 6f, 0.14f);
                             }
 
                         }).UnRegisterWhenGameObjectDestroyed(self);

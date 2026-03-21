@@ -18,6 +18,7 @@ namespace VampireSurvivorLike
         public void Configure(Vector2 direction, float speed, float damage, bool superMode, int maxHits, float maxDistanceFromPlayer, float knockbackForce)
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _rb.velocity = direction.normalized * speed;
             transform.up = direction.normalized;
             _damage = damage;
@@ -50,13 +51,12 @@ namespace VampireSurvivorLike
 
             DamageSystem.CalculateDamage(_damage, enemy, maxNormalDamage: 2, criticalDamageTimes: _superMode ? 6f : 5f);
 
-            var ownerRigidbody = hitHurtBox.CachedOwnerRigidbody;
-            if (_knockbackForce > 0f && ownerRigidbody)
+            if (_knockbackForce > 0f)
             {
                 var dir = ((Vector2)collider.transform.position - (Vector2)transform.position).normalized;
                 if (dir.sqrMagnitude > 0.001f)
                 {
-                    ownerRigidbody.velocity = dir * _knockbackForce;
+                    enemy.ApplyExternalKnockback(dir, _knockbackForce, 0.12f);
                 }
             }
 
@@ -76,6 +76,7 @@ namespace VampireSurvivorLike
         public void OnSpawned()
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _damage = 1f;
             _maxDistanceFromPlayer = 24f;
             _knockbackForce = 0f;

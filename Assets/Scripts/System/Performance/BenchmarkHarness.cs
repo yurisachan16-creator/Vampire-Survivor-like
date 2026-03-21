@@ -39,6 +39,9 @@ namespace VampireSurvivorLike
         private string _lastExportPath = "";
         private bool _pcInstancedEnemyRenderer;
         private bool _pcInstancedEnemyRendererAtRunStart;
+        private double _sumManagedNearEnemies;
+        private double _sumPhysicsActiveEnemies;
+        private int _manualMeleeHitCountAtRunStart;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -160,6 +163,8 @@ namespace VampireSurvivorLike
 
             var frameMs = _smoothedDeltaTime * 1000.0;
             _frameMs.Add(frameMs);
+            _sumManagedNearEnemies += EnemySimulationManager.LastManagedNearEnemyCount;
+            _sumPhysicsActiveEnemies += EnemySimulationManager.LastPhysicsActiveEnemyCount;
         }
 
         private void Finish()
@@ -198,6 +203,9 @@ namespace VampireSurvivorLike
                 SampleCount = data.Count,
                 AvgFrameMs = avg,
                 P95FrameMs = p95,
+                AvgManagedNearEnemies = _sumManagedNearEnemies / Math.Max(1, data.Count),
+                AvgPhysicsActiveEnemies = _sumPhysicsActiveEnemies / Math.Max(1, data.Count),
+                ManualMeleeHits = Math.Max(0, EnemySimulationManager.TotalManualMeleeHitCount - _manualMeleeHitCountAtRunStart),
                 GcAllocBytes = ReadRecorderValue(_gcAllocInFrame),
                 MonoUsedBytes = ReadRecorderValue(_monoUsedSize),
                 TotalUsedBytes = ReadRecorderValue(_totalUsedMemory),
@@ -237,7 +245,7 @@ namespace VampireSurvivorLike
         private string BuildCsv(BenchmarkResult r)
         {
             var sb = new StringBuilder(512);
-            sb.Append("platform,unity,targetEnemyCount,pcInstancedEnemyRenderer,sampleCount,avgFrameMs,p95FrameMs,gcAllocBytes,monoUsedBytes,totalUsedBytes,batches,setPass,triangles\n");
+            sb.Append("platform,unity,targetEnemyCount,pcInstancedEnemyRenderer,sampleCount,avgFrameMs,p95FrameMs,avgManagedNearEnemies,avgPhysicsActiveEnemies,manualMeleeHits,gcAllocBytes,monoUsedBytes,totalUsedBytes,batches,setPass,triangles\n");
             sb.Append(r.Platform).Append(',')
                 .Append(r.Unity).Append(',')
                 .Append(r.TargetEnemyCount).Append(',')
@@ -245,6 +253,9 @@ namespace VampireSurvivorLike
                 .Append(r.SampleCount).Append(',')
                 .Append(r.AvgFrameMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',')
                 .Append(r.P95FrameMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.AvgManagedNearEnemies.ToString("0.000", CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.AvgPhysicsActiveEnemies.ToString("0.000", CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.ManualMeleeHits).Append(',')
                 .Append(r.GcAllocBytes).Append(',')
                 .Append(r.MonoUsedBytes).Append(',')
                 .Append(r.TotalUsedBytes).Append(',')
@@ -265,6 +276,9 @@ namespace VampireSurvivorLike
             sb.Append("\"sampleCount\":").Append(r.SampleCount).Append(',');
             sb.Append("\"avgFrameMs\":").Append(r.AvgFrameMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',');
             sb.Append("\"p95FrameMs\":").Append(r.P95FrameMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',');
+            sb.Append("\"avgManagedNearEnemies\":").Append(r.AvgManagedNearEnemies.ToString("0.000", CultureInfo.InvariantCulture)).Append(',');
+            sb.Append("\"avgPhysicsActiveEnemies\":").Append(r.AvgPhysicsActiveEnemies.ToString("0.000", CultureInfo.InvariantCulture)).Append(',');
+            sb.Append("\"manualMeleeHits\":").Append(r.ManualMeleeHits).Append(',');
             sb.Append("\"gcAllocBytes\":").Append(r.GcAllocBytes).Append(',');
             sb.Append("\"monoUsedBytes\":").Append(r.MonoUsedBytes).Append(',');
             sb.Append("\"totalUsedBytes\":").Append(r.TotalUsedBytes).Append(',');
@@ -320,6 +334,9 @@ namespace VampireSurvivorLike
             _nextSampleTime = Time.unscaledTime + SampleIntervalSeconds;
             _status = "Running...";
             _lastExportPath = "";
+            _sumManagedNearEnemies = 0.0;
+            _sumPhysicsActiveEnemies = 0.0;
+            _manualMeleeHitCountAtRunStart = EnemySimulationManager.TotalManualMeleeHitCount;
         }
 
         private void OnGUI()
@@ -415,6 +432,9 @@ namespace VampireSurvivorLike
             public int SampleCount;
             public double AvgFrameMs;
             public double P95FrameMs;
+            public double AvgManagedNearEnemies;
+            public double AvgPhysicsActiveEnemies;
+            public int ManualMeleeHits;
             public long GcAllocBytes;
             public long MonoUsedBytes;
             public long TotalUsedBytes;

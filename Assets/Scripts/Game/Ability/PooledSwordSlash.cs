@@ -76,6 +76,7 @@ namespace VampireSurvivorLike
 
         public void OnSpawned()
         {
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _t = 0f;
             _damage = 0f;
             _hasHit = false;

@@ -170,6 +170,7 @@ namespace VampireSurvivorLike
         public void OnSpawned()
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _direction = Vector2.right;
             _spawnPosition = transform.position;
             _speed = 8f;

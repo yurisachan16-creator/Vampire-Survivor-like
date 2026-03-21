@@ -34,11 +34,23 @@ namespace VampireSurvivorLike
         internal string ConfigKey;
 
         // 受击计时器（替代 ActionKit.Delay，零 GC）
-        private float _hurtTimer;
-        private float _pendingDamage;
-        private bool _hurtPending;
+		private float _hurtTimer;
+		private float _pendingDamage;
+		private bool _hurtPending;
+		private bool _knockbackActive;
+		private Vector2 _knockbackVelocity;
+		private float _knockbackRemainSeconds;
+		private float _knockbackCooldownUntil;
+
+		private const float ExternalKnockbackCooldownSeconds = 0.12f;
+		private const float ExternalKnockbackMinDuration = 0.05f;
+		private const float ExternalKnockbackMaxDuration = 0.35f;
 
 		internal bool IsDeadOrIgnoringHurt => _isDead || _isIgnoreHurt;
+		internal bool IsDead => _isDead;
+		internal bool IsIgnoringHurt => _isIgnoreHurt;
+		internal bool HasExternalKnockback => _knockbackActive;
+		internal Vector2 ExternalKnockbackVelocity => _knockbackVelocity;
 
 		private Animator _animator;
 		private Transform _shadowTransform;
@@ -92,6 +104,8 @@ namespace VampireSurvivorLike
 
 		private void OnEnable()
 		{
+			CombatLayerSettings.ApplyEnemyBodyLayer(gameObject);
+			ConfigureRuntimePhysics();
 			EnemySimulationManager.Register(this);
 		}
 
@@ -196,6 +210,8 @@ namespace VampireSurvivorLike
 
         void Update()
         {
+			UpdateExternalKnockback();
+
 			if (!_isDead && Health <= 0)
 			{
 				Die();
@@ -231,6 +247,7 @@ namespace VampireSurvivorLike
 			Global.RunKillCount++;
 			_isIgnoreHurt = true;
 			_hurtPending = false;
+			ResetExternalKnockback(true);
 
 			if (HitBox) HitBox.enabled = false;
 			if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
@@ -257,6 +274,9 @@ namespace VampireSurvivorLike
 			ResetPendingSpawnOverrides();
 			_slowMultiplier = 1f;
 			_slowUntilTime = 0f;
+			ResetExternalKnockback(true);
+			CombatLayerSettings.ApplyEnemyBodyLayer(gameObject);
+			ConfigureRuntimePhysics();
 
 			// 恢复默认属性值
 			Health = _defaultHealth;
@@ -312,21 +332,22 @@ namespace VampireSurvivorLike
         {
 			if (EnemySimulationManager.Enabled) return;
 
+			if (_knockbackActive)
+			{
+				MoveByVelocity(_knockbackVelocity, Time.fixedDeltaTime);
+				return;
+			}
+
             if (!_isIgnoreHurt)
             {
                 if(Player.Default)
                 {
                     var direction=(Player.Default.transform.position-transform.position).normalized;
-                    if (Time.time >= _slowUntilTime)
-                    {
-                        _slowMultiplier = 1f;
-                    }
-
-                    SelfRigidbody2D.velocity = direction * MovementSpeed * _slowMultiplier;
+                    MoveByVelocity(direction * GetEffectiveMovementSpeed(), Time.fixedDeltaTime);
                 }
                 else
                 {
-                    SelfRigidbody2D.velocity = Vector2.zero;
+                    MoveByVelocity(Vector2.zero, Time.fixedDeltaTime);
                 }
             }
             
@@ -341,7 +362,7 @@ namespace VampireSurvivorLike
 
             //受伤时停止移动
             _isIgnoreHurt = true;
-            SelfRigidbody2D.velocity = Vector2.zero;
+            if (SelfRigidbody2D) SelfRigidbody2D.velocity = Vector2.zero;
 
             //显示伤害数字
             FloatingTextController.PlayDamage(transform.position + Vector3.up * 0.5f, value, critical);
@@ -448,6 +469,85 @@ namespace VampireSurvivorLike
 
 			_slowMultiplier = multiplier;
 			_slowUntilTime = Time.time + durationSeconds;
+		}
+
+		public void ApplyExternalKnockback(Vector2 direction, float speed = 5.5f, float durationSeconds = 0.14f)
+		{
+			if (_isDead) return;
+			if (Time.time < _knockbackCooldownUntil) return;
+			if (direction.sqrMagnitude <= 0.0001f) return;
+
+			direction.Normalize();
+			_knockbackVelocity = direction * Mathf.Max(0f, speed);
+			_knockbackRemainSeconds = Mathf.Clamp(durationSeconds, ExternalKnockbackMinDuration, ExternalKnockbackMaxDuration);
+			_knockbackActive = true;
+			_knockbackCooldownUntil = Time.time + ExternalKnockbackCooldownSeconds;
+			_isIgnoreHurt = true;
+
+			if (SelfRigidbody2D)
+			{
+				SelfRigidbody2D.velocity = Vector2.zero;
+			}
+		}
+
+		internal float GetEffectiveMovementSpeed()
+		{
+			if (Time.time >= _slowUntilTime)
+			{
+				_slowMultiplier = 1f;
+			}
+
+			return MovementSpeed * _slowMultiplier;
+		}
+
+		private void ConfigureRuntimePhysics()
+		{
+			if (!SelfRigidbody2D) return;
+
+			SelfRigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+			SelfRigidbody2D.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+			SelfRigidbody2D.interpolation = RigidbodyInterpolation2D.None;
+		}
+
+		private void UpdateExternalKnockback()
+		{
+			if (!_knockbackActive) return;
+
+			_knockbackRemainSeconds -= Time.deltaTime;
+			if (_knockbackRemainSeconds > 0f)
+			{
+				return;
+			}
+
+			ResetExternalKnockback(false);
+			if (!_hurtPending)
+			{
+				_isIgnoreHurt = false;
+			}
+		}
+
+		private void ResetExternalKnockback(bool clearCooldown)
+		{
+			_knockbackActive = false;
+			_knockbackVelocity = Vector2.zero;
+			_knockbackRemainSeconds = 0f;
+			if (clearCooldown)
+			{
+				_knockbackCooldownUntil = 0f;
+			}
+		}
+
+		internal void MoveByVelocity(Vector2 velocity, float stepSeconds)
+		{
+			if (!SelfRigidbody2D) return;
+
+			if (stepSeconds <= 0f)
+			{
+				stepSeconds = Time.fixedDeltaTime;
+			}
+
+			var nextPosition = SelfRigidbody2D.position + velocity * stepSeconds;
+			SelfRigidbody2D.MovePosition(nextPosition);
 		}
     }
 }

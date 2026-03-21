@@ -67,6 +67,7 @@ namespace VampireSurvivorLike
         public void OnSpawned()
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _hitCount = 0;
             _maxHits = 2;
             _baseDamage = 0f;

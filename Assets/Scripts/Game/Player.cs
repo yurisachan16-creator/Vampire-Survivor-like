@@ -25,6 +25,9 @@ namespace VampireSurvivorLike
 
 		public static Player Default { get; private set; }
 		public bool IsGameOver => Global.IsGameOver.Value;
+		public bool CanReceiveEnemyMeleeDamage => !IsGameOver &&
+			_lastDamageFrame != Time.frameCount &&
+			Time.time >= _invincibleUntilTime;
 
 		#region 生命周期函数
 
@@ -46,7 +49,7 @@ namespace VampireSurvivorLike
 				gameObject.AddComponent<LemonBuffVisualController>();
 			}
 
-            HurtBox.OnTriggerEnter2DEvent(Collider2D =>
+			HurtBox.OnTriggerEnter2DEvent(Collider2D =>
 			{
 				if (IsGameOver) return;
 
@@ -54,16 +57,9 @@ namespace VampireSurvivorLike
 				if (!hitHurtBox.IsEnemyOwner) return;
 
 				var boss = hitHurtBox.CachedMiniBoss;
-				var contactDamage = 1;
-				if (boss)
-				{
-					contactDamage = Mathf.Max(1, Mathf.CeilToInt(boss.DamageMultiplier));
-				}
-				else if (hitHurtBox.TryGetEnemy(out var enemy) && enemy is Enemy normalEnemy)
-				{
-					contactDamage = Mathf.Max(1, Mathf.CeilToInt(normalEnemy.DamageMultiplier));
-				}
+				if (!boss) return;
 
+				var contactDamage = Mathf.Max(1, Mathf.CeilToInt(boss.DamageMultiplier));
 				var bossId = boss ? boss.BossType.ToString() : string.Empty;
 				ApplyDamage(contactDamage, bossId, boss ? "BossMelee" : "EnemyMelee");
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);

@@ -12,6 +12,7 @@ namespace VampireSurvivorLike
 		
 		void Start()
 		{
+			CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
 			SelfRigidbody2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
 			SelfRigidbody2D.velocity = 
@@ -59,15 +60,7 @@ namespace VampireSurvivorLike
 							: playerDirection;
 					}
 
-					var miniBoss = hitHurtBox.CachedMiniBoss;
-					if (miniBoss != null)
-					{
-						miniBoss.ApplyExternalKnockback(combinedDirection);
-					}
-					else if (hitHurtBox.CachedOwnerRigidbody)
-					{
-						hitHurtBox.CachedOwnerRigidbody.velocity = knockbackDirection * 5f + playerDirection * 10f;
-					}
+					enemy.ApplyExternalKnockback(combinedDirection, 6f, 0.14f);
 				}
 			}).UnRegisterWhenGameObjectDestroyed(gameObject);
 		}

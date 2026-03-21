@@ -137,7 +137,10 @@ namespace VampireSurvivorLike
                 SetPass = (int)ReadRecorderValue(_setPass),
                 Triangles = ReadRecorderValue(_triangles),
                 MainThreadMs = ReadRecorderMs(_mainThreadTime),
-                RenderThreadMs = ReadRecorderMs(_renderThreadTime)
+                RenderThreadMs = ReadRecorderMs(_renderThreadTime),
+                ManagedNearEnemies = EnemySimulationManager.LastManagedNearEnemyCount,
+                PhysicsActiveEnemies = EnemySimulationManager.LastPhysicsActiveEnemyCount,
+                ManualMeleeHits = EnemySimulationManager.LastManualMeleeHitCount
             });
 
             _audioSourceCount = CountAudioSources();
@@ -195,6 +198,10 @@ namespace VampireSurvivorLike
             _sb.Append("Enemies: ").Append(EnemyGenerator.SmallEnemyCount.Value)
                 .Append(" small + ").Append(EnemyGenerator.BossEnemyCount.Value)
                 .Append(" boss (total ").Append(EnemyGenerator.EnemyCount.Value).Append(")\n");
+            _sb.Append("Managed Near: ").Append(latest.ManagedNearEnemies)
+                .Append("  Physics Active: ").Append(latest.PhysicsActiveEnemies)
+                .Append("  Manual Melee Hits: ").Append(latest.ManualMeleeHits)
+                .Append("  Total: ").Append(EnemySimulationManager.TotalManualMeleeHitCount).Append('\n');
             _sb.Append("Drops: ").Append(PowerUpRegistry.ExpCount).Append(" exp / ")
                 .Append(PowerUpRegistry.CoinCount).Append(" coin")
                 .Append("  CoinMerge: ").Append(PowerUpMergeSystem.CoinMergeTriggerCount).Append('\n');
@@ -251,7 +258,7 @@ namespace VampireSurvivorLike
         private string BuildCsv()
         {
             var sb = new StringBuilder(_samples.Count * 80);
-            sb.Append("time,fps,frameMs,gcAllocBytes,monoUsedBytes,totalUsedBytes,totalReservedBytes,batches,setPass,triangles,mainThreadMs,renderThreadMs\n");
+            sb.Append("time,fps,frameMs,gcAllocBytes,monoUsedBytes,totalUsedBytes,totalReservedBytes,batches,setPass,triangles,mainThreadMs,renderThreadMs,managedNearEnemies,physicsActiveEnemies,manualMeleeHits\n");
             for (var i = 0; i < _samples.Count; i++)
             {
                 var s = _samples[i];
@@ -266,7 +273,10 @@ namespace VampireSurvivorLike
                     .Append(s.SetPass).Append(',')
                     .Append(s.Triangles).Append(',')
                     .Append(s.MainThreadMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',')
-                    .Append(s.RenderThreadMs.ToString("0.000", CultureInfo.InvariantCulture)).Append('\n');
+                    .Append(s.RenderThreadMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',')
+                    .Append(s.ManagedNearEnemies).Append(',')
+                    .Append(s.PhysicsActiveEnemies).Append(',')
+                    .Append(s.ManualMeleeHits).Append('\n');
             }
             return sb.ToString();
         }
@@ -295,7 +305,10 @@ namespace VampireSurvivorLike
                 sb.Append("\"setPass\":").Append(s.SetPass).Append(',');
                 sb.Append("\"triangles\":").Append(s.Triangles).Append(',');
                 sb.Append("\"mainThreadMs\":").Append(s.MainThreadMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',');
-                sb.Append("\"renderThreadMs\":").Append(s.RenderThreadMs.ToString("0.000", CultureInfo.InvariantCulture));
+                sb.Append("\"renderThreadMs\":").Append(s.RenderThreadMs.ToString("0.000", CultureInfo.InvariantCulture)).Append(',');
+                sb.Append("\"managedNearEnemies\":").Append(s.ManagedNearEnemies).Append(',');
+                sb.Append("\"physicsActiveEnemies\":").Append(s.PhysicsActiveEnemies).Append(',');
+                sb.Append("\"manualMeleeHits\":").Append(s.ManualMeleeHits);
                 sb.Append('}');
             }
 
@@ -378,6 +391,9 @@ namespace VampireSurvivorLike
             public long Triangles;
             public double MainThreadMs;
             public double RenderThreadMs;
+            public int ManagedNearEnemies;
+            public int PhysicsActiveEnemies;
+            public int ManualMeleeHits;
         }
     }
 }

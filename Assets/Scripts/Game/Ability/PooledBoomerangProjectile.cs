@@ -159,6 +159,7 @@ namespace VampireSurvivorLike
         public void OnSpawned()
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _speed = 10f;
             _outboundDistance = 8f;
             _damage = 1f;
