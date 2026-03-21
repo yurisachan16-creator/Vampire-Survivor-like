@@ -34,13 +34,14 @@ namespace QFramework
         {
             // 先清空一下没用的 ab 名字
             AssetDatabase.RemoveUnusedAssetBundleNames();
+            var platformName = GetPlatformName(buildTarget);
 
             var defaultSubProjectData = new SubProjectData();
             var subProjectDatas = SubProjectData.SearchAllInProject();
             SubProjectData.SplitAssetBundles2DefaultAndSubProjectDatas(defaultSubProjectData, subProjectDatas);
 
             // Choose the output path according to the build target.
-            var outputPath = Path.Combine(ResKitAssetsMenu.AssetBundlesOutputPath, GetPlatformName());
+            var outputPath = Path.Combine(ResKitAssetsMenu.AssetBundlesOutputPath, platformName);
             outputPath.CreateDirIfNotExists();
 
             if (ResKitView.AppendHash)
@@ -58,14 +59,17 @@ namespace QFramework
 
             GenerateVersionConfig();
 
-            var finalDir = Application.streamingAssetsPath + "/AssetBundles/" + GetPlatformName();
+            var finalDir = Application.streamingAssetsPath + "/AssetBundles/" + platformName;
 
             finalDir.DeleteDirIfExists();
             finalDir.CreateDirIfNotExists();
 
             FileUtil.ReplaceDirectory(outputPath, finalDir);
 
-            AssetBundleExporter.BuildDataTable(defaultSubProjectData.Builds.Select(b => b.assetBundleName).ToArray(),appendHash:ResKitView.AppendHash);
+            AssetBundleExporter.BuildDataTable(
+                defaultSubProjectData.Builds.Select(b => b.assetBundleName).ToArray(),
+                finalDir + "/",
+                ResKitView.AppendHash);
 
             // foreach (var subProjectData in subProjectDatas)
             // {
@@ -110,9 +114,9 @@ namespace QFramework
         }
 
 
-        private static string GetPlatformName()
+        private static string GetPlatformName(BuildTarget buildTarget)
         {
-            return AssetBundlePathHelper.GetPlatformName();
+            return AssetBundlePathHelper.GetPlatformForAssetBundles(buildTarget);
         }
     }
 }

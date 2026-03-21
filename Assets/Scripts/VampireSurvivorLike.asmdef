@@ -7,7 +7,10 @@
         "ResKit",
         "UIKit",
         "UniRx",
-        "QF.Redux"
+        "QF.Redux",
+        "QAssetBundle.Generated",
+        "Unity.TextMeshPro",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

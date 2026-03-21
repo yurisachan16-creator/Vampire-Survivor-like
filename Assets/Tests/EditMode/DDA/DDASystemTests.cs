@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using System.Reflection;
 using UnityEngine;
+using UnityEditor;
+using QFramework;
 using global::VampireSurvivorLike;
 
 namespace VampireSurvivorLike.Tests
@@ -161,6 +163,50 @@ namespace VampireSurvivorLike.Tests
             finally
             {
                 Object.DestroyImmediate(bossPrefab);
+            }
+        }
+
+        [Test]
+        public void AssetBundleConfigPaths_UseCurrentPlatformOnly()
+        {
+            var platformName = AssetBundlePathHelper.GetPlatformForAssetBundles(EditorUserBuildSettings.activeBuildTarget);
+            var expectedSuffix = $"/AssetBundles/{platformName}/{ResDatas.FileName}";
+
+            var streamingPath = AssetBundlePathHelper.GetStreamingAssetBundleConfigFilePath();
+            var persistentPath = AssetBundlePathHelper.GetPersistentAssetBundleConfigFilePath();
+            var streamingUrl = AssetBundlePathHelper.GetStreamingAssetBundleConfigFileUrl();
+
+            Assert.That(streamingPath.Replace("\\", "/"), Does.EndWith(expectedSuffix));
+            Assert.That(persistentPath.Replace("\\", "/"), Does.EndWith(expectedSuffix));
+            Assert.That(streamingUrl.Replace("\\", "/"),
+                Is.EqualTo((AssetBundlePathHelper.PathPrefix + streamingPath).Replace("\\", "/")));
+        }
+
+        [Test]
+        public void SessionSimulationOverride_TakesPrecedenceWithoutPersisting()
+        {
+            var originalPersistentMode = AssetBundlePathHelper.PersistentSimulationMode;
+
+            try
+            {
+                AssetBundlePathHelper.ClearSessionSimulationModeOverride();
+                AssetBundlePathHelper.PersistentSimulationMode = false;
+
+                AssetBundlePathHelper.SetSessionSimulationModeOverride(true, "test override");
+
+                Assert.That(AssetBundlePathHelper.HasSessionSimulationModeOverride, Is.True);
+                Assert.That(AssetBundlePathHelper.SessionSimulationModeOverrideReason, Is.EqualTo("test override"));
+                Assert.That(AssetBundlePathHelper.SimulationMode, Is.True);
+
+                AssetBundlePathHelper.ClearSessionSimulationModeOverride();
+
+                Assert.That(AssetBundlePathHelper.HasSessionSimulationModeOverride, Is.False);
+                Assert.That(AssetBundlePathHelper.SimulationMode, Is.False);
+            }
+            finally
+            {
+                AssetBundlePathHelper.ClearSessionSimulationModeOverride();
+                AssetBundlePathHelper.PersistentSimulationMode = originalPersistentMode;
             }
         }
 

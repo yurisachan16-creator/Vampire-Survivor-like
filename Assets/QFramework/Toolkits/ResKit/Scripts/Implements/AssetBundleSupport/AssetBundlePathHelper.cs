@@ -14,6 +14,33 @@ namespace QFramework
     public class AssetBundlePathHelper
     {
 #if UNITY_EDITOR
+        private struct EditorAssetBundleFreshnessReport
+        {
+            public bool ShouldForceSimulationMode;
+            public string Message;
+        }
+
+        const string kSimulateAssetBundles = "SimulateAssetBundles"; //此处跟editor中保持统一，不能随意更改
+
+        private static readonly string[] EditorStaleCheckRoots =
+        {
+            "Assets/Scripts",
+            "Assets/Art",
+            "Assets/Scenes",
+            "Assets/QFrameworkData"
+        };
+
+        private static readonly string[] EditorStaleCheckExtensions =
+        {
+            ".cs",
+            ".asmdef",
+            ".prefab",
+            ".unity"
+        };
+
+        private static bool? sSessionSimulationModeOverride;
+        private static string sSessionSimulationModeOverrideReason;
+
         public static string GetPlatformForAssetBundles(BuildTarget target)
         {
             switch (target)
@@ -54,6 +81,61 @@ namespace QFramework
         }
 #endif
         
+        public static string GetStreamingAssetBundleDirectory(string platformName = null)
+        {
+            var effectivePlatformName = string.IsNullOrEmpty(platformName) ? GetPlatformName() : platformName;
+            return Path.Combine(Application.streamingAssetsPath, "AssetBundles", effectivePlatformName).Replace("\\", "/");
+        }
+
+        public static string GetPersistentAssetBundleDirectory(string platformName = null)
+        {
+            var effectivePlatformName = string.IsNullOrEmpty(platformName) ? GetPlatformName() : platformName;
+            return Path.Combine(Application.persistentDataPath, "AssetBundles", effectivePlatformName).Replace("\\", "/");
+        }
+
+        public static string GetStreamingAssetBundleConfigFilePath(string platformName = null)
+        {
+            var effectivePlatformName = string.IsNullOrEmpty(platformName) ? GetPlatformName() : platformName;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return (Application.dataPath + "!/assets/AssetBundles/" + effectivePlatformName + "/" + ResDatas.FileName)
+                .Replace("\\", "/");
+#else
+            return Path.Combine(Application.streamingAssetsPath, "AssetBundles", effectivePlatformName, ResDatas.FileName)
+                .Replace("\\", "/");
+#endif
+        }
+
+        public static string GetPersistentAssetBundleConfigFilePath(string platformName = null)
+        {
+            var effectivePlatformName = string.IsNullOrEmpty(platformName) ? GetPlatformName() : platformName;
+            return Path.Combine(Application.persistentDataPath, "AssetBundles", effectivePlatformName, ResDatas.FileName)
+                .Replace("\\", "/");
+        }
+
+        public static string GetStreamingAssetBundleConfigFileUrl(string platformName = null)
+        {
+            var effectivePlatformName = string.IsNullOrEmpty(platformName) ? GetPlatformName() : platformName;
+            var configPath = Path.Combine(Application.streamingAssetsPath, "AssetBundles", effectivePlatformName, ResDatas.FileName)
+                .Replace("\\", "/");
+#if UNITY_EDITOR || UNITY_IOS
+            return PathPrefix + configPath;
+#else
+            return configPath;
+#endif
+        }
+
+        public static string GetPersistentAssetBundleConfigFileUrl(string platformName = null)
+        {
+            var effectivePlatformName = string.IsNullOrEmpty(platformName) ? GetPlatformName() : platformName;
+            var configPath = Path.Combine(Application.persistentDataPath, "AssetBundles", effectivePlatformName, ResDatas.FileName)
+                .Replace("\\", "/");
+#if UNITY_EDITOR || UNITY_IOS
+            return PathPrefix + configPath;
+#else
+            return configPath;
+#endif
+        }
+
         // 资源路径，优先返回外存资源路径
         public static string GetResPathInPersistentOrStream(string relativePath)
         {
@@ -269,12 +351,197 @@ namespace QFramework
             }
         }
 #if UNITY_EDITOR
-        const string kSimulateAssetBundles = "SimulateAssetBundles"; //此处跟editor中保持统一，不能随意更改
-
-        public static bool SimulationMode
+        public static bool PersistentSimulationMode
         {
             get { return UnityEditor.EditorPrefs.GetBool(kSimulateAssetBundles, true); }
             set { UnityEditor.EditorPrefs.SetBool(kSimulateAssetBundles, value); }
+        }
+
+        public static bool HasSessionSimulationModeOverride => sSessionSimulationModeOverride.HasValue;
+
+        public static string SessionSimulationModeOverrideReason => sSessionSimulationModeOverrideReason;
+
+        public static void SetSessionSimulationModeOverride(bool value, string reason = null)
+        {
+            sSessionSimulationModeOverride = value;
+            sSessionSimulationModeOverrideReason = reason;
+        }
+
+        public static void ClearSessionSimulationModeOverride()
+        {
+            sSessionSimulationModeOverride = null;
+            sSessionSimulationModeOverrideReason = null;
+        }
+
+        public static void ApplyEditorPlayModeSimulationFallbackIfNeeded()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode && !Application.isPlaying)
+            {
+                return;
+            }
+
+            if (PersistentSimulationMode)
+            {
+                ClearSessionSimulationModeOverride();
+                return;
+            }
+
+            var report = EvaluateEditorPlayModeAssetBundleFreshness();
+            if (!report.ShouldForceSimulationMode)
+            {
+                ClearSessionSimulationModeOverride();
+                return;
+            }
+
+            if (sSessionSimulationModeOverride == true &&
+                string.Equals(sSessionSimulationModeOverrideReason, report.Message, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            SetSessionSimulationModeOverride(true, report.Message);
+            Debug.LogWarning(report.Message);
+        }
+
+        public static bool SimulationMode
+        {
+            get { return sSessionSimulationModeOverride ?? PersistentSimulationMode; }
+            set { PersistentSimulationMode = value; }
+        }
+
+        private static EditorAssetBundleFreshnessReport EvaluateEditorPlayModeAssetBundleFreshness()
+        {
+            var platformName = GetPlatformForAssetBundles(EditorUserBuildSettings.activeBuildTarget);
+            var bundleDirectory = GetStreamingAssetBundleDirectory(platformName);
+            if (!Directory.Exists(bundleDirectory))
+            {
+                return CreateForcedSimulationReport(
+                    $"[ResKit] AssetBundle fallback enabled for this Play session because '{bundleDirectory}' does not exist. " +
+                    "The editor will use Simulation Mode until tracked bundles are rebuilt.");
+            }
+
+            var configPath = Path.Combine(bundleDirectory, ResDatas.FileName).Replace("\\", "/");
+            if (!File.Exists(configPath))
+            {
+                return CreateForcedSimulationReport(
+                    $"[ResKit] AssetBundle fallback enabled for this Play session because the current platform config '{configPath}' is missing. " +
+                    "The editor will use Simulation Mode until tracked bundles are rebuilt.");
+            }
+
+            var latestBundleWriteTimeUtc = GetLatestNonMetaWriteTimeUtc(bundleDirectory);
+            if (!latestBundleWriteTimeUtc.HasValue)
+            {
+                return CreateForcedSimulationReport(
+                    $"[ResKit] AssetBundle fallback enabled for this Play session because '{bundleDirectory}' contains no bundle payloads. " +
+                    "The editor will use Simulation Mode until tracked bundles are rebuilt.");
+            }
+
+            var latestSourceWriteTimeUtc = GetLatestRelevantProjectWriteTimeUtc();
+            if (!latestSourceWriteTimeUtc.HasValue)
+            {
+                return default;
+            }
+
+            if (latestSourceWriteTimeUtc.Value <= latestBundleWriteTimeUtc.Value)
+            {
+                return default;
+            }
+
+            return CreateForcedSimulationReport(
+                $"[ResKit] AssetBundle fallback enabled for this Play session because current platform bundles for '{platformName}' are stale. " +
+                $"Newest tracked source timestamp: {FormatTimestamp(latestSourceWriteTimeUtc.Value)}; newest bundle timestamp: {FormatTimestamp(latestBundleWriteTimeUtc.Value)}. " +
+                "This usually means prefabs or scripts changed after the last AssetBundle rebuild.");
+        }
+
+        private static EditorAssetBundleFreshnessReport CreateForcedSimulationReport(string message)
+        {
+            return new EditorAssetBundleFreshnessReport
+            {
+                ShouldForceSimulationMode = true,
+                Message = message
+            };
+        }
+
+        private static DateTime? GetLatestRelevantProjectWriteTimeUtc()
+        {
+            var projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            DateTime? latestWriteTimeUtc = null;
+
+            for (var i = 0; i < EditorStaleCheckRoots.Length; i++)
+            {
+                var root = Path.Combine(projectRoot, EditorStaleCheckRoots[i]);
+                if (!Directory.Exists(root))
+                {
+                    continue;
+                }
+
+                foreach (var filePath in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories))
+                {
+                    if (!ShouldTrackForEditorBundleFreshness(filePath))
+                    {
+                        continue;
+                    }
+
+                    var writeTimeUtc = File.GetLastWriteTimeUtc(filePath);
+                    if (!latestWriteTimeUtc.HasValue || writeTimeUtc > latestWriteTimeUtc.Value)
+                    {
+                        latestWriteTimeUtc = writeTimeUtc;
+                    }
+                }
+            }
+
+            return latestWriteTimeUtc;
+        }
+
+        private static bool ShouldTrackForEditorBundleFreshness(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return false;
+            }
+
+            var extension = Path.GetExtension(filePath);
+            if (string.IsNullOrEmpty(extension) ||
+                string.Equals(extension, ".meta", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            for (var i = 0; i < EditorStaleCheckExtensions.Length; i++)
+            {
+                if (string.Equals(extension, EditorStaleCheckExtensions[i], StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static DateTime? GetLatestNonMetaWriteTimeUtc(string directoryPath)
+        {
+            DateTime? latestWriteTimeUtc = null;
+
+            foreach (var filePath in Directory.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories))
+            {
+                if (string.Equals(Path.GetExtension(filePath), ".meta", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var writeTimeUtc = File.GetLastWriteTimeUtc(filePath);
+                if (!latestWriteTimeUtc.HasValue || writeTimeUtc > latestWriteTimeUtc.Value)
+                {
+                    latestWriteTimeUtc = writeTimeUtc;
+                }
+            }
+
+            return latestWriteTimeUtc;
+        }
+
+        private static string FormatTimestamp(DateTime timestampUtc)
+        {
+            return timestampUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
         }
 #else
          public static bool SimulationMode

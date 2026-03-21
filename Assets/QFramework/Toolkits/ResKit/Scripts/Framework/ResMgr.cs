@@ -97,21 +97,15 @@ namespace QFramework
 
                 var outResult = new List<string>();
 
-                var pathPrefix = AssetBundlePathHelper.PathPrefix;
-
                 // 未进行过热更
                 if (AssetBundleSettings.LoadAssetResFromStreamingAssetsPath)
                 {
-                    var streamingPath = Application.streamingAssetsPath + "/AssetBundles/" +
-                                        AssetBundlePathHelper.GetPlatformName() + "/" + ResDatas.FileName;
-                    outResult.Add(pathPrefix + streamingPath);
+                    outResult.Add(AssetBundlePathHelper.GetStreamingAssetBundleConfigFileUrl());
                 }
                 // 进行过热更
                 else
                 {
-                    var persistentPath = Application.persistentDataPath + "/AssetBundles/" +
-                                         AssetBundlePathHelper.GetPlatformName() + "/" + ResDatas.FileName;
-                    outResult.Add(pathPrefix + persistentPath);
+                    outResult.Add(AssetBundlePathHelper.GetPersistentAssetBundleConfigFileUrl());
                 }
 
                 foreach (var outRes in outResult)
@@ -142,18 +136,17 @@ namespace QFramework
                 // 未进行过热更
                 if (AssetBundleSettings.LoadAssetResFromStreamingAssetsPath)
                 {
-                    Architecture.ZipFileHelper.GetFileInInner(ResDatas.FileName, outResult);
+                    outResult.Add(AssetBundlePathHelper.GetStreamingAssetBundleConfigFilePath());
                 }
                 // 进行过热更
                 else
                 {
-                    AssetBundlePathHelper.GetFileInFolder(AssetBundlePathHelper.PersistentDataPath, ResDatas.FileName,
-                        outResult);
+                    outResult.Add(AssetBundlePathHelper.GetPersistentAssetBundleConfigFilePath());
                 }
 
                 foreach (var outRes in outResult)
                 {
-                 
+                    Debug.Log(outRes);
                     AssetBundleSettings.AssetBundleConfigFile.LoadFromFile(outRes);
                 }
             }

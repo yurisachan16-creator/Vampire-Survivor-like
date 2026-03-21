@@ -1,8 +1,10 @@
 {
     "name": "VampireSurvivorLike.DDA.Tests",
     "references": [
-        "VampireSurvivorLike",
-        "QFramework"
+    "VampireSurvivorLike",
+    "ResKit",
+    "QFramework",
+    "QFramework.CoreKit" 
     ],
     "optionalUnityReferences": [
         "TestAssemblies"

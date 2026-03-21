@@ -25,16 +25,68 @@
 
 using UnityEditor;
 using UnityEngine;
+using System;
 
 namespace QFramework
 {
     public class ResKitEditorAPI
     {
+        private static readonly BuildTarget[] TrackedBundleTargets =
+        {
+            BuildTarget.StandaloneWindows64,
+            BuildTarget.WebGL,
+            BuildTarget.Android
+        };
+
         public static void BuildAssetBundles()
         {
             AssetDatabase.RemoveUnusedAssetBundleNames();
             AssetDatabase.Refresh();
             BuildScript.BuildAssetBundles(EditorUserBuildSettings.activeBuildTarget);
+        }
+
+        [MenuItem("QFramework/Toolkits/Res Kit/Build Tracked AssetBundles")]
+        public static void BuildTrackedAssetBundles()
+        {
+            var originalTarget = EditorUserBuildSettings.activeBuildTarget;
+            var originalTargetGroup = BuildPipeline.GetBuildTargetGroup(originalTarget);
+
+            try
+            {
+                for (var i = 0; i < TrackedBundleTargets.Length; i++)
+                {
+                    var target = TrackedBundleTargets[i];
+                    var targetGroup = BuildPipeline.GetBuildTargetGroup(target);
+                    if (!BuildPipeline.IsBuildTargetSupported(targetGroup, target))
+                    {
+                        throw new InvalidOperationException(
+                            $"Unity build support for '{target}' is not installed. Install the module before rebuilding tracked AssetBundles.");
+                    }
+
+                    EditorUtility.DisplayProgressBar(
+                        "Build Tracked AssetBundles",
+                        $"Building {AssetBundlePathHelper.GetPlatformForAssetBundles(target)} ({i + 1}/{TrackedBundleTargets.Length})",
+                        (i + 1f) / TrackedBundleTargets.Length);
+
+                    if (EditorUserBuildSettings.activeBuildTarget != target &&
+                        !EditorUserBuildSettings.SwitchActiveBuildTarget(targetGroup, target))
+                    {
+                        throw new InvalidOperationException(
+                            $"Failed to switch active build target to '{target}'. AssetBundle rebuild was aborted.");
+                    }
+
+                    BuildAssetBundles();
+                }
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+
+                if (EditorUserBuildSettings.activeBuildTarget != originalTarget)
+                {
+                    EditorUserBuildSettings.SwitchActiveBuildTarget(originalTargetGroup, originalTarget);
+                }
+            }
         }
 
         public static bool SimulationMode

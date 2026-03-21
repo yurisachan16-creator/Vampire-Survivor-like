@@ -24,8 +24,8 @@
  ****************************************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -41,17 +41,58 @@ namespace QFramework
         public virtual IPanel LoadPanel(PanelSearchKeys panelSearchKeys)
         {
             var panelLoader = PanelLoaderPool.AllocateLoader();
+            GameObject instance = null;
             
-            // panelLoader.LoadPanelPrefab 感谢 NormalKatt、高跟鞋提供为反馈
-            var panelPrefab = panelLoader.LoadPanelPrefab(panelSearchKeys);
+            try
+            {
+                // panelLoader.LoadPanelPrefab 感谢 NormalKatt、高跟鞋提供为反馈
+                var panelPrefab = panelLoader.LoadPanelPrefab(panelSearchKeys);
+                return CreatePanelInstance(panelSearchKeys, panelLoader, panelPrefab, ref instance);
+            }
+            catch
+            {
+                ReleaseFailedPanelLoad(panelLoader, instance);
+                throw;
+            }
+        }
 
-            var obj = Object.Instantiate(panelPrefab);
+        private IPanel CreatePanelInstance(
+            PanelSearchKeys panelSearchKeys,
+            IPanelLoader panelLoader,
+            GameObject panelPrefab,
+            ref GameObject instance)
+        {
+            if (!panelPrefab)
+            {
+                throw new InvalidOperationException(BuildPanelLoadFailureMessage(
+                    panelSearchKeys,
+                    null,
+                    null,
+                    "Panel loader returned a null prefab."));
+            }
 
-            var retScript = obj.GetComponent<UIPanel>();
+            instance = Object.Instantiate(panelPrefab);
+            var retScript = instance.GetComponent<UIPanel>();
+            if (!retScript)
+            {
+                throw new InvalidOperationException(BuildPanelLoadFailureMessage(
+                    panelSearchKeys,
+                    panelPrefab,
+                    instance,
+                    "Loaded prefab does not contain a UIPanel component."));
+            }
 
-            var panelInterface = retScript as IPanel;
+            if (!(retScript is IPanel panelInterface))
+            {
+                throw new InvalidOperationException(BuildPanelLoadFailureMessage(
+                    panelSearchKeys,
+                    panelPrefab,
+                    instance,
+                    "Loaded UIPanel does not implement IPanel."));
+            }
+
             panelInterface.Loader = panelLoader;
-
+            instance = null;
             return retScript;
         }
 
@@ -62,15 +103,110 @@ namespace QFramework
 
             panelLoader.LoadPanelPrefabAsync(panelSearchKeys, (panelPrefab) =>
             {
-                var obj = Object.Instantiate(panelPrefab);
-
-                var retScript = obj.GetComponent<UIPanel>();
-
-                var panelInterface = retScript as IPanel;
-                panelInterface.Loader = panelLoader;
-
-                onPanelLoad?.Invoke(retScript);
+                GameObject instance = null;
+                try
+                {
+                    var panel = CreatePanelInstance(panelSearchKeys, panelLoader, panelPrefab, ref instance);
+                    onPanelLoad?.Invoke(panel);
+                }
+                catch
+                {
+                    ReleaseFailedPanelLoad(panelLoader, instance);
+                    throw;
+                }
             });
+        }
+
+        private void ReleaseFailedPanelLoad(IPanelLoader panelLoader, GameObject instance)
+        {
+            if (instance)
+            {
+                if (Application.isPlaying)
+                {
+                    Object.Destroy(instance);
+                }
+                else
+                {
+                    Object.DestroyImmediate(instance);
+                }
+            }
+
+            panelLoader?.Unload();
+            if (panelLoader != null)
+            {
+                PanelLoaderPool.RecycleLoader(panelLoader);
+            }
+        }
+
+        private static string BuildPanelLoadFailureMessage(
+            PanelSearchKeys panelSearchKeys,
+            GameObject panelPrefab,
+            GameObject instance,
+            string failureReason)
+        {
+            var messageBuilder = new StringBuilder(256);
+            messageBuilder.Append("[UIKit] Failed to load panel. ")
+                .Append(failureReason)
+                .Append(" SearchKeys: ")
+                .Append(panelSearchKeys)
+                .Append(". SimulationMode: ")
+                .Append(GetSimulationModeDescription())
+                .Append('.');
+
+            if (panelPrefab)
+            {
+                messageBuilder.Append(" Prefab: ").Append(panelPrefab.name).Append('.');
+            }
+
+            var missingScriptCount = CountMissingScripts(instance);
+            if (missingScriptCount > 0)
+            {
+                messageBuilder.Append(" The instantiated prefab contains ")
+                    .Append(missingScriptCount)
+                    .Append(" missing script reference(s), which usually means the AssetBundle is stale relative to the current assemblies.");
+            }
+
+            return messageBuilder.ToString();
+        }
+
+        private static int CountMissingScripts(GameObject instance)
+        {
+            if (!instance)
+            {
+                return 0;
+            }
+
+            var missingScriptCount = 0;
+            var components = instance.GetComponentsInChildren<Component>(true);
+            for (var i = 0; i < components.Length; i++)
+            {
+                if (!components[i])
+                {
+                    missingScriptCount++;
+                }
+            }
+
+            return missingScriptCount;
+        }
+
+        private static string GetSimulationModeDescription()
+        {
+            var helperType = Type.GetType("QFramework.AssetBundlePathHelper, ResKit");
+            var propertyInfo = helperType?.GetProperty("SimulationMode");
+            if (propertyInfo == null)
+            {
+                return "unknown";
+            }
+
+            try
+            {
+                var value = propertyInfo.GetValue(null, null);
+                return value?.ToString() ?? "unknown";
+            }
+            catch
+            {
+                return "unknown";
+            }
         }
 
 

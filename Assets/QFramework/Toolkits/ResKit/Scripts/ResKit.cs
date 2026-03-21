@@ -23,6 +23,7 @@ namespace QFramework
         [RuntimeInitializeOnLoadMethod]
         public static void CheckAutoInit()
         {
+            AssetBundlePathHelper.ApplyEditorPlayModeSimulationFallbackIfNeeded();
             if (PlatformCheck.IsEditor && AssetBundlePathHelper.SimulationMode)
             {
                 Init();
@@ -40,6 +41,9 @@ ResKit.Init();
 #endif
         public static void Init()
         {
+#if UNITY_EDITOR
+            AssetBundlePathHelper.ApplyEditorPlayModeSimulationFallbackIfNeeded();
+#endif
             ResMgr.Init();
         }
 
@@ -62,6 +66,9 @@ ResKit.InitAsync().ToAction().Start(this,()=>
 #endif
         public static IEnumerator InitAsync()
         {
+#if UNITY_EDITOR
+            AssetBundlePathHelper.ApplyEditorPlayModeSimulationFallbackIfNeeded();
+#endif
             yield return ResMgr.InitAsync();
         }
         
