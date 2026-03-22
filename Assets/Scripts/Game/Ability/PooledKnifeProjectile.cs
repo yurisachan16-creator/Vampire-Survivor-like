@@ -18,6 +18,7 @@ namespace VampireSurvivorLike
         public void Configure(Vector2 direction, float speed, float baseDamage, bool superKnife, int maxHits, float maxDistanceFromPlayer)
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _rb.velocity = direction * speed;
             transform.up = direction;
 

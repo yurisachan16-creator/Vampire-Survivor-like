@@ -773,6 +773,7 @@ namespace VampireSurvivorLike
             }
 
             PlatformInput.ClearWitnessMoveOverride();
+            CleanupPersistentTitleUi();
             DestroyHud();
             ClearWitnessRunState();
             Global.ResetData();
@@ -982,6 +983,8 @@ namespace VampireSurvivorLike
 
         private static void CleanupPersistentTitleUi()
         {
+            UIKit.ClosePanel<UIGamePassPanel>();
+            UIKit.ClosePanel<UIGameOverPanel>();
             UIKit.ClosePanel<UIGameSettingsPanel>();
             UIKit.ClosePanel<UIGameLocalLeaderboardPanel>();
             UIKit.ClosePanel<UIGameStartPanel>();

@@ -43,6 +43,7 @@ namespace VampireSurvivorLike
             bool superMode)
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _direction = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.right;
             _speed = Mathf.Max(1f, speed);
             _maxDistanceFromSpawn = Mathf.Max(4f, maxDistanceFromSpawn);

@@ -73,7 +73,12 @@ namespace VampireSurvivorLike
                 go.transform.localScale = Vector3.one * (superBoomerang ? 1.25f : 1f);
 
                 var projectile = go.GetComponent<PooledBoomerangProjectile>();
-                if (!projectile) projectile = go.AddComponent<PooledBoomerangProjectile>();
+                if (!projectile)
+                {
+                    projectile = go.AddComponent<PooledBoomerangProjectile>();
+                    ObjectPoolSystem.RefreshPoolableCache(go);
+                    projectile.OnSpawned();
+                }
                 projectile.Configure(direction, ProjectileSpeed, maxDistance, damage, maxHits, returnCount, superBoomerang);
             }
         }
@@ -152,6 +157,11 @@ namespace VampireSurvivorLike
             var circle = template.AddComponent<CircleCollider2D>();
             circle.isTrigger = true;
             circle.radius = colliderRadius;
+
+            if (!template.GetComponent<PooledBoomerangProjectile>())
+            {
+                template.AddComponent<PooledBoomerangProjectile>();
+            }
 
             return template;
         }

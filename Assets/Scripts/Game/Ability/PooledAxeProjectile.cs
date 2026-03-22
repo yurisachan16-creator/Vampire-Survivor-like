@@ -20,6 +20,7 @@ namespace VampireSurvivorLike
         public void Configure(Vector2 velocity, float damage, float despawnAbovePlayerDistance, int maxPierce, bool infinitePierce)
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _rb.velocity = velocity;
             _damage = damage;
             _despawnAbovePlayerDistance = despawnAbovePlayerDistance;

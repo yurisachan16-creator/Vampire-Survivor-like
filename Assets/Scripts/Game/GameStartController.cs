@@ -24,6 +24,10 @@ namespace VampireSurvivorLike
 			LocalizationManager.PreloadTable("upgrade");
 			// 应用技能配置
 			Global.ApplyAbilityConfig();
+
+			UIKit.ClosePanel<UIGamePassPanel>();
+			UIKit.ClosePanel<UIGameOverPanel>();
+			UIKit.ClosePanel<UIGameLocalLeaderboardPanel>();
 			
 			// 预加载完成后，OpenPanel 可以从缓存中同步获取资源
 			UIKit.OpenPanel<UIGameStartPanel>();

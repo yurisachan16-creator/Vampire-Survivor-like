@@ -62,7 +62,12 @@ namespace VampireSurvivorLike
                 go.transform.localScale = Vector3.one * (superWand ? 1.1f : 0.9f);
 
                 var projectile = go.GetComponent<PooledMagicBullet>();
-                if (!projectile) projectile = go.AddComponent<PooledMagicBullet>();
+                if (!projectile)
+                {
+                    projectile = go.AddComponent<PooledMagicBullet>();
+                    ObjectPoolSystem.RefreshPoolableCache(go);
+                    projectile.OnSpawned();
+                }
 
                 var damage = Global.MagicWandDamage.Value * (superWand ? 1.8f : 1f);
                 var maxHits = superWand ? 4 : 1;
@@ -145,6 +150,11 @@ namespace VampireSurvivorLike
             var circle = template.AddComponent<CircleCollider2D>();
             circle.isTrigger = true;
             circle.radius = colliderRadius;
+
+            if (!template.GetComponent<PooledMagicBullet>())
+            {
+                template.AddComponent<PooledMagicBullet>();
+            }
 
             return template;
         }

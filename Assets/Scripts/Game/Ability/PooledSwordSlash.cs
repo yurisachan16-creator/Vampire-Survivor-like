@@ -17,6 +17,7 @@ namespace VampireSurvivorLike
 
         public void Configure(float damage)
         {
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _damage = damage;
             _hasHit = false;
             _t = 0f;
