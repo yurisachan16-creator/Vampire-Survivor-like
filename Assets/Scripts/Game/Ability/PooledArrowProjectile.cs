@@ -30,6 +30,7 @@ namespace VampireSurvivorLike
             float homingStrength)
         {
             EnsureRefs();
+            CombatLayerSettings.ApplyPlayerAttackLayer(gameObject);
             _direction = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.up;
             _speed = Mathf.Max(1f, speed);
             _damage = damage;
@@ -42,7 +43,7 @@ namespace VampireSurvivorLike
             _nextHomingQueryFrame = Time.frameCount;
             _hitEnemyIds.Clear();
             _rb.velocity = _direction * _speed;
-            transform.up = _direction;
+            ApplyFacing();
         }
 
         private void Update()
@@ -65,7 +66,7 @@ namespace VampireSurvivorLike
             }
 
             _rb.velocity = _direction * _speed;
-            transform.up = _direction;
+            ApplyFacing();
 
             if (((Vector2)transform.position - _spawnPosition).sqrMagnitude > _maxDistanceFromSpawn * _maxDistanceFromSpawn)
             {
@@ -109,6 +110,12 @@ namespace VampireSurvivorLike
         {
             if (_rb) return;
             _rb = GetComponent<Rigidbody2D>();
+        }
+
+        private void ApplyFacing()
+        {
+            if (_direction.sqrMagnitude <= 0.0001f) return;
+            transform.right = _direction;
         }
 
         public void OnSpawned()

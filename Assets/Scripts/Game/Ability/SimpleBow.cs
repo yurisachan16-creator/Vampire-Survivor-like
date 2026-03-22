@@ -83,7 +83,11 @@ namespace VampireSurvivorLike
             go.transform.localScale = Vector3.one * (superArrow ? 1.15f : 0.95f);
 
             var projectile = go.GetComponent<PooledArrowProjectile>();
-            if (!projectile) projectile = go.AddComponent<PooledArrowProjectile>();
+            if (!projectile)
+            {
+                projectile = go.AddComponent<PooledArrowProjectile>();
+                ObjectPoolSystem.RefreshPoolableCache(go);
+            }
 
             var distance = ArrowDistance * Mathf.Max(1f, Global.AreaMultiplier.Value) * (superArrow ? 1.2f : 1f);
             projectile.Configure(direction, ArrowSpeed, damage, maxHits, distance, homingStrength);
@@ -162,6 +166,11 @@ namespace VampireSurvivorLike
             var circle = template.AddComponent<CircleCollider2D>();
             circle.isTrigger = true;
             circle.radius = colliderRadius;
+
+            if (!template.GetComponent<PooledArrowProjectile>())
+            {
+                template.AddComponent<PooledArrowProjectile>();
+            }
 
             return template;
         }

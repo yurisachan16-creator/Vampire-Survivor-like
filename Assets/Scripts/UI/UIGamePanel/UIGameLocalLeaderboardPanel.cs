@@ -44,11 +44,6 @@ namespace VampireSurvivorLike
 			RegisterFont(_btnReturnText);
 			RegisterFont(_btnClearText);
 
-			if (RankingTemplate)
-			{
-				RankingTemplate.gameObject.SetActive(false);
-			}
-
 			if (BtnClose)
 			{
 				BtnClose.onClick.RemoveAllListeners();

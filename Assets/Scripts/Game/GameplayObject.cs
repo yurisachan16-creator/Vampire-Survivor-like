@@ -393,6 +393,11 @@ namespace VampireSurvivorLike
 		{
 			if (Current == null) return;
 			if (string.IsNullOrWhiteSpace(audioKey)) return;
+			if (!AudioKit.Settings.IsSoundOn.Value) return;
+
+			var finalVolume = Mathf.Clamp01(volume) * Mathf.Clamp01(AudioKit.Settings.SoundVolume.Value);
+			if (finalVolume <= 0.0001f) return;
+
 			if (_active3DSoundCount >= Max3DSounds) return;
 			if (!SfxThrottle.CanPlay("3D_" + audioKey)) return;
 
@@ -403,7 +408,7 @@ namespace VampireSurvivorLike
 			if (entry == null) return;
 
 			entry.Root.transform.position = worldPosition;
-			entry.Source.volume = Mathf.Clamp01(volume);
+			entry.Source.volume = finalVolume;
 			entry.Source.clip = clip;
 			entry.Source.Play();
 
